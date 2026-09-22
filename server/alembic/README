@@ -1,0 +1,7 @@
+"""Alembic migrations for EventAI.
+
+Generate after Stage 2 models stabilize:
+
+    alembic revision --autogenerate -m "init"
+    alembic upgrade head
+"""

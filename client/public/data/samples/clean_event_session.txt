@@ -1,0 +1,17 @@
+Welcome everyone to today's keynote session on Intelligent Content Operations and Agentic AI Pipelines. 
+
+My name is Dr. Sarah Chen, and today we are unveiling the EventAI architecture. Over the last decade, technical conferences and developer meetups have faced a persistent bottleneck: while the event recording is captured immediately, turning that 45-minute recording into structured, publish-ready collateral—such as executive summaries, technical blog posts, newsletters, LinkedIn recaps, and event flyers—typically requires four to six hours of manual transcription, summarization, and human copywriting.
+
+EventAI completely redesigns this workflow into an automated, job-based content factory. When an audio or video file is uploaded, the ingestion pipeline first inspects the audio quality, computing silence ratios and sample rates, and executes an antivirus verification hook. 
+
+Next, our speech-to-text engine transcribes the audio, calculating segment confidence scores. Rather than relying on a single, monolithic LLM prompt, the system delegates analysis to a stateful LangGraph multi-agent architecture. Four specialized agents execute in parallel:
+First, the Topic Extraction Agent maps key themes and architectural concepts.
+Second, the Highlight Detection Agent identifies high-impact quotable moments with exact timestamps.
+Third, the Speaker Analysis Agent segments speakers and attributes discussion points.
+Fourth, the Sentiment Analysis Agent evaluates audience engagement and conversational tone.
+
+These four streams feed into a centralized Content Planner agent, which drafts tailored content briefs for each requested output format. When the source content exceeds context thresholds, our selective RAG module queries PostgreSQL with pgvector embeddings to retrieve relevant past event knowledge.
+
+Finally, Google Gemini synthesizes publish-ready assets, which are immediately passed through a dual guardrail layer for content moderation and transcript grounding. This ensures zero hallucinations: every claim must be traceable to the source audio. Most importantly, a human-in-the-loop review gate guarantees that no asset is marked ready to publish without explicit human approval.
+
+Thank you all for attending, and we now welcome questions from the audience.

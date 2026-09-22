@@ -1,0 +1,43 @@
+# Runtime — EventAI API
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+pydantic==2.11.3
+pydantic-settings==2.8.1
+email-validator==2.2.0
+python-multipart==0.0.20
+httpx==0.28.1
+
+# Database
+SQLAlchemy==2.0.40
+aiomysql==0.2.0
+aiosqlite==0.21.0
+alembic==1.15.2
+
+# Auth
+python-jose[cryptography]==3.4.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.2.1
+
+# Jobs / cache
+redis==5.2.1
+celery[redis]==5.4.0
+
+# Resilience
+tenacity==9.1.2
+
+# Observability
+structlog==25.2.0
+sentry-sdk[fastapi]==2.25.1
+
+# AI / media (wired in later stages)
+langgraph==0.3.31
+langchain-core==0.3.51
+google-generativeai==0.8.5
+pydub==0.25.1
+
+# Cloud Storage (Cloudflare R2 / AWS S3 / MinIO)
+boto3==1.37.9
+
+# Optional VideoDB — install when keys are available
+# videodb
+
