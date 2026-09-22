@@ -9,6 +9,7 @@ from app.models import (  # noqa: F401
     AgentOutput,
     AuditLog,
     ContentPiece,
+    Event,
     Job,
     Recording,
     RefreshToken,

@@ -12,7 +12,7 @@ from app.db.session import get_db
 from app.models.content import ContentPiece
 from app.models.job import Job
 from app.models.user import User
-from app.schemas.common import ContentPatch, ContentPublic, RejectRequest
+from app.schemas.common import ContentPatch, ContentPublic, CreatePostRequest, RejectRequest
 from app.services.audit import write_audit
 
 router = APIRouter(tags=["content"])
@@ -26,9 +26,51 @@ async def _load_piece(db: AsyncSession, user: User, content_id: UUID) -> Content
     piece = (await db.execute(select(ContentPiece).where(ContentPiece.id == content_id))).scalar_one_or_none()
     if piece is None:
         raise http_error(status.HTTP_404_NOT_FOUND, "Content not found", "not_found")
-    job = (await db.execute(select(Job).where(Job.id == piece.job_id))).scalar_one()
-    if not _can_access_job(user, job):
-        raise http_error(status.HTTP_404_NOT_FOUND, "Content not found", "not_found")
+    if piece.job_id is not None:
+        job = (await db.execute(select(Job).where(Job.id == piece.job_id))).scalar_one_or_none()
+        if job and not _can_access_job(user, job):
+            raise http_error(status.HTTP_404_NOT_FOUND, "Content not found", "not_found")
+    return piece
+
+
+@router.get("/content", response_model=list[ContentPublic])
+async def list_community_content(
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+    event_id: UUID | None = None,
+    type: str | None = None,
+) -> list[ContentPiece]:
+    query = select(ContentPiece).order_by(ContentPiece.created_at.desc())
+    if event_id is not None:
+        query = query.where(ContentPiece.event_id == event_id)
+    if type is not None:
+        query = query.where(ContentPiece.type == type)
+    result = await db.execute(query)
+    return list(result.scalars().all())
+
+
+@router.post("/content", response_model=ContentPublic, status_code=status.HTTP_201_CREATED)
+async def create_user_post(
+    body: CreatePostRequest,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> ContentPiece:
+    import uuid
+    author_name = user.email.split("@")[0]
+    piece = ContentPiece(
+        job_id=uuid.uuid4(),
+        title=body.title,
+        body=body.body,
+        type=body.type,
+        event_id=body.event_id,
+        user_id=user.id,
+        author_name=author_name,
+        status="approved",
+        language="en",
+    )
+    db.add(piece)
+    await db.commit()
+    await db.refresh(piece)
     return piece
 
 

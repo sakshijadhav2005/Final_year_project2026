@@ -83,7 +83,10 @@ class TranscriptPublic(BaseModel):
 
 class ContentPublic(ORMModel):
     id: UUID
-    job_id: UUID
+    job_id: UUID | None = None
+    event_id: UUID | None = None
+    user_id: UUID | None = None
+    author_name: str | None = None
     type: str
     language: str
     title: str | None
@@ -93,6 +96,14 @@ class ContentPublic(ORMModel):
     version: int
     grounding: dict | None = None
     moderation: dict | None = None
+    created_at: datetime | None = None
+
+
+class CreatePostRequest(BaseModel):
+    title: str = Field(..., min_length=1, max_length=255)
+    body: str = Field(..., min_length=1)
+    type: str = Field(default="user_post", max_length=32)
+    event_id: UUID | None = None
 
 
 class ContentPatch(BaseModel):

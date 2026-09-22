@@ -27,6 +27,7 @@ class User(TimestampMixin, Base):
     id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email: Mapped[str] = mapped_column(String(320), unique=True, index=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
+# Role of the user: 'event_organizer' for organizers, 'regular_user' for normal users, 'admin' for admin accounts
     role: Mapped[str] = mapped_column(String(32), nullable=False, default="event_organizer")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 

@@ -210,7 +210,7 @@ export function PipelineStepper({
 
 function getStepStatus(
   statuses: (string | undefined)[],
-  jobStatus: string,
+  _jobStatus: string,
   isJobDone: boolean,
   isFailed: boolean,
 ): AgentStatus {

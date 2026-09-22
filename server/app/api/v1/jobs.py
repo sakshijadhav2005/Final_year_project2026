@@ -148,3 +148,24 @@ async def job_events(
             await asyncio.sleep(1)
 
     return StreamingResponse(stream(), media_type="text/event-stream", headers={"Cache-Control": "no-cache"})
+
+
+@router.delete("/{job_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_job(
+    job_id: UUID,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> None:
+    from sqlalchemy import delete
+    from app.models.content import ContentPiece
+    from app.models.job import AgentOutput, Transcript
+    from app.models.recording import Recording
+
+    job = await _load_job(db, user, job_id)
+    await db.execute(delete(ContentPiece).where(ContentPiece.job_id == job_id))
+    await db.execute(delete(Transcript).where(Transcript.job_id == job_id))
+    await db.execute(delete(AgentOutput).where(AgentOutput.job_id == job_id))
+    if job.recording_id is not None:
+        await db.execute(delete(Recording).where(Recording.id == job.recording_id))
+    await db.delete(job)
+    await db.commit()

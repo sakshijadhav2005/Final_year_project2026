@@ -1,18 +1,33 @@
 import { useState, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { PipelineStepper } from "@/components/pipeline/PipelineStepper";
 import { ContentStudio } from "@/components/content/ContentStudio";
-import { getJob, getJobContent, getTranscript, regenerateJob } from "@/lib/api";
+import { deleteJob, getJob, getJobContent, getTranscript, regenerateJob } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { useAuthStore } from "@/store/auth";
 import { useJobEvents } from "@/hooks/useJobEvents";
 
 export function JobDetailPage() {
   const { jobId = "" } = useParams();
+  const navigate = useNavigate();
   const token = useAuthStore((s) => s.accessToken) as string;
   const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteJob(token, jobId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      navigate("/dashboard");
+    },
+  });
+
+  const handleDeleteSession = () => {
+    if (window.confirm(`Are you sure you want to permanently delete session ${jobId.slice(0, 8)}? All generated content and transcripts will be removed.`)) {
+      deleteMutation.mutate();
+    }
+  };
 
   // Active View Tab: "studio" or "transcript"
   const [activeTab, setActiveTab] = useState<"studio" | "transcript">("studio");
@@ -101,12 +116,23 @@ export function JobDetailPage() {
             Job <span className="text-gold-soft font-mono">{jobId.slice(0, 8)}</span>
           </h1>
         </div>
-        <Link
-          to="/dashboard"
-          className="rounded-full border border-gold/30 bg-white/[0.03] px-21 py-8 text-xs font-medium text-gold-soft hover:border-gold transition-all"
-        >
-          ← Back to Dashboard
-        </Link>
+        <div className="flex items-center gap-13">
+          <button
+            type="button"
+            onClick={handleDeleteSession}
+            disabled={deleteMutation.isPending}
+            className="rounded-full border border-danger/40 bg-danger/10 px-21 py-8 text-xs font-medium text-danger hover:bg-danger/20 transition-all"
+            title="Permanently delete this session"
+          >
+            {deleteMutation.isPending ? "Deleting..." : "🗑️ Delete Session"}
+          </button>
+          <Link
+            to="/dashboard"
+            className="rounded-full border border-gold/30 bg-white/[0.03] px-21 py-8 text-xs font-medium text-gold-soft hover:border-gold transition-all"
+          >
+            ← Back to Dashboard
+          </Link>
+        </div>
       </div>
 
       {/* Pipeline Status & Stepper Progression */}

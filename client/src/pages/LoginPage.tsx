@@ -18,7 +18,11 @@ export function LoginPage() {
     mutationFn: () => loginAccount(email, password),
     onSuccess: (data) => {
       setSession(data.access_token, data.refresh_token, data.user);
-      navigate("/dashboard");
+      if (data.user.role === "regular_user") {
+        navigate("/user/dashboard");
+      } else {
+        navigate("/organizer/dashboard");
+      }
     },
     onError: (err: Error) => setError(err.message),
   });

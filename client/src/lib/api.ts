@@ -1,6 +1,20 @@
 const API_BASE = import.meta.env.VITE_API_URL ?? "";
 
-export type UserRole = "admin" | "content_creator" | "event_organizer";
+export type UserRole = "admin" | "content_creator" | "event_organizer" | "regular_user";
+
+export type EventType = "meetup" | "event" | "speech" | "other";
+
+export type EventPublic = {
+  id: string;
+  name: string;
+  date: string;
+  topic?: string | null;
+  organizer_name?: string | null;
+  type: EventType;
+  organizer_id: string;
+  created_at?: string | null;
+  updated_at?: string | null;
+};
 
 export type UserPublic = {
   id: string;
@@ -39,7 +53,10 @@ export type TranscriptPublic = {
 
 export type ContentPublic = {
   id: string;
-  job_id: string;
+  job_id?: string | null;
+  event_id?: string | null;
+  user_id?: string | null;
+  author_name?: string | null;
   type: string;
   language: string;
   title: string | null;
@@ -49,6 +66,7 @@ export type ContentPublic = {
   version: number;
   grounding: { pass?: boolean; unsupported?: string[] } | null;
   moderation: { pass?: boolean; hits?: string[] } | null;
+  created_at?: string | null;
 };
 
 export type HealthResponse = {
@@ -169,4 +187,34 @@ export async function uploadRecording(
   body.append("requested_types", options.types);
   return request<JobPublic>("/api/v1/uploads", { method: "POST", token, body });
 }
+
+export const listEvents = (token: string, type?: EventType) =>
+  request<EventPublic[]>(`/api/v1/events${type ? `?type=${type}` : ""}`, { token });
+
+export const getEvent = (token: string, id: string) =>
+  request<EventPublic>(`/api/v1/events/${id}`, { token });
+
+export const createEvent = (
+  token: string,
+  data: { name: string; date: string; topic?: string; organizer_name?: string; type?: EventType },
+) => request<EventPublic>("/api/v1/events", { method: "POST", token, json: data });
+
+export const listCommunityContent = (token: string, params?: { event_id?: string; type?: string }) => {
+  const q = new URLSearchParams();
+  if (params?.event_id) q.set("event_id", params.event_id);
+  if (params?.type) q.set("type", params.type);
+  const qs = q.toString();
+  return request<ContentPublic[]>(`/api/v1/content${qs ? `?${qs}` : ""}`, { token });
+};
+
+export const createPost = (
+  token: string,
+  data: { title: string; body: string; type?: string; event_id?: string },
+) => request<ContentPublic>("/api/v1/content", { method: "POST", token, json: data });
+
+export const deleteJob = (token: string, id: string) =>
+  request<void>(`/api/v1/jobs/${id}`, { method: "DELETE", token });
+
+export const deleteEvent = (token: string, id: string) =>
+  request<void>(`/api/v1/events/${id}`, { method: "DELETE", token });
 

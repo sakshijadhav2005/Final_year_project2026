@@ -32,6 +32,7 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
 
 async def init_db() -> None:
+    from sqlalchemy import text
     from app.db.base import Base
     from app import models  # noqa: F401
 
@@ -45,3 +46,23 @@ async def init_db() -> None:
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        if settings.is_mysql:
+            for col, col_type in [
+                ("event_id", "CHAR(32) NULL"),
+                ("user_id", "CHAR(32) NULL"),
+                ("author_name", "VARCHAR(255) NULL"),
+            ]:
+                try:
+                    await conn.execute(text(f"ALTER TABLE content_pieces ADD COLUMN {col} {col_type}"))
+                except Exception:
+                    pass
+        elif settings.is_sqlite:
+            for col, col_type in [
+                ("event_id", "TEXT NULL"),
+                ("user_id", "TEXT NULL"),
+                ("author_name", "TEXT NULL"),
+            ]:
+                try:
+                    await conn.execute(text(f"ALTER TABLE content_pieces ADD COLUMN {col} {col_type}"))
+                except Exception:
+                    pass

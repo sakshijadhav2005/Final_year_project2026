@@ -14,6 +14,7 @@ class UserRole(StrEnum):
     ADMIN = "admin"
     CONTENT_CREATOR = "content_creator"
     EVENT_ORGANIZER = "event_organizer"
+    REGULAR_USER = "regular_user"
 
 
 def hash_password(password: str) -> str:

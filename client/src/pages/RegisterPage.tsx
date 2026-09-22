@@ -19,7 +19,11 @@ export function RegisterPage() {
     mutationFn: () => registerAccount(email, password, role),
     onSuccess: (data) => {
       setSession(data.access_token, data.refresh_token, data.user);
-      navigate("/dashboard");
+      if (data.user.role === "regular_user") {
+        navigate("/user/dashboard");
+      } else {
+        navigate("/organizer/dashboard");
+      }
     },
     onError: (err: Error) => setError(err.message),
   });
@@ -90,8 +94,9 @@ export function RegisterPage() {
               value={role}
               onChange={(e) => setRole(e.target.value as UserRole)}
             >
-              <option value="event_organizer" className="bg-surface-light dark:bg-[#141826]">Event Organizer (Full Upload &amp; Review)</option>
-              <option value="content_creator" className="bg-surface-light dark:bg-[#141826]">Content Creator (Review &amp; Edit)</option>
+              <option value="event_organizer" className="bg-surface-light dark:bg-[#141826]">Event Organizer (Host events, uploads &amp; AI pipeline)</option>
+              <option value="regular_user" className="bg-surface-light dark:bg-[#141826]">Regular User / Attendee (Browse catalogs &amp; community)</option>
+              <option value="content_creator" className="bg-surface-light dark:bg-[#141826]">Content Creator (Review &amp; Edit Content)</option>
             </select>
           </div>
 

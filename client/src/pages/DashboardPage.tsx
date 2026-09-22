@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-
+import { CatalogNav } from "@/components/dashboard/CatalogNav";
 import { DashboardUploadCard } from "@/components/dashboard/DashboardUploadCard";
 import { PipelineStepper } from "@/components/pipeline/PipelineStepper";
-import { getTranscript, listJobs } from "@/lib/api";
+import { deleteJob, getTranscript, listJobs } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { useAuthStore } from "@/store/auth";
 
 export function DashboardPage() {
   const token = useAuthStore((s) => s.accessToken) as string;
+  const queryClient = useQueryClient();
   const [showTranscriptPreview, setShowTranscriptPreview] = useState(false);
 
   const jobs = useQuery({
@@ -17,6 +18,21 @@ export function DashboardPage() {
     queryFn: () => listJobs(token),
     refetchInterval: 3000,
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteJob(token, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+    },
+  });
+
+  const handleDeleteSession = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.confirm(`Are you sure you want to permanently delete session ${id.slice(0, 8)}? All generated content and transcripts will be removed.`)) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   const latest = jobs.data?.[0];
   const isLatestActive =
@@ -48,6 +64,9 @@ export function DashboardPage() {
 
       <div className="space-y-34">
         {/* Step 1: Upload Options Card */}
+        <section className="mb-6">
+          <CatalogNav />
+        </section>
         <section>
           <DashboardUploadCard />
         </section>
@@ -79,6 +98,15 @@ export function DashboardPage() {
                 >
                   Open Studio Hub →
                 </Link>
+                <button
+                  type="button"
+                  onClick={(e) => handleDeleteSession(e, latest.id)}
+                  disabled={deleteMutation.isPending}
+                  className="rounded-full border border-danger/40 bg-danger/10 px-13 py-4 text-xs font-medium text-danger hover:bg-danger/20 transition-all"
+                  title="Delete this session"
+                >
+                  🗑️ Delete Session
+                </button>
               </div>
             </div>
 
@@ -182,6 +210,14 @@ export function DashboardPage() {
                       >
                         {job.status.replace("_", " ")}
                       </span>
+                      <button
+                        type="button"
+                        onClick={(e) => handleDeleteSession(e, job.id)}
+                        className="rounded-lg p-2 text-xs text-ink-dim hover:text-danger hover:bg-danger/10 transition-colors z-10"
+                        title="Delete Session"
+                      >
+                        🗑️
+                      </button>
                       <span className="text-sm text-gold-soft opacity-0 transition-opacity group-hover:opacity-100">
                         →
                       </span>

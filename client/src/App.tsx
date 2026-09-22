@@ -1,15 +1,28 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { RequireAuth } from "@/components/RequireAuth";
+import { RequireRole } from "@/components/RequireRole";
 import { AdminPage } from "@/pages/AdminPage";
-import { DashboardPage } from "@/pages/DashboardPage";
+import { CatalogPage } from "@/pages/CatalogPage";
+import { CommunityPage } from "@/pages/CommunityPage";
 import { JobDetailPage } from "@/pages/JobDetailPage";
 import { LandingPage } from "@/pages/LandingPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
+import { OrganizerDashboard } from "@/pages/OrganizerDashboard";
 import { RegisterPage } from "@/pages/RegisterPage";
 import { ReviewPage } from "@/pages/ReviewPage";
 import { SettingsPage } from "@/pages/SettingsPage";
+import { UserDashboard } from "@/pages/UserDashboard";
+import { useAuthStore } from "@/store/auth";
+
+function DashboardDispatcher() {
+  const user = useAuthStore((s) => s.user);
+  if (user?.role === "regular_user") {
+    return <Navigate to="/user/dashboard" replace />;
+  }
+  return <Navigate to="/organizer/dashboard" replace />;
+}
 
 export function App() {
   return (
@@ -18,14 +31,57 @@ export function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+
+        {/* Generic Dashboard Redirector */}
         <Route
           path="/dashboard"
           element={
             <RequireAuth>
-              <DashboardPage />
+              <DashboardDispatcher />
             </RequireAuth>
           }
         />
+
+        {/* Organizer Executive Dashboard */}
+        <Route
+          path="/organizer/dashboard"
+          element={
+            <RequireRole allowedRoles={["event_organizer", "admin", "content_creator"]}>
+              <OrganizerDashboard />
+            </RequireRole>
+          }
+        />
+
+        {/* Regular User Attendee Dashboard */}
+        <Route
+          path="/user/dashboard"
+          element={
+            <RequireRole allowedRoles={["regular_user", "event_organizer", "admin", "content_creator"]}>
+              <UserDashboard />
+            </RequireRole>
+          }
+        />
+
+        {/* Catalogs (Meetup, Event, Speech, All) */}
+        <Route
+          path="/catalog/:type"
+          element={
+            <RequireAuth>
+              <CatalogPage />
+            </RequireAuth>
+          }
+        />
+
+        {/* Community Feed */}
+        <Route
+          path="/community"
+          element={
+            <RequireAuth>
+              <CommunityPage />
+            </RequireAuth>
+          }
+        />
+
         <Route
           path="/jobs/:jobId"
           element={
