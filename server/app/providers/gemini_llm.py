@@ -1,6 +1,6 @@
-from typing import Any
 import json
 import re
+from typing import Any
 
 from app.core.config import get_settings
 from app.providers.llm import LLMProvider
@@ -21,19 +21,28 @@ def _extract_json(text: str) -> dict[str, Any]:
 class GeminiLLMProvider(LLMProvider):
     name = "gemini"
 
-    async def generate_json(self, *, system: str, user: str, temperature: float = 0.3) -> dict[str, Any]:
+    async def generate_json(
+        self, *, system: str, user: str, temperature: float = 0.3
+    ) -> dict[str, Any]:
         settings = get_settings()
         import google.generativeai as genai
+
         from app.providers.fake_llm import FakeLLMProvider
         from app.services.resilience import llm_circuit, with_backoff
 
-        models_to_try = [settings.gemini_model_generate, "gemini-3.6-flash", "gemini-2.5-flash", "gemini-flash-latest"]
+        models_to_try = [
+            settings.gemini_model_generate,
+            "gemini-3.6-flash",
+            "gemini-2.5-flash",
+            "gemini-flash-latest",
+        ]
         # Deduplicate candidates while keeping order
         candidate_models = list(dict.fromkeys([m for m in models_to_try if m]))
 
         last_error = None
         for model_name in candidate_models:
             try:
+
                 async def _call(m_name: str = model_name):
                     genai.configure(api_key=settings.gemini_api_key)
                     model = genai.GenerativeModel(
@@ -56,8 +65,9 @@ class GeminiLLMProvider(LLMProvider):
                 continue
 
         # If Gemini API fails (e.g. 404 model not found or 429 rate limit exceeded), fall back gracefully to FakeLLMProvider
-        return await FakeLLMProvider().generate_json(system=system, user=user, temperature=temperature)
-
+        return await FakeLLMProvider().generate_json(
+            system=system, user=user, temperature=temperature
+        )
 
 
 def analysis_system() -> str:

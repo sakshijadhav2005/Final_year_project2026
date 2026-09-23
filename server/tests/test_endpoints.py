@@ -1,9 +1,9 @@
-from fastapi.testclient import TestClient
 import uuid
+from unittest.mock import patch
 
 from app.main import app
-from app.models.job import Job
-from app.models.user import User
+from fastapi.testclient import TestClient
+
 
 
 def get_auth_token(client: TestClient) -> str:
@@ -52,32 +52,37 @@ def test_sse_query_token_auth() -> None:
 
 
 def test_delete_job() -> None:
-    with TestClient(app) as client:
-        token = get_auth_token(client)
-        # Create a test job via direct upload
-        files = {
-            "file": ("session.txt", b"Short test snippet for session deletion.", "text/plain")
-        }
-        data = {
-            "consent_confirmed": "true",
-            "requested_types": "summary",
-            "target_languages": "en",
-        }
-        upload = client.post(
-            "/api/v1/uploads",
-            headers={"Authorization": f"Bearer {token}"},
-            files=files,
-            data=data,
-        )
-        assert upload.status_code == 202
-        job_id = upload.json()["id"]
 
-        # Delete the job
-        del_resp = client.delete(f"/api/v1/jobs/{job_id}", headers={"Authorization": f"Bearer {token}"})
-        assert del_resp.status_code == 204
+    with patch("app.api.v1.uploads.enqueue_process_job") as mock_enqueue:
+        mock_enqueue.return_value = "mocked"
+        with TestClient(app) as client:
+            token = get_auth_token(client)
+            # Create a test job via direct upload
+            files = {
+                "file": ("session.txt", b"Short test snippet for session deletion.", "text/plain")
+            }
+            data = {
+                "consent_confirmed": "true",
+                "requested_types": "summary",
+                "target_languages": "en",
+            }
+            upload = client.post(
+                "/api/v1/uploads",
+                headers={"Authorization": f"Bearer {token}"},
+                files=files,
+                data=data,
+            )
+            assert upload.status_code == 202
+            job_id = upload.json()["id"]
 
-        # Confirm job no longer exists
-        get_resp = client.get(f"/api/v1/jobs/{job_id}", headers={"Authorization": f"Bearer {token}"})
-        assert get_resp.status_code == 404
+            # Delete the job
+            del_resp = client.delete(
+                f"/api/v1/jobs/{job_id}", headers={"Authorization": f"Bearer {token}"}
+            )
+            assert del_resp.status_code == 204
 
-
+            # Confirm job no longer exists
+            get_resp = client.get(
+                f"/api/v1/jobs/{job_id}", headers={"Authorization": f"Bearer {token}"}
+            )
+            assert get_resp.status_code == 404

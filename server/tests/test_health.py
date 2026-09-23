@@ -1,8 +1,8 @@
+import uuid
 from collections.abc import Generator
 
-from fastapi.testclient import TestClient
-
 from app.main import app
+from fastapi.testclient import TestClient
 
 
 def test_root_health() -> None:
@@ -22,9 +22,8 @@ def _client() -> Generator[TestClient, None, None]:
         yield client
 
 
-import uuid
-
 def test_register_login_and_me() -> None:
+
     email = f"org_{uuid.uuid4().hex[:8]}@example.com"
     with TestClient(app) as client:
         register = client.post(
@@ -61,7 +60,11 @@ def test_upload_txt_generates_content() -> None:
             )
         token = login.json()["access_token"]
         files = {
-            "file": ("session.txt", b"Welcome to the EventAI demo about recordings becoming blogs.", "text/plain")
+            "file": (
+                "session.txt",
+                b"Welcome to the EventAI demo about recordings becoming blogs.",
+                "text/plain",
+            )
         }
         data = {
             "consent_confirmed": "true",
@@ -79,7 +82,9 @@ def test_upload_txt_generates_content() -> None:
         job = client.get(f"/api/v1/jobs/{job_id}", headers={"Authorization": f"Bearer {token}"})
         assert job.status_code == 200
         assert job.json()["status"] in {"pending_review", "needs_review", "ready_to_publish"}
-        content = client.get(f"/api/v1/jobs/{job_id}/content", headers={"Authorization": f"Bearer {token}"})
+        content = client.get(
+            f"/api/v1/jobs/{job_id}/content", headers={"Authorization": f"Bearer {token}"}
+        )
         assert content.status_code == 200
         assert len(content.json()) >= 1
         first = content.json()[0]

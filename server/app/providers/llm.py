@@ -6,5 +6,7 @@ class LLMProvider(ABC):
     name: str
 
     @abstractmethod
-    async def generate_json(self, *, system: str, user: str, temperature: float = 0.3) -> dict[str, Any]:
+    async def generate_json(
+        self, *, system: str, user: str, temperature: float = 0.3
+    ) -> dict[str, Any]:
         raise NotImplementedError

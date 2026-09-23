@@ -72,12 +72,20 @@ export function EventCard({ event, onSelect }: EventCardProps) {
         </div>
       </div>
 
-      <div className="mt-6 flex items-center gap-3 pt-4 border-t border-white/5">
+      <div className="mt-6 flex items-center gap-2 pt-4 border-t border-white/5">
+        <Link
+          to={`/events/${event.id}`}
+          className="inline-flex flex-1 items-center justify-center gap-1 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 px-3 py-2 text-xs font-semibold text-amber-300 transition-all hover:bg-amber-500/30"
+        >
+          <span>🎙️ Event Hub &amp; Transcript</span>
+        </Link>
+
         <Link
           to={`/community?event_id=${event.id}`}
-          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition-all hover:border-amber-500/30 hover:bg-amber-500/10 hover:text-amber-300"
+          className="inline-flex items-center justify-center gap-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-300 transition-all hover:border-white/20 hover:text-white"
+          title="Community Discussions"
         >
-          <span>💬 Community Feed</span>
+          <span>💬</span>
         </Link>
 
         {onSelect && (
@@ -90,6 +98,7 @@ export function EventCard({ event, onSelect }: EventCardProps) {
           </button>
         )}
       </div>
+
     </div>
   );
 }

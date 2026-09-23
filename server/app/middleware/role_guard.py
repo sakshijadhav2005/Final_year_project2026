@@ -1,4 +1,4 @@
-from typing import Sequence
+from collections.abc import Sequence
 
 from fastapi import Depends, HTTPException, status
 
@@ -12,7 +12,11 @@ def require_role(allowed_roles: Sequence[UserRole] | UserRole):
     allowed_values = {r.value if hasattr(r, "value") else str(r) for r in roles}
 
     def role_checker(current_user: User = Depends(get_current_user)) -> User:
-        user_role_str = current_user.role.value if hasattr(current_user.role, "value") else str(current_user.role)
+        user_role_str = (
+            current_user.role.value
+            if hasattr(current_user.role, "value")
+            else str(current_user.role)
+        )
         if user_role_str not in allowed_values:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -21,4 +25,3 @@ def require_role(allowed_roles: Sequence[UserRole] | UserRole):
         return current_user
 
     return role_checker
-

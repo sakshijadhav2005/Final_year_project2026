@@ -35,7 +35,10 @@ class InMemoryRateLimitMiddleware(BaseHTTPMiddleware):
             bucket.popleft()
         if len(bucket) >= settings.rate_limit_per_minute:
             return JSONResponse(
-                {"detail": "Too many requests. Slow down uploads/regenerations.", "code": "rate_limited"},
+                {
+                    "detail": "Too many requests. Slow down uploads/regenerations.",
+                    "code": "rate_limited",
+                },
                 status_code=429,
             )
         bucket.append(now)

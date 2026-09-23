@@ -82,7 +82,11 @@ def _transcribe_sync(file_path: str) -> TranscriptResult:
         understanding = media.understand(analyzers=[{"type": "spoken_words", "name": "transcript"}])
         if hasattr(understanding, "wait_until_complete"):
             understanding.wait_until_complete()
-        analyzer = understanding.get_analyzer("transcript") if hasattr(understanding, "get_analyzer") else None
+        analyzer = (
+            understanding.get_analyzer("transcript")
+            if hasattr(understanding, "get_analyzer")
+            else None
+        )
         for attr in ("text", "transcript", "content"):
             value = getattr(analyzer, attr, None) if analyzer is not None else None
             if isinstance(value, str) and value.strip():

@@ -3,6 +3,7 @@ import hashlib
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
+from fastapi import status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,7 +19,6 @@ from app.core.security import (
 )
 from app.models.user import RefreshToken, User
 from app.schemas.common import TokenResponse, UserPublic
-from fastapi import status
 
 
 def _hash_token(token: str) -> str:
@@ -29,7 +29,9 @@ def _to_public(user: User) -> UserPublic:
     return UserPublic.model_validate(user)
 
 
-async def register_user(db: AsyncSession, email: str, password: str, role: UserRole) -> TokenResponse:
+async def register_user(
+    db: AsyncSession, email: str, password: str, role: UserRole
+) -> TokenResponse:
     settings = get_settings()
     existing = await db.execute(select(User).where(User.email == email.lower()))
     if existing.scalar_one_or_none():
@@ -56,11 +58,15 @@ async def login_user(db: AsyncSession, email: str, password: str) -> TokenRespon
     result = await db.execute(select(User).where(User.email == email.lower()))
     user = result.scalar_one_or_none()
     if user is None:
-        raise http_error(status.HTTP_401_UNAUTHORIZED, "Invalid email or password", "invalid_credentials")
-    
+        raise http_error(
+            status.HTTP_401_UNAUTHORIZED, "Invalid email or password", "invalid_credentials"
+        )
+
     is_valid = await asyncio.to_thread(verify_password, password, user.hashed_password)
     if not is_valid:
-        raise http_error(status.HTTP_401_UNAUTHORIZED, "Invalid email or password", "invalid_credentials")
+        raise http_error(
+            status.HTTP_401_UNAUTHORIZED, "Invalid email or password", "invalid_credentials"
+        )
     if not user.is_active:
         raise http_error(status.HTTP_403_FORBIDDEN, "Account disabled", "disabled")
     return await issue_tokens(db, user)
@@ -88,16 +94,22 @@ async def rotate_refresh(db: AsyncSession, refresh_token: str) -> TokenResponse:
         raise http_error(status.HTTP_401_UNAUTHORIZED, "Invalid refresh token", "invalid_refresh")
     token_hash = _hash_token(refresh_token)
     result = await db.execute(
-        select(RefreshToken).where(RefreshToken.token_hash == token_hash, RefreshToken.revoked.is_(False))
+        select(RefreshToken).where(
+            RefreshToken.token_hash == token_hash, RefreshToken.revoked.is_(False)
+        )
     )
     row = result.scalar_one_or_none()
     if row is None:
         raise http_error(status.HTTP_401_UNAUTHORIZED, "Refresh token expired", "invalid_refresh")
-    expires_at = row.expires_at.replace(tzinfo=UTC) if row.expires_at.tzinfo is None else row.expires_at
+    expires_at = (
+        row.expires_at.replace(tzinfo=UTC) if row.expires_at.tzinfo is None else row.expires_at
+    )
     if expires_at < datetime.now(UTC):
         raise http_error(status.HTTP_401_UNAUTHORIZED, "Refresh token expired", "invalid_refresh")
     row.revoked = True
-    user = (await db.execute(select(User).where(User.id == UUID(payload["sub"])))).scalar_one_or_none()
+    user = (
+        await db.execute(select(User).where(User.id == UUID(payload["sub"])))
+    ).scalar_one_or_none()
     if user is None:
         raise http_error(status.HTTP_401_UNAUTHORIZED, "User not found", "invalid_refresh")
     return await issue_tokens(db, user)

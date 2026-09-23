@@ -69,13 +69,21 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             await db.execute(select(Recording).where(Recording.id == job.recording_id))
         ).scalar_one_or_none()
         if recording is None:
-            await _save(db, job, status="failed", error_code="missing_recording", error_message="Recording missing")
+            await _save(
+                db,
+                job,
+                status="failed",
+                error_code="missing_recording",
+                error_message="Recording missing",
+            )
             return
 
         job.started_at = datetime.now(UTC)
         progress = _queued_progress()
         progress["quality_check"] = "running"
-        await _save(db, job, status="validating", progress=progress, error_code=None, error_message=None)
+        await _save(
+            db, job, status="validating", progress=progress, error_code=None, error_message=None
+        )
 
         transcript_row = None
         if reuse_transcript:
@@ -133,12 +141,16 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
 
             if transcript.vendor_id:
                 recording.videodb_id = transcript.vendor_id
-            recording.duration_sec = int(quality.duration_sec) if quality.duration_sec else recording.duration_sec
+            recording.duration_sec = (
+                int(quality.duration_sec) if quality.duration_sec else recording.duration_sec
+            )
 
             if await _cancelled(db, job.id):
                 return
 
-            existing = (await db.execute(select(Transcript).where(Transcript.job_id == job.id))).scalar_one_or_none()
+            existing = (
+                await db.execute(select(Transcript).where(Transcript.job_id == job.id))
+            ).scalar_one_or_none()
             if existing:
                 await db.delete(existing)
                 await db.flush()
@@ -189,7 +201,32 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             await db.execute(delete(ContentPiece).where(ContentPiece.job_id == job.id))
             await db.flush()
 
-        quality_dict = quality.as_dict() if hasattr(quality, "as_dict") else (quality if isinstance(quality, dict) else {"ok": True})
+        quality_dict = (
+            quality.as_dict()
+            if hasattr(quality, "as_dict")
+            else (quality if isinstance(quality, dict) else {"ok": True})
+        )
+
+        # Fetch Centralized User & Brand Memory
+        from app.models.user import UserProfile
+
+        user_prof = (
+            await db.execute(select(UserProfile).where(UserProfile.user_id == job.user_id))
+        ).scalar_one_or_none()
+        user_memory = {}
+        if user_prof:
+            user_memory = {
+                "full_name": user_prof.full_name,
+                "organization": user_prof.organization,
+                "job_title": user_prof.job_title,
+                "bio": user_prof.bio,
+                "linkedin_handle": user_prof.linkedin_handle,
+                "instagram_handle": user_prof.instagram_handle,
+                "website_url": user_prof.website_url,
+                "brand_tone": user_prof.brand_tone,
+                "custom_signoff": user_prof.custom_signoff,
+            }
+
         graph = get_compiled_graph()
         initial = {
             "job_id": str(job.id),
@@ -200,6 +237,7 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             "requested_types": job.requested_types or [],
             "target_languages": job.target_languages or ["en"],
             "use_org_memory": job.use_org_memory,
+            "user_memory": user_memory,
             "retry_count": 0,
             "rag_chunks": rag_chunks,
         }
@@ -239,7 +277,12 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                         if progress[key] == "queued" and key == node_name:
                             progress[key] = "complete"
                     nxt = {
-                        "fan_out": ["topic_extraction", "highlight_detection", "speaker_analysis", "sentiment_analysis"],
+                        "fan_out": [
+                            "topic_extraction",
+                            "highlight_detection",
+                            "speaker_analysis",
+                            "sentiment_analysis",
+                        ],
                         "quality_check": ["topic_extraction"],
                         "content_planner": ["rag_retrieve"],
                         "rag_retrieve": ["generator"],
@@ -263,7 +306,10 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                 error_code="pipeline_failed",
                 error_message=str(exc),
                 finished_at=datetime.now(UTC),
-                progress={key: "failed" if progress.get(key) != "complete" else "complete" for key in AGENT_KEYS},
+                progress={
+                    key: "failed" if progress.get(key) != "complete" else "complete"
+                    for key in AGENT_KEYS
+                },
             )
             return
 
@@ -294,11 +340,16 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             )
             return
 
+        event_id = recording.event_id if hasattr(recording, "event_id") else None
+        author_name = user_memory.get("full_name") or "Event Speaker"
         generated = list(final_state.get("generated") or [])
         for piece in generated:
             db.add(
                 ContentPiece(
                     job_id=job.id,
+                    user_id=job.user_id,
+                    event_id=event_id,
+                    author_name=author_name,
                     type=str(piece.get("type") or "summary"),
                     language="en",
                     title=piece.get("title"),
@@ -313,6 +364,9 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             db.add(
                 ContentPiece(
                     job_id=job.id,
+                    user_id=job.user_id,
+                    event_id=event_id,
+                    author_name=author_name,
                     type=str(item.get("type") or "summary"),
                     language=str(item.get("language") or "und"),
                     title=item.get("title"),

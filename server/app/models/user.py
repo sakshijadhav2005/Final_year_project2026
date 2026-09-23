@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, String, Text, Uuid, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text, Uuid, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
@@ -21,15 +21,47 @@ class TimestampMixin:
     )
 
 
+class UserProfile(TimestampMixin, Base):
+    __tablename__ = "user_profiles"
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        Uuid(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        unique=True,
+        nullable=False,
+        index=True,
+    )
+    full_name: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    organization: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    job_title: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    bio: Mapped[str | None] = mapped_column(Text, nullable=True)
+    linkedin_handle: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    instagram_handle: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    website_url: Mapped[str | None] = mapped_column(String(256), nullable=True)
+    brand_tone: Mapped[str | None] = mapped_column(String(64), default="authoritative_inspiring")
+    custom_signoff: Mapped[str | None] = mapped_column(String(256), nullable=True)
+
+    user = relationship("User", back_populates="profile")
+
+
 class User(TimestampMixin, Base):
     __tablename__ = "users"
 
     id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email: Mapped[str] = mapped_column(String(320), unique=True, index=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
-# Role of the user: 'event_organizer' for organizers, 'regular_user' for normal users, 'admin' for admin accounts
+    # Role of the user: 'event_organizer' for organizers, 'regular_user' for normal users, 'admin' for admin accounts
     role: Mapped[str] = mapped_column(String(32), nullable=False, default="event_organizer")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+
+    profile = relationship(
+        "UserProfile",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
 
 
 class RefreshToken(TimestampMixin, Base):

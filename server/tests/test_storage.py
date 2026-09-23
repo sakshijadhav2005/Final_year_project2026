@@ -1,6 +1,4 @@
-import os
 from pathlib import Path
-import pytest
 
 from app.services.storage import LocalStorageService, S3CompatibleStorageService, get_storage
 
@@ -27,4 +25,5 @@ def test_local_storage_lifecycle(tmp_path: Path) -> None:
 
 def test_get_storage_default_is_local() -> None:
     storage = get_storage()
-    assert isinstance(storage, (LocalStorageService, S3CompatibleStorageService))
+    assert isinstance(storage, LocalStorageService | S3CompatibleStorageService)
+

@@ -72,7 +72,9 @@ async def delete_event(
     if event is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event not found")
     if user.role != UserRole.ADMIN and event.organizer_id != user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cannot delete an event you did not organize")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Cannot delete an event you did not organize",
+        )
     await db.delete(event)
     await db.commit()
-

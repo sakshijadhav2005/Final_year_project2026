@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from app.core.config import get_settings
 from app.providers.factory import get_stt_provider
 from app.providers.stt import TranscriptResult, TranscriptSegment
 from app.services.resilience import stt_circuit, with_backoff

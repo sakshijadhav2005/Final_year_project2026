@@ -207,6 +207,39 @@ export const listCommunityContent = (token: string, params?: { event_id?: string
   return request<ContentPublic[]>(`/api/v1/content${qs ? `?${qs}` : ""}`, { token });
 };
 
+export type UserProfilePublic = {
+  full_name: string | null;
+  organization: string | null;
+  job_title: string | null;
+  bio: string | null;
+  linkedin_handle: string | null;
+  instagram_handle: string | null;
+  website_url: string | null;
+  brand_tone: string | null;
+  custom_signoff: string | null;
+};
+
+export type UserProfileUpdate = Partial<UserProfilePublic>;
+
+export type ChatMessagePublic = {
+  id: string;
+  session_id: string;
+  sender_type: "user" | "assistant" | "system";
+  content: string;
+  created_at?: string | null;
+};
+
+export type ChatSessionPublic = {
+  id: string;
+  user_id: string;
+  event_id?: string | null;
+  job_id?: string | null;
+  context_type: "organizer_copilot" | "attendee_qa" | "general";
+  title: string;
+  created_at?: string | null;
+  messages?: ChatMessagePublic[];
+};
+
 export const createPost = (
   token: string,
   data: { title: string; body: string; type?: string; event_id?: string },
@@ -217,4 +250,29 @@ export const deleteJob = (token: string, id: string) =>
 
 export const deleteEvent = (token: string, id: string) =>
   request<void>(`/api/v1/events/${id}`, { method: "DELETE", token });
+
+export const getProfile = (token: string) =>
+  request<UserProfilePublic>("/api/v1/auth/profile", { token });
+
+export const updateProfile = (token: string, data: UserProfileUpdate) =>
+  request<UserProfilePublic>("/api/v1/auth/profile", { method: "PUT", token, json: data });
+
+export const listChatSessions = (token: string, eventId?: string) =>
+  request<ChatSessionPublic[]>(`/api/v1/chat/sessions${eventId ? `?event_id=${eventId}` : ""}`, { token });
+
+export const createChatSession = (
+  token: string,
+  data: { context_type?: string; event_id?: string; job_id?: string; title?: string },
+) => request<ChatSessionPublic>("/api/v1/chat/sessions", { method: "POST", token, json: data });
+
+export const getChatSession = (token: string, sessionId: string) =>
+  request<ChatSessionPublic>(`/api/v1/chat/sessions/${sessionId}`, { token });
+
+export const sendChatMessage = (
+  token: string,
+  sessionId: string,
+  data: { content: string; context_type?: string },
+) => request<ChatMessagePublic>(`/api/v1/chat/sessions/${sessionId}/messages`, { method: "POST", token, json: data });
+
+
 

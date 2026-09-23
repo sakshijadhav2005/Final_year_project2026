@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import abc
-import os
 from pathlib import Path
-from typing import BinaryIO
 
 import structlog
 
@@ -110,7 +108,9 @@ class S3CompatibleStorageService(StorageService):
             )
             logger.info("cloud_upload_success", bucket=self.bucket_name, key=destination_name)
         except Exception as exc:
-            logger.error("cloud_upload_failed", bucket=self.bucket_name, key=destination_name, error=str(exc))
+            logger.error(
+                "cloud_upload_failed", bucket=self.bucket_name, key=destination_name, error=str(exc)
+            )
             # Even if cloud upload fails, local copy is saved
             return str(local_dest)
 
@@ -153,7 +153,11 @@ class S3CompatibleStorageService(StorageService):
         return storage_uri
 
     def delete(self, storage_uri: str) -> bool:
-        key = storage_uri.split(f"s3://{self.bucket_name}/")[-1] if storage_uri.startswith("s3://") else storage_uri
+        key = (
+            storage_uri.split(f"s3://{self.bucket_name}/")[-1]
+            if storage_uri.startswith("s3://")
+            else storage_uri
+        )
         # Delete local cached copy
         try:
             local_dest = self.local_cache / key
@@ -196,7 +200,9 @@ def get_storage() -> StorageService:
                 region_name="auto",
                 public_domain=settings.r2_public_domain,
             )
-            logger.info("storage_initialized", backend="cloudflare_r2", bucket=settings.r2_bucket_name)
+            logger.info(
+                "storage_initialized", backend="cloudflare_r2", bucket=settings.r2_bucket_name
+            )
             return _storage_singleton
         except Exception as exc:
             logger.error("r2_init_failed_falling_back_to_local", error=str(exc))
@@ -211,7 +217,9 @@ def get_storage() -> StorageService:
                 bucket_name=settings.s3_bucket_name,
                 region_name=settings.s3_region or "auto",
             )
-            logger.info("storage_initialized", backend="s3_compatible", bucket=settings.s3_bucket_name)
+            logger.info(
+                "storage_initialized", backend="s3_compatible", bucket=settings.s3_bucket_name
+            )
             return _storage_singleton
         except Exception as exc:
             logger.error("s3_init_failed_falling_back_to_local", error=str(exc))

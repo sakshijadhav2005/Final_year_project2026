@@ -5,6 +5,7 @@ import { RequireRole } from "@/components/RequireRole";
 import { AdminPage } from "@/pages/AdminPage";
 import { CatalogPage } from "@/pages/CatalogPage";
 import { CommunityPage } from "@/pages/CommunityPage";
+import { EventDetailPage } from "@/pages/EventDetailPage";
 import { JobDetailPage } from "@/pages/JobDetailPage";
 import { LandingPage } from "@/pages/LandingPage";
 import { LoginPage } from "@/pages/LoginPage";
@@ -15,6 +16,7 @@ import { ReviewPage } from "@/pages/ReviewPage";
 import { SettingsPage } from "@/pages/SettingsPage";
 import { UserDashboard } from "@/pages/UserDashboard";
 import { useAuthStore } from "@/store/auth";
+
 
 function DashboardDispatcher() {
   const user = useAuthStore((s) => s.user);
@@ -72,7 +74,18 @@ export function App() {
           }
         />
 
+        {/* Event Detail Hub with Transcript and Generated Posts */}
+        <Route
+          path="/events/:eventId"
+          element={
+            <RequireAuth>
+              <EventDetailPage />
+            </RequireAuth>
+          }
+        />
+
         {/* Community Feed */}
+
         <Route
           path="/community"
           element={

@@ -52,8 +52,14 @@ def inspect_media(path: str) -> QualityReport:
             )
         if ratio > 0.92:
             return QualityReport(
-                duration, audio.frame_rate, ratio, False, "Mostly silence — re-upload a clearer recording"
+                duration,
+                audio.frame_rate,
+                ratio,
+                False,
+                "Mostly silence — re-upload a clearer recording",
             )
         return QualityReport(duration, audio.frame_rate, ratio, True, None)
     except Exception:
-        return QualityReport(None, None, None, True, "Could not probe audio locally; continuing with transcription")
+        return QualityReport(
+            None, None, None, True, "Could not probe audio locally; continuing with transcription"
+        )

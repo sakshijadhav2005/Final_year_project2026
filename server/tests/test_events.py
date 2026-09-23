@@ -1,8 +1,8 @@
 import uuid
 from datetime import date
-from fastapi.testclient import TestClient
 
 from app.main import app
+from fastapi.testclient import TestClient
 
 
 def test_event_crud_and_role_guard():
@@ -68,12 +68,16 @@ def test_event_crud_and_role_guard():
     assert any(e["id"] == event_id for e in list_user.json())
 
     # 6. Filter by type
-    filtered = client.get("/api/v1/events/?type=event", headers={"Authorization": f"Bearer {user_token}"})
+    filtered = client.get(
+        "/api/v1/events/?type=event", headers={"Authorization": f"Bearer {user_token}"}
+    )
     assert filtered.status_code == 200
     assert all(e["type"] == "event" for e in filtered.json())
 
     # 7. Get event by ID
-    get_event = client.get(f"/api/v1/events/{event_id}", headers={"Authorization": f"Bearer {user_token}"})
+    get_event = client.get(
+        f"/api/v1/events/{event_id}", headers={"Authorization": f"Bearer {user_token}"}
+    )
     assert get_event.status_code == 200
     assert get_event.json()["id"] == event_id
 
@@ -94,6 +98,8 @@ def test_event_crud_and_role_guard():
     assert post_data["event_id"] == event_id
 
     # 9. List community content
-    community_resp = client.get("/api/v1/content", headers={"Authorization": f"Bearer {user_token}"})
+    community_resp = client.get(
+        "/api/v1/content", headers={"Authorization": f"Bearer {user_token}"}
+    )
     assert community_resp.status_code == 200
     assert any(c["id"] == post_data["id"] for c in community_resp.json())

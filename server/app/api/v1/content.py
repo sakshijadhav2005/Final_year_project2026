@@ -23,7 +23,9 @@ def _can_access_job(user: User, job: Job) -> bool:
 
 
 async def _load_piece(db: AsyncSession, user: User, content_id: UUID) -> ContentPiece:
-    piece = (await db.execute(select(ContentPiece).where(ContentPiece.id == content_id))).scalar_one_or_none()
+    piece = (
+        await db.execute(select(ContentPiece).where(ContentPiece.id == content_id))
+    ).scalar_one_or_none()
     if piece is None:
         raise http_error(status.HTTP_404_NOT_FOUND, "Content not found", "not_found")
     if piece.job_id is not None:
@@ -56,6 +58,7 @@ async def create_user_post(
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> ContentPiece:
     import uuid
+
     author_name = user.email.split("@")[0]
     piece = ContentPiece(
         job_id=uuid.uuid4(),

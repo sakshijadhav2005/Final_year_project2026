@@ -21,5 +21,9 @@ def validate_upload(filename: str, content_type: str | None, size_bytes: int) ->
     max_bytes = settings.max_upload_mb * 1024 * 1024
     if size_bytes > max_bytes:
         raise ValueError(f"File exceeds {settings.max_upload_mb} MB limit")
-    if content_type and not content_type.startswith(ALLOWED_MIME_PREFIXES) and suffix not in {".txt", ".md"}:
+    if (
+        content_type
+        and not content_type.startswith(ALLOWED_MIME_PREFIXES)
+        and suffix not in {".txt", ".md"}
+    ):
         raise ValueError("MIME type is not allowed")

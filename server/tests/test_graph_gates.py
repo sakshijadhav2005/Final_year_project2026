@@ -1,6 +1,5 @@
-from app.graphs.pipeline import rag_should_run, _after_quality, _after_guardrail
+from app.graphs.pipeline import _after_guardrail, _after_quality, rag_should_run
 from app.services.gemini import wrap_transcript
-from app.graphs.state import JobGraphState
 
 
 def test_rag_gate_skips_short_transcripts() -> None:
@@ -21,7 +20,7 @@ def test_transcript_wrapped_as_untrusted() -> None:
 def test_after_quality() -> None:
     # Test routing logic from quality_check
     assert _after_quality({"route": "needs_reupload"}) == "needs_reupload"
-    assert _after_quality({"route": "continue"}) == "fan_out"
+    assert _after_quality({"route": "continue"}) == "parallel_analysis"
 
 
 def test_after_guardrail() -> None:

@@ -20,5 +20,6 @@ class JobGraphState(TypedDict, total=False):
     guardrail: dict[str, Any]
     translations: list[dict[str, Any]]
     use_org_memory: bool
+    user_memory: dict[str, Any]
     route: Literal["continue", "retry_generate", "needs_review", "needs_reupload", "failed"]
     retry_count: int

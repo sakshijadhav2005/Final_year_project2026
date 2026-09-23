@@ -25,8 +25,9 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-
-def create_token(subject: str, token_type: str, expires_delta: timedelta, extra: dict[str, Any] | None = None) -> str:
+def create_token(
+    subject: str, token_type: str, expires_delta: timedelta, extra: dict[str, Any] | None = None
+) -> str:
     settings = get_settings()
     payload: dict[str, Any] = {
         "sub": subject,
@@ -50,13 +51,14 @@ def create_access_token(user_id: str, role: UserRole) -> str:
 
 import uuid
 
+
 def create_refresh_token(user_id: str) -> str:
     settings = get_settings()
     return create_token(
         subject=user_id,
         token_type="refresh",
         expires_delta=timedelta(days=settings.refresh_token_expire_days),
-        extra={"jti": uuid.uuid4().hex}
+        extra={"jti": uuid.uuid4().hex},
     )
 
 

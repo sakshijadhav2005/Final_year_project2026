@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { CatalogNav } from "@/components/dashboard/CatalogNav";
 import { DashboardUploadCard } from "@/components/dashboard/DashboardUploadCard";
 import { PipelineStepper } from "@/components/pipeline/PipelineStepper";
+import { ChatDrawer } from "@/components/chat/ChatDrawer";
 import { deleteJob, getTranscript, listJobs } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { useAuthStore } from "@/store/auth";
@@ -12,6 +13,7 @@ export function DashboardPage() {
   const token = useAuthStore((s) => s.accessToken) as string;
   const queryClient = useQueryClient();
   const [showTranscriptPreview, setShowTranscriptPreview] = useState(false);
+  const [showChatDrawer, setShowChatDrawer] = useState(false);
 
   const jobs = useQuery({
     queryKey: ["jobs"],
@@ -60,7 +62,24 @@ export function DashboardPage() {
             Executive <em className="not-italic text-gold-soft">Dashboard</em>
           </h1>
         </div>
+
+        <button
+          type="button"
+          onClick={() => setShowChatDrawer(true)}
+          className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gradient-to-r from-gold/20 via-orange-500/20 to-teal/20 px-21 py-8 text-xs font-semibold text-gold-soft shadow-lg hover:scale-105 transition-all"
+        >
+          <span className="text-sm">🤖</span>
+          <span>AI Co-Pilot Assistant</span>
+          <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+        </button>
       </div>
+
+      <ChatDrawer
+        isOpen={showChatDrawer}
+        onClose={() => setShowChatDrawer(false)}
+        jobId={latest?.id}
+      />
+
 
       <div className="space-y-34">
         {/* Step 1: Upload Options Card */}

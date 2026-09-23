@@ -1,15 +1,18 @@
 from collections.abc import AsyncGenerator
 
+from sqlalchemy.dialects.mysql.aiomysql import AsyncAdapt_aiomysql_connection
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import StaticPool
 
 from app.core.config import get_settings
 
-from sqlalchemy.dialects.mysql.aiomysql import AsyncAdapt_aiomysql_connection
-
 _orig_ping = AsyncAdapt_aiomysql_connection.ping
+
+
 def _patched_ping(self, reconnect=True):
     return _orig_ping(self, reconnect)
+
+
 AsyncAdapt_aiomysql_connection.ping = _patched_ping
 
 settings = get_settings()
@@ -33,8 +36,9 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
 async def init_db() -> None:
     from sqlalchemy import text
-    from app.db.base import Base
+
     from app import models  # noqa: F401
+    from app.db.base import Base
 
     if settings.is_sqlite:
         from pathlib import Path
@@ -53,7 +57,9 @@ async def init_db() -> None:
                 ("author_name", "VARCHAR(255) NULL"),
             ]:
                 try:
-                    await conn.execute(text(f"ALTER TABLE content_pieces ADD COLUMN {col} {col_type}"))
+                    await conn.execute(
+                        text(f"ALTER TABLE content_pieces ADD COLUMN {col} {col_type}")
+                    )
                 except Exception:
                     pass
         elif settings.is_sqlite:
@@ -63,6 +69,8 @@ async def init_db() -> None:
                 ("author_name", "TEXT NULL"),
             ]:
                 try:
-                    await conn.execute(text(f"ALTER TABLE content_pieces ADD COLUMN {col} {col_type}"))
+                    await conn.execute(
+                        text(f"ALTER TABLE content_pieces ADD COLUMN {col} {col_type}")
+                    )
                 except Exception:
                     pass

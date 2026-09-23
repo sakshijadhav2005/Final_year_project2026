@@ -32,9 +32,11 @@ class Settings(BaseSettings):
 
     videodb_api_key: str = ""
     videodb_collection: str = ""
+    stt_provider: str = "videodb"
     gemini_api_key: str = ""
     gemini_model_generate: str = "gemini-3.6-flash"
     gemini_model_analyze: str = "gemini-3.6-flash"
+    llm_provider: str = "gemini"
 
     rag_token_threshold: int = 12000
     rag_enabled: bool = True

@@ -36,7 +36,9 @@ def chunk_text(text: str, size: int = 400) -> list[str]:
     return [" ".join(words[i : i + size]) for i in range(0, len(words), size)]
 
 
-async def index_transcript_chunks(db: AsyncSession, *, user_id: UUID, job_id: str, text: str) -> None:
+async def index_transcript_chunks(
+    db: AsyncSession, *, user_id: UUID, job_id: str, text: str
+) -> None:
     for chunk in chunk_text(text):
         db.add(
             Embedding(

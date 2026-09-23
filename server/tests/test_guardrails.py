@@ -35,11 +35,13 @@ def test_grounding_check_pass() -> None:
 
 def test_grounding_check_fail() -> None:
     transcript = "Welcome to the Python conference."
-    body = "The fantastic event was completely sponsored by a major artificial intelligence corporation that provided excellent free hardware technology to all participating attendees. " \
-           "Welcome to the Python conference. " \
-           "The executive leadership team of the enterprise announced a revolutionary brand new product development line during today presentation. " \
-           "Everybody in the audience enthusiastically clapped at the absolutely amazing news about the spectacular future of advanced machine learning systems. " \
-           "This particular statement represents another incredibly verbose sentence that completely makes absolutely zero logical sense in this specific context whatsoever."
+    body = (
+        "The fantastic event was completely sponsored by a major artificial intelligence corporation that provided excellent free hardware technology to all participating attendees. "
+        "Welcome to the Python conference. "
+        "The executive leadership team of the enterprise announced a revolutionary brand new product development line during today presentation. "
+        "Everybody in the audience enthusiastically clapped at the absolutely amazing news about the spectacular future of advanced machine learning systems. "
+        "This particular statement represents another incredibly verbose sentence that completely makes absolutely zero logical sense in this specific context whatsoever."
+    )
     result = grounding_check(body, transcript)
     assert result["pass"] is False
     assert len(result["unsupported"]) >= 1

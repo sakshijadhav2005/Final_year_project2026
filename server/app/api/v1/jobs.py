@@ -61,7 +61,9 @@ async def get_transcript(
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> TranscriptPublic:
     await _load_job(db, user, job_id)
-    row = (await db.execute(select(Transcript).where(Transcript.job_id == job_id))).scalar_one_or_none()
+    row = (
+        await db.execute(select(Transcript).where(Transcript.job_id == job_id))
+    ).scalar_one_or_none()
     if row is None:
         raise http_error(status.HTTP_404_NOT_FOUND, "Transcript not ready", "not_found")
     return TranscriptPublic(
@@ -101,9 +103,15 @@ async def regenerate_job(
     body: RegenerRequest | None = None,
 ) -> Job:
     job = await _load_job(db, user, job_id)
-    transcript = (await db.execute(select(Transcript).where(Transcript.job_id == job_id))).scalar_one_or_none()
+    transcript = (
+        await db.execute(select(Transcript).where(Transcript.job_id == job_id))
+    ).scalar_one_or_none()
     if transcript is None:
-        raise http_error(status.HTTP_400_BAD_REQUEST, "Transcript is not available to regenerate", "no_transcript")
+        raise http_error(
+            status.HTTP_400_BAD_REQUEST,
+            "Transcript is not available to regenerate",
+            "no_transcript",
+        )
     payload = body or RegenerRequest()
     if payload.requested_types:
         job.requested_types = payload.requested_types
@@ -133,7 +141,9 @@ async def job_events(
             if await request.is_disconnected():
                 break
             async with SessionLocal() as session:
-                row = (await session.execute(select(Job).where(Job.id == job_id))).scalar_one_or_none()
+                row = (
+                    await session.execute(select(Job).where(Job.id == job_id))
+                ).scalar_one_or_none()
             if row is None:
                 break
             payload = {
@@ -147,7 +157,9 @@ async def job_events(
                 break
             await asyncio.sleep(1)
 
-    return StreamingResponse(stream(), media_type="text/event-stream", headers={"Cache-Control": "no-cache"})
+    return StreamingResponse(
+        stream(), media_type="text/event-stream", headers={"Cache-Control": "no-cache"}
+    )
 
 
 @router.delete("/{job_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -157,6 +169,7 @@ async def delete_job(
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> None:
     from sqlalchemy import delete
+
     from app.models.content import ContentPiece
     from app.models.job import AgentOutput, Transcript
     from app.models.recording import Recording
