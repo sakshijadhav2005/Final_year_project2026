@@ -231,7 +231,10 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
         initial = {
             "job_id": str(job.id),
             "user_id": str(job.user_id),
+            "recording_id": str(recording.id),
             "transcript_text": transcript_row.full_text,
+            "transcript_segments": transcript_row.segments or [],
+            "scenes": getattr(transcript_row, "scenes", None) or [],
             "avg_confidence": transcript_row.avg_confidence,
             "quality": quality_dict,
             "requested_types": job.requested_types or [],
@@ -253,7 +256,17 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                         final_state.update(update)
                     if node_name in progress:
                         progress[node_name] = "complete"
+                    if node_name == "parallel_analysis":
+                        for k in (
+                            "topic_extraction",
+                            "highlight_detection",
+                            "speaker_analysis",
+                            "sentiment_analysis",
+                        ):
+                            if k in progress:
+                                progress[k] = "complete"
                     next_status = {
+                        "parallel_analysis": "analyzing",
                         "topic_extraction": "analyzing",
                         "highlight_detection": "analyzing",
                         "speaker_analysis": "analyzing",
@@ -283,7 +296,13 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                             "speaker_analysis",
                             "sentiment_analysis",
                         ],
-                        "quality_check": ["topic_extraction"],
+                        "quality_check": [
+                            "topic_extraction",
+                            "highlight_detection",
+                            "speaker_analysis",
+                            "sentiment_analysis",
+                        ],
+                        "parallel_analysis": ["content_planner"],
                         "content_planner": ["rag_retrieve"],
                         "rag_retrieve": ["generator"],
                         "generator": ["guardrail"],
@@ -322,6 +341,7 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             ("highlights", final_state.get("highlights")),
             ("speakers", final_state.get("speakers")),
             ("sentiment", final_state.get("sentiment")),
+            ("combined_analysis", final_state.get("combined_analysis")),
             ("brief", final_state.get("brief")),
             ("guardrail", final_state.get("guardrail")),
         ):
