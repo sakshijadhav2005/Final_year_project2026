@@ -6,6 +6,7 @@ import { GoldenShell } from "@/layouts/GoldenShell";
 import { getEvent, listCommunityContent, listJobs, getTranscript, type ContentPublic } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { EventChatWidget } from "@/components/chat/EventChatWidget";
+import { getEventCity, getCityBadge } from "@/lib/eventLocation";
 
 export function EventDetailPage() {
   const { eventId } = useParams<{ eventId: string }>();
@@ -48,6 +49,9 @@ export function EventDetailPage() {
 
   const event = eventQuery.data;
   const posts: ContentPublic[] = contentQuery.data || [];
+
+  const detectedCity = event ? getEventCity(event) : null;
+  const cityBadge = detectedCity ? getCityBadge(detectedCity) : null;
 
   const filteredPosts = selectedType === "all" ? posts : posts.filter((p) => p.type === selectedType);
 
@@ -111,6 +115,12 @@ export function EventDetailPage() {
                   <span>🎪</span>
                   <span className="capitalize">{event?.type || "Event"}</span>
                 </span>
+                {cityBadge && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold dark:text-gold-soft">
+                    <span>{cityBadge.icon}</span>
+                    <span>{cityBadge.label}</span>
+                  </span>
+                )}
                 <span className="text-xs text-ink-light/60 dark:text-ink-dim">
                   📅 {event?.date ? new Date(event.date).toLocaleDateString(undefined, { dateStyle: "full" }) : "Scheduled Date"}
                 </span>

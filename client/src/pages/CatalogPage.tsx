@@ -7,6 +7,7 @@ import { CatalogNav } from "@/components/dashboard/CatalogNav";
 import { EventCard } from "@/components/dashboard/EventCard";
 import { listEvents, createEvent, type EventType } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
+import { getEventCity } from "@/lib/eventLocation";
 
 export function CatalogPage() {
   const { type } = useParams<{ type: string }>();
@@ -15,6 +16,7 @@ export function CatalogPage() {
   const queryClient = useQueryClient();
 
   const [search, setSearch] = useState("");
+  const [locationFilter, setLocationFilter] = useState<"all" | "Pune">("all");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
@@ -50,12 +52,21 @@ export function CatalogPage() {
     },
   });
 
+  const puneEventsCount = events.filter((e) => getEventCity(e) === "Pune").length;
+
   const filteredEvents = events.filter((e) => {
     const matchesSearch =
       e.name.toLowerCase().includes(search.toLowerCase()) ||
       (e.topic && e.topic.toLowerCase().includes(search.toLowerCase())) ||
       (e.organizer_name && e.organizer_name.toLowerCase().includes(search.toLowerCase()));
-    return matchesSearch;
+
+    if (!matchesSearch) return false;
+
+    if (locationFilter === "Pune") {
+      return getEventCity(e) === "Pune";
+    }
+
+    return true;
   });
 
   const isOrganizer = user?.role === "event_organizer" || user?.role === "admin";
@@ -113,6 +124,58 @@ export function CatalogPage() {
           <CatalogNav />
         </section>
 
+        {/* Discover by Location Toolbar */}
+        <div className="rounded-card border border-black/10 bg-surface-light p-21 shadow-sm dark:border-white/10 dark:bg-surface-dark dark:shadow-none">
+          <div className="flex flex-col gap-13 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="flex items-center gap-8">
+                <span className="text-sm">📍</span>
+                <h3 className="font-display text-sm font-semibold text-ink-light dark:text-ink-dark">
+                  Discover by Location
+                </h3>
+                <span className="rounded-full border border-gold/30 bg-gold/10 px-8 py-2 text-[10px] font-semibold text-gold dark:text-gold-soft">
+                  Pune Focus
+                </span>
+              </div>
+              <p className="mt-4 text-xs text-ink-light/60 dark:text-ink-dim">
+                Explore events around Pune and beyond.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-8">
+              <button
+                type="button"
+                onClick={() => setLocationFilter("all")}
+                className={`inline-flex items-center gap-1.5 rounded-full px-21 py-8 text-xs font-semibold transition-all ${
+                  locationFilter === "all"
+                    ? "border border-gold/40 bg-gold/20 text-gold dark:text-gold-soft shadow-sm"
+                    : "border border-black/10 dark:border-white/10 bg-surface-light/50 dark:bg-white/[0.02] text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark"
+                }`}
+              >
+                <span>🌐 All Locations</span>
+                <span className="rounded-full bg-black/5 dark:bg-white/10 px-6 py-1 text-[10px]">
+                  {events.length}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setLocationFilter("Pune")}
+                className={`inline-flex items-center gap-1.5 rounded-full px-21 py-8 text-xs font-semibold transition-all ${
+                  locationFilter === "Pune"
+                    ? "border border-teal/40 bg-teal/20 text-teal shadow-sm ring-1 ring-teal/30"
+                    : "border border-gold/40 bg-gold/10 text-gold dark:text-gold-soft hover:bg-gold/20"
+                }`}
+              >
+                <span>📍 Pune</span>
+                <span className="rounded-full bg-black/5 dark:bg-white/10 px-6 py-1 text-[10px]">
+                  {puneEventsCount}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Search & Stats Bar */}
         <div className="flex flex-col gap-13 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative flex-1 max-w-md">
@@ -164,8 +227,19 @@ export function CatalogPage() {
             <p className="mt-4 text-xs text-ink-light/60 dark:text-ink-dim max-w-md mx-auto">
               {search
                 ? `No events matching "${search}". Try adjusting your keywords.`
+                : locationFilter === "Pune"
+                ? "No Pune events currently found. Switch to 'All Locations' or check back soon."
                 : "No events have been scheduled under this category yet."}
             </p>
+            {locationFilter === "Pune" && (
+              <button
+                type="button"
+                onClick={() => setLocationFilter("all")}
+                className="mt-13 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-21 py-8 text-xs font-semibold text-gold hover:bg-gold/20 dark:text-gold-soft transition-all"
+              >
+                <span>View All Locations</span>
+              </button>
+            )}
             {isOrganizer && (
               <button
                 type="button"
