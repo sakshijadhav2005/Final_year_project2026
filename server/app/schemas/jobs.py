@@ -20,6 +20,16 @@ class JobPublic(ORMModel):
     finished_at: datetime | None = None
 
 
+class UploadResponse(JobPublic):
+    recording_id: UUID
+    filename: str
+    content_type: str
+    size_bytes: int
+    sha256: str
+    storage_backend: str
+    storage_uri: str
+
+
 class TranscriptPublic(BaseModel):
     full_text: str
     language: str

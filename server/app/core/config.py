@@ -42,13 +42,18 @@ class Settings(BaseSettings):
     rag_enabled: bool = True
 
     max_upload_mb: int = 500
+    max_upload_size_mb: int = 0
     max_duration_sec: int = 10800
     media_retention_hours: int = 72
     clamav_enabled: bool = False
     media_root: str = str(SERVER_DIR / "data" / "media")
+    local_storage_path: str = ""
+    upload_chunk_size: int = 5 * 1024 * 1024  # 5 MB chunks for streaming uploads
+    media_storage_prefix: str = "media"
+    storage_fallback_to_local: bool = True
 
-    # Cloud Storage (Cloudflare R2 / S3 / MinIO)
-    storage_backend: Literal["local", "r2", "s3"] = "local"
+    # Cloud Storage (Cloudflare R2 / AWS S3 / MinIO)
+    storage_backend: str = "local"
     r2_account_id: str = ""
     r2_access_key_id: str = ""
     r2_secret_access_key: str = ""
@@ -58,6 +63,7 @@ class Settings(BaseSettings):
     s3_endpoint_url: str = ""
     s3_access_key_id: str = ""
     s3_secret_access_key: str = ""
+    s3_bucket: str = ""
     s3_bucket_name: str = "eventai-recordings"
     s3_region: str = "auto"
 
@@ -95,6 +101,22 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.eventai_env == "production"
+
+    @property
+    def resolved_s3_bucket(self) -> str:
+        return self.s3_bucket or self.s3_bucket_name
+
+    @property
+    def resolved_media_root(self) -> str:
+        return self.local_storage_path or self.media_root
+
+    @property
+    def effective_max_upload_mb(self) -> int:
+        return self.max_upload_size_mb if self.max_upload_size_mb > 0 else self.max_upload_mb
+
+    @property
+    def max_upload_bytes(self) -> int:
+        return self.effective_max_upload_mb * 1024 * 1024
 
     @property
     def is_sqlite(self) -> bool:

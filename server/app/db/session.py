@@ -51,26 +51,32 @@ async def init_db() -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         if settings.is_mysql:
-            for col, col_type in [
-                ("event_id", "CHAR(32) NULL"),
-                ("user_id", "CHAR(32) NULL"),
-                ("author_name", "VARCHAR(255) NULL"),
+            for table, col, col_type in [
+                ("content_pieces", "event_id", "CHAR(32) NULL"),
+                ("content_pieces", "user_id", "CHAR(32) NULL"),
+                ("content_pieces", "author_name", "VARCHAR(255) NULL"),
+                ("recordings", "event_id", "CHAR(32) NULL"),
+                ("recordings", "storage_backend", "VARCHAR(32) NULL"),
+                ("recordings", "sha256", "VARCHAR(64) NULL"),
             ]:
                 try:
                     await conn.execute(
-                        text(f"ALTER TABLE content_pieces ADD COLUMN {col} {col_type}")
+                        text(f"ALTER TABLE {table} ADD COLUMN {col} {col_type}")
                     )
                 except Exception:
                     pass
         elif settings.is_sqlite:
-            for col, col_type in [
-                ("event_id", "TEXT NULL"),
-                ("user_id", "TEXT NULL"),
-                ("author_name", "TEXT NULL"),
+            for table, col, col_type in [
+                ("content_pieces", "event_id", "TEXT NULL"),
+                ("content_pieces", "user_id", "TEXT NULL"),
+                ("content_pieces", "author_name", "TEXT NULL"),
+                ("recordings", "event_id", "TEXT NULL"),
+                ("recordings", "storage_backend", "TEXT NULL"),
+                ("recordings", "sha256", "TEXT NULL"),
             ]:
                 try:
                     await conn.execute(
-                        text(f"ALTER TABLE content_pieces ADD COLUMN {col} {col_type}")
+                        text(f"ALTER TABLE {table} ADD COLUMN {col} {col_type}")
                     )
                 except Exception:
                     pass

@@ -5,7 +5,6 @@ from app.main import app
 from fastapi.testclient import TestClient
 
 
-
 def get_auth_token(client: TestClient) -> str:
     email = f"test_{uuid.uuid4().hex[:8]}@example.com"
     client.post(
@@ -38,7 +37,9 @@ def test_get_nonexistent_job() -> None:
     with TestClient(app) as client:
         token = get_auth_token(client)
         fake_uuid = str(uuid.uuid4())
-        resp = client.get(f"/api/v1/jobs/{fake_uuid}", headers={"Authorization": f"Bearer {token}"})
+        resp = client.get(
+            f"/api/v1/jobs/{fake_uuid}", headers={"Authorization": f"Bearer {token}"}
+        )
         assert resp.status_code == 404
 
 
@@ -46,7 +47,7 @@ def test_sse_query_token_auth() -> None:
     with TestClient(app) as client:
         token = get_auth_token(client)
         fake_uuid = str(uuid.uuid4())
-        # Querying events with token query param should yield 404 for nonexistent job (authenticated), NOT 401 Unauthorized
+        # Querying events with token param returns 404 for nonexistent job (authenticated)
         resp = client.get(f"/api/v1/jobs/{fake_uuid}/events?token={token}")
         assert resp.status_code == 404
 
@@ -73,7 +74,13 @@ def test_delete_job() -> None:
                 data=data,
             )
             assert upload.status_code == 202
-            job_id = upload.json()["id"]
+            resp_data = upload.json()
+            job_id = resp_data["id"]
+            assert "recording_id" in resp_data
+            assert resp_data["filename"] == "session.txt"
+            assert resp_data["storage_backend"] == "local"
+            assert "sha256" in resp_data and len(resp_data["sha256"]) == 64
+            assert "storage_uri" in resp_data
 
             # Delete the job
             del_resp = client.delete(
@@ -86,3 +93,49 @@ def test_delete_job() -> None:
                 f"/api/v1/jobs/{job_id}", headers={"Authorization": f"Bearer {token}"}
             )
             assert get_resp.status_code == 404
+
+
+def test_upload_missing_consent() -> None:
+    with TestClient(app) as client:
+        token = get_auth_token(client)
+        files = {"file": ("audio.wav", b"sample content", "audio/wav")}
+        data = {"consent_confirmed": "false"}
+        resp = client.post(
+            "/api/v1/uploads",
+            headers={"Authorization": f"Bearer {token}"},
+            files=files,
+            data=data,
+        )
+        assert resp.status_code == 400
+        assert "consent_required" in resp.text
+
+
+def test_upload_unsupported_extension() -> None:
+    with TestClient(app) as client:
+        token = get_auth_token(client)
+        files = {"file": ("bad_program.exe", b"binary content", "application/x-msdownload")}
+        data = {"consent_confirmed": "true"}
+        resp = client.post(
+            "/api/v1/uploads",
+            headers={"Authorization": f"Bearer {token}"},
+            files=files,
+            data=data,
+        )
+        assert resp.status_code == 400
+        assert "not allowed" in resp.text
+
+
+def test_upload_empty_file() -> None:
+    with TestClient(app) as client:
+        token = get_auth_token(client)
+        files = {"file": ("empty.wav", b"", "audio/wav")}
+        data = {"consent_confirmed": "true"}
+        resp = client.post(
+            "/api/v1/uploads",
+            headers={"Authorization": f"Bearer {token}"},
+            files=files,
+            data=data,
+        )
+        assert resp.status_code == 400
+        assert "Empty file" in resp.text
+
