@@ -411,6 +411,19 @@ async def purge_expired_media() -> int:
             age_hours = (now - created).total_seconds() / 3600
             if age_hours < cutoff_hours:
                 continue
+
+            # Ensure we do not delete media for active/in-progress jobs
+            active_job = (
+                await db.execute(
+                    select(Job.id).where(
+                        Job.recording_id == recording.id,
+                        Job.status.not_in(TERMINAL),
+                    )
+                )
+            ).scalar_one_or_none()
+            if active_job is not None:
+                continue
+
             from app.services.storage import get_storage
 
             if recording.storage_uri:

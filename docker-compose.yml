@@ -37,6 +37,8 @@ services:
       DATABASE_URL: postgresql+asyncpg://eventai:eventai@postgres:5432/eventai
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      USE_CELERY: "true"
       CORS_ORIGINS: http://localhost:5173,http://localhost:8080
     ports:
       - "8000:8000"
@@ -58,6 +60,8 @@ services:
       DATABASE_URL: postgresql+asyncpg://eventai:eventai@postgres:5432/eventai
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      USE_CELERY: "true"
     command: celery -A app.workers.celery_app.celery_app worker --loglevel=INFO
     volumes:
       - eventai_media:/data/media

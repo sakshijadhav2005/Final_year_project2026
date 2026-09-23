@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     database_url: str = f"sqlite+aiosqlite:///{(SERVER_DIR / 'data' / 'eventai.db').as_posix()}"
     redis_url: str = "redis://localhost:6379/0"
     celery_broker_url: str = "redis://localhost:6379/1"
+    celery_result_backend: str = "redis://localhost:6379/2"
 
     videodb_api_key: str = ""
     videodb_collection: str = ""
