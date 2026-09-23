@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
+import { GoldenShell } from "@/layouts/GoldenShell";
 import { CatalogNav } from "@/components/dashboard/CatalogNav";
 import { CreatePostForm } from "@/components/dashboard/CreatePostForm";
 import { listCommunityContent, listEvents } from "@/lib/api";
@@ -47,35 +48,35 @@ export function CommunityPage() {
   const isOrganizer = user?.role === "event_organizer" || user?.role === "admin";
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
-      <div className="mx-auto max-w-7xl">
+    <GoldenShell>
+      <div className="space-y-34">
         {/* Navigation & Header */}
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-13 sm:flex-row sm:items-center sm:justify-between border-b border-black/10 dark:border-white/10 pb-21">
           <div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-13">
               <Link
                 to={isOrganizer ? "/organizer/dashboard" : "/user/dashboard"}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+                className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-surface-light/80 dark:bg-white/[0.03] px-13 py-4 text-xs font-medium text-gold hover:border-gold transition-all dark:text-gold-soft"
               >
                 ← Back to Dashboard
               </Link>
-              <span className="rounded-md bg-emerald-500/20 px-2 py-0.5 text-[11px] font-bold text-emerald-300 border border-emerald-500/30">
+              <span className="rounded-full border border-teal/30 bg-teal/10 px-8 py-2 text-[11px] font-semibold text-teal">
                 Community Hub
               </span>
             </div>
-            <h1 className="mt-2 text-2xl font-black tracking-tight text-white md:text-3xl">
+            <h1 className="mt-8 font-display text-2xl sm:text-3xl font-semibold tracking-tight text-ink-light dark:text-ink-dark">
               🌐 EventAI Community Feed
             </h1>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="mt-4 text-xs sm:text-sm text-ink-light/60 dark:text-ink-dim">
               Read session blogs, newsletters, keynotes, and member discussions from events across the platform.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-13">
             <button
               type="button"
               onClick={() => setShowCreatePost((prev) => !prev)}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-105 hover:from-amber-400 hover:to-orange-500"
+              className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/30 transition-all"
             >
               <span>{showCreatePost ? "✕ Close Form" : "✍️ Create Post"}</span>
             </button>
@@ -83,30 +84,32 @@ export function CommunityPage() {
         </div>
 
         {/* Catalog Navigation */}
-        <CatalogNav />
+        <section>
+          <CatalogNav />
+        </section>
 
         {/* Create Post Accordion/Card */}
         {showCreatePost && (
-          <div className="mb-8">
+          <section className="rounded-card border border-gold/30 bg-surface-light p-21 shadow-sm dark:border-gold/20 dark:bg-surface-dark">
             <CreatePostForm
               events={events}
               defaultEventId={eventIdFilter}
               onSuccess={() => setShowCreatePost(false)}
               onCancel={() => setShowCreatePost(false)}
             />
-          </div>
+          </section>
         )}
 
         {/* Event Filter Banner (if filtered by event) */}
         {selectedEvent && (
-          <div className="mb-6 flex items-center justify-between rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
-            <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between rounded-card border border-gold/30 bg-gold/10 p-13">
+            <div className="flex items-center gap-13">
               <span className="text-2xl">🎯</span>
               <div>
-                <span className="text-xs font-semibold text-amber-300 uppercase tracking-wider">
+                <span className="text-[10px] font-semibold text-gold dark:text-gold-soft uppercase tracking-wider">
                   Filtering by Event
                 </span>
-                <h4 className="text-sm font-bold text-white">{selectedEvent.name}</h4>
+                <h4 className="font-display text-sm font-semibold text-ink-light dark:text-ink-dark">{selectedEvent.name}</h4>
               </div>
             </div>
             <button
@@ -115,7 +118,7 @@ export function CommunityPage() {
                 searchParams.delete("event_id");
                 setSearchParams(searchParams);
               }}
-              className="rounded-lg bg-white/10 px-3 py-1 text-xs font-semibold text-slate-200 hover:bg-white/20"
+              className="rounded-full border border-black/10 dark:border-white/10 bg-surface-light/80 dark:bg-white/[0.05] px-13 py-4 text-xs font-semibold text-ink-light dark:text-ink-dark hover:border-gold transition-colors"
             >
               Clear Filter ✕
             </button>
@@ -123,9 +126,9 @@ export function CommunityPage() {
         )}
 
         {/* Feed Controls: Search & Category Tabs */}
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-13 sm:flex-row sm:items-center sm:justify-between">
           {/* Tabs */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-8">
             {[
               { id: "all", label: "All Posts", icon: "✨" },
               { id: "discussion", label: "Discussions", icon: "💬" },
@@ -138,10 +141,10 @@ export function CommunityPage() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-all ${
+                className={`inline-flex items-center gap-1.5 rounded-full px-13 py-4 text-xs font-semibold transition-all ${
                   activeTab === tab.id
-                    ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                    : "border border-white/5 bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white"
+                    ? "border border-gold/40 bg-gold/20 text-gold dark:text-gold-soft shadow-sm"
+                    : "border border-black/10 dark:border-white/10 bg-surface-light/50 dark:bg-white/[0.02] text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark"
                 }`}
               >
                 <span>{tab.icon}</span>
@@ -152,24 +155,26 @@ export function CommunityPage() {
 
           {/* Search bar */}
           <div className="relative w-full sm:w-64">
+            <span className="absolute inset-y-0 left-3 flex items-center text-xs text-ink-light/40 dark:text-ink-dim">
+              🔍
+            </span>
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search feed..."
-              className="w-full rounded-xl border border-white/10 bg-slate-900/60 pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+              className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] pl-34 pr-13 py-4 text-xs text-ink-light dark:text-ink-dark placeholder-ink-light/40 dark:placeholder-ink-dim/50 focus:border-gold focus:outline-none"
             />
-            <span className="absolute left-2.5 top-2 text-xs text-slate-400">🔍</span>
           </div>
         </div>
 
         {/* Loading State */}
         {isLoading && (
-          <div className="space-y-4">
+          <div className="space-y-13">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-40 animate-pulse rounded-2xl border border-white/5 bg-slate-900/40 p-6"
+                className="h-40 animate-pulse rounded-card border border-black/5 dark:border-white/5 bg-black/[0.03] dark:bg-white/[0.03] p-21"
               />
             ))}
           </div>
@@ -177,23 +182,25 @@ export function CommunityPage() {
 
         {/* Error State */}
         {error && (
-          <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-center text-sm text-rose-300">
+          <div className="rounded-card border border-danger/30 bg-danger/20 p-21 text-center text-xs font-medium text-danger">
             Failed to load community feed. {(error as Error).message}
           </div>
         )}
 
         {/* Empty State */}
         {!isLoading && !error && filteredPosts.length === 0 && (
-          <div className="rounded-3xl border border-dashed border-white/10 bg-slate-900/30 p-12 text-center">
+          <div className="rounded-card border border-dashed border-black/15 dark:border-white/15 bg-surface-light/40 dark:bg-surface-dark/40 p-34 text-center">
             <span className="text-4xl">💭</span>
-            <h3 className="mt-3 text-lg font-bold text-white">No posts to display</h3>
-            <p className="mt-1 text-sm text-slate-400 max-w-md mx-auto">
+            <h3 className="mt-13 font-display text-lg font-semibold text-ink-light dark:text-ink-dark">
+              No posts to display
+            </h3>
+            <p className="mt-4 text-xs text-ink-light/60 dark:text-ink-dim max-w-md mx-auto">
               Be the first to share your notes or spark a conversation with attendees!
             </p>
             <button
               type="button"
               onClick={() => setShowCreatePost(true)}
-              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-orange-500/20"
+              className="mt-21 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/30 transition-all"
             >
               ✍️ Write a Post
             </button>
@@ -202,7 +209,7 @@ export function CommunityPage() {
 
         {/* Feed Posts List */}
         {!isLoading && !error && filteredPosts.length > 0 && (
-          <div className="space-y-5">
+          <div className="space-y-21">
             {filteredPosts.map((post) => {
               const matchedEvent = events.find((e) => e.id === post.event_id);
               const author = post.author_name || "Community Member";
@@ -210,21 +217,21 @@ export function CommunityPage() {
               return (
                 <div
                   key={post.id}
-                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-6 shadow-xl backdrop-blur-xl transition-all hover:border-white/20 hover:shadow-2xl"
+                  className="group rounded-card border border-black/10 bg-surface-light p-21 shadow-sm dark:border-white/10 dark:bg-surface-dark dark:shadow-none hover:border-gold/30 transition-all"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-500/30 to-purple-500/30 text-sm font-bold text-white shadow-inner">
+                  <div className="flex items-start justify-between gap-13">
+                    <div className="flex items-center gap-13">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-display text-sm font-bold text-gold dark:text-gold-soft shadow-inner">
                         {author[0].toUpperCase()}
                       </div>
                       <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-bold text-white">{author}</span>
-                          <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-slate-300">
+                        <div className="flex items-center gap-8">
+                          <span className="text-sm font-semibold text-ink-light dark:text-ink-dark">{author}</span>
+                          <span className="rounded-full border border-gold/20 bg-gold/10 px-8 py-2 text-[10px] font-semibold text-gold dark:text-gold-soft">
                             {post.type.replace("_", " ").toUpperCase()}
                           </span>
                         </div>
-                        <span className="text-xs text-slate-400">
+                        <span className="text-xs text-ink-light/50 dark:text-ink-dim">
                           {post.created_at ? new Date(post.created_at).toLocaleString() : "Recently shared"}
                         </span>
                       </div>
@@ -233,7 +240,7 @@ export function CommunityPage() {
                     {matchedEvent && (
                       <Link
                         to={`/community?event_id=${matchedEvent.id}`}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-xs font-semibold text-amber-300 hover:bg-amber-500/20"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold dark:text-gold-soft hover:bg-gold/20 transition-all"
                       >
                         <span>🎪 {matchedEvent.name}</span>
                       </Link>
@@ -241,17 +248,17 @@ export function CommunityPage() {
                   </div>
 
                   {post.title && (
-                    <h3 className="mt-4 text-lg font-bold text-white group-hover:text-amber-300 transition-colors">
+                    <h3 className="mt-13 font-display text-base sm:text-lg font-semibold text-ink-light dark:text-ink-dark group-hover:text-gold transition-colors">
                       {post.title}
                     </h3>
                   )}
 
-                  <div className="mt-3 text-sm text-slate-300 whitespace-pre-wrap leading-relaxed">
+                  <div className="mt-8 text-xs sm:text-sm text-ink-light/80 dark:text-ink-dim whitespace-pre-wrap leading-relaxed">
                     {post.body}
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-3 text-xs text-slate-400">
-                    <div className="flex items-center gap-4">
+                  <div className="mt-21 flex items-center justify-between border-t border-black/5 dark:border-white/5 pt-13 text-xs text-ink-light/60 dark:text-ink-dim">
+                    <div className="flex items-center gap-13">
                       <button
                         type="button"
                         onClick={(e) => {
@@ -265,14 +272,14 @@ export function CommunityPage() {
                       </button>
                       <button
                         type="button"
-                        className="flex items-center gap-1 hover:text-amber-300"
+                        className="flex items-center gap-1 hover:text-gold dark:hover:text-gold-soft transition-colors"
                       >
                         <span>💡</span> Insightful
                       </button>
                     </div>
 
-                    <span className="text-[11px] text-slate-500">
-                      Status: <strong className="text-emerald-400 font-medium">{post.status}</strong>
+                    <span className="text-[11px] text-ink-light/50 dark:text-ink-dim">
+                      Status: <strong className="text-teal font-medium">{post.status}</strong>
                     </span>
                   </div>
                 </div>
@@ -281,6 +288,6 @@ export function CommunityPage() {
           </div>
         )}
       </div>
-    </div>
+    </GoldenShell>
   );
 }

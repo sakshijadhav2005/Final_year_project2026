@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { GoldenShell } from "@/layouts/GoldenShell";
 import { CatalogNav } from "@/components/dashboard/CatalogNav";
 import { EventCard } from "@/components/dashboard/EventCard";
 import { listEvents, createEvent, type EventType } from "@/lib/api";
@@ -60,37 +61,37 @@ export function CatalogPage() {
   const isOrganizer = user?.role === "event_organizer" || user?.role === "admin";
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
-      <div className="mx-auto max-w-7xl">
+    <GoldenShell>
+      <div className="space-y-34">
         {/* Header navigation bar */}
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-13 sm:flex-row sm:items-center sm:justify-between border-b border-black/10 dark:border-white/10 pb-21">
           <div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-13">
               <Link
                 to={isOrganizer ? "/organizer/dashboard" : "/user/dashboard"}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+                className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-surface-light/80 dark:bg-white/[0.03] px-13 py-4 text-xs font-medium text-gold hover:border-gold transition-all dark:text-gold-soft"
               >
                 ← Back to Dashboard
               </Link>
-              <span className="rounded-md bg-amber-500/20 px-2 py-0.5 text-[11px] font-bold text-amber-300 border border-amber-500/30">
+              <span className="rounded-full border border-gold/30 bg-gold/10 px-8 py-2 text-[11px] font-semibold text-gold dark:text-gold-soft">
                 Catalog Mode
               </span>
             </div>
-            <h1 className="mt-2 text-2xl font-black tracking-tight text-white md:text-3xl">
+            <h1 className="mt-8 font-display text-2xl sm:text-3xl font-semibold tracking-tight text-ink-light dark:text-ink-dark">
               {type === "meetup" && "👥 Community Meetups"}
               {type === "event" && "🎪 Conferences & Keynote Events"}
               {type === "speech" && "🎤 Speeches, Panels & Tech Talks"}
               {(!type || type === "all") && "🌐 All Event Catalogs"}
             </h1>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="mt-4 text-xs sm:text-sm text-ink-light/60 dark:text-ink-dim">
               Browse organized sessions and access AI-generated blogs, newsletters, and social summaries.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-13">
             <Link
               to="/community"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-slate-200 transition-all hover:border-amber-500/30 hover:bg-amber-500/10 hover:text-amber-300"
+              className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-surface-light/80 dark:bg-white/[0.03] px-21 py-8 text-xs font-medium text-gold hover:border-gold transition-all dark:text-gold-soft"
             >
               <span>💬 Community Feed</span>
             </Link>
@@ -99,7 +100,7 @@ export function CatalogPage() {
               <button
                 type="button"
                 onClick={() => setShowCreateModal(true)}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-105 hover:from-amber-400 hover:to-orange-500"
+                className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/30 transition-all"
               >
                 <span>➕ Create New Event</span>
               </button>
@@ -108,12 +109,14 @@ export function CatalogPage() {
         </div>
 
         {/* Catalog Navigation Tabs */}
-        <CatalogNav />
+        <section>
+          <CatalogNav />
+        </section>
 
         {/* Search & Stats Bar */}
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-13 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative flex-1 max-w-md">
-            <span className="absolute inset-y-0 left-3 flex items-center text-slate-400 text-sm">
+            <span className="absolute inset-y-0 left-3 flex items-center text-xs text-ink-light/40 dark:text-ink-dim">
               🔍
             </span>
             <input
@@ -121,24 +124,24 @@ export function CatalogPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by event name, topic, or speaker..."
-              className="w-full rounded-xl border border-white/10 bg-slate-900/60 pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20 backdrop-blur-xl"
+              className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] pl-34 pr-13 py-8 text-xs text-ink-light dark:text-ink-dark placeholder-ink-light/40 dark:placeholder-ink-dim/50 focus:border-gold focus:outline-none backdrop-blur-md"
             />
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-slate-400">
-            <span>Showing <strong className="text-white">{filteredEvents.length}</strong> events</span>
+          <div className="flex items-center gap-8 text-xs text-ink-light/60 dark:text-ink-dim">
+            <span>Showing <strong className="text-ink-light dark:text-ink-dark">{filteredEvents.length}</strong> events</span>
             <span>•</span>
-            <span className="text-emerald-400">● Live Catalogs</span>
+            <span className="text-teal font-medium">● Live Catalogs</span>
           </div>
         </div>
 
         {/* Loading State */}
         {isLoading && (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-21 sm:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div
                 key={i}
-                className="h-56 animate-pulse rounded-2xl border border-white/5 bg-slate-900/40 p-6"
+                className="h-56 animate-pulse rounded-card border border-black/5 dark:border-white/5 bg-black/[0.03] dark:bg-white/[0.03] p-21"
               />
             ))}
           </div>
@@ -146,17 +149,19 @@ export function CatalogPage() {
 
         {/* Error State */}
         {error && (
-          <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-center text-sm text-rose-300">
+          <div className="rounded-card border border-danger/30 bg-danger/20 p-21 text-center text-xs font-medium text-danger">
             Failed to load events. {(error as Error).message}
           </div>
         )}
 
         {/* Empty State */}
         {!isLoading && !error && filteredEvents.length === 0 && (
-          <div className="rounded-3xl border border-dashed border-white/10 bg-slate-900/30 p-12 text-center">
+          <div className="rounded-card border border-dashed border-black/15 dark:border-white/15 bg-surface-light/40 dark:bg-surface-dark/40 p-34 text-center">
             <span className="text-4xl">📂</span>
-            <h3 className="mt-3 text-lg font-bold text-white">No events found in this catalog</h3>
-            <p className="mt-1 text-sm text-slate-400 max-w-md mx-auto">
+            <h3 className="mt-13 font-display text-lg font-semibold text-ink-light dark:text-ink-dark">
+              No events found in this catalog
+            </h3>
+            <p className="mt-4 text-xs text-ink-light/60 dark:text-ink-dim max-w-md mx-auto">
               {search
                 ? `No events matching "${search}". Try adjusting your keywords.`
                 : "No events have been scheduled under this category yet."}
@@ -165,7 +170,7 @@ export function CatalogPage() {
               <button
                 type="button"
                 onClick={() => setShowCreateModal(true)}
-                className="mt-5 inline-flex items-center gap-2 rounded-xl bg-amber-500/20 px-4 py-2 text-xs font-semibold text-amber-300 transition-all hover:bg-amber-500/30"
+                className="mt-21 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-21 py-8 text-xs font-semibold text-gold hover:bg-gold/20 dark:text-gold-soft transition-all"
               >
                 <span>➕ Create First Event</span>
               </button>
@@ -175,7 +180,7 @@ export function CatalogPage() {
 
         {/* Events Grid */}
         {!isLoading && !error && filteredEvents.length > 0 && (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-21 sm:grid-cols-2 lg:grid-cols-3">
             {filteredEvents.map((event) => (
               <EventCard key={event.id} event={event} />
             ))}
@@ -185,20 +190,22 @@ export function CatalogPage() {
         {/* Create Event Modal */}
         {showCreateModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-            <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <h3 className="text-lg font-bold text-white">Create New Event</h3>
+            <div className="w-full max-w-lg rounded-card border border-gold/30 bg-surface-light dark:bg-surface-dark p-21 shadow-2xl backdrop-blur-xl">
+              <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-13">
+                <h3 className="font-display text-lg font-semibold text-ink-light dark:text-ink-dark">
+                  Create New Event
+                </h3>
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="text-slate-400 hover:text-white"
+                  className="text-ink-light/50 hover:text-ink-light dark:text-ink-dim dark:hover:text-ink-dark transition-colors"
                 >
                   ✕
                 </button>
               </div>
 
               {createEventMutation.error && (
-                <div className="mt-4 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-300">
+                <div className="mt-13 rounded-card border border-danger/30 bg-danger/20 p-13 text-xs font-medium text-danger">
                   {(createEventMutation.error as Error).message}
                 </div>
               )}
@@ -208,38 +215,44 @@ export function CatalogPage() {
                   e.preventDefault();
                   createEventMutation.mutate();
                 }}
-                className="mt-4 space-y-4"
+                className="mt-21 space-y-13"
               >
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-300">Event Name</label>
+                  <label className="mb-4 block text-xs uppercase tracking-wider text-ink-light/60 dark:text-ink-dim">
+                    Event Name
+                  </label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g., Annual Tech Summit 2026"
                     required
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                    className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-13 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1 block text-xs font-semibold text-slate-300">Event Date</label>
+                    <label className="mb-4 block text-xs uppercase tracking-wider text-ink-light/60 dark:text-ink-dim">
+                      Event Date
+                    </label>
                     <input
                       type="date"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
                       required
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-amber-500/50 focus:outline-none"
+                      className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-xs font-semibold text-slate-300">Catalog Category</label>
+                    <label className="mb-4 block text-xs uppercase tracking-wider text-ink-light/60 dark:text-ink-dim">
+                      Catalog Category
+                    </label>
                     <select
                       value={selectedType}
                       onChange={(e) => setSelectedType(e.target.value as EventType)}
-                      className="w-full rounded-xl border border-white/10 bg-slate-800 px-3 py-2 text-sm text-slate-200 focus:border-amber-500/50 focus:outline-none"
+                      className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-surface-dark px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
                     >
                       <option value="meetup">👥 Meetup</option>
                       <option value="event">🎪 Conference / Event</option>
@@ -250,28 +263,30 @@ export function CatalogPage() {
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-300">Topic / Theme</label>
+                  <label className="mb-4 block text-xs uppercase tracking-wider text-ink-light/60 dark:text-ink-dim">
+                    Topic / Theme
+                  </label>
                   <input
                     type="text"
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     placeholder="e.g., Generative AI in Production"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                    className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
                   />
                 </div>
 
-                <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
+                <div className="flex justify-end gap-13 pt-13 border-t border-black/10 dark:border-white/10">
                   <button
                     type="button"
                     onClick={() => setShowCreateModal(false)}
-                    className="rounded-xl border border-white/10 px-4 py-2 text-xs font-medium text-slate-300 hover:bg-white/5"
+                    className="rounded-full border border-black/10 dark:border-white/10 px-21 py-8 text-xs font-medium text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={createEventMutation.isPending || !name.trim() || !date}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-5 py-2 text-xs font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-105 disabled:opacity-50"
+                    className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/30 disabled:opacity-50 transition-all"
                   >
                     {createEventMutation.isPending ? "Creating..." : "Save Event"}
                   </button>
@@ -281,6 +296,6 @@ export function CatalogPage() {
           </div>
         )}
       </div>
-    </div>
+    </GoldenShell>
   );
 }
