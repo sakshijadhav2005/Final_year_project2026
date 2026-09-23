@@ -286,3 +286,35 @@ async def test_purge_expired_media_protects_active_jobs(tmp_path: Path) -> None:
             await db.execute(select(Recording).where(Recording.id == rec_completed_id))
         ).scalar_one()
         assert rec_comp.storage_uri == ""
+
+
+def test_docker_compose_celery_beat_service() -> None:
+    """Verifies docker-compose.yml defines dedicated Celery Beat service for retention."""
+    import yaml
+
+    compose_file = Path(__file__).resolve().parents[2] / "docker-compose.yml"
+    assert compose_file.exists(), "docker-compose.yml must exist at repository root"
+
+    with open(compose_file, encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+
+    services = data.get("services", {})
+    assert "redis" in services
+    assert "worker" in services
+    assert "beat" in services
+
+    worker = services["worker"]
+    beat = services["beat"]
+
+    # Beat command must run celery beat
+    assert "beat" in beat.get("command", "")
+    assert beat["command"] == "celery -A app.workers.celery_app.celery_app beat --loglevel=INFO"
+
+    # Worker command must run worker without -B flag (since beat is dedicated service)
+    assert "-B" not in worker.get("command", "")
+    assert worker["command"] == "celery -A app.workers.celery_app.celery_app worker --loglevel=INFO"
+
+    # Beat must depend on healthy redis service
+    depends_on = beat.get("depends_on", {})
+    assert "redis" in depends_on
+    assert depends_on["redis"].get("condition") == "service_healthy"

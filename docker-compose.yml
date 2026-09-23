@@ -71,6 +71,23 @@ services:
       redis:
         condition: service_healthy
 
+  beat:
+    build:
+      context: ./server
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://eventai:eventai@postgres:5432/eventai
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      USE_CELERY: "true"
+    command: celery -A app.workers.celery_app.celery_app beat --loglevel=INFO
+    depends_on:
+      redis:
+        condition: service_healthy
+
   client:
     build:
       context: ./client
