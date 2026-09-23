@@ -32,6 +32,7 @@ class Settings(BaseSettings):
 
     videodb_api_key: str = ""
     videodb_collection: str = ""
+    videodb_index_scenes: bool = False
     stt_provider: str = "videodb"
     gemini_api_key: str = ""
     gemini_model_generate: str = "gemini-3.6-flash"

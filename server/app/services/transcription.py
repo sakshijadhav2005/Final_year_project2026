@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from app.providers.factory import get_stt_provider
-from app.providers.stt import TranscriptResult, TranscriptSegment
+from app.providers.stt import STTProvider, TranscriptResult, TranscriptSegment
 from app.services.resilience import stt_circuit, with_backoff
 
 LOW_CONFIDENCE = 0.55
@@ -32,15 +32,18 @@ def _from_plain_text(path: str) -> TranscriptResult:
     )
 
 
-async def transcribe_file(path: str) -> TranscriptResult:
+async def transcribe_file(
+    path: str,
+    provider: STTProvider | None = None,
+) -> TranscriptResult:
     suffix = Path(path).suffix.lower()
     if suffix in {".txt", ".md"}:
         return _from_plain_text(path)
 
-    provider = get_stt_provider()
+    active_provider = provider or get_stt_provider()
 
     async def _run(target: str) -> TranscriptResult:
-        return await with_backoff(lambda: provider.transcribe(target), circuit=stt_circuit)
+        return await with_backoff(lambda: active_provider.transcribe(target), circuit=stt_circuit)
 
     result = await _run(path)
     avg = result.avg_confidence

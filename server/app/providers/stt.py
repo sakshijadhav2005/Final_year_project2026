@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
@@ -19,6 +20,7 @@ class TranscriptResult:
     avg_confidence: float | None = None
     provider: str = "unknown"
     vendor_id: str | None = None
+    scenes: list[dict[str, Any]] = field(default_factory=list)
 
 
 class STTProvider(ABC):
