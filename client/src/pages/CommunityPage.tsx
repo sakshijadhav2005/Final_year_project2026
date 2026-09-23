@@ -5,19 +5,25 @@ import { useQuery } from "@tanstack/react-query";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { CatalogNav } from "@/components/dashboard/CatalogNav";
 import { CreatePostForm } from "@/components/dashboard/CreatePostForm";
-import { listCommunityContent, listEvents } from "@/lib/api";
+import { listCommunityContent, listEvents, type ContentPublic } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 
 export function CommunityPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const eventIdFilter = searchParams.get("event_id") || undefined;
+  const repurposeId = searchParams.get("repurpose") || undefined;
 
   const token = useAuthStore((s) => s.accessToken);
   const user = useAuthStore((s) => s.user);
 
   const [activeTab, setActiveTab] = useState<string>("all");
-  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [showCreatePost, setShowCreatePost] = useState(Boolean(repurposeId));
   const [searchTerm, setSearchTerm] = useState("");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const [prefillTitle, setPrefillTitle] = useState("");
+  const [prefillBody, setPrefillBody] = useState("");
+  const [prefillEventId, setPrefillEventId] = useState(eventIdFilter || "");
 
   const { data: events = [] } = useQuery({
     queryKey: ["events"],
@@ -32,6 +38,25 @@ export function CommunityPage() {
   });
 
   const selectedEvent = events.find((e) => e.id === eventIdFilter);
+  const selectedRepurposePost = posts.find((p) => p.id === repurposeId);
+
+  const handleCopy = async (text: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      // Graceful fallback
+    }
+  };
+
+  const handleStartRepurpose = (post: ContentPublic) => {
+    setPrefillTitle(post.title ? `Reflection on: ${post.title}` : `Reflection on ${post.type}`);
+    setPrefillBody(`"${post.body.slice(0, 200)}..."\n\nKey takeaways and reflection:\n`);
+    setPrefillEventId(post.event_id || eventIdFilter || "");
+    setShowCreatePost(true);
+    window.scrollTo({ top: 180, behavior: "smooth" });
+  };
 
   const filteredPosts = posts.filter((p) => {
     if (activeTab !== "all" && p.type !== activeTab) return false;
@@ -46,6 +71,17 @@ export function CommunityPage() {
   });
 
   const isOrganizer = user?.role === "event_organizer" || user?.role === "admin";
+
+  const TYPE_BADGES: Record<string, { label: string; icon: string; badgeClass: string }> = {
+    discussion: { label: "Discussion", icon: "💬", badgeClass: "bg-teal/15 text-teal border-teal/30" },
+    blog: { label: "Blog Article", icon: "📄", badgeClass: "bg-blue-500/15 text-blue-400 border-blue-500/30" },
+    linkedin: { label: "LinkedIn Post", icon: "💼", badgeClass: "bg-purple-500/15 text-purple-400 border-purple-500/30" },
+    newsletter: { label: "Newsletter", icon: "✉️", badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" },
+    summary: { label: "Summary", icon: "📊", badgeClass: "bg-gold/15 text-gold-soft border-gold/30" },
+    flyer: { label: "Flyer", icon: "📢", badgeClass: "bg-orange-500/15 text-orange-400 border-orange-500/30" },
+    question: { label: "Question", icon: "❓", badgeClass: "bg-amber-500/15 text-amber-300 border-amber-500/30" },
+    announcement: { label: "Announcement", icon: "📣", badgeClass: "bg-rose-500/15 text-rose-400 border-rose-500/30" },
+  };
 
   return (
     <GoldenShell>
@@ -68,7 +104,7 @@ export function CommunityPage() {
               🌐 EventAI Community Feed
             </h1>
             <p className="mt-4 text-xs sm:text-sm text-ink-light/60 dark:text-ink-dim">
-              Read session blogs, newsletters, keynotes, and member discussions from events across the platform.
+              Explore session blogs, keynotes, newsletters, and attendee takeaways across the platform.
             </p>
           </div>
 
@@ -76,9 +112,9 @@ export function CommunityPage() {
             <button
               type="button"
               onClick={() => setShowCreatePost((prev) => !prev)}
-              className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/30 transition-all"
+              className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/30 transition-all shadow-sm"
             >
-              <span>{showCreatePost ? "✕ Close Form" : "✍️ Create Post"}</span>
+              <span>{showCreatePost ? "✕ Close Form" : "✍️ Write Reflection"}</span>
             </button>
           </div>
         </div>
@@ -88,14 +124,54 @@ export function CommunityPage() {
           <CatalogNav />
         </section>
 
+        {/* Repurpose Notice Banner */}
+        {selectedRepurposePost && (
+          <div className="flex items-center justify-between rounded-card border border-gold/30 bg-gold/10 p-13 text-xs">
+            <div className="flex items-center gap-8 text-ink-light dark:text-ink-dark">
+              <span className="text-base">✍️</span>
+              <span>
+                Repurposing piece: <strong className="text-gold dark:text-gold-soft">"{selectedRepurposePost.title || selectedRepurposePost.type}"</strong> by {selectedRepurposePost.author_name || "Speaker"}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                searchParams.delete("repurpose");
+                setSearchParams(searchParams);
+              }}
+              className="text-xs text-ink-light/60 hover:text-ink-light dark:text-ink-dim dark:hover:text-ink-dark"
+            >
+              Dismiss ✕
+            </button>
+          </div>
+        )}
+
         {/* Create Post Accordion/Card */}
         {showCreatePost && (
-          <section className="rounded-card border border-gold/30 bg-surface-light p-21 shadow-sm dark:border-gold/20 dark:bg-surface-dark">
+          <section>
             <CreatePostForm
               events={events}
-              defaultEventId={eventIdFilter}
-              onSuccess={() => setShowCreatePost(false)}
-              onCancel={() => setShowCreatePost(false)}
+              defaultEventId={prefillEventId || eventIdFilter || ""}
+              defaultTitle={prefillTitle}
+              defaultBody={prefillBody}
+              onSuccess={() => {
+                setShowCreatePost(false);
+                setPrefillTitle("");
+                setPrefillBody("");
+                if (repurposeId) {
+                  searchParams.delete("repurpose");
+                  setSearchParams(searchParams);
+                }
+              }}
+              onCancel={() => {
+                setShowCreatePost(false);
+                setPrefillTitle("");
+                setPrefillBody("");
+                if (repurposeId) {
+                  searchParams.delete("repurpose");
+                  setSearchParams(searchParams);
+                }
+              }}
             />
           </section>
         )}
@@ -104,12 +180,22 @@ export function CommunityPage() {
         {selectedEvent && (
           <div className="flex items-center justify-between rounded-card border border-gold/30 bg-gold/10 p-13">
             <div className="flex items-center gap-13">
-              <span className="text-2xl">🎯</span>
+              <span className="text-2xl">🎪</span>
               <div>
                 <span className="text-[10px] font-semibold text-gold dark:text-gold-soft uppercase tracking-wider">
                   Filtering by Event
                 </span>
-                <h4 className="font-display text-sm font-semibold text-ink-light dark:text-ink-dark">{selectedEvent.name}</h4>
+                <div className="flex items-center gap-8">
+                  <h4 className="font-display text-sm font-semibold text-ink-light dark:text-ink-dark">
+                    {selectedEvent.name}
+                  </h4>
+                  <Link
+                    to={`/events/${selectedEvent.id}`}
+                    className="text-xs text-gold-soft underline hover:text-gold"
+                  >
+                    Open Event Hub →
+                  </Link>
+                </div>
               </div>
             </div>
             <button
@@ -135,7 +221,8 @@ export function CommunityPage() {
               { id: "blog", label: "AI Blogs", icon: "📄" },
               { id: "linkedin", label: "LinkedIn Posts", icon: "💼" },
               { id: "newsletter", label: "Newsletters", icon: "✉️" },
-              { id: "summary", label: "Summaries", icon: "📌" },
+              { id: "summary", label: "Summaries", icon: "📊" },
+              { id: "flyer", label: "Flyers", icon: "📢" },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -165,6 +252,15 @@ export function CommunityPage() {
               placeholder="Search feed..."
               className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] pl-34 pr-13 py-4 text-xs text-ink-light dark:text-ink-dark placeholder-ink-light/40 dark:placeholder-ink-dim/50 focus:border-gold focus:outline-none"
             />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm("")}
+                className="absolute inset-y-0 right-2 flex items-center text-xs text-ink-light/40 hover:text-ink-light dark:text-ink-dim dark:hover:text-ink-dark"
+              >
+                ✕
+              </button>
+            )}
           </div>
         </div>
 
@@ -189,7 +285,7 @@ export function CommunityPage() {
 
         {/* Empty State */}
         {!isLoading && !error && filteredPosts.length === 0 && (
-          <div className="rounded-card border border-dashed border-black/15 dark:border-white/15 bg-surface-light/40 dark:bg-surface-dark/40 p-34 text-center">
+          <div className="rounded-card border border-dashed border-gold/20 bg-surface-light/40 dark:bg-surface-dark/40 p-34 text-center">
             <span className="text-4xl">💭</span>
             <h3 className="mt-13 font-display text-lg font-semibold text-ink-light dark:text-ink-dark">
               No posts to display
@@ -200,7 +296,7 @@ export function CommunityPage() {
             <button
               type="button"
               onClick={() => setShowCreatePost(true)}
-              className="mt-21 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/30 transition-all"
+              className="mt-21 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/30 transition-all shadow-sm"
             >
               ✍️ Write a Post
             </button>
@@ -213,13 +309,19 @@ export function CommunityPage() {
             {filteredPosts.map((post) => {
               const matchedEvent = events.find((e) => e.id === post.event_id);
               const author = post.author_name || "Community Member";
+              const typeConfig = TYPE_BADGES[post.type] || {
+                label: post.type,
+                icon: "📌",
+                badgeClass: "bg-white/[0.05] text-ink-light dark:text-ink-dark border-white/10",
+              };
+              const isCopied = copiedId === post.id;
 
               return (
                 <div
                   key={post.id}
                   className="group rounded-card border border-black/10 bg-surface-light p-21 shadow-sm dark:border-white/10 dark:bg-surface-dark dark:shadow-none hover:border-gold/30 transition-all"
                 >
-                  <div className="flex items-start justify-between gap-13">
+                  <div className="flex flex-wrap items-start justify-between gap-13">
                     <div className="flex items-center gap-13">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-display text-sm font-bold text-gold dark:text-gold-soft shadow-inner">
                         {author[0].toUpperCase()}
@@ -227,8 +329,9 @@ export function CommunityPage() {
                       <div>
                         <div className="flex items-center gap-8">
                           <span className="text-sm font-semibold text-ink-light dark:text-ink-dark">{author}</span>
-                          <span className="rounded-full border border-gold/20 bg-gold/10 px-8 py-2 text-[10px] font-semibold text-gold dark:text-gold-soft">
-                            {post.type.replace("_", " ").toUpperCase()}
+                          <span className={`inline-flex items-center gap-1 rounded-full border px-8 py-1 text-[10px] font-semibold ${typeConfig.badgeClass}`}>
+                            <span>{typeConfig.icon}</span>
+                            <span>{typeConfig.label}</span>
                           </span>
                         </div>
                         <span className="text-xs text-ink-light/50 dark:text-ink-dim">
@@ -238,12 +341,29 @@ export function CommunityPage() {
                     </div>
 
                     {matchedEvent && (
-                      <Link
-                        to={`/community?event_id=${matchedEvent.id}`}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold dark:text-gold-soft hover:bg-gold/20 transition-all"
-                      >
-                        <span>🎪 {matchedEvent.name}</span>
-                      </Link>
+                      <div className="flex items-center gap-8">
+                        <Link
+                          to={`/events/${matchedEvent.id}`}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold dark:text-gold-soft hover:bg-gold/20 transition-all"
+                          title="Open Event Hub & Transcript"
+                        >
+                          <span>🎪 {matchedEvent.name}</span>
+                        </Link>
+
+                        {eventIdFilter !== matchedEvent.id && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              searchParams.set("event_id", matchedEvent.id);
+                              setSearchParams(searchParams);
+                            }}
+                            className="rounded-full border border-black/10 dark:border-white/10 px-8 py-2 text-[10px] text-ink-light/60 hover:text-ink-light dark:text-ink-dim dark:hover:text-ink-dark"
+                            title="Filter feed by this event"
+                          >
+                            Filter
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
 
@@ -257,29 +377,37 @@ export function CommunityPage() {
                     {post.body}
                   </div>
 
-                  <div className="mt-21 flex items-center justify-between border-t border-black/5 dark:border-white/5 pt-13 text-xs text-ink-light/60 dark:text-ink-dim">
+                  {/* Truthful Functional Actions Footer (No fake likes/engagement!) */}
+                  <div className="mt-21 flex flex-wrap items-center justify-between gap-13 border-t border-black/5 dark:border-white/5 pt-13 text-xs text-ink-light/60 dark:text-ink-dim">
                     <div className="flex items-center gap-13">
                       <button
                         type="button"
-                        onClick={(e) => {
-                          const target = e.currentTarget;
-                          target.classList.add("text-rose-400", "scale-110");
-                          setTimeout(() => target.classList.remove("scale-110"), 200);
-                        }}
-                        className="flex items-center gap-1 transition-transform hover:text-rose-400"
+                        onClick={() => handleCopy(`${post.title ? post.title + '\n\n' : ''}${post.body}`, post.id)}
+                        className="inline-flex items-center gap-1 rounded-full border border-black/10 dark:border-white/10 bg-canvas-light/80 dark:bg-white/[0.03] px-13 py-4 text-xs font-medium text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark transition-colors"
                       >
-                        <span>❤️</span> Helpful
+                        <span>{isCopied ? "✓ Copied!" : "📋 Copy Text"}</span>
                       </button>
+
                       <button
                         type="button"
-                        className="flex items-center gap-1 hover:text-gold dark:hover:text-gold-soft transition-colors"
+                        onClick={() => handleStartRepurpose(post)}
+                        className="inline-flex items-center gap-1 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold dark:text-gold-soft hover:bg-gold/20 transition-all"
                       >
-                        <span>💡</span> Insightful
+                        <span>✍️ Repurpose</span>
                       </button>
+
+                      {post.event_id && (
+                        <Link
+                          to={`/events/${post.event_id}`}
+                          className="inline-flex items-center gap-1 text-xs text-gold-soft hover:underline hidden sm:inline-flex"
+                        >
+                          <span>🎙️ View Event Hub</span>
+                        </Link>
+                      )}
                     </div>
 
                     <span className="text-[11px] text-ink-light/50 dark:text-ink-dim">
-                      Status: <strong className="text-teal font-medium">{post.status}</strong>
+                      Status: <strong className="text-teal font-medium capitalize">{post.status.replace("_", " ")}</strong>
                     </span>
                   </div>
                 </div>
