@@ -1,4 +1,5 @@
-from typing import Any, Literal, TypedDict
+import operator
+from typing import Annotated, Any, Literal, TypedDict
 
 
 class JobGraphState(TypedDict, total=False):
@@ -16,7 +17,7 @@ class JobGraphState(TypedDict, total=False):
     rag_chunks: list[dict[str, Any]]
     requested_types: list[str]
     target_languages: list[str]
-    generated: list[dict[str, Any]]
+    generated: Annotated[list[dict[str, Any]], operator.add]
     guardrail: dict[str, Any]
     translations: list[dict[str, Any]]
     use_org_memory: bool

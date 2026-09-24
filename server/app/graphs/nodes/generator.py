@@ -2,35 +2,32 @@ import asyncio
 from typing import Any
 
 from app.graphs.agents import AGENT_REGISTRY
-from app.graphs.state import JobGraphState
 
 
-async def generator(state: JobGraphState) -> dict[str, Any]:
-    """Dispatches parallel execution to specialized creator agents based on requested_types."""
+async def generator(state: dict[str, Any]) -> dict[str, Any]:
+    """Runs a single specialized creator agent dynamically spawned by the Send API."""
     transcript = state.get("transcript_text") or ""
     brief = state.get("brief") or {}
     user_memory = state.get("user_memory") or {}
-    requested = state.get("requested_types") or list(AGENT_REGISTRY.keys())
+    
+    # Extract the dynamic agent_type from the Send payload
+    agent_type = state.get("agent_type")
+    
+    # Ensure the agent exists in the registry, fallback to a dummy/default if needed
+    agent_cls = AGENT_REGISTRY.get(agent_type)
+    if not agent_cls:
+        # If unknown, just skip or return empty
+        return {"generated": []}
+        
+    agent = agent_cls()
 
-    # Filter agents to run
-    agents_to_run = [
-        agent_cls()
-        for type_name, agent_cls in AGENT_REGISTRY.items()
-        if type_name in requested or (type_name == "ig_caption" and "instagram" in requested)
-    ]
+    # Generate the content piece
+    piece = await agent.generate(
+        transcript_text=transcript,
+        brief=brief,
+        user_memory=user_memory,
+    )
 
-    if not agents_to_run:
-        agents_to_run = [agent_cls() for agent_cls in AGENT_REGISTRY.values()]
-
-    # Run specialized agents concurrently in parallel
-    tasks = [
-        agent.generate(
-            transcript_text=transcript,
-            brief=brief,
-            user_memory=user_memory,
-        )
-        for agent in agents_to_run
-    ]
-
-    pieces = await asyncio.gather(*tasks)
-    return {"generated": list(pieces), "retry_count": int(state.get("retry_count") or 0)}
+    # Return as a list so the Annoted[list, operator.add] reducer can safely aggregate it 
+    # with the outputs of other parallel agents!
+    return {"generated": [piece], "retry_count": int(state.get("retry_count") or 0)}
