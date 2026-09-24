@@ -38,25 +38,39 @@ async def create_upload(
             "consent_required",
         )
     settings = get_settings()
-    data = await file.read()
     filename = file.filename or "upload.bin"
+    
+    # Pre-validate file extension and content type before downloading stream
     try:
-        validate_upload(filename, file.content_type, len(data))
+        validate_upload(filename, file.content_type, 0)
     except ValueError as exc:
         raise http_error(status.HTTP_400_BAD_REQUEST, str(exc), "invalid_file") from exc
 
     from app.services.storage import get_storage
+    import structlog
 
     storage = get_storage()
     stored_name = f"{uuid4().hex}_{Path(filename).name}"
-    storage_uri = storage.save_bytes(data, stored_name)
+    
+    # Chunked streaming directly to disk/S3 (Does not consume RAM!)
+    storage_uri, sha256_hash, total_bytes = storage.save_stream(file.file, stored_name)
+    
+    # Final validation for size limit
+    try:
+        validate_upload(filename, file.content_type, total_bytes)
+    except ValueError as exc:
+        storage.delete(storage_uri)
+        raise http_error(status.HTTP_400_BAD_REQUEST, str(exc), "invalid_file") from exc
+
+    logger = structlog.get_logger("uploads")
+    logger.info("upload_integrity_verified", filename=filename, sha256=sha256_hash)
 
     recording = Recording(
         user_id=user.id,
         original_name=filename,
         storage_uri=storage_uri,
         content_type=file.content_type or "application/octet-stream",
-        size_bytes=len(data),
+        size_bytes=total_bytes,
         consent_confirmed=True,
         retain_source=retain_source,
     )
