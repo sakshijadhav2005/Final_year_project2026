@@ -21,6 +21,8 @@ export type UserPublic = {
   email: string;
   role: UserRole;
   is_active: boolean;
+  created_at?: string | null;
+  profile?: UserProfilePublic | null;
 };
 
 export type TokenResponse = {
@@ -138,6 +140,9 @@ export const rejectContent = (token: string, id: string, reason: string) =>
   request<ContentPublic>(`/api/v1/content/${id}/reject`, { method: "POST", token, json: { reason } });
 export const listAdminJobs = (token: string) => request<JobPublic[]>("/api/v1/admin/jobs", { token });
 export const listAudit = (token: string) => request<Record<string, string | null>[]>("/api/v1/admin/audit", { token });
+export const listAdminUsers = (token: string) => request<UserPublic[]>("/api/v1/admin/users", { token });
+export const setUserRole = (token: string, userId: string, role: UserRole) =>
+  request<UserPublic>(`/api/v1/admin/users/${userId}/role`, { method: "POST", token, json: { role } });
 
 export const patchContent = (
   token: string,

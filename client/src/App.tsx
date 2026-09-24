@@ -122,9 +122,9 @@ export function App() {
         <Route
           path="/admin"
           element={
-            <RequireAuth>
+            <RequireRole allowedRoles={["admin"]}>
               <AdminPage />
-            </RequireAuth>
+            </RequireRole>
           }
         />
         <Route path="/home" element={<Navigate to="/" replace />} />
