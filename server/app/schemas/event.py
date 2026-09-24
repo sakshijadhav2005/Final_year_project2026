@@ -15,6 +15,9 @@ class EventBase(BaseModel):
     date: dt.date = Field(..., description="Date of the event")
     topic: str | None = Field(None, max_length=255, description="Topic or theme of the event")
     organizer_name: str | None = Field(None, max_length=255, description="Name of the organizer")
+    location: str | None = Field(None, max_length=255, description="Location or City")
+    banner_image: str | None = Field(None, max_length=1024, description="Banner Image URL")
+    description: str | None = Field(None, description="Event description")
     type: EventType = Field(
         default=EventType.OTHER, description="Type of event: meetup, event, speech, other"
     )

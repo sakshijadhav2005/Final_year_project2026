@@ -18,6 +18,9 @@ export function CatalogPage() {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [topic, setTopic] = useState("");
+  const [location, setLocation] = useState("");
+  const [bannerImage, setBannerImage] = useState("");
+  const [description, setDescription] = useState("");
   const [selectedType, setSelectedType] = useState<EventType>(
     type && type !== "all" ? (type as EventType) : "event",
   );
@@ -37,6 +40,9 @@ export function CatalogPage() {
         name,
         date,
         topic: topic || undefined,
+        location: location || undefined,
+        banner_image: bannerImage || undefined,
+        description: description || undefined,
         type: selectedType,
       });
     },
@@ -46,6 +52,9 @@ export function CatalogPage() {
       setName("");
       setDate("");
       setTopic("");
+      setLocation("");
+      setBannerImage("");
+      setDescription("");
     },
   });
 
@@ -249,13 +258,48 @@ export function CatalogPage() {
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-slate-300">Topic / Theme</label>
+                    <input
+                      type="text"
+                      value={topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                      placeholder="e.g., Generative AI in Production"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-slate-300">Location / City</label>
+                    <input
+                      type="text"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="e.g., San Francisco, CA or Virtual"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-300">Topic / Theme</label>
+                  <label className="mb-1 block text-xs font-semibold text-slate-300">Banner Image URL</label>
                   <input
-                    type="text"
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    placeholder="e.g., Generative AI in Production"
+                    type="url"
+                    value={bannerImage}
+                    onChange={(e) => setBannerImage(e.target.value)}
+                    placeholder="https://example.com/banner.jpg"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-slate-300">Description</label>
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Brief description of the event..."
+                    rows={3}
                     className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
                   />
                 </div>

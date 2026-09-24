@@ -30,6 +30,7 @@ async def create_upload(
     use_org_memory: bool = Form(False),
     requested_types: str = Form(",".join(DEFAULT_CONTENT_TYPES)),
     target_languages: str = Form("en"),
+    event_id: str | None = Form(None),
 ) -> Job:
     if not consent_confirmed:
         raise http_error(
@@ -65,8 +66,17 @@ async def create_upload(
     logger = structlog.get_logger("uploads")
     logger.info("upload_integrity_verified", filename=filename, sha256=sha256_hash)
 
+    from uuid import UUID
+    ev_id = None
+    if event_id:
+        try:
+            ev_id = UUID(event_id)
+        except ValueError:
+            raise http_error(status.HTTP_400_BAD_REQUEST, "Invalid event_id UUID", "invalid_id")
+
     recording = Recording(
         user_id=user.id,
+        event_id=ev_id,
         original_name=filename,
         storage_uri=storage_uri,
         content_type=file.content_type or "application/octet-stream",

@@ -2,8 +2,9 @@ import { useState, useRef, type ChangeEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import { uploadRecording } from "@/lib/api";
+import { uploadRecording, listEvents } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
+import { useQuery } from "@tanstack/react-query";
 
 // The 6 post formats exactly as specified in the architectural flowchart
 const POST_TYPES = [
@@ -96,7 +97,14 @@ export function DashboardUploadCard() {
     "flyer",
   ]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>(["en", "hi"]);
+  const [selectedEventId, setSelectedEventId] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+
+  const { data: events = [] } = useQuery({
+    queryKey: ["my_events"],
+    queryFn: () => listEvents(token as string),
+    enabled: !!token,
+  });
 
   const upload = useMutation({
     mutationFn: (file: File) =>
@@ -104,6 +112,7 @@ export function DashboardUploadCard() {
         consent,
         languages: selectedLanguages.join(","),
         types: selectedTypes.join(","),
+        event_id: selectedEventId || undefined,
       }),
     onSuccess: (job) => {
       navigate(`/jobs/${job.id}`);
@@ -316,6 +325,23 @@ export function DashboardUploadCard() {
             >
               Select All (6 Formats)
             </button>
+          </div>
+
+          <div className="mb-13">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gold mb-4">Link to Event (Optional)</label>
+            <select
+              value={selectedEventId}
+              onChange={(e) => setSelectedEventId(e.target.value)}
+              className="w-full max-w-sm rounded-xl border border-white/10 bg-slate-900/80 px-4 py-3 text-sm text-slate-200 focus:border-gold/50 focus:outline-none focus:ring-2 focus:ring-gold/20"
+            >
+              <option value="">No Event Link (Standalone Recording)</option>
+              {events.map((ev) => (
+                <option key={ev.id} value={ev.id}>
+                  {ev.name} ({new Date(ev.date).toLocaleDateString()})
+                </option>
+              ))}
+            </select>
+            <p className="mt-3 text-xs text-ink-dim">By selecting an event, all generated AI posts and transcripts will automatically populate the Event Hub page for attendees.</p>
           </div>
 
           {/* Top Row: 6 Colored Post Type Cards */}

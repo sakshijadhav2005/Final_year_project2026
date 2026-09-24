@@ -178,13 +178,16 @@ export async function downloadContent(
 export async function uploadRecording(
   token: string,
   file: File,
-  options: { consent: boolean; languages: string; types: string },
+  options: { consent: boolean; languages: string; types: string; event_id?: string },
 ) {
   const body = new FormData();
   body.append("file", file);
   body.append("consent_confirmed", options.consent ? "true" : "false");
   body.append("target_languages", options.languages);
   body.append("requested_types", options.types);
+  if (options.event_id) {
+    body.append("event_id", options.event_id);
+  }
   return request<JobPublic>("/api/v1/uploads", { method: "POST", token, body });
 }
 

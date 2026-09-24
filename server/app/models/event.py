@@ -2,7 +2,7 @@ import enum
 import uuid
 from datetime import date
 
-from sqlalchemy import Date, ForeignKey, String, Uuid
+from sqlalchemy import Date, ForeignKey, String, Uuid, Text
 from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -24,6 +24,9 @@ class Event(TimestampMixin, Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     date: Mapped[date] = mapped_column(Date, nullable=False)
     topic: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    location: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    banner_image: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
     organizer_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     type: Mapped[EventType] = mapped_column(
         SqlEnum(EventType, native_enum=False), nullable=False, default=EventType.OTHER
