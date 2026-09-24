@@ -39,6 +39,7 @@ export function OrganizerDashboard() {
   const [showTranscriptPreview, setShowTranscriptPreview] = useState(false);
   const [showChatDrawer, setShowChatDrawer] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [selectedUploadEventId, setSelectedUploadEventId] = useState<string | undefined>(undefined);
 
   // Form state for Event Creation
   const [name, setName] = useState("");
@@ -352,18 +353,37 @@ export function OrganizerDashboard() {
                         ID: {event.id.slice(0, 8)}
                       </span>
 
-                      {isOwner && (
+                      <div className="flex items-center gap-8">
                         <button
                           type="button"
-                          onClick={(e) => handleDeleteEvent(e, event)}
-                          disabled={deleteEventMutation.isPending}
-                          className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-danger/80 hover:text-danger hover:bg-danger/10 transition-colors"
-                          title="Delete Event"
+                          onClick={() => {
+                            setSelectedUploadEventId(event.id);
+                            document.getElementById("upload-section")?.scrollIntoView({ behavior: "smooth" });
+                          }}
+                          className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-[11px] transition-colors ${
+                            selectedUploadEventId === event.id
+                              ? "bg-teal/20 text-teal font-semibold"
+                              : "text-gold hover:text-gold-soft hover:bg-gold/10"
+                          }`}
+                          title="Select this event for recording upload"
                         >
-                          <span>🗑️</span>
-                          <span>Delete</span>
+                          <span>🎙️</span>
+                          <span>{selectedUploadEventId === event.id ? "Selected for Upload" : "Upload Recording"}</span>
                         </button>
-                      )}
+
+                        {isOwner && (
+                          <button
+                            type="button"
+                            onClick={(e) => handleDeleteEvent(e, event)}
+                            disabled={deleteEventMutation.isPending}
+                            className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-danger/80 hover:text-danger hover:bg-danger/10 transition-colors"
+                            title="Delete Event"
+                          >
+                            <span>🗑️</span>
+                            <span>Delete</span>
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     {/* Shared EventCard */}
@@ -378,7 +398,7 @@ export function OrganizerDashboard() {
         </section>
 
         {/* Section 4: Ingest Recording */}
-        <section className="space-y-13">
+        <section id="upload-section" className="space-y-13">
           <div>
             <span className="text-xs font-semibold uppercase tracking-wider text-gold">
               Media Ingestion
@@ -391,14 +411,11 @@ export function OrganizerDashboard() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-ink-light/70 dark:text-ink-dim bg-white/[0.02] border border-white/5 rounded-card px-13 py-8">
-            <span className="text-gold">ℹ️</span>
-            <span>
-              Recording-to-event association will be connected when the backend event/job contract supports it.
-            </span>
-          </div>
-
-          <DashboardUploadCard />
+          <DashboardUploadCard
+            events={events}
+            selectedEventId={selectedUploadEventId}
+            onSelectEventId={setSelectedUploadEventId}
+          />
         </section>
 
         {/* Section 5: Active Processing & Stepper */}

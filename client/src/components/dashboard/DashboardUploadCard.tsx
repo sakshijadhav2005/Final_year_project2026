@@ -1,8 +1,8 @@
 import { useState, useRef, type ChangeEvent } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import { uploadRecording } from "@/lib/api";
+import { listEvents, uploadRecording, type EventPublic } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 
 // The 6 post formats exactly as specified in the architectural flowchart
@@ -79,10 +79,38 @@ const AVAILABLE_LANGUAGES = [
   { code: "pt", label: "Portuguese (Português)", flag: "🇧🇷" },
 ];
 
-export function DashboardUploadCard() {
+export interface DashboardUploadCardProps {
+  events?: EventPublic[];
+  selectedEventId?: string;
+  onSelectEventId?: (id: string | undefined) => void;
+}
+
+export function DashboardUploadCard({
+  events: propEvents,
+  selectedEventId: propSelectedEventId,
+  onSelectEventId,
+}: DashboardUploadCardProps = {}) {
   const token = useAuthStore((s) => s.accessToken);
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { data: fetchedEvents = [] } = useQuery({
+    queryKey: ["events"],
+    queryFn: () => (token ? listEvents(token) : Promise.resolve([])),
+    enabled: !!token && propEvents === undefined,
+  });
+
+  const events = propEvents ?? fetchedEvents;
+
+  const [internalSelectedEventId, setInternalSelectedEventId] = useState<string | undefined>(undefined);
+  const currentEventId = propSelectedEventId !== undefined ? propSelectedEventId : internalSelectedEventId;
+
+  const handleSelectEvent = (id: string | undefined) => {
+    setInternalSelectedEventId(id);
+    onSelectEventId?.(id);
+  };
+
+  const selectedEvent = events.find((e) => e.id === currentEventId);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -104,6 +132,7 @@ export function DashboardUploadCard() {
         consent,
         languages: selectedLanguages.join(","),
         types: selectedTypes.join(","),
+        event_id: currentEventId || undefined,
       }),
     onSuccess: (job) => {
       navigate(`/jobs/${job.id}`);
@@ -233,6 +262,75 @@ export function DashboardUploadCard() {
           >
             ⚡ Try Sample Recording Demo
           </button>
+        </div>
+
+        {/* Event Association Selector */}
+        <div className="mb-21 rounded-xl border border-gold/30 bg-surface-light/80 dark:bg-white/[0.03] p-16 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-8 mb-10">
+            <div className="flex items-center gap-8">
+              <span className="text-lg">🎪</span>
+              <div>
+                <label htmlFor="event-selector" className="text-xs font-semibold uppercase tracking-wider text-gold block">
+                  Event Association (Optional)
+                </label>
+                <p className="text-[11px] text-ink-dim">
+                  Link this recording to an event so its transcript and generated content appear in that Event Hub.
+                </p>
+              </div>
+            </div>
+            {selectedEvent && (
+              <span className="rounded-full bg-teal/15 border border-teal/30 px-8 py-0.5 text-[10px] font-semibold text-teal uppercase">
+                Linked to Event Hub
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-10">
+            <div className="flex-1 min-w-[260px]">
+              <select
+                id="event-selector"
+                value={currentEventId || ""}
+                onChange={(e) => handleSelectEvent(e.target.value || undefined)}
+                className="w-full rounded-lg border border-gold/30 bg-surface-light dark:bg-surface-dark px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none transition-colors"
+              >
+                <option value="">🌐 No Event — Standalone Recording</option>
+                {events.map((ev) => (
+                  <option key={ev.id} value={ev.id}>
+                    🎪 {ev.name} ({ev.type.toUpperCase()}) — {ev.date}
+                    {ev.topic ? ` • ${ev.topic}` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {currentEventId && (
+              <button
+                type="button"
+                onClick={() => handleSelectEvent(undefined)}
+                className="rounded-full border border-white/10 px-13 py-6 text-xs text-ink-dim hover:text-white hover:border-white/30 transition-colors"
+              >
+                Clear Selection
+              </button>
+            )}
+          </div>
+
+          {selectedEvent ? (
+            <div className="mt-10 rounded-lg border border-teal/30 bg-teal/10 p-10 flex flex-wrap items-center justify-between gap-8 text-xs text-teal">
+              <div className="flex items-center gap-2">
+                <span>📌</span>
+                <span>
+                  Recording will be published to: <strong>{selectedEvent.name}</strong> ({selectedEvent.date})
+                </span>
+              </div>
+              <span className="text-[10px] text-teal-300 font-mono">
+                Event ID: {selectedEvent.id.slice(0, 8)}
+              </span>
+            </div>
+          ) : (
+            <p className="mt-8 text-[11px] text-ink-dim">
+              Tip: Selecting an event links this session&apos;s audio, transcript, and generated content directly to that event&apos;s public catalog entry.
+            </p>
+          )}
         </div>
 
         {/* Media Upload Drag & Drop Target */}
@@ -491,7 +589,11 @@ export function DashboardUploadCard() {
               </>
             ) : selectedFile ? (
               <>
-                <span>Generate {selectedTypes.length} Posts in {selectedLanguages.length} Languages</span>
+                <span>
+                  {selectedEvent
+                    ? `Generate Posts for "${selectedEvent.name.slice(0, 24)}${selectedEvent.name.length > 24 ? "…" : ""}" (${selectedLanguages.length} Langs)`
+                    : `Generate ${selectedTypes.length} Posts in ${selectedLanguages.length} Languages`}
+                </span>
                 <span>→</span>
               </>
             ) : (
