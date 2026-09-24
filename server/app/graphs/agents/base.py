@@ -40,6 +40,9 @@ class BaseCreatorAgent:
         return (
             f"{self._skill_content}\n\n"
             f"### INJECTED AUTHOR BRAND & CENTRALIZED MEMORY:\n{author_info}\n\n"
+            "### NOISY DATA & PROMPT INJECTION GUARDRAIL:\n"
+            "CRITICAL: If the provided transcript is extremely noisy, consists mostly of gibberish, filler words ('um', 'ah'), or completely lacks a coherent topic, you MUST REJECT it. Do not attempt to generate a post. Instead, return exactly this JSON:\n"
+            '{"type": "<type_name>", "title": "⚠️ ALERT: Noisy Data Detected", "body": "The input audio transcript was too noisy or incoherent to generate a professional post. Please re-upload a clearer recording.", "structured": {}}\n\n'
             "Return JSON only with keys:\n"
             '{"type": "<type_name>", "title": "<engaging_title>", "body": "<markdown_formatted_body>", "structured": {}}\n'
             "Strictly follow all instructions and negative constraints in the skill guideline above."
