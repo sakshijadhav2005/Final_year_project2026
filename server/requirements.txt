@@ -9,7 +9,7 @@ httpx==0.28.1
 
 # Database
 SQLAlchemy==2.0.40
-aiomysql==0.2.0
+asyncpg==0.30.0
 aiosqlite==0.21.0
 alembic==1.15.2
 

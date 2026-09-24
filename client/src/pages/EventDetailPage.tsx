@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { getEvent, listCommunityContent, listJobs, getTranscript, getJobContent, type ContentPublic } from "@/lib/api";
+import { getEvent, listCommunityContent, listJobs, getTranscript, type ContentPublic } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { EventChatWidget } from "@/components/chat/EventChatWidget";
 

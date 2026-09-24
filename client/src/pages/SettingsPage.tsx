@@ -175,7 +175,7 @@ export function SettingsPage() {
               <span className="font-mono text-gold dark:text-gold-soft">{health.data?.version ?? "0.1.0"}</span>
             </div>
             <div className="rounded-card border border-black/5 bg-canvas-light p-13 text-xs dark:border-white/5 dark:bg-white/[0.04]">
-              <span className="text-ink-light/50 dark:text-ink-dim block text-[11px]">MySQL Database</span>
+              <span className="text-ink-light/50 dark:text-ink-dim block text-[11px]">PostgreSQL Database</span>
               <span className="font-semibold text-teal">{ready.data?.checks.postgres ?? "connected"}</span>
             </div>
             <div className="rounded-card border border-black/5 bg-canvas-light p-13 text-xs dark:border-white/5 dark:bg-white/[0.04]">
