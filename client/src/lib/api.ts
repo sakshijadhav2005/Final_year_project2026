@@ -44,12 +44,28 @@ export type JobPublic = {
   finished_at: string | null;
 };
 
+export type TranscriptSegment = {
+  text: string;
+  start: number;
+  end: number;
+  confidence?: number | null;
+  speaker?: string | null;
+};
+
+export type TranscriptQuality = {
+  duration_sec?: number | null;
+  sample_rate?: number | null;
+  silence_ratio?: number | null;
+  ok?: boolean;
+  reason?: string | null;
+};
+
 export type TranscriptPublic = {
   full_text: string;
   language: string;
   avg_confidence: number | null;
-  quality_json: Record<string, unknown> | null;
-  segments: unknown[] | null;
+  quality_json: TranscriptQuality | null;
+  segments: TranscriptSegment[] | null;
   provider: string;
   badge: "high" | "medium" | "low";
 };

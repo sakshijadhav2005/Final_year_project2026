@@ -3,13 +3,90 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { GoldenShell } from "@/layouts/GoldenShell";
-import { getEvent, listCommunityContent, getTranscript, type ContentPublic } from "@/lib/api";
+import {
+  getEvent,
+  listCommunityContent,
+  getTranscript,
+  type ContentPublic,
+  type TranscriptSegment,
+} from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { EventChatWidget } from "@/components/chat/EventChatWidget";
 import { getEventCity, getCityBadge } from "@/lib/eventLocation";
 
 function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function formatTimestamp(sec: number | null | undefined): string {
+  if (sec === null || sec === undefined || isNaN(sec)) return "00:00";
+  const totalSeconds = Math.max(0, Math.floor(sec));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  if (minutes >= 60) {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return `${pad(hours)}:${pad(remainingMinutes)}:${pad(seconds)}`;
+  }
+  return `${pad(minutes)}:${pad(seconds)}`;
+}
+
+function formatDuration(sec: number | null | undefined): string | null {
+  if (sec === null || sec === undefined || isNaN(sec) || sec <= 0) return null;
+  const totalSeconds = Math.round(sec);
+  if (totalSeconds < 60) {
+    return `${totalSeconds}s`;
+  }
+  const minutes = Math.floor(totalSeconds / 60);
+  const remainingSeconds = totalSeconds % 60;
+  if (minutes < 60) {
+    return `${minutes}m ${remainingSeconds}s`;
+  }
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return `${hours}h ${remainingMinutes}m`;
+}
+
+function getSegmentConfidenceMeta(confidence?: number | null) {
+  if (confidence === null || confidence === undefined || isNaN(confidence)) return null;
+  const pct = Math.round(confidence * 100);
+  if (confidence >= 0.85) {
+    return {
+      percentage: pct,
+      label: "High",
+      className: "border-teal/30 bg-teal/10 text-teal",
+    };
+  }
+  if (confidence >= 0.70) {
+    return {
+      percentage: pct,
+      label: "Medium",
+      className: "border-gold/30 bg-gold/10 text-gold dark:text-gold-soft",
+    };
+  }
+  return {
+    percentage: pct,
+    label: "Low",
+    className: "border-danger/30 bg-danger/10 text-danger",
+  };
+}
+
+function renderHighlightedText(text: string, search: string) {
+  const trimmed = search.trim();
+  if (!trimmed || !text) return text;
+  const escaped = escapeRegExp(trimmed);
+  const regex = new RegExp(`(${escaped})`, "gi");
+  const parts = text.split(regex);
+  return parts.map((part, i) =>
+    part.toLowerCase() === trimmed.toLowerCase() ? (
+      <mark key={i} className="rounded bg-accent/40 text-inherit font-semibold px-1 py-0.5">
+        {part}
+      </mark>
+    ) : (
+      part
+    ),
+  );
 }
 
 export function EventDetailPage() {
@@ -20,7 +97,9 @@ export function EventDetailPage() {
   const [activeTab, setActiveTab] = useState<"content" | "transcript">("content");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [transcriptSearch, setTranscriptSearch] = useState("");
+  const [transcriptViewMode, setTranscriptViewMode] = useState<"dialogue" | "continuous">("dialogue");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [copiedSegmentIdx, setCopiedSegmentIdx] = useState<number | null>(null);
   const [isCopiedTranscript, setIsCopiedTranscript] = useState(false);
 
   // Fetch Event Details
@@ -63,6 +142,12 @@ export function EventDetailPage() {
 
   const fullTranscriptText = transcriptQuery.data?.full_text || "";
   const hasTranscript = Boolean(transcriptQuery.data && fullTranscriptText.trim());
+  const segments: TranscriptSegment[] | null = transcriptQuery.data?.segments ?? null;
+  const hasSegments = Boolean(segments && segments.length > 0);
+  const activeTranscriptMode = hasSegments ? transcriptViewMode : "continuous";
+
+  const qualityReport = transcriptQuery.data?.quality_json;
+  const formattedDuration = formatDuration(qualityReport?.duration_sec);
 
   const handleCopyTranscript = async () => {
     if (!fullTranscriptText) return;
@@ -70,6 +155,16 @@ export function EventDetailPage() {
       await navigator.clipboard.writeText(fullTranscriptText);
       setIsCopiedTranscript(true);
       setTimeout(() => setIsCopiedTranscript(false), 2000);
+    } catch {
+      // Do not crash page if clipboard access fails
+    }
+  };
+
+  const handleCopySegment = async (text: string, idx: number) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedSegmentIdx(idx);
+      setTimeout(() => setCopiedSegmentIdx(null), 2000);
     } catch {
       // Do not crash page if clipboard access fails
     }
@@ -97,7 +192,7 @@ export function EventDetailPage() {
       : "Low"
     : null;
 
-  // Search highlighting & match count with regex escaping
+  // Search highlighting & match count with regex escaping (continuous text)
   const { highlightedTranscript, matchCount } = useMemo(() => {
     const trimmedSearch = transcriptSearch.trim();
     if (!trimmedSearch || !fullTranscriptText) {
@@ -122,6 +217,16 @@ export function EventDetailPage() {
 
     return { highlightedTranscript: highlighted, matchCount: count };
   }, [fullTranscriptText, transcriptSearch]);
+
+  // Search filtering for timestamped dialogue segments
+  const filteredSegments = useMemo(() => {
+    if (!segments || segments.length === 0) return [];
+    const trimmed = transcriptSearch.trim();
+    if (!trimmed) return segments;
+    const escaped = escapeRegExp(trimmed);
+    const regex = new RegExp(escaped, "i");
+    return segments.filter((seg) => regex.test(seg.text));
+  }, [segments, transcriptSearch]);
 
   const TYPE_BADGES: Record<string, { label: string; icon: string; color: string }> = {
     linkedin: { label: "LinkedIn Post", icon: "💼", color: "border-blue-500/30 bg-blue-500/10 text-blue-400" },
@@ -218,6 +323,26 @@ export function EventDetailPage() {
                   {confidenceLevel ? `${confidenceLevel} Grounding` : "Transcript Grounding"}
                 </span>
               </div>
+              {formattedDuration && (
+                <div className="rounded-card border border-black/10 dark:border-white/10 bg-canvas-light/60 dark:bg-white/[0.02] p-13 text-center min-w-[120px]">
+                  <span className="block font-display text-xl sm:text-2xl font-bold text-ink-light dark:text-ink-dark">
+                    {formattedDuration}
+                  </span>
+                  <span className="text-[10px] text-ink-light/60 dark:text-ink-dim uppercase tracking-wider font-semibold">
+                    Duration
+                  </span>
+                </div>
+              )}
+              {qualityReport?.ok !== undefined && (
+                <div className="rounded-card border border-black/10 dark:border-white/10 bg-canvas-light/60 dark:bg-white/[0.02] p-13 text-center min-w-[120px]">
+                  <span className={`block font-display text-base font-bold sm:text-lg ${qualityReport.ok ? "text-teal" : "text-danger"}`}>
+                    {qualityReport.ok ? "Clean Audio" : "Issue Detected"}
+                  </span>
+                  <span className="text-[10px] text-ink-light/60 dark:text-ink-dim uppercase tracking-wider font-semibold">
+                    Audio Quality
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -362,6 +487,34 @@ export function EventDetailPage() {
 
               {hasTranscript && (
                 <div className="flex flex-wrap items-center gap-8">
+                  {/* View Mode Toggle: Timestamped Dialogue vs Continuous Text */}
+                  {hasSegments && (
+                    <div className="inline-flex items-center rounded-full border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-surface-dark p-1">
+                      <button
+                        type="button"
+                        onClick={() => setTranscriptViewMode("dialogue")}
+                        className={`rounded-full px-13 py-4 text-xs font-semibold transition-all ${
+                          activeTranscriptMode === "dialogue"
+                            ? "border border-gold/40 bg-gold/20 text-gold dark:text-gold-soft shadow-xs"
+                            : "text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark"
+                        }`}
+                      >
+                        ⏱️ Timestamped Dialogue ({segments?.length})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTranscriptViewMode("continuous")}
+                        className={`rounded-full px-13 py-4 text-xs font-semibold transition-all ${
+                          activeTranscriptMode === "continuous"
+                            ? "border border-gold/40 bg-gold/20 text-gold dark:text-gold-soft shadow-xs"
+                            : "text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark"
+                        }`}
+                      >
+                        📄 Continuous Text
+                      </button>
+                    </div>
+                  )}
+
                   {/* Copy Full Transcript */}
                   <button
                     type="button"
@@ -381,7 +534,11 @@ export function EventDetailPage() {
                       type="text"
                       value={transcriptSearch}
                       onChange={(e) => setTranscriptSearch(e.target.value)}
-                      placeholder="Search transcript text..."
+                      placeholder={
+                        activeTranscriptMode === "dialogue"
+                          ? "Search dialogue segments..."
+                          : "Search transcript text..."
+                      }
                       className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] pl-34 pr-21 py-4 text-xs text-ink-light dark:text-ink-dark placeholder-ink-light/40 dark:placeholder-ink-dim/50 focus:border-gold focus:outline-none"
                     />
                     {transcriptSearch && (
@@ -402,21 +559,52 @@ export function EventDetailPage() {
             {/* Transcript Statistics & Match Count */}
             {hasTranscript && (
               <div className="flex flex-wrap items-center justify-between gap-8 pt-8 border-t border-black/5 dark:border-white/5 text-xs text-ink-light/60 dark:text-ink-dim">
-                <div className="flex items-center gap-13">
+                <div className="flex flex-wrap items-center gap-13">
                   <span>
                     Words: <strong className="text-ink-light dark:text-ink-dark font-medium">{wordCount.toLocaleString()}</strong>
                   </span>
+                  {formattedDuration && (
+                    <span>
+                      Duration: <strong className="text-ink-light dark:text-ink-dark font-medium">{formattedDuration}</strong>
+                    </span>
+                  )}
                   {confidencePercentage !== null && (
                     <span className="inline-flex items-center gap-1 rounded-full border border-teal/30 bg-teal/10 px-8 py-2 text-[10px] font-semibold text-teal">
                       <span>🎯</span>
                       <span>{confidencePercentage}% Grounding ({confidenceLevel})</span>
                     </span>
                   )}
+                  {qualityReport?.ok !== undefined && (
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-full border px-8 py-2 text-[10px] font-semibold ${
+                        qualityReport.ok
+                          ? "border-teal/30 bg-teal/10 text-teal"
+                          : "border-danger/30 bg-danger/10 text-danger"
+                      }`}
+                    >
+                      <span>{qualityReport.ok ? "✓" : "⚠️"}</span>
+                      <span>{qualityReport.ok ? "Clean Audio" : "Audio Warning"}</span>
+                    </span>
+                  )}
+                  {typeof qualityReport?.silence_ratio === "number" && (
+                    <span className="text-[10px] text-ink-light/50 dark:text-ink-dim hidden md:inline">
+                      Silence: {Math.round(qualityReport.silence_ratio * 100)}%
+                    </span>
+                  )}
+                  {typeof qualityReport?.sample_rate === "number" && (
+                    <span className="text-[10px] text-ink-light/50 dark:text-ink-dim hidden md:inline">
+                      Rate: {qualityReport.sample_rate} Hz
+                    </span>
+                  )}
                 </div>
 
                 {transcriptSearch.trim() && (
                   <span className="rounded-full border border-gold/30 bg-gold/10 px-8 py-2 text-[11px] font-medium text-gold dark:text-gold-soft">
-                    {matchCount} {matchCount === 1 ? "match found" : "matches found"}
+                    {activeTranscriptMode === "dialogue"
+                      ? `${filteredSegments.length} of ${segments?.length || 0} segments (${matchCount} ${
+                          matchCount === 1 ? "match" : "matches"
+                        })`
+                      : `${matchCount} ${matchCount === 1 ? "match found" : "matches found"}`}
                   </span>
                 )}
               </div>
@@ -455,7 +643,72 @@ export function EventDetailPage() {
                   ⚠️ Unable to retrieve transcript for session {eventJobId.slice(0, 8)}: {(transcriptQuery.error as Error).message}
                 </p>
               </div>
+            ) : activeTranscriptMode === "dialogue" && hasSegments ? (
+              /* Timestamped Dialogue View */
+              <div className="space-y-13 max-h-[550px] overflow-y-auto pr-8">
+                {filteredSegments.length === 0 ? (
+                  <div className="rounded-card border border-dashed border-black/15 dark:border-white/15 p-34 text-center">
+                    <span className="text-2xl">🔍</span>
+                    <p className="mt-8 text-xs font-semibold text-ink-light dark:text-ink-dark">
+                      No dialogue segments match &ldquo;{transcriptSearch}&rdquo;
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setTranscriptSearch("")}
+                      className="mt-8 text-xs text-gold dark:text-gold-soft hover:underline"
+                    >
+                      Clear search filter
+                    </button>
+                  </div>
+                ) : (
+                  filteredSegments.map((segment, idx) => {
+                    const confMeta = getSegmentConfidenceMeta(segment.confidence);
+                    const speakerLabel = segment.speaker?.trim() ? segment.speaker.trim() : "Speaker";
+                    const isSegmentCopied = copiedSegmentIdx === idx;
+
+                    return (
+                      <div
+                        key={`${segment.start}-${idx}`}
+                        className="group rounded-card border border-black/10 dark:border-white/10 bg-canvas-light/60 dark:bg-canvas-dark/60 p-13 sm:p-21 hover:border-gold/30 transition-all"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-8 pb-8 mb-8 border-b border-black/5 dark:border-white/5">
+                          <div className="flex items-center gap-8">
+                            <span className="inline-flex items-center font-mono text-xs font-semibold px-8 py-2 rounded-full border border-gold/30 bg-gold/10 text-gold dark:text-gold-soft">
+                              ⏱️ {formatTimestamp(segment.start)}
+                            </span>
+                            <span className="inline-flex items-center font-display text-xs font-semibold uppercase tracking-wider text-ink-light dark:text-ink-dark">
+                              🎙️ {speakerLabel}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-8">
+                            {confMeta && (
+                              <span className={`inline-flex items-center gap-1 rounded-full border px-8 py-2 text-[10px] font-semibold ${confMeta.className}`}>
+                                <span>🎯</span>
+                                <span>{confMeta.percentage}% ({confMeta.label})</span>
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleCopySegment(segment.text, idx)}
+                              className="opacity-70 group-hover:opacity-100 text-[11px] font-medium text-ink-light/60 hover:text-gold dark:text-ink-dim dark:hover:text-gold-soft transition-colors"
+                              title="Copy segment text"
+                            >
+                              {isSegmentCopied ? "✓ Copied" : "📋 Copy"}
+                            </button>
+                          </div>
+                        </div>
+
+                        <p className="text-xs sm:text-sm text-ink-light dark:text-ink-dark font-sans leading-relaxed whitespace-pre-wrap">
+                          {renderHighlightedText(segment.text, transcriptSearch)}
+                        </p>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
             ) : (
+              /* Continuous Text View */
               <div className="max-h-[500px] overflow-y-auto rounded-card bg-canvas-light dark:bg-canvas-dark/70 p-21 font-mono text-xs text-ink-light dark:text-ink-dark leading-relaxed whitespace-pre-wrap border border-black/5 dark:border-white/5">
                 {highlightedTranscript}
               </div>
