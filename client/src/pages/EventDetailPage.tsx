@@ -171,9 +171,9 @@ export function EventDetailPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-21">
             <div>
               <div className="flex flex-wrap items-center gap-8 mb-8">
-                <span className="inline-flex items-center gap-1 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold dark:text-gold-soft">
-                  <span>🎪</span>
-                  <span className="capitalize">{event?.type || "Event"}</span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold dark:text-gold-soft">
+                  <span>{event?.type === "meetup" ? "👥" : event?.type === "speech" ? "🎤" : event?.type === "event" ? "🎪" : "📌"}</span>
+                  <span className="capitalize">{event?.type === "other" ? "Session" : event?.type || "Event"}</span>
                 </span>
                 {cityBadge && (
                   <span className="inline-flex items-center gap-1 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold dark:text-gold-soft">

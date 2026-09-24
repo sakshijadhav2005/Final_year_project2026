@@ -21,6 +21,13 @@ export function CatalogPage() {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [topic, setTopic] = useState("");
+  const [organizerName, setOrganizerName] = useState("");
+  const [formErrors, setFormErrors] = useState<{
+    name?: string;
+    date?: string;
+    topic?: string;
+    organizerName?: string;
+  }>({});
   const [selectedType, setSelectedType] = useState<EventType>(
     type && type !== "all" ? (type as EventType) : "event",
   );
@@ -36,10 +43,39 @@ export function CatalogPage() {
   const createEventMutation = useMutation({
     mutationFn: async () => {
       if (!token) throw new Error("Not authenticated");
+      const trimmedName = name.trim();
+      const trimmedTopic = topic.trim();
+      const trimmedOrg = organizerName.trim();
+
+      const errors: { name?: string; date?: string; topic?: string; organizerName?: string } = {};
+      if (!trimmedName) {
+        errors.name = "Event name is required";
+      } else if (trimmedName.length > 255) {
+        errors.name = "Event name cannot exceed 255 characters";
+      }
+
+      if (!date) {
+        errors.date = "Event date is required";
+      }
+
+      if (trimmedTopic.length > 255) {
+        errors.topic = "Topic cannot exceed 255 characters";
+      }
+
+      if (trimmedOrg.length > 255) {
+        errors.organizerName = "Organizer name cannot exceed 255 characters";
+      }
+
+      if (Object.keys(errors).length > 0) {
+        setFormErrors(errors);
+        throw new Error("Please correct the form errors before submitting.");
+      }
+
       return createEvent(token, {
-        name,
+        name: trimmedName,
         date,
-        topic: topic || undefined,
+        topic: trimmedTopic || undefined,
+        organizer_name: trimmedOrg || undefined,
         type: selectedType,
       });
     },
@@ -49,6 +85,8 @@ export function CatalogPage() {
       setName("");
       setDate("");
       setTopic("");
+      setOrganizerName("");
+      setFormErrors({});
     },
   });
 
@@ -263,96 +301,206 @@ export function CatalogPage() {
 
         {/* Create Event Modal */}
         {showCreateModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-            <div className="w-full max-w-lg rounded-card border border-gold/30 bg-surface-light dark:bg-surface-dark p-21 shadow-2xl backdrop-blur-xl">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-md overflow-y-auto">
+            <div className="w-full max-w-xl my-8 rounded-card border border-gold/40 bg-surface-light dark:bg-surface-dark p-21 sm:p-28 shadow-2xl backdrop-blur-2xl transition-all">
               <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-13">
-                <h3 className="font-display text-lg font-semibold text-ink-light dark:text-ink-dark">
-                  Create New Event
-                </h3>
+                <div>
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-gold dark:text-gold-soft">
+                    Catalog Management
+                  </span>
+                  <h3 className="font-display text-xl font-semibold text-ink-light dark:text-ink-dark">
+                    Create New Event
+                  </h3>
+                </div>
                 <button
                   type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="text-ink-light/50 hover:text-ink-light dark:text-ink-dim dark:hover:text-ink-dark transition-colors"
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    setFormErrors({});
+                  }}
+                  className="rounded-full p-2 text-ink-light/50 hover:text-ink-light dark:text-ink-dim dark:hover:text-ink-dark hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                 >
                   ✕
                 </button>
               </div>
 
               {createEventMutation.error && (
-                <div className="mt-13 rounded-card border border-danger/30 bg-danger/20 p-13 text-xs font-medium text-danger">
-                  {(createEventMutation.error as Error).message}
+                <div className="mt-13 rounded-card border border-danger/30 bg-danger/15 p-13 text-xs font-medium text-danger flex items-center gap-2">
+                  <span>⚠️</span>
+                  <span>{(createEventMutation.error as Error).message}</span>
                 </div>
               )}
 
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
+                  setFormErrors({});
                   createEventMutation.mutate();
                 }}
-                className="mt-21 space-y-13"
+                className="mt-21 space-y-16"
               >
                 <div>
-                  <label className="mb-4 block text-xs uppercase tracking-wider text-ink-light/60 dark:text-ink-dim">
-                    Event Name
-                  </label>
+                  <div className="flex items-center justify-between mb-4">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-ink-light/80 dark:text-ink-dim">
+                      Event Name <span className="text-danger">*</span>
+                    </label>
+                    <span className="text-[10px] text-ink-light/40 dark:text-ink-dim">
+                      {name.length}/255
+                    </span>
+                  </div>
                   <input
                     type="text"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    maxLength={255}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (formErrors.name) setFormErrors((prev) => ({ ...prev, name: undefined }));
+                    }}
                     placeholder="e.g., Annual Tech Summit 2026"
                     required
-                    className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+                    className={`w-full rounded-card border bg-canvas-light dark:bg-white/[0.04] px-13 py-10 text-xs text-ink-light dark:text-ink-dark focus:outline-none transition-colors ${
+                      formErrors.name
+                        ? "border-danger focus:border-danger ring-1 ring-danger/30"
+                        : "border-black/10 dark:border-white/10 focus:border-gold"
+                    }`}
                   />
+                  {formErrors.name && (
+                    <p className="mt-1 text-[11px] text-danger font-medium">{formErrors.name}</p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 gap-13 sm:grid-cols-2">
                   <div>
-                    <label className="mb-4 block text-xs uppercase tracking-wider text-ink-light/60 dark:text-ink-dim">
-                      Event Date
-                    </label>
+                    <div className="flex items-center justify-between mb-4">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-ink-light/80 dark:text-ink-dim">
+                        Event Date <span className="text-danger">*</span>
+                      </label>
+                      <span className="text-[10px] text-gold dark:text-gold-soft font-medium">
+                        Date only (YYYY-MM-DD)
+                      </span>
+                    </div>
                     <input
                       type="date"
                       value={date}
-                      onChange={(e) => setDate(e.target.value)}
+                      onChange={(e) => {
+                        setDate(e.target.value);
+                        if (formErrors.date) setFormErrors((prev) => ({ ...prev, date: undefined }));
+                      }}
                       required
-                      className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+                      className={`w-full rounded-card border bg-canvas-light dark:bg-white/[0.04] px-13 py-10 text-xs text-ink-light dark:text-ink-dark focus:outline-none transition-colors ${
+                        formErrors.date
+                          ? "border-danger focus:border-danger ring-1 ring-danger/30"
+                          : "border-black/10 dark:border-white/10 focus:border-gold"
+                      }`}
                     />
+                    {formErrors.date && (
+                      <p className="mt-1 text-[11px] text-danger font-medium">{formErrors.date}</p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="mb-4 block text-xs uppercase tracking-wider text-ink-light/60 dark:text-ink-dim">
-                      Catalog Category
-                    </label>
+                    <div className="flex items-center justify-between mb-4">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-ink-light/80 dark:text-ink-dim">
+                        Catalog Category
+                      </label>
+                      <span className="text-[10px] text-ink-light/40 dark:text-ink-dim">
+                        EventType
+                      </span>
+                    </div>
                     <select
                       value={selectedType}
                       onChange={(e) => setSelectedType(e.target.value as EventType)}
-                      className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-surface-dark px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+                      className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-surface-dark px-13 py-10 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
                     >
                       <option value="meetup">👥 Meetup</option>
-                      <option value="event">🎪 Conference / Event</option>
-                      <option value="speech">🎤 Speech / Talk</option>
-                      <option value="other">📌 Other Session</option>
+                      <option value="speech">🎤 Speech / Keynote</option>
+                      <option value="event">🎪 Event / Conference</option>
+                      <option value="other">📌 Workshop / Session</option>
                     </select>
                   </div>
                 </div>
 
-                <div>
-                  <label className="mb-4 block text-xs uppercase tracking-wider text-ink-light/60 dark:text-ink-dim">
-                    Topic / Theme
-                  </label>
-                  <input
-                    type="text"
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    placeholder="e.g., Generative AI in Production"
-                    className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
-                  />
+                <div className="grid grid-cols-1 gap-13 sm:grid-cols-2">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-ink-light/80 dark:text-ink-dim">
+                        Organizer / Host Name
+                      </label>
+                      <span className="text-[10px] text-ink-light/40 dark:text-ink-dim">
+                        Optional
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      value={organizerName}
+                      maxLength={255}
+                      onChange={(e) => {
+                        setOrganizerName(e.target.value);
+                        if (formErrors.organizerName) setFormErrors((prev) => ({ ...prev, organizerName: undefined }));
+                      }}
+                      placeholder={user?.email ? `${user.email.split("@")[0]} (default)` : "Organizer display name"}
+                      className={`w-full rounded-card border bg-canvas-light dark:bg-white/[0.04] px-13 py-10 text-xs text-ink-light dark:text-ink-dark focus:outline-none transition-colors ${
+                        formErrors.organizerName
+                          ? "border-danger focus:border-danger ring-1 ring-danger/30"
+                          : "border-black/10 dark:border-white/10 focus:border-gold"
+                      }`}
+                    />
+                    {formErrors.organizerName && (
+                      <p className="mt-1 text-[11px] text-danger font-medium">{formErrors.organizerName}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-ink-light/80 dark:text-ink-dim">
+                        Topic / Theme
+                      </label>
+                      <span className="text-[10px] text-ink-light/40 dark:text-ink-dim">
+                        {topic.length}/255
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      value={topic}
+                      maxLength={255}
+                      onChange={(e) => {
+                        setTopic(e.target.value);
+                        if (formErrors.topic) setFormErrors((prev) => ({ ...prev, topic: undefined }));
+                      }}
+                      placeholder="e.g., Generative AI in Production"
+                      className={`w-full rounded-card border bg-canvas-light dark:bg-white/[0.04] px-13 py-10 text-xs text-ink-light dark:text-ink-dark focus:outline-none transition-colors ${
+                        formErrors.topic
+                          ? "border-danger focus:border-danger ring-1 ring-danger/30"
+                          : "border-black/10 dark:border-white/10 focus:border-gold"
+                      }`}
+                    />
+                    {formErrors.topic && (
+                      <p className="mt-1 text-[11px] text-danger font-medium">{formErrors.topic}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Schema status note */}
+                <div className="rounded-card border border-gold/20 bg-gold/5 dark:bg-gold/[0.03] p-13 text-[11px] text-ink-light/70 dark:text-ink-dim space-y-1">
+                  <div className="flex items-center gap-1.5 font-semibold text-gold dark:text-gold-soft">
+                    <span>ℹ️</span>
+                    <span>Backend Schema Contract &amp; Status</span>
+                  </div>
+                  <p>
+                    • <strong>Persisted fields:</strong> Event Name, Category, Date, Topic, and Organizer Name.
+                  </p>
+                  <p className="text-[10px] opacity-80">
+                    • <strong>Upcoming backend features:</strong> Time-of-day scheduling, physical venue coordinates, and banner image uploads are pending backend database schema migration v2. Location badges are detected from title/topic keywords (e.g. Pune).
+                  </p>
                 </div>
 
                 <div className="flex justify-end gap-13 pt-13 border-t border-black/10 dark:border-white/10">
                   <button
                     type="button"
-                    onClick={() => setShowCreateModal(false)}
+                    onClick={() => {
+                      setShowCreateModal(false);
+                      setFormErrors({});
+                    }}
                     className="rounded-full border border-black/10 dark:border-white/10 px-21 py-8 text-xs font-medium text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark transition-colors"
                   >
                     Cancel
