@@ -199,7 +199,16 @@ export const getEvent = (token: string, id: string) =>
 
 export const createEvent = (
   token: string,
-  data: { name: string; date: string; topic?: string; organizer_name?: string; type?: EventType },
+  data: {
+    name: string;
+    date: string;
+    topic?: string;
+    location?: string;
+    banner_image?: string;
+    description?: string;
+    organizer_name?: string;
+    type?: EventType;
+  },
 ) => request<EventPublic>("/api/v1/events", { method: "POST", token, json: data });
 
 export const listCommunityContent = (token: string, params?: { event_id?: string; type?: string }) => {

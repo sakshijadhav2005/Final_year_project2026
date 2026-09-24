@@ -16,7 +16,7 @@ from app.schemas.event import EventCreate, EventRead
 router = APIRouter(prefix="/events", tags=["events"])
 
 
-@router.get("/", response_model=list[EventRead])
+@router.get("", response_model=list[EventRead])
 async def list_events(
     user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
@@ -29,7 +29,7 @@ async def list_events(
     return list(result.scalars().all())
 
 
-@router.post("/", response_model=EventRead, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=EventRead, status_code=status.HTTP_201_CREATED)
 async def create_event(
     body: EventCreate,
     user: Annotated[User, Depends(require_role([UserRole.EVENT_ORGANIZER, UserRole.ADMIN]))],
