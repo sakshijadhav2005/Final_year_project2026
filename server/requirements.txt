@@ -39,5 +39,5 @@ pydub==0.25.1
 boto3==1.37.9
 
 # Optional VideoDB — install when keys are available
-# videodb
+videodb
 
