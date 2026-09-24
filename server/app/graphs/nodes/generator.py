@@ -28,6 +28,7 @@ async def generator(state: dict[str, Any]) -> dict[str, Any]:
         user_memory=user_memory,
     )
 
-    # Return as a list so the Annoted[list, operator.add] reducer can safely aggregate it 
-    # with the outputs of other parallel agents!
-    return {"generated": [piece], "retry_count": int(state.get("retry_count") or 0)}
+    # Return as a list so the Annotated[list, operator.add] reducer can safely aggregate it 
+    # with the outputs of other parallel agents! Do NOT return retry_count here because 
+    # parallel nodes cannot overwrite a non-annotated state key simultaneously.
+    return {"generated": [piece]}

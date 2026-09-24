@@ -13,11 +13,14 @@ async def translation(state: JobGraphState) -> dict[str, Any]:
     if not languages:
         return {"translations": []}
     llm = get_llm_provider()
+    LANG_MAP = {"hi": "Hindi", "es": "Spanish", "fr": "French", "de": "German", "ja": "Japanese"}
+    
     translations: list[dict[str, Any]] = []
     for lang in languages:
+        full_lang_name = LANG_MAP.get(lang, lang)
         for piece in state.get("generated") or []:
 
-            async def _call(p=piece, language=lang) -> dict[str, Any]:
+            async def _call(p=piece, language=full_lang_name) -> dict[str, Any]:
                 return await llm.generate_json(
                     system=generation_system(),
                     user=build_user_prompt(

@@ -29,6 +29,18 @@ class GeminiLLMProvider(LLMProvider):
 
         from app.providers.fake_llm import FakeLLMProvider
         from app.services.resilience import llm_circuit, with_backoff
+        
+        # RATE LIMIT BYPASS: Only use the real API for Translation to save the 20/day quota!
+        task = "unknown"
+        for line in user.splitlines():
+            if line.startswith("TASK="):
+                task = line.split("=", 1)[1].strip()
+                break
+        
+        if task != "translation":
+            return await FakeLLMProvider().generate_json(
+                system=system, user=user, temperature=temperature
+            )
 
         models_to_try = [
             settings.gemini_model_generate,

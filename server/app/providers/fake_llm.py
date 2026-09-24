@@ -113,7 +113,10 @@ def _demo_content(task: str, transcript: str) -> dict[str, Any]:
     if task == "guardrail":
         return {"pass": True, "issues": []}
     if task == "translation":
-        return {"text": transcript}
+        return {
+            "title": "[HINDI TRANSLATION] अनुवादित शीर्षक",
+            "body": "यह एक नकली हिंदी अनुवाद है (This is a mock Hindi translation).\n\n" + snippet
+        }
     return {"ok": True, "task": task, "title": "Session Note", "body": snippet}
 
 

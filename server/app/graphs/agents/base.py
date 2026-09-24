@@ -56,9 +56,10 @@ class BaseCreatorAgent:
         system_prompt = self._build_system_prompt(user_memory)
         brief_str = str(brief) if brief else "N/A"
         user_prompt = (
-            f"MASTER EDITORIAL BRIEF:\n{brief_str}\n\n"
-            f"EVENT TRANSCRIPT:\n{transcript_text[:12000]}\n\n"
-            f"Generate the {self.agent_name} post matching the skill blueprint."
+            "Here is the context you must use to generate the post:\n\n"
+            f"<EDITORIAL_BRIEF>\n{brief_str}\n</EDITORIAL_BRIEF>\n\n"
+            f"<TRANSCRIPT>\n{transcript_text[:12000]}\n</TRANSCRIPT>\n\n"
+            f"Now, please generate the final {self.agent_name} post matching your system instructions."
         )
 
         async def _call() -> dict[str, Any]:
