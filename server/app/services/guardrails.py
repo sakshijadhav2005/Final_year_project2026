@@ -43,10 +43,11 @@ def grounding_check(body: str, transcript: str) -> dict:
 from app.providers.factory import get_llm_provider
 from app.services.resilience import llm_circuit, with_backoff
 
+
 async def verify_content_with_llm(body: str, transcript: str) -> dict:
     """Uses LLM-as-a-judge to semantically verify facts and screen for moderation."""
     llm = get_llm_provider()
-    
+
     system_prompt = (
         "You are an elite fact-checker and moderation guardrail. "
         "Read the provided 'Generated Post' and cross-reference it against the 'Original Transcript'. "
@@ -55,29 +56,29 @@ async def verify_content_with_llm(body: str, transcript: str) -> dict:
         "Return JSON exactly in this format: "
         '{"grounding_pass": true/false, "moderation_pass": true/false, "issues": ["list of hallucinated or toxic quotes if any"]}'
     )
-    
+
     user_prompt = f"Original Transcript:\n{transcript[:12000]}\n\nGenerated Post:\n{body}"
-    
+
     async def _call():
         return await llm.generate_json(system=system_prompt, user=user_prompt, temperature=0.1)
 
     try:
         res = await with_backoff(_call, circuit=llm_circuit)
-        
+
         # Fallback parsing in case the LLM didn't return exactly true/false
         g_pass = res.get("grounding_pass", True)
         m_pass = res.get("moderation_pass", True)
         issues = res.get("issues", [])
-        
+
         return {
             "grounding": {"pass": g_pass, "issues": issues},
-            "moderation": {"pass": m_pass, "hits": issues if not m_pass else []}
+            "moderation": {"pass": m_pass, "hits": issues if not m_pass else []},
         }
     except Exception as e:
         # If API fails, default to pass so we don't break the pipeline completely
         return {
             "grounding": {"pass": True, "issues": [str(e)]},
-            "moderation": {"pass": True, "hits": []}
+            "moderation": {"pass": True, "hits": []},
         }
 
 

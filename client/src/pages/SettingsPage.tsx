@@ -351,7 +351,6 @@ export function SettingsPage() {
         <section className="rounded-card border border-black/10 bg-surface-light p-21 shadow-sm dark:border-white/10 dark:bg-surface-dark dark:shadow-none">
           <h3 className="text-sm font-semibold text-ink-light dark:text-ink-dark">Appearance & Design System</h3>
           <p className="mt-4 text-xs text-ink-light/50 dark:text-ink-dim">Deep Signal design tokens with golden ratio layout</p>
-
             <div className="mt-13 flex gap-13">
               <button
                 type="button"
