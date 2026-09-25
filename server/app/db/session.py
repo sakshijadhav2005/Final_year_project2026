@@ -62,6 +62,19 @@ async def init_db() -> None:
                     )
                 except Exception:
                     pass
+            for table, col, col_type in [
+                ("recordings", "event_id", "CHAR(32) NULL"),
+                ("jobs", "event_id", "CHAR(32) NULL"),
+                ("events", "location", "VARCHAR(255) NULL"),
+                ("events", "banner_image", "VARCHAR(1024) NULL"),
+                ("events", "description", "TEXT NULL"),
+            ]:
+                try:
+                    await conn.execute(
+                        text(f"ALTER TABLE {table} ADD COLUMN {col} {col_type}")
+                    )
+                except Exception:
+                    pass
         elif settings.is_sqlite:
             for col, col_type in [
                 ("event_id", "TEXT NULL"),
@@ -71,6 +84,19 @@ async def init_db() -> None:
                 try:
                     await conn.execute(
                         text(f"ALTER TABLE content_pieces ADD COLUMN {col} {col_type}")
+                    )
+                except Exception:
+                    pass
+            for table, col, col_type in [
+                ("recordings", "event_id", "TEXT NULL"),
+                ("jobs", "event_id", "TEXT NULL"),
+                ("events", "location", "TEXT NULL"),
+                ("events", "banner_image", "TEXT NULL"),
+                ("events", "description", "TEXT NULL"),
+            ]:
+                try:
+                    await conn.execute(
+                        text(f"ALTER TABLE {table} ADD COLUMN {col} {col_type}")
                     )
                 except Exception:
                     pass
