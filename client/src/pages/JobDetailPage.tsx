@@ -106,6 +106,34 @@ export function JobDetailPage() {
     );
   }, [transcriptText, searchQuery]);
 
+  if (job.isError) {
+    return (
+      <GoldenShell>
+        <div className="flex flex-col items-center justify-center py-48 text-center">
+          <span className="text-5xl mb-13">🔍</span>
+          <h2 className="font-display text-2xl font-bold mb-8">Job Not Found</h2>
+          <p className="text-sm opacity-60 max-w-md mb-21">
+            Job <span className="font-mono text-gold-soft">{jobId}</span> does not exist in the current database. This happens if the database was reset or you visited an old session link.
+          </p>
+          <div className="flex gap-13">
+            <Link
+              to="/dashboard"
+              className="rounded-full bg-gold/20 border border-gold/40 px-21 py-8 text-sm font-semibold text-gold-soft hover:bg-gold/30 transition-all"
+            >
+              Go to Dashboard
+            </Link>
+            <Link
+              to="/"
+              className="rounded-full bg-white/[0.05] border border-white/10 px-21 py-8 text-sm font-medium hover:bg-white/[0.1] transition-all"
+            >
+              Upload New Recording
+            </Link>
+          </div>
+        </div>
+      </GoldenShell>
+    );
+  }
+
   return (
     <GoldenShell>
       {/* Top Breadcrumb & Actions */}

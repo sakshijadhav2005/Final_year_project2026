@@ -54,18 +54,18 @@ async def get_job(
     return await _load_job(db, user, job_id)
 
 
-@router.get("/{job_id}/transcript", response_model=TranscriptPublic)
+@router.get("/{job_id}/transcript", response_model=TranscriptPublic | None)
 async def get_transcript(
     job_id: UUID,
     user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
-) -> TranscriptPublic:
+) -> TranscriptPublic | None:
     await _load_job(db, user, job_id)
     row = (
         await db.execute(select(Transcript).where(Transcript.job_id == job_id))
     ).scalar_one_or_none()
     if row is None:
-        raise http_error(status.HTTP_404_NOT_FOUND, "Transcript not ready", "not_found")
+        return None
     return TranscriptPublic(
         full_text=row.full_text,
         language=row.language,

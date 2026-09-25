@@ -34,8 +34,9 @@ class GeminiLLMProvider(LLMProvider):
 
         models_to_try = [
             settings.gemini_model_generate,
-            "gemini-3.6-flash",
-            "gemini-2.5-flash",
+            "gemini-1.5-flash",
+            "gemini-2.0-flash",
+            "gemini-1.5-pro",
             "gemini-flash-latest",
         ]
         # Deduplicate candidates while keeping order
