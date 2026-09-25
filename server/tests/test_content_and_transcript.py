@@ -229,3 +229,109 @@ async def test_event_transcript_access():
     )
     assert res_zero_posts.status_code == 200
     assert res_zero_posts.json()["full_text"] == org_trans["full_text"]
+
+
+@pytest.mark.asyncio
+async def test_saved_content_and_customization():
+    client = TestClient(app)
+
+    org_token, org_id = _register_user(client, "event_organizer")
+    attendee_token, attendee_id = _register_user(client, "regular_user")
+    other_token, _ = _register_user(client, "regular_user")
+
+    # 1. Organizer creates an event and an organizer post
+    event_res = client.post(
+        "/api/v1/events/",
+        headers={"Authorization": f"Bearer {org_token}"},
+        json={
+            "name": "Cloud Native Con",
+            "date": str(date.today()),
+            "topic": "Microservices in Go and Python",
+            "type": "event",
+        },
+    )
+    event_id = event_res.json()["id"]
+
+    org_post_res = client.post(
+        "/api/v1/content",
+        headers={"Authorization": f"Bearer {org_token}"},
+        json={
+            "title": "Organizer Keynote Post",
+            "body": "Official session summary by keynote speaker.",
+            "type": "linkedin",
+            "event_id": event_id,
+        },
+    )
+    assert org_post_res.status_code == 201
+    org_piece = org_post_res.json()
+    org_piece_id = org_piece["id"]
+
+    # 2. Attendee customizes the organizer post (CRITICAL RULE: DO NOT OVERWRITE ORGANIZER PIECE)
+    customized_res = client.post(
+        "/api/v1/content",
+        headers={"Authorization": f"Bearer {attendee_token}"},
+        json={
+            "title": "My Custom Takeaway from Keynote",
+            "body": "Here are my personal notes and reflections on the microservices talk.",
+            "type": "linkedin",
+            "event_id": event_id,
+            "parent_id": org_piece_id,
+        },
+    )
+    assert customized_res.status_code == 201
+    custom_piece = customized_res.json()
+    assert custom_piece["id"] != org_piece_id
+    assert custom_piece["user_id"] == attendee_id
+    assert custom_piece["parent_id"] == org_piece_id
+    assert custom_piece["title"] == "My Custom Takeaway from Keynote"
+
+    # Verify organizer's piece remains intact and UNCHANGED
+    check_org_res = client.get(
+        f"/api/v1/content/{org_piece_id}",
+        headers={"Authorization": f"Bearer {org_token}"},
+    )
+    assert check_org_res.status_code == 200
+    assert check_org_res.json()["title"] == "Organizer Keynote Post"
+    assert check_org_res.json()["body"] == "Official session summary by keynote speaker."
+
+    # 3. Save Functionality: Attendee saves organizer's piece
+    save_res = client.post(
+        f"/api/v1/content/{org_piece_id}/save",
+        headers={"Authorization": f"Bearer {attendee_token}"},
+    )
+    assert save_res.status_code == 200
+    assert save_res.json()["status"] == "saved"
+
+    # 4. List saved content for attendee
+    saved_list_res = client.get(
+        "/api/v1/content/saved",
+        headers={"Authorization": f"Bearer {attendee_token}"},
+    )
+    assert saved_list_res.status_code == 200
+    saved_items = saved_list_res.json()
+    assert len(saved_items) == 1
+    assert saved_items[0]["id"] == org_piece_id
+
+    # 5. Isolation: Other user's saved list is empty
+    other_saved_res = client.get(
+        "/api/v1/content/saved",
+        headers={"Authorization": f"Bearer {other_token}"},
+    )
+    assert other_saved_res.status_code == 200
+    assert other_saved_res.json() == []
+
+    # 6. Unsave content
+    unsave_res = client.delete(
+        f"/api/v1/content/{org_piece_id}/save",
+        headers={"Authorization": f"Bearer {attendee_token}"},
+    )
+    assert unsave_res.status_code == 200
+    assert unsave_res.json()["status"] == "unsaved"
+
+    # Verify saved list is now empty for attendee
+    saved_list_after = client.get(
+        "/api/v1/content/saved",
+        headers={"Authorization": f"Bearer {attendee_token}"},
+    )
+    assert saved_list_after.status_code == 200
+    assert saved_list_after.json() == []

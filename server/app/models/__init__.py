@@ -1,5 +1,5 @@
 from app.models.chat import ChatMessage, ChatSession
-from app.models.content import ContentPiece
+from app.models.content import ContentPiece, SavedContent
 from app.models.event import Event, EventType
 from app.models.job import AgentOutput, Job, Transcript
 from app.models.recording import Recording
@@ -16,6 +16,7 @@ __all__ = [
     "Job",
     "Recording",
     "RefreshToken",
+    "SavedContent",
     "Transcript",
     "User",
     "UserProfile",

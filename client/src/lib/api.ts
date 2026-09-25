@@ -86,6 +86,7 @@ export type ContentPublic = {
   version: number;
   grounding: { pass?: boolean; unsupported?: string[] } | null;
   moderation: { pass?: boolean; hits?: string[] } | null;
+  parent_id?: string | null;
   created_at?: string | null;
 };
 
@@ -280,8 +281,23 @@ export type ChatSessionPublic = {
 
 export const createPost = (
   token: string,
-  data: { title: string; body: string; type?: string; event_id?: string },
+  data: { title: string; body: string; type?: string; event_id?: string; parent_id?: string },
 ) => request<ContentPublic>("/api/v1/content", { method: "POST", token, json: data });
+
+export const saveContent = (token: string, contentId: string) =>
+  request<{ status: string; content_id: string }>(`/api/v1/content/${contentId}/save`, {
+    method: "POST",
+    token,
+  });
+
+export const unsaveContent = (token: string, contentId: string) =>
+  request<{ status: string; content_id: string }>(`/api/v1/content/${contentId}/save`, {
+    method: "DELETE",
+    token,
+  });
+
+export const getSavedContent = (token: string) =>
+  request<ContentPublic[]>("/api/v1/content/saved", { token });
 
 export const deleteJob = (token: string, id: string) =>
   request<void>(`/api/v1/jobs/${id}`, { method: "DELETE", token });

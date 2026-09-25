@@ -9,6 +9,10 @@ type CreatePostFormProps = {
   defaultEventId?: string;
   defaultTitle?: string;
   defaultBody?: string;
+  defaultType?: string;
+  parentId?: string;
+  isCustomization?: boolean;
+  sourceAuthor?: string;
   onSuccess?: () => void;
   onCancel?: () => void;
 };
@@ -18,6 +22,10 @@ export function CreatePostForm({
   defaultEventId = "",
   defaultTitle = "",
   defaultBody = "",
+  defaultType = "discussion",
+  parentId,
+  isCustomization = false,
+  sourceAuthor = "Organizer",
   onSuccess,
   onCancel,
 }: CreatePostFormProps) {
@@ -28,7 +36,7 @@ export function CreatePostForm({
   const [title, setTitle] = useState(defaultTitle);
   const [body, setBody] = useState(defaultBody);
   const [eventId, setEventId] = useState(defaultEventId);
-  const [postType, setPostType] = useState("discussion");
+  const [postType, setPostType] = useState(defaultType);
 
   useEffect(() => {
     if (defaultEventId) setEventId(defaultEventId);
@@ -42,6 +50,10 @@ export function CreatePostForm({
     if (defaultBody) setBody(defaultBody);
   }, [defaultBody]);
 
+  useEffect(() => {
+    if (defaultType) setPostType(defaultType);
+  }, [defaultType]);
+
   const mutation = useMutation({
     mutationFn: async () => {
       if (!token) throw new Error("Not authenticated");
@@ -50,10 +62,12 @@ export function CreatePostForm({
         body,
         type: postType,
         event_id: eventId || undefined,
+        parent_id: parentId || undefined,
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["community-content"] });
+      queryClient.invalidateQueries({ queryKey: ["event-content"] });
       setTitle("");
       setBody("");
       onSuccess?.();
@@ -74,10 +88,13 @@ export function CreatePostForm({
       <div className="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-13">
         <div>
           <h3 className="font-display text-base font-semibold text-ink-light dark:text-ink-dark flex items-center gap-2">
-            <span>✍️</span> Share with the Community
+            <span>{isCustomization ? "✨" : "✍️"}</span>{" "}
+            {isCustomization ? "Customize Organizer Takeaway" : "Share with the Community"}
           </h3>
           <p className="text-xs text-ink-light/60 dark:text-ink-dim mt-1">
-            Publish your insights, questions, or highlights from attended sessions
+            {isCustomization
+              ? `Personal Copy: Editing will create a separate version in your library. ${sourceAuthor}'s original content remains unchanged.`
+              : "Publish your insights, questions, or highlights from attended sessions"}
           </p>
         </div>
         {onCancel && (
@@ -182,7 +199,11 @@ export function CreatePostForm({
             disabled={mutation.isPending || !title.trim() || !body.trim()}
             className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/30 disabled:opacity-50 transition-all shadow-sm"
           >
-            {mutation.isPending ? "Publishing..." : "Publish Post 🚀"}
+            {mutation.isPending
+              ? "Publishing..."
+              : isCustomization
+              ? "Save Customized Post ✨"
+              : "Publish Post 🚀"}
           </button>
         </div>
       </div>

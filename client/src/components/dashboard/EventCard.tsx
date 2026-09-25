@@ -5,6 +5,7 @@ import { getEventCity, getCityBadge } from "@/lib/eventLocation";
 type EventCardProps = {
   event: EventPublic;
   onSelect?: (event: EventPublic) => void;
+  selected?: boolean;
 };
 
 const TYPE_CONFIG: Record<string, { label: string; icon: string; badgeClass: string }> = {
@@ -30,7 +31,7 @@ const TYPE_CONFIG: Record<string, { label: string; icon: string; badgeClass: str
   },
 };
 
-export function EventCard({ event, onSelect }: EventCardProps) {
+export function EventCard({ event, onSelect, selected = false }: EventCardProps) {
   const config = TYPE_CONFIG[event.type] ?? TYPE_CONFIG.other;
   const detectedCity = getEventCity(event);
   const cityBadge = detectedCity ? getCityBadge(detectedCity) : null;
@@ -42,7 +43,14 @@ export function EventCard({ event, onSelect }: EventCardProps) {
   });
 
   return (
-    <div className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-6 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:shadow-2xl hover:shadow-amber-500/10">
+    <div
+      onClick={() => onSelect?.(event)}
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border p-6 shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 ${
+        selected
+          ? "border-amber-400 bg-slate-900/90 ring-2 ring-amber-400/50 shadow-amber-500/20"
+          : "border-white/10 bg-slate-900/60 hover:border-white/20 hover:shadow-2xl hover:shadow-amber-500/10 cursor-pointer"
+      }`}
+    >
       <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-gradient-to-br from-amber-500/10 via-purple-500/5 to-transparent blur-xl transition-all duration-300 group-hover:scale-150" />
 
       <div>
@@ -103,10 +111,17 @@ export function EventCard({ event, onSelect }: EventCardProps) {
         {onSelect && (
           <button
             type="button"
-            onClick={() => onSelect(event)}
-            className="inline-flex items-center justify-center rounded-xl bg-amber-500/20 px-3 py-2 text-xs font-semibold text-amber-300 transition-all hover:bg-amber-500/30"
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(event);
+            }}
+            className={`inline-flex items-center justify-center rounded-xl px-3 py-2 text-xs font-semibold transition-all ${
+              selected
+                ? "bg-amber-400 text-slate-950 font-bold shadow-sm"
+                : "bg-amber-500/20 text-amber-300 hover:bg-amber-500/30"
+            }`}
           >
-            Select
+            {selected ? "✓ Active" : "Select"}
           </button>
         )}
       </div>

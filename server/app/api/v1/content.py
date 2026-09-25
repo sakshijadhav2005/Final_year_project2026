@@ -10,10 +10,16 @@ from app.api.deps import get_current_user
 from app.core.exceptions import http_error
 from app.core.security import UserRole
 from app.db.session import get_db
-from app.models.content import ContentPiece
+from app.models.content import ContentPiece, SavedContent
 from app.models.job import Job
 from app.models.user import User
-from app.schemas.common import ContentPatch, ContentPublic, CreatePostRequest, RejectRequest
+from app.schemas.common import (
+    ContentPatch,
+    ContentPublic,
+    CreatePostRequest,
+    RejectRequest,
+    SaveResponse,
+)
 from app.services.audit import write_audit
 
 router = APIRouter(tags=["content"])
@@ -62,6 +68,21 @@ async def list_community_content(
     return list(result.scalars().all())
 
 
+@router.get("/content/saved", response_model=list[ContentPublic])
+async def list_saved_content(
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> list[ContentPiece]:
+    stmt = (
+        select(ContentPiece)
+        .join(SavedContent, SavedContent.content_id == ContentPiece.id)
+        .where(SavedContent.user_id == user.id)
+        .order_by(SavedContent.created_at.desc())
+    )
+    result = await db.execute(stmt)
+    return list(result.scalars().all())
+
+
 @router.post("/content", response_model=ContentPublic, status_code=status.HTTP_201_CREATED)
 async def create_user_post(
     body: CreatePostRequest,
@@ -81,11 +102,59 @@ async def create_user_post(
         author_name=author_name,
         status="approved",
         language="en",
+        parent_id=body.parent_id,
     )
     db.add(piece)
     await db.commit()
     await db.refresh(piece)
     return piece
+
+
+@router.post("/content/{content_id}/save", response_model=SaveResponse)
+async def save_content(
+    content_id: UUID,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> SaveResponse:
+    piece = (
+        await db.execute(select(ContentPiece).where(ContentPiece.id == content_id))
+    ).scalar_one_or_none()
+    if piece is None:
+        raise http_error(status.HTTP_404_NOT_FOUND, "Content not found", "not_found")
+
+    existing = (
+        await db.execute(
+            select(SavedContent).where(
+                SavedContent.user_id == user.id,
+                SavedContent.content_id == content_id,
+            )
+        )
+    ).scalar_one_or_none()
+
+    if existing is None:
+        saved = SavedContent(user_id=user.id, content_id=content_id)
+        db.add(saved)
+        await db.commit()
+
+    return SaveResponse(status="saved", content_id=str(content_id))
+
+
+@router.delete("/content/{content_id}/save", response_model=SaveResponse)
+async def unsave_content(
+    content_id: UUID,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> SaveResponse:
+    from sqlalchemy import delete
+
+    await db.execute(
+        delete(SavedContent).where(
+            SavedContent.user_id == user.id,
+            SavedContent.content_id == content_id,
+        )
+    )
+    await db.commit()
+    return SaveResponse(status="unsaved", content_id=str(content_id))
 
 
 @router.get("/jobs/{job_id}/content", response_model=list[ContentPublic])

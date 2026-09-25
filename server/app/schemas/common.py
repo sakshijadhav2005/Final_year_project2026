@@ -16,6 +16,7 @@ from app.schemas.content import (
     ContentPublic,
     CreatePostRequest,
     RejectRequest,
+    SaveResponse,
 )
 from app.schemas.jobs import (
     JobPublic,

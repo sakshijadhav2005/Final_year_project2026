@@ -25,6 +25,7 @@ class ContentPublic(ORMModel):
     version: int = 1
     grounding: dict | None = None
     moderation: dict | None = None
+    parent_id: UUID | None = None
     created_at: datetime | None = None
 
 
@@ -33,6 +34,7 @@ class CreatePostRequest(BaseModel):
     body: str = Field(..., min_length=1)
     type: str = Field(default="user_post", max_length=32)
     event_id: UUID | None = None
+    parent_id: UUID | None = None
 
 
 class ContentPatch(BaseModel):
@@ -42,3 +44,8 @@ class ContentPatch(BaseModel):
 
 class RejectRequest(BaseModel):
     reason: str = Field(min_length=1, max_length=2000)
+
+
+class SaveResponse(BaseModel):
+    status: str
+    content_id: str
