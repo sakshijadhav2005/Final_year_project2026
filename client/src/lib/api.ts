@@ -68,6 +68,7 @@ export type TranscriptPublic = {
   segments: TranscriptSegment[] | null;
   provider: string;
   badge: "high" | "medium" | "low";
+  job_id?: string | null;
 };
 
 export type ContentPublic = {
@@ -218,6 +219,9 @@ export const listEvents = (token: string, type?: EventType) =>
 
 export const getEvent = (token: string, id: string) =>
   request<EventPublic>(`/api/v1/events/${id}`, { token });
+
+export const getEventTranscript = (token: string, eventId: string) =>
+  request<TranscriptPublic>(`/api/v1/events/${eventId}/transcript`, { token });
 
 export const createEvent = (
   token: string,

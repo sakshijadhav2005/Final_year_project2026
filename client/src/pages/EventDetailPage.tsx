@@ -6,7 +6,7 @@ import { GoldenShell } from "@/layouts/GoldenShell";
 import {
   getEvent,
   listCommunityContent,
-  getTranscript,
+  getEventTranscript,
   type ContentPublic,
   type TranscriptSegment,
 } from "@/lib/api";
@@ -119,15 +119,17 @@ export function EventDetailPage() {
   const event = eventQuery.data;
   const posts: ContentPublic[] = contentQuery.data || [];
 
-  // Derive the exact job associated with this event from its generated content pieces
-  const eventJobId = posts.find((post) => Boolean(post.job_id))?.job_id ?? undefined;
-
-  // Fetch transcript ONLY if a valid job ID is linked to this event
+  // Fetch event transcript directly via event ID (does NOT depend on generated community posts)
   const transcriptQuery = useQuery({
-    queryKey: ["transcript", eventJobId],
-    queryFn: () => (token && eventJobId ? getTranscript(token, eventJobId) : null),
-    enabled: !!token && !!eventJobId,
+    queryKey: ["event-transcript", eventId],
+    queryFn: () => (token && eventId ? getEventTranscript(token, eventId) : null),
+    enabled: !!token && !!eventId,
+    retry: false,
   });
+
+  // Retain the associated job ID only where needed for chat
+  const eventJobId =
+    transcriptQuery.data?.job_id ?? posts.find((post) => Boolean(post.job_id))?.job_id ?? undefined;
 
   const detectedCity = event ? getEventCity(event) : null;
   const cityBadge = detectedCity ? getCityBadge(detectedCity) : null;
@@ -611,7 +613,22 @@ export function EventDetailPage() {
             )}
 
             {/* Content states */}
-            {!eventJobId ? (
+            {transcriptQuery.isLoading ? (
+              <div className="py-34 text-center">
+                <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-gold border-t-transparent" />
+                <p className="mt-8 text-xs text-ink-light/60 dark:text-ink-dim">
+                  Fetching grounded transcript from speech-to-text engine...
+                </p>
+              </div>
+            ) : transcriptQuery.isError &&
+              !(transcriptQuery.error as Error).message.toLowerCase().includes("not found") &&
+              !(transcriptQuery.error as Error).message.includes("404") ? (
+              <div className="rounded-card border border-danger/30 bg-danger/10 p-21 text-center">
+                <p className="text-xs text-danger">
+                  ⚠️ Unable to retrieve transcript: {(transcriptQuery.error as Error).message}
+                </p>
+              </div>
+            ) : !hasTranscript ? (
               <div className="rounded-card border border-dashed border-gold/20 bg-surface-light/40 dark:bg-surface-dark/40 p-34 text-center">
                 <span className="text-3xl">🎙️</span>
                 <h4 className="mt-8 font-display text-base font-semibold text-ink-light dark:text-ink-dark">
@@ -629,19 +646,6 @@ export function EventDetailPage() {
                     <span>Browse Community Discussion</span>
                   </Link>
                 </div>
-              </div>
-            ) : transcriptQuery.isLoading ? (
-              <div className="py-34 text-center">
-                <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-gold border-t-transparent" />
-                <p className="mt-8 text-xs text-ink-light/60 dark:text-ink-dim">
-                  Fetching grounded transcript from speech-to-text engine...
-                </p>
-              </div>
-            ) : transcriptQuery.error ? (
-              <div className="rounded-card border border-danger/30 bg-danger/10 p-21 text-center">
-                <p className="text-xs text-danger">
-                  ⚠️ Unable to retrieve transcript for session {eventJobId.slice(0, 8)}: {(transcriptQuery.error as Error).message}
-                </p>
               </div>
             ) : activeTranscriptMode === "dialogue" && hasSegments ? (
               /* Timestamped Dialogue View */

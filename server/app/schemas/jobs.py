@@ -29,6 +29,7 @@ class TranscriptPublic(BaseModel):
     segments: list | None
     provider: str
     badge: str
+    job_id: UUID | None = None
 
 
 class RegenerRequest(BaseModel):
