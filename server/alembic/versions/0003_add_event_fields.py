@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '0003_add_event_fields'
-down_revision = '0002_add_events_table'
+down_revision = '0003_add_event_id_to_jobs'
 branch_labels = None
 depends_on = None
 
