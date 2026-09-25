@@ -1,6 +1,9 @@
 from langchain_core.tools import tool
 import structlog
-from duckduckgo_search import DDGS
+try:
+    from duckduckgo_search import DDGS
+except ImportError:
+    DDGS = None
 
 logger = structlog.get_logger("agent_tools")
 
@@ -10,6 +13,8 @@ def search_web(query: str) -> str:
     Provide a specific search query.
     """
     logger.info("tool_invoked", tool="search_web", query=query)
+    if DDGS is None:
+        return "No relevant information found on the web (search tool offline)."
     try:
         results = DDGS().text(query, max_results=3)
         if not results:
