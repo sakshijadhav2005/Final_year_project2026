@@ -26,6 +26,7 @@ export function SettingsPage() {
   const [fullName, setFullName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [organization, setOrganization] = useState("");
+  const [websiteUrl, setWebsiteUrl] = useState("");
   const [linkedinHandle, setLinkedinHandle] = useState("");
   const [instagramHandle, setInstagramHandle] = useState("");
   const [brandTone, setBrandTone] = useState("Professional");
@@ -41,6 +42,7 @@ export function SettingsPage() {
       setFullName(profileQuery.data.full_name || "");
       setJobTitle(profileQuery.data.job_title || "");
       setOrganization(profileQuery.data.organization || "");
+      setWebsiteUrl(profileQuery.data.website_url || "");
       setLinkedinHandle(profileQuery.data.linkedin_handle || "");
       setInstagramHandle(profileQuery.data.instagram_handle || "");
       setBrandTone(profileQuery.data.brand_tone || "Professional");
@@ -57,6 +59,7 @@ export function SettingsPage() {
         full_name: fullName.trim() || null,
         job_title: jobTitle.trim() || null,
         organization: organization.trim() || null,
+        website_url: websiteUrl.trim() || null,
         linkedin_handle: linkedinHandle.trim() || null,
         instagram_handle: instagramHandle.trim() || null,
         brand_tone: brandTone.trim() || null,
@@ -265,18 +268,33 @@ export function SettingsPage() {
                 </div>
               </div>
 
-              {/* Custom Sign-off */}
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-ink-light/60 dark:text-ink-dim mb-4">
-                  Custom Sign-off
-                </label>
-                <input
-                  type="text"
-                  value={customSignoff}
-                  onChange={(e) => setCustomSignoff(e.target.value)}
-                  placeholder="e.g. Stay curious and keep building 🚀"
-                  className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
-                />
+              {/* Website URL & Custom Sign-off */}
+              <div className="grid grid-cols-1 gap-13 sm:grid-cols-2">
+                <div>
+                  <label className="block text-xs uppercase tracking-wider text-ink-light/60 dark:text-ink-dim mb-4">
+                    Website URL
+                  </label>
+                  <input
+                    type="url"
+                    value={websiteUrl}
+                    onChange={(e) => setWebsiteUrl(e.target.value)}
+                    placeholder="e.g. https://alexmorgan.dev"
+                    className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs uppercase tracking-wider text-ink-light/60 dark:text-ink-dim mb-4">
+                    Custom Sign-off
+                  </label>
+                  <input
+                    type="text"
+                    value={customSignoff}
+                    onChange={(e) => setCustomSignoff(e.target.value)}
+                    placeholder="e.g. Stay curious and keep building 🚀"
+                    className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+                  />
+                </div>
               </div>
 
               {/* Bio / Brand Context */}
