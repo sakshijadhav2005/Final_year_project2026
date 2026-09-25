@@ -139,6 +139,27 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                 )
                 return
 
+            # --- VAD HALLUCINATION GUARDRAIL ---
+            # Reject known Whisper hallucinations caused by background noise/coughing
+            known_hallucinations = [
+                "अमर रहे, अमर रहे, नेताजी सुभाष चंद्र बोस अमर रहे।",
+                "अमर रहे, अमर रहे, नेताजी सुभाष चंद्र बोस अमर रहे",
+                "अमर रहे, अमर रहे, नेताजी सुभाष चंद्र बोस",
+            ]
+            
+            clean_text = transcript.text.strip()
+            if any(hallucination in clean_text for hallucination in known_hallucinations):
+                await _save(
+                    db,
+                    job,
+                    status="needs_reupload",
+                    error_code="vad_hallucination",
+                    error_message="Audio was mostly silence or noise (detected hallucinated output). Please upload a clearer recording with actual speech.",
+                    finished_at=datetime.now(UTC),
+                    progress={key: "failed" for key in AGENT_KEYS},
+                )
+                return
+
             if transcript.vendor_id:
                 recording.videodb_id = transcript.vendor_id
             recording.duration_sec = (

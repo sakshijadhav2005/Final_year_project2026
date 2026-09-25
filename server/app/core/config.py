@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     gemini_model_generate: str = "gemini-3.6-flash"
     gemini_model_analyze: str = "gemini-3.6-flash"
+    portkey_api_key: str = ""
+    openai_api_key: str = ""
+    groq_api_key: str = ""
     llm_provider: str = "gemini"
 
     rag_token_threshold: int = 12000

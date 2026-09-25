@@ -16,8 +16,10 @@ def get_stt_provider() -> STTProvider:
 
 def get_llm_provider() -> LLMProvider:
     settings = get_settings()
+    if settings.llm_provider == "portkey" or settings.portkey_api_key:
+        from app.providers.portkey_llm import PortkeyLLMProvider
+        return PortkeyLLMProvider()
     if settings.gemini_api_key:
         from app.providers.gemini_llm import GeminiLLMProvider
-
         return GeminiLLMProvider()
     return FakeLLMProvider()
