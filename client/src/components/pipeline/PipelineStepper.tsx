@@ -19,13 +19,19 @@ export function PipelineStepper({
   const isJobDone = ["pending_review", "ready_to_publish"].includes(jobStatus);
   const isFailed = ["failed", "needs_reupload"].includes(jobStatus);
 
-  // Grouped steps
+  // Grouped steps with sequential lifecycle gating
   const steps = [
     {
       id: "ingest",
       title: "1. Upload & Quality Pre-Check",
       description: "Antivirus, silence detection & sample rate",
-      status: getStepStatus([progress.quality_check], jobStatus, isJobDone, isFailed),
+      status: isFailed && progress.quality_check === "failed"
+        ? "failed"
+        : progress.quality_check === "complete" || isJobDone || ["transcribing", "analyzing", "planning", "generating", "guarding", "translating", "pending_review", "ready_to_publish"].includes(jobStatus)
+        ? "complete"
+        : jobStatus === "validating" || progress.quality_check === "running"
+        ? "running"
+        : "queued",
       icon: "🛡️",
     },
     {
@@ -35,9 +41,9 @@ export function PipelineStepper({
         ? `Confidence: ${transcriptConfidence.toUpperCase()} ${avgConfidence ? `(${(avgConfidence * 100).toFixed(0)}%)` : ""}`
         : "VideoDB speech-to-text & timestamp indexing",
       status:
-        transcriptConfidence || progress.topic_extraction || isJobDone
+        isJobDone || ["analyzing", "planning", "generating", "guarding", "translating", "pending_review", "ready_to_publish"].includes(jobStatus) || progress.topic_extraction === "complete"
           ? "complete"
-          : jobStatus === "validating"
+          : jobStatus === "transcribing"
           ? "running"
           : "queued",
       icon: "🎙️",
@@ -46,17 +52,12 @@ export function PipelineStepper({
       id: "analysis",
       title: "3. 4-Agent Intelligence Fan-Out",
       description: "Topics, Highlights, Speaker Roles & Sentiment",
-      status: getStepStatus(
-        [
-          progress.topic_extraction,
-          progress.highlight_detection,
-          progress.speaker_analysis,
-          progress.sentiment_analysis,
-        ],
-        jobStatus,
-        isJobDone,
-        isFailed,
-      ),
+      status:
+        isJobDone || ["planning", "generating", "guarding", "translating", "pending_review", "ready_to_publish"].includes(jobStatus) || (progress.topic_extraction === "complete" && progress.highlight_detection === "complete")
+          ? "complete"
+          : jobStatus === "analyzing" || progress.topic_extraction === "running"
+          ? "running"
+          : "queued",
       icon: "🧠",
       subAgents: [
         { name: "Topics", status: progress.topic_extraction },
@@ -67,30 +68,50 @@ export function PipelineStepper({
     },
     {
       id: "planner",
-      title: "4. Content Planner & RAG Gate",
-      description: "Brief synthesis & context augmentation",
-      status: getStepStatus([progress.content_planner, progress.rag_retrieve], jobStatus, isJobDone, isFailed),
+      title: "4. Editorial Brief & Planning",
+      description: "Synthesis of key takeaways & editorial structure",
+      status:
+        isJobDone || ["generating", "guarding", "translating", "pending_review", "ready_to_publish"].includes(jobStatus) || progress.content_planner === "complete"
+          ? "complete"
+          : jobStatus === "planning" || progress.content_planner === "running"
+          ? "running"
+          : "queued",
       icon: "📐",
     },
     {
       id: "generator",
       title: "5. Multi-Format Generation",
       description: "Gemini LLM generation for requested asset types",
-      status: getStepStatus([progress.generator], jobStatus, isJobDone, isFailed),
+      status:
+        isJobDone || ["guarding", "translating", "pending_review", "ready_to_publish"].includes(jobStatus) || progress.generator === "complete"
+          ? "complete"
+          : jobStatus === "generating" || progress.generator === "running"
+          ? "running"
+          : "queued",
       icon: "✨",
     },
     {
       id: "guardrail",
       title: "6. Guardrails & Grounding",
       description: "Moderation & hallucination verification",
-      status: getStepStatus([progress.guardrail], jobStatus, isJobDone, isFailed),
+      status:
+        isJobDone || ["translating", "pending_review", "ready_to_publish"].includes(jobStatus) || progress.guardrail === "complete"
+          ? "complete"
+          : jobStatus === "guarding" || progress.guardrail === "running"
+          ? "running"
+          : "queued",
       icon: "🔒",
     },
     {
       id: "translation",
       title: "7. Multi-Language Translation",
       description: "Target languages translation pass",
-      status: getStepStatus([progress.translation], jobStatus, isJobDone, isFailed),
+      status:
+        isJobDone || ["pending_review", "ready_to_publish"].includes(jobStatus) || progress.translation === "complete"
+          ? "complete"
+          : jobStatus === "translating" || progress.translation === "running"
+          ? "running"
+          : "queued",
       icon: "🌐",
     },
     {

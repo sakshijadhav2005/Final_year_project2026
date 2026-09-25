@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 import { listAdminJobs, listAudit } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
@@ -24,11 +25,20 @@ export function AdminPage() {
   return (
     <GoldenShell>
       <div className="space-y-34">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-gold">System Management</p>
-          <h1 className="font-display text-3xl font-normal italic text-ink-light dark:text-ink-dark">
-            Administrative <em className="not-italic text-gold-soft">Overview</em>
-          </h1>
+        <div className="flex flex-wrap items-center justify-between gap-13">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-gold">System Management</p>
+            <h1 className="font-display text-3xl font-normal italic text-ink-light dark:text-ink-dark">
+              Administrative <em className="not-italic text-gold-soft">Overview</em>
+            </h1>
+          </div>
+
+          <Link
+            to="/dashboard"
+            className="rounded-full border border-gold/30 bg-surface-light/80 dark:bg-white/[0.03] px-21 py-8 text-xs font-medium text-gold hover:border-gold transition-all dark:text-gold-soft"
+          >
+            ← Back to Dashboard
+          </Link>
         </div>
 
         <div className="grid md:grid-cols-2 gap-21">

@@ -20,11 +20,15 @@ router = APIRouter(prefix="/events", tags=["events"])
 async def list_events(
     user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
-    type: EventType | None = Query(None, description="Filter events by type"),
+    type: str | None = Query(None, description="Filter events by type: meetup, event, speech, other, all"),
 ) -> list[Event]:
     query = select(Event).order_by(Event.date.desc())
-    if type is not None:
-        query = query.where(Event.type == type)
+    if type and type.lower() != "all":
+        try:
+            event_type_enum = EventType(type.lower())
+            query = query.where(Event.type == event_type_enum)
+        except ValueError:
+            pass
     result = await db.execute(query)
     return list(result.scalars().all())
 

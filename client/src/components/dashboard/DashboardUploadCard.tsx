@@ -1,10 +1,9 @@
-import { useState, useRef, type ChangeEvent } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect, type ChangeEvent } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { uploadRecording, listEvents } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
-import { useQuery } from "@tanstack/react-query";
 
 // The 6 post formats exactly as specified in the architectural flowchart
 const POST_TYPES = [
@@ -71,19 +70,22 @@ const POST_TYPES = [
 ];
 
 const AVAILABLE_LANGUAGES = [
-  { code: "en", label: "English", flag: "🇬🇧" },
-  { code: "hi", label: "Hindi (हिंदी)", flag: "🇮🇳" },
-  { code: "es", label: "Spanish (Español)", flag: "🇪🇸" },
-  { code: "fr", label: "French (Français)", flag: "🇫🇷" },
-  { code: "de", label: "German (Deutsch)", flag: "🇩🇪" },
-  { code: "ja", label: "Japanese (日本語)", flag: "🇯🇵" },
-  { code: "pt", label: "Portuguese (Português)", flag: "🇧🇷" },
+  { code: "en", label: "English", country: "GB", flag: "🇬🇧" },
+  { code: "hi", label: "Hindi (हिंदी)", country: "IN", flag: "🇮🇳" },
+  { code: "es", label: "Spanish", country: "ES", flag: "🇪🇸" },
+  { code: "fr", label: "French", country: "FR", flag: "🇫🇷" },
+  { code: "de", label: "German", country: "DE", flag: "🇩🇪" },
+  { code: "ja", label: "Japanese", country: "JP", flag: "🇯🇵" },
+  { code: "pt", label: "Portuguese", country: "BR", flag: "🇧🇷" },
 ];
 
 export function DashboardUploadCard() {
   const token = useAuthStore((s) => s.accessToken);
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const eventIdParam = searchParams.get("event_id") || "";
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -97,14 +99,22 @@ export function DashboardUploadCard() {
     "flyer",
   ]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>(["en", "hi"]);
-  const [selectedEventId, setSelectedEventId] = useState<string>("");
+  const [selectedEventId, setSelectedEventId] = useState<string>(eventIdParam);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (eventIdParam) {
+      setSelectedEventId(eventIdParam);
+    }
+  }, [eventIdParam]);
 
   const { data: events = [] } = useQuery({
     queryKey: ["my_events"],
     queryFn: () => listEvents(token as string),
     enabled: !!token,
   });
+
+  const selectedEvent = events.find((ev) => ev.id === selectedEventId);
 
   const upload = useMutation({
     mutationFn: (file: File) =>
@@ -203,10 +213,10 @@ export function DashboardUploadCard() {
   }
 
   return (
-    <div className="glass p-21 sm:p-34 border-gold/30 relative overflow-hidden space-y-21">
+    <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6 md:p-8 shadow-xl backdrop-blur-xl relative overflow-hidden space-y-6">
       {/* Decorative ambient gradients */}
-      <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
-      <div className="pointer-events-none absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-teal/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-orange-500/10 blur-3xl" />
 
       {/* Hidden File Input */}
       <input
@@ -217,20 +227,20 @@ export function DashboardUploadCard() {
         onChange={handleFileSelect}
       />
 
-      <div className="relative z-10">
+      <div className="relative z-10 space-y-6">
         {/* Header Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-13 mb-21 border-b border-[#D8B478]/15 pb-13">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
           <div>
-            <div className="flex items-center gap-8">
-              <span className="text-xs font-semibold uppercase tracking-wider text-gold">AI Content Studio</span>
-              <span className="rounded-full bg-teal/15 border border-teal/30 px-8 py-0.5 text-[10px] font-semibold text-teal uppercase">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-400">AI Content Studio</span>
+              <span className="rounded-full bg-amber-500/20 border border-amber-500/30 px-2.5 py-0.5 text-[10px] font-bold text-amber-300 uppercase">
                 Multi-Agent + Multilingual
               </span>
             </div>
-            <h2 className="font-display text-2xl sm:text-3xl font-normal italic text-ink-light dark:text-ink-dark mt-4">
-              Ingest Recording &amp; <em className="not-italic text-gold-soft">Configure Posts</em>
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-white mt-1">
+              Ingest Recording &amp; <em className="not-italic text-amber-300">Configure Posts</em>
             </h2>
-            <p className="mt-4 text-xs text-ink-dim max-w-2xl">
+            <p className="mt-1 text-xs text-slate-400 max-w-2xl">
               Select which post types to synthesize, choose multilingual translation targets, and ingest your recording into the EventAI pipeline.
             </p>
           </div>
@@ -238,10 +248,70 @@ export function DashboardUploadCard() {
           <button
             type="button"
             onClick={loadSampleRecording}
-            className="rounded-full border border-gold/40 bg-gold/10 px-13 py-6 text-xs font-medium text-gold-soft hover:bg-gold/20 hover:scale-105 transition-all shadow-sm"
+            className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-500/20 hover:scale-105 transition-all shadow-sm"
           >
-            ⚡ Try Sample Recording Demo
+            <span>⚡ Try Sample Recording Demo</span>
           </button>
+        </div>
+
+        {/* Target Event Linking Bar */}
+        <div className="rounded-xl border border-white/10 bg-slate-950/60 p-4">
+          {selectedEvent ? (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🎪</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-amber-300">Linked Event:</span>
+                    <span className="text-xs font-semibold text-white">{selectedEvent.name}</span>
+                    <span className="rounded bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-300 uppercase">
+                      {selectedEvent.type}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    All 6 generated AI posts and full speech transcript will be attached to this event's hub.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedEventId("");
+                  setSearchParams({});
+                }}
+                className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                ✕ Detach / Change Event
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold text-slate-300">Target Event:</span>
+                <select
+                  value={selectedEventId}
+                  onChange={(e) => setSelectedEventId(e.target.value)}
+                  className="rounded-xl border border-white/10 bg-slate-900 px-3.5 py-2 text-xs text-slate-200 focus:border-amber-500 focus:outline-none"
+                >
+                  <option value="">General Session (No Specific Event Linked)</option>
+                  {events.map((ev) => (
+                    <option key={ev.id} value={ev.id}>
+                      {ev.name} ({ev.type})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => navigate("/catalog/all")}
+                className="text-xs text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 font-semibold"
+              >
+                <span>➕ Create New Event</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Media Upload Drag & Drop Target */}
@@ -253,33 +323,33 @@ export function DashboardUploadCard() {
           onDragLeave={() => setIsDragging(false)}
           onDrop={handleDrop}
           onClick={() => !selectedFile && fileInputRef.current?.click()}
-          className={`rounded-card border-2 border-dashed p-21 text-center transition-all ${
+          className={`rounded-2xl border-2 border-dashed p-6 text-center transition-all ${
             isDragging
-              ? "border-gold bg-gold/10"
+              ? "border-amber-500 bg-amber-500/10"
               : selectedFile
-              ? "border-gold/50 bg-white/[0.03]"
-              : "border-white/15 bg-white/[0.02] hover:border-gold/40 cursor-pointer"
+              ? "border-amber-500/50 bg-slate-950/60"
+              : "border-white/15 bg-slate-950/40 hover:border-amber-500/40 hover:bg-amber-500/5 cursor-pointer"
           }`}
         >
           {selectedFile ? (
-            <div className="flex flex-wrap items-center justify-between gap-13">
-              <div className="flex items-center gap-13 text-left">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3 text-left">
                 <span className="text-3xl">🎙️</span>
                 <div>
-                  <p className="font-medium text-sm text-gold-soft">{selectedFile.name}</p>
-                  <p className="text-xs text-ink-dim">
+                  <p className="font-semibold text-sm text-amber-300">{selectedFile.name}</p>
+                  <p className="text-xs text-slate-400">
                     {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • {selectedFile.type || "Event Recording Source"}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     fileInputRef.current?.click();
                   }}
-                  className="rounded-full border border-white/10 px-13 py-4 text-xs text-ink-dim hover:text-white"
+                  className="rounded-xl border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
                 >
                   Change File
                 </button>
@@ -289,63 +359,44 @@ export function DashboardUploadCard() {
                     e.stopPropagation();
                     setSelectedFile(null);
                   }}
-                  className="rounded-full border border-danger/30 bg-danger/10 px-13 py-4 text-xs text-danger hover:bg-danger/20"
+                  className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-1.5 text-xs text-rose-300 hover:bg-rose-500/20 transition-colors"
                 >
                   Remove
                 </button>
               </div>
             </div>
           ) : (
-            <div className="py-13">
-              <span className="text-3xl block mb-8">📁</span>
-              <p className="text-sm font-medium text-ink-light dark:text-ink-dark">
+            <div className="py-4">
+              <span className="text-4xl block mb-3">📁</span>
+              <p className="text-sm font-semibold text-slate-200">
                 Drag and drop your event audio or video here, or{" "}
-                <span className="text-gold-soft underline">browse files</span>
+                <span className="text-amber-400 underline">browse files</span>
               </p>
-              <p className="mt-4 text-xs text-ink-dim">
+              <p className="mt-1 text-xs text-slate-400">
                 Supported formats: MP4, MOV, WEBM, MP3, WAV, M4A, or TXT transcript (up to 500 MB)
               </p>
             </div>
           )}
         </div>
 
-        {/* ========================================================================= */}
-        {/* ARCHITECTURAL FLOW VISUALIZER (Matching User Diagram) */}
-        {/* ========================================================================= */}
-        <div className="mt-26 pt-21 border-t border-[#D8B478]/15">
-          <div className="flex flex-wrap items-center justify-between gap-8 mb-13">
+        {/* Post Generation Targets */}
+        <div className="border-t border-white/10 pt-5 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-gold">1. Post Generation Targets</span>
-              <p className="text-xs text-ink-dim">Choose what kind of posts you want the AI pipeline to compose:</p>
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-400">1. Post Generation Targets</span>
+              <p className="text-xs text-slate-400">Choose what kind of posts you want the AI pipeline to compose:</p>
             </div>
             <button
               type="button"
               onClick={selectAllTypes}
-              className="text-[11px] font-medium text-gold-soft hover:underline"
+              className="text-xs font-semibold text-amber-300 hover:underline"
             >
               Select All (6 Formats)
             </button>
           </div>
 
-          <div className="mb-13">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gold mb-4">Link to Event (Optional)</label>
-            <select
-              value={selectedEventId}
-              onChange={(e) => setSelectedEventId(e.target.value)}
-              className="w-full max-w-sm rounded-xl border border-white/10 bg-slate-900/80 px-4 py-3 text-sm text-slate-200 focus:border-gold/50 focus:outline-none focus:ring-2 focus:ring-gold/20"
-            >
-              <option value="">No Event Link (Standalone Recording)</option>
-              {events.map((ev) => (
-                <option key={ev.id} value={ev.id}>
-                  {ev.name} ({new Date(ev.date).toLocaleDateString()})
-                </option>
-              ))}
-            </select>
-            <p className="mt-3 text-xs text-ink-dim">By selecting an event, all generated AI posts and transcripts will automatically populate the Event Hub page for attendees.</p>
-          </div>
-
           {/* Top Row: 6 Colored Post Type Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-10">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             {POST_TYPES.map((pt) => {
               const isSelected = selectedTypes.includes(pt.id);
               return (
@@ -353,17 +404,17 @@ export function DashboardUploadCard() {
                   key={pt.id}
                   type="button"
                   onClick={() => toggleType(pt.id)}
-                  className={`group relative flex flex-col items-center justify-between rounded-xl border p-13 text-center transition-all cursor-pointer ${
+                  className={`group relative flex flex-col items-center justify-between rounded-xl border p-3.5 text-center transition-all cursor-pointer ${
                     isSelected
                       ? pt.activeClass
-                      : "border-white/10 bg-white/[0.02] text-ink-dim opacity-60 hover:opacity-100 hover:border-white/20"
+                      : "border-white/10 bg-slate-950/60 text-slate-400 opacity-60 hover:opacity-100 hover:border-white/20"
                   }`}
                 >
                   {/* Selection Checkmark */}
-                  <div className="w-full flex justify-end mb-4">
+                  <div className="w-full flex justify-end mb-2">
                     <span
                       className={`h-4 w-4 rounded-full flex items-center justify-center text-[10px] ${
-                        isSelected ? "bg-white/20 text-white" : "border border-white/20"
+                        isSelected ? "bg-white/20 text-white font-bold" : "border border-white/20"
                       }`}
                     >
                       {isSelected ? "✓" : ""}
@@ -371,16 +422,16 @@ export function DashboardUploadCard() {
                   </div>
 
                   {/* Icon with Subtle Background */}
-                  <div className="h-12 w-12 rounded-xl flex items-center justify-center text-2xl mb-8 bg-white/[0.05] border border-white/5 group-hover:scale-110 transition-transform">
+                  <div className="h-10 w-10 rounded-xl flex items-center justify-center text-2xl mb-2 bg-white/[0.05] border border-white/5 group-hover:scale-110 transition-transform">
                     {pt.icon}
                   </div>
 
                   {/* Label & Description */}
                   <div>
-                    <h4 className="text-xs font-semibold tracking-wide text-ink-light dark:text-ink-dark">
+                    <h4 className="text-xs font-bold tracking-wide text-white">
                       {pt.title}
                     </h4>
-                    <p className="mt-4 text-[10px] leading-tight opacity-75 hidden sm:block">
+                    <p className="mt-1 text-[10px] leading-tight opacity-75 hidden sm:block">
                       {pt.subtitle}
                     </p>
                   </div>
@@ -390,43 +441,41 @@ export function DashboardUploadCard() {
           </div>
 
           {/* Visual Converging Flow Arrows */}
-          <div className="relative my-13 flex justify-center items-center">
-            <div className="h-6 w-px bg-gradient-to-b from-white/20 to-teal/50" />
-            <span className="mx-8 text-[11px] font-mono text-teal uppercase tracking-widest bg-black/40 px-13 py-2 rounded-full border border-teal/30 shadow-[0_0_10px_rgba(20,184,166,0.2)]">
+          <div className="relative my-3 flex justify-center items-center">
+            <div className="h-5 w-px bg-gradient-to-b from-white/20 to-teal-500/50" />
+            <span className="mx-3 text-[10px] font-mono font-bold text-teal-300 uppercase tracking-widest bg-slate-950 px-3 py-1 rounded-full border border-teal-500/30">
               ↓ Synthesized into Multilingual Formats ↓
             </span>
-            <div className="h-6 w-px bg-gradient-to-b from-white/20 to-teal/50" />
+            <div className="h-5 w-px bg-gradient-to-b from-white/20 to-teal-500/50" />
           </div>
 
-          {/* ===================================================================== */}
-          {/* MULTILINGUAL TRANSLATION BANNER (Matching User Diagram) */}
-          {/* ===================================================================== */}
-          <div className="rounded-xl border border-teal/40 bg-gradient-to-r from-teal/15 via-[#164E63]/25 to-teal/15 p-16 shadow-[0_0_25px_rgba(20,184,166,0.15)]">
-            <div className="flex flex-wrap items-center justify-between gap-13 mb-13">
-              <div className="flex items-center gap-10">
-                <div className="h-9 w-9 rounded-lg bg-teal/25 border border-teal/40 flex items-center justify-center text-lg">
+          {/* Multilingual Translation Banner */}
+          <div className="rounded-2xl border border-teal-500/30 bg-gradient-to-r from-teal-950/40 via-slate-900/90 to-teal-950/40 p-4 shadow-lg backdrop-blur-xl">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="h-7 w-7 rounded-lg bg-teal-500/20 border border-teal-500/30 flex items-center justify-center text-sm">
                   🌐
                 </div>
                 <div>
-                  <h3 className="font-sans text-sm font-bold tracking-wider text-teal uppercase flex items-center gap-8">
-                    Multilingual Translation
-                    <span className="text-[10px] font-normal normal-case opacity-75 text-teal-200">
-                      (Powered by Gemini LLM Translation Pass)
+                  <h3 className="text-xs font-bold tracking-wider text-teal-400 uppercase flex items-center gap-2">
+                    <span>Multilingual Translation</span>
+                    <span className="text-[10px] font-normal normal-case text-teal-200/70">
+                      (Powered by Gemini LLM Pass)
                     </span>
                   </h3>
-                  <p className="text-[11px] text-teal-100/80">
+                  <p className="text-[11px] text-teal-100/70">
                     Each approved post above will be translated into your selected target languages automatically:
                   </p>
                 </div>
               </div>
 
-              <div className="text-[11px] font-mono text-teal-300">
+              <div className="text-[10px] font-mono font-bold text-teal-300 bg-teal-500/10 px-2.5 py-1 rounded-full border border-teal-500/30">
                 {selectedLanguages.length} Active {selectedLanguages.length === 1 ? "Language" : "Languages"}
               </div>
             </div>
 
             {/* Language Selection Pills */}
-            <div className="flex flex-wrap gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
               {AVAILABLE_LANGUAGES.map((lang) => {
                 const active = selectedLanguages.includes(lang.code);
                 return (
@@ -434,15 +483,15 @@ export function DashboardUploadCard() {
                     key={lang.code}
                     type="button"
                     onClick={() => toggleLanguage(lang.code)}
-                    className={`flex items-center gap-6 rounded-full px-13 py-6 text-xs font-medium transition-all ${
+                    className={`flex items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-xs font-medium transition-all ${
                       active
-                        ? "border border-teal bg-teal/25 text-white shadow-[0_0_10px_rgba(20,184,166,0.3)] scale-105"
-                        : "border border-white/10 bg-black/20 text-ink-dim hover:border-teal/40 hover:text-white"
+                        ? "border border-teal-400 bg-teal-500/20 text-white shadow-[0_0_12px_rgba(20,184,166,0.35)] ring-1 ring-teal-400/50"
+                        : "border border-white/10 bg-slate-950/60 text-slate-400 hover:border-teal-500/40 hover:text-white hover:bg-slate-900"
                     }`}
                   >
-                    <span>{lang.flag}</span>
-                    <span>{lang.label}</span>
-                    {active && <span className="text-[10px] text-teal">✓</span>}
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{lang.country}</span>
+                    <span className="text-[11px] font-semibold truncate">{lang.label}</span>
+                    {active && <span className="text-[10px] font-bold text-teal-300">✓</span>}
                   </button>
                 );
               })}
@@ -450,45 +499,43 @@ export function DashboardUploadCard() {
           </div>
 
           {/* Visual Output Connector */}
-          <div className="relative my-13 flex justify-center items-center">
-            <div className="h-6 w-px bg-gradient-to-b from-teal/50 to-gold/50" />
-            <span className="mx-8 text-[11px] font-mono text-gold-soft uppercase tracking-widest bg-black/40 px-13 py-2 rounded-full border border-gold/30">
-              ↓ Delivered To ↓
+          <div className="relative my-3 flex justify-center items-center">
+            <div className="h-5 w-px bg-gradient-to-b from-teal-500/50 to-amber-500/50" />
+            <span className="mx-3 text-[10px] font-mono font-bold text-amber-300 uppercase tracking-widest bg-slate-950 px-3 py-1 rounded-full border border-amber-500/30">
+              ↓ Delivered To Content Hub ↓
             </span>
-            <div className="h-6 w-px bg-gradient-to-b from-teal/50 to-gold/50" />
+            <div className="h-5 w-px bg-gradient-to-b from-teal-500/50 to-amber-500/50" />
           </div>
 
-          {/* ===================================================================== */}
-          {/* USER DASHBOARD DESTINATION CARD (Matching User Diagram) */}
-          {/* ===================================================================== */}
-          <div className="rounded-xl border border-gold/40 bg-gradient-to-r from-gold/10 via-[#2A241E]/30 to-gold/10 p-13 flex flex-wrap items-center justify-between gap-13 shadow-sm">
-            <div className="flex items-center gap-10">
+          {/* User Dashboard Destination Card */}
+          <div className="rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-slate-900/60 to-amber-500/10 p-4 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+            <div className="flex items-center gap-3">
               <span className="text-2xl">🖥️</span>
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-gold-soft">
-                  User Dashboard Workspace
+                <h4 className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                  Dashboard &amp; Studio Workspace
                 </h4>
-                <p className="text-[11px] text-ink-dim">
-                  Interactive content studio: <span className="text-gold-soft">view</span>, in-line edit, <span className="text-gold-soft">download</span> (Markdown, TXT, JSON), and <span className="text-gold-soft">share</span>.
+                <p className="text-[11px] text-slate-400">
+                  Interactive content studio: <span className="text-amber-300 font-semibold">view</span>, in-line edit, <span className="text-amber-300 font-semibold">download</span> (Markdown, TXT, JSON), and <span className="text-amber-300 font-semibold">share</span>.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-13 text-xs text-ink-dim font-mono">
-              <span>✓ Human Review Gate</span>
-              <span>✓ Grounding Anti-Hallucination</span>
+            <div className="flex items-center gap-3 text-xs text-slate-400 font-mono">
+              <span className="text-emerald-400">✓ Human Review Gate</span>
+              <span className="text-emerald-400">✓ Grounding Verification</span>
             </div>
           </div>
         </div>
 
         {/* Consent Checkbox */}
-        <div className="mt-21 border-t border-[#D8B478]/15 pt-13 flex flex-wrap items-center justify-between gap-13">
-          <label className="flex items-center gap-8 text-xs text-ink-dim cursor-pointer">
+        <div className="border-t border-white/10 pt-4 flex flex-wrap items-center justify-between gap-3">
+          <label className="flex items-center gap-2.5 text-xs text-slate-300 cursor-pointer">
             <input
               type="checkbox"
               checked={consent}
               onChange={(e) => setConsent(e.target.checked)}
-              className="accent-gold h-4 w-4 rounded"
+              className="accent-amber-500 h-4 w-4 rounded"
             />
             <span>
               Confirm participant consent for recording ingestion, speech-to-text, and AI synthesis
@@ -496,23 +543,23 @@ export function DashboardUploadCard() {
           </label>
 
           {error && (
-            <div className="text-xs text-danger font-medium">
+            <div className="text-xs text-rose-400 font-semibold">
               ⚠️ {error}
             </div>
           )}
         </div>
 
         {/* Submit Execution Button */}
-        <div className="mt-13 flex items-center justify-end">
+        <div className="flex items-center justify-end pt-2">
           <button
             type="button"
             onClick={handleSubmit}
             disabled={upload.isPending}
-            className="inline-flex items-center gap-13 rounded-full border border-gold/50 bg-gradient-to-r from-gold/30 via-lavender/25 to-teal/20 px-34 py-13 font-sans text-sm font-semibold tracking-wide text-gold-soft shadow-[0_10px_28px_rgba(216,180,120,0.2)] transition-all hover:scale-105 hover:border-gold disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-gradient-to-r from-amber-500 to-orange-600 px-8 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-105 hover:shadow-orange-500/30 disabled:opacity-50"
           >
             {upload.isPending ? (
               <>
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gold-soft border-t-transparent" />
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                 <span>Ingesting Recording &amp; Generating Posts…</span>
               </>
             ) : selectedFile ? (

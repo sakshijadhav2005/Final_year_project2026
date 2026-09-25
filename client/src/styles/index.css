@@ -402,3 +402,21 @@ html:not(.dark) header {
 html:not(.dark) .live-bars span {
   background: var(--gold);
 }
+
+/* ── Global Interactive Cursor Rules ─────────────────────────── */
+button,
+a,
+select,
+summary,
+[role="button"],
+[role="tab"],
+[role="checkbox"],
+[role="switch"],
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+textarea {
+  cursor: text;
+}

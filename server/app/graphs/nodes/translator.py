@@ -1,3 +1,4 @@
+import asyncio
 from typing import Any
 
 from app.graphs.state import JobGraphState
@@ -13,33 +14,52 @@ async def translation(state: JobGraphState) -> dict[str, Any]:
     if not languages:
         return {"translations": []}
     llm = get_llm_provider()
-    LANG_MAP = {"hi": "Hindi", "es": "Spanish", "fr": "French", "de": "German", "ja": "Japanese"}
+    LANG_MAP = {
+        "hi": "Hindi",
+        "es": "Spanish",
+        "fr": "French",
+        "de": "German",
+        "ja": "Japanese",
+        "pt": "Portuguese",
+        "it": "Italian",
+        "zh": "Chinese",
+        "ar": "Arabic",
+        "ru": "Russian",
+        "ko": "Korean",
+    }
     
-    translations: list[dict[str, Any]] = []
+    generated_pieces = state.get("generated") or []
+    if not generated_pieces:
+        return {"translations": []}
+
+    tasks = []
+    
     for lang in languages:
         full_lang_name = LANG_MAP.get(lang, lang)
-        for piece in state.get("generated") or []:
+        for piece in generated_pieces:
+            async def _translate_task(p=piece, l_code=lang, l_name=full_lang_name):
+                async def _call() -> dict[str, Any]:
+                    return await llm.generate_json(
+                        system=generation_system(),
+                        user=build_user_prompt(
+                            "translation",
+                            state.get("transcript_text", "")[:4000],
+                            f"Translate this {p.get('type')} into {l_name}. Return JSON with keys 'title', 'body'.\n"
+                            f"Title={p.get('title')}\nBody={p.get('body')}",
+                        ),
+                        temperature=0.2,
+                    )
 
-            async def _call(p=piece, language=full_lang_name) -> dict[str, Any]:
-                return await llm.generate_json(
-                    system=generation_system(),
-                    user=build_user_prompt(
-                        "translation",
-                        state.get("transcript_text", ""),
-                        f"Translate this {p.get('type')} into {language}. JSON with keys title, body.\n"
-                        f"Title={p.get('title')}\nBody={p.get('body')}",
-                    ),
-                    temperature=0.2,
-                )
-
-            result = await with_backoff(_call, circuit=llm_circuit)
-            translations.append(
-                {
-                    "type": piece.get("type"),
-                    "language": lang,
-                    "title": result.get("title") or piece.get("title"),
-                    "body": result.get("text") or result.get("body") or piece.get("body"),
-                    "parent_type": piece.get("type"),
+                result = await with_backoff(_call, circuit=llm_circuit)
+                return {
+                    "type": p.get("type"),
+                    "language": l_code,
+                    "title": result.get("title") or p.get("title"),
+                    "body": result.get("text") or result.get("body") or p.get("body"),
+                    "parent_type": p.get("type"),
                 }
-            )
-    return {"translations": translations}
+
+            tasks.append(_translate_task())
+
+    translations = await asyncio.gather(*tasks)
+    return {"translations": list(translations)}

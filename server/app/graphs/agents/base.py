@@ -75,8 +75,7 @@ class BaseCreatorAgent:
 
         try:
             res = await with_backoff(_call, circuit=llm_circuit)
-            if "type" not in res:
-                res["type"] = self.agent_name
+            res["type"] = self.agent_name
             if "body" not in res and "text" in res:
                 res["body"] = res["text"]
             return res

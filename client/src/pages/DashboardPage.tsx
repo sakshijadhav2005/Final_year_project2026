@@ -11,20 +11,35 @@ import { useAuthStore } from "@/store/auth";
 
 export function DashboardPage() {
   const token = useAuthStore((s) => s.accessToken) as string;
+  const user = useAuthStore((s) => s.user);
   const queryClient = useQueryClient();
   const [showTranscriptPreview, setShowTranscriptPreview] = useState(false);
   const [showChatDrawer, setShowChatDrawer] = useState(false);
+  const [showPastSessions, setShowPastSessions] = useState(false);
 
   const jobs = useQuery({
     queryKey: ["jobs"],
-    queryFn: () => listJobs(token),
-    refetchInterval: 3000,
+    queryFn: () => (token ? listJobs(token) : Promise.resolve([])),
+    enabled: Boolean(token),
+    refetchInterval: token ? 3000 : false,
+  });
+
+  // Strict RBAC filtering: Admin sees all, non-admins see only their jobs
+  const userSessions = (jobs.data ?? []).filter((j) => {
+    if (!user || user.role === "admin") return true;
+    return j.user_id === user.id;
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteJob(token, id),
-    onSuccess: () => {
+    onSuccess: (_, deletedId) => {
+      queryClient.setQueryData(["jobs"], (old: any) =>
+        Array.isArray(old) ? old.filter((j: any) => j.id !== deletedId) : []
+      );
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["my_events"] });
+      queryClient.invalidateQueries({ queryKey: ["transcript"] });
     },
   });
 
@@ -36,7 +51,7 @@ export function DashboardPage() {
     }
   };
 
-  const latest = jobs.data?.[0];
+  const latest = userSessions[0];
   const isLatestActive =
     latest && !["ready_to_publish", "rejected"].includes(latest.status);
 
@@ -54,66 +69,184 @@ export function DashboardPage() {
 
   return (
     <GoldenShell>
-      {/* Dashboard Top Header */}
-      <div className="mb-21 flex flex-wrap items-center justify-between gap-13">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-gold">Workspace Control</p>
-          <h1 className="font-display text-3xl font-normal italic text-ink-light dark:text-ink-dark">
-            Executive <em className="not-italic text-gold-soft">Dashboard</em>
-          </h1>
+      <div className="space-y-8">
+        {/* Dashboard Top Header */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-amber-400">Workspace Control</p>
+            <h1 className="font-display text-3xl font-bold text-white">
+              Executive <em className="not-italic text-amber-300">Dashboard</em>
+            </h1>
+            <p className="text-xs text-slate-400 mt-1">
+              Welcome back, <strong className="text-amber-300">{user?.email}</strong> ({user?.role || "organizer"})
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowChatDrawer(true)}
+            className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-teal-500/20 px-5 py-2 text-xs font-semibold text-amber-300 shadow-lg hover:scale-105 transition-all"
+          >
+            <span className="text-sm">🤖</span>
+            <span>AI Co-Pilot Assistant</span>
+            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+          </button>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setShowChatDrawer(true)}
-          className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gradient-to-r from-gold/20 via-orange-500/20 to-teal/20 px-21 py-8 text-xs font-semibold text-gold-soft shadow-lg hover:scale-105 transition-all"
-        >
-          <span className="text-sm">🤖</span>
-          <span>AI Co-Pilot Assistant</span>
-          <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-        </button>
-      </div>
+        <ChatDrawer
+          isOpen={showChatDrawer}
+          onClose={() => setShowChatDrawer(false)}
+          jobId={latest?.id}
+        />
 
-      <ChatDrawer
-        isOpen={showChatDrawer}
-        onClose={() => setShowChatDrawer(false)}
-        jobId={latest?.id}
-      />
-
-
-      <div className="space-y-34">
-        {/* Step 1: Upload Options Card */}
-        <section className="mb-6">
+        {/* Step 1: Catalog Navigation */}
+        <section>
           <CatalogNav />
         </section>
+
+        {/* Step 2: Past Recording Sessions Section (Above Upload with RBAC) */}
+        <section className="rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-xl backdrop-blur-xl transition-all">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/20 text-lg">
+                🎙️
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-base font-bold text-white">Past Recording Sessions</h2>
+                  <span className="rounded-full bg-amber-500/20 px-2.5 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-500/30">
+                    {userSessions.length} {userSessions.length === 1 ? "Session" : "Sessions"}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400">
+                  {user?.role === "admin"
+                    ? "🛡️ Admin View: Showing all system sessions across users"
+                    : `👤 Isolated to account: ${user?.email || "Current User"} (${user?.role || "organizer"})`}
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowPastSessions((prev) => !prev)}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-200 transition-all shadow-sm"
+            >
+              <span>{showPastSessions ? "▲ Hide Previous Sessions" : "▼ Show All Previous Sessions"}</span>
+              <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold">
+                {userSessions.length}
+              </span>
+            </button>
+          </div>
+
+          {/* Expanded Previous Sessions List */}
+          {showPastSessions && (
+            <div className="mt-5 space-y-3 animate-fadeIn">
+              {userSessions.length === 0 ? (
+                <div className="rounded-2xl border border-white/5 bg-slate-950/40 p-8 text-center">
+                  <span className="text-3xl">📭</span>
+                  <p className="mt-2 text-sm font-semibold text-slate-300">No past recording sessions found</p>
+                  <p className="mt-1 text-xs text-slate-400">
+                    Upload a recording below to automatically transcribe, index, and generate multi-format content.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-1">
+                  {userSessions.map((job) => {
+                    const isReady = job.status === "ready_to_publish";
+                    const isPending = job.status === "pending_review";
+                    const isFailed = job.status === "failed";
+
+                    return (
+                      <Link
+                        key={job.id}
+                        to={`/jobs/${job.id}`}
+                        className="group flex flex-col justify-between rounded-2xl border border-white/10 bg-slate-950/60 p-4 transition-all hover:border-amber-500/40 hover:bg-slate-900/90 hover:shadow-lg hover:shadow-amber-500/5"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-center gap-2.5">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-amber-300 group-hover:border-amber-500/40">
+                              ⚡
+                            </div>
+                            <div>
+                              <h4 className="text-xs font-bold text-white group-hover:text-amber-300 transition-colors">
+                                Session {job.id.slice(0, 8)}
+                              </h4>
+                              <p className="text-[10px] text-slate-400">
+                                {job.created_at ? new Date(job.created_at).toLocaleString() : "Recently"}
+                              </p>
+                            </div>
+                          </div>
+
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                              isReady
+                                ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                                : isPending
+                                ? "bg-amber-500/15 text-amber-300 border border-amber-500/30"
+                                : isFailed
+                                ? "bg-rose-500/15 text-rose-400 border border-rose-500/30"
+                                : "bg-sky-500/15 text-sky-400 border border-sky-500/30"
+                            }`}
+                          >
+                            {job.status.replace("_", " ")}
+                          </span>
+                        </div>
+
+                        {job.error_message && (
+                          <p className="mt-2 text-[11px] text-rose-400 line-clamp-1">⚠️ {job.error_message}</p>
+                        )}
+
+                        <div className="mt-3 flex items-center justify-between border-t border-white/5 pt-2.5 text-[11px]">
+                          <span className="text-amber-400 font-semibold group-hover:underline">
+                            Open in Studio Hub →
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => handleDeleteSession(e, job.id)}
+                            className="rounded-lg p-1 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                            title="Delete session"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+        </section>
+
+        {/* Step 3: Upload Options Card */}
         <section>
           <DashboardUploadCard />
         </section>
 
         {/* Step 2 & 3: Active Session Progression & Transcription */}
         {latest && (
-          <section className="space-y-13">
-            <div className="flex flex-wrap items-center justify-between gap-13">
+          <section className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-gold">
+                <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">
                   {isLatestActive ? "⚡ Active Pipeline Execution" : "✦ Most Recent Session"}
                 </span>
-                <h3 className="font-display text-xl text-ink-light dark:text-ink-dark">
-                  Session <span className="font-mono text-gold-soft">{latest.id.slice(0, 8)}</span>
+                <h3 className="font-display text-xl text-white">
+                  Session <span className="font-mono text-amber-300">{latest.id.slice(0, 8)}</span>
                 </h3>
               </div>
 
-              <div className="flex items-center gap-13">
+              <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setShowTranscriptPreview(!showTranscriptPreview)}
-                  className="rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold-soft hover:bg-gold/20 transition-all"
+                  className="rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-500/20 transition-all"
                 >
                   {showTranscriptPreview ? "Hide Transcript ✕" : "📜 Show Transcription"}
                 </button>
                 <Link
                   to={`/jobs/${latest.id}`}
-                  className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gradient-to-r from-gold/20 to-teal/15 px-21 py-4 text-xs font-medium text-gold-soft hover:scale-105 transition-all"
+                  className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-gradient-to-r from-amber-500 to-orange-600 px-5 py-2 text-xs font-bold text-white shadow-lg shadow-orange-500/20 hover:scale-105 transition-all"
                 >
                   Open Studio Hub →
                 </Link>
@@ -121,7 +254,7 @@ export function DashboardPage() {
                   type="button"
                   onClick={(e) => handleDeleteSession(e, latest.id)}
                   disabled={deleteMutation.isPending}
-                  className="rounded-full border border-danger/40 bg-danger/10 px-13 py-4 text-xs font-medium text-danger hover:bg-danger/20 transition-all"
+                  className="rounded-full border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-xs font-medium text-rose-300 hover:bg-rose-500/20 transition-all"
                   title="Delete this session"
                 >
                   🗑️ Delete Session
@@ -139,35 +272,35 @@ export function DashboardPage() {
 
             {/* Optional Collapsible Transcript Preview */}
             {showTranscriptPreview && (
-              <div className="glass p-21 border-gold/20 animate-fadeIn">
-                <div className="flex items-center justify-between border-b border-[#D8B478]/15 pb-8 mb-13">
-                  <div className="flex items-center gap-8 text-xs font-semibold text-gold">
+              <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-5 shadow-xl backdrop-blur-xl animate-fadeIn">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-amber-300">
                     <span>🎙️ Source Transcription Text</span>
                     {latestTranscript.data?.badge && (
-                      <span className="rounded-full bg-gold/20 px-8 py-1 text-[10px] uppercase">
+                      <span className="rounded-full bg-amber-500/20 border border-amber-500/30 px-2 py-0.5 text-[10px] uppercase font-bold text-amber-300">
                         {latestTranscript.data.badge} confidence
                       </span>
                     )}
                   </div>
                   <Link
                     to={`/jobs/${latest.id}`}
-                    className="text-xs text-gold-soft hover:underline"
+                    className="text-xs text-amber-400 hover:text-amber-300 hover:underline font-semibold"
                   >
                     Open in Studio to Search &amp; Edit →
                   </Link>
                 </div>
 
                 {latestTranscript.isLoading ? (
-                  <div className="py-21 text-center text-xs opacity-60">
-                    <div className="inline-block h-4 w-4 animate-spin rounded-full border border-gold border-t-transparent mr-8" />
+                  <div className="py-6 text-center text-xs text-slate-400">
+                    <div className="inline-block h-4 w-4 animate-spin rounded-full border border-amber-400 border-t-transparent mr-2" />
                     Fetching latest transcription...
                   </div>
                 ) : latestTranscript.data?.full_text ? (
-                  <div className="max-h-48 overflow-y-auto rounded bg-black/20 p-13 font-mono text-xs text-ink-dim whitespace-pre-wrap leading-relaxed">
+                  <div className="max-h-48 overflow-y-auto rounded-xl bg-slate-950/80 p-4 font-mono text-xs text-slate-300 whitespace-pre-wrap leading-relaxed border border-white/5">
                     {latestTranscript.data.full_text}
                   </div>
                 ) : (
-                  <p className="text-xs opacity-60 text-center py-13">
+                  <p className="text-xs text-slate-400 text-center py-4">
                     Transcription is currently being indexed by the engine or not yet available.
                   </p>
                 )}
@@ -175,91 +308,6 @@ export function DashboardPage() {
             )}
           </section>
         )}
-
-        {/* Step 4: Session History List */}
-        <section>
-          <div className="mb-13">
-            <span className="text-xs font-semibold uppercase tracking-wider text-gold">Archive</span>
-            <h3 className="font-display text-xl text-ink-light dark:text-ink-dark">
-              Past Recording Sessions
-            </h3>
-            <p className="text-xs text-ink-dim">
-              Click any previous session to review generated copy, edit drafts, or mark ready to publish.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-13">
-            {(jobs.data ?? []).map((job) => {
-              const isReady = job.status === "ready_to_publish";
-              const isPending = job.status === "pending_review";
-              const isFailed = job.status === "failed";
-
-              return (
-                <Link
-                  key={job.id}
-                  to={`/jobs/${job.id}`}
-                  className="glass group p-21 transition-all hover:scale-[1.01] hover:border-gold/50"
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-13">
-                    <div className="flex items-center gap-13">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.04] border border-white/10 font-display font-semibold text-gold-soft group-hover:border-gold transition-colors">
-                        ✦
-                      </div>
-                      <div>
-                        <h4 className="font-display text-base font-medium capitalize text-ink-light dark:text-ink-dark">
-                          Session {job.id.slice(0, 8)}
-                        </h4>
-                        <p className="text-xs text-ink-dim">
-                          {job.created_at ? new Date(job.created_at).toLocaleString() : "Just now"}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-13">
-                      <span
-                        className={`rounded-full px-13 py-4 text-xs font-semibold uppercase tracking-wider ${
-                          isReady
-                            ? "bg-success/15 text-success border border-success/30"
-                            : isPending
-                            ? "bg-gold/15 text-gold-soft border border-gold/30"
-                            : isFailed
-                            ? "bg-danger/15 text-danger border border-danger/30"
-                            : "bg-teal/15 text-teal border border-teal/30"
-                        }`}
-                      >
-                        {job.status.replace("_", " ")}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={(e) => handleDeleteSession(e, job.id)}
-                        className="rounded-lg p-2 text-xs text-ink-dim hover:text-danger hover:bg-danger/10 transition-colors z-10"
-                        title="Delete Session"
-                      >
-                        🗑️
-                      </button>
-                      <span className="text-sm text-gold-soft opacity-0 transition-opacity group-hover:opacity-100">
-                        →
-                      </span>
-                    </div>
-                  </div>
-
-                  {job.error_message && (
-                    <p className="mt-13 text-xs text-danger">⚠️ {job.error_message}</p>
-                  )}
-                </Link>
-              );
-            })}
-
-            {jobs.data?.length === 0 && (
-              <div className="glass p-34 text-center">
-                <p className="text-sm opacity-60">No recording sessions found yet.</p>
-                <p className="text-xs text-ink-dim mt-4">
-                  Use the upload section above to submit your first audio or video file.
-                </p>
-              </div>
-            )}
-          </div>
-        </section>
       </div>
     </GoldenShell>
   );

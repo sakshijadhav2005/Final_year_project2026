@@ -83,6 +83,9 @@ async def cancel_job(
     user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> Job:
+    from app.services.job_runner import cancel_job_task
+
+    cancel_job_task(str(job_id))
     job = await _load_job(db, user, job_id)
     if job.status in TERMINAL:
         raise http_error(status.HTTP_409_CONFLICT, "Job already finished", "already_finished")
@@ -173,7 +176,9 @@ async def delete_job(
     from app.models.content import ContentPiece
     from app.models.job import AgentOutput, Transcript
     from app.models.recording import Recording
+    from app.services.job_runner import cancel_job_task
 
+    cancel_job_task(str(job_id))
     job = await _load_job(db, user, job_id)
     await db.execute(delete(ContentPiece).where(ContentPiece.job_id == job_id))
     await db.execute(delete(Transcript).where(Transcript.job_id == job_id))

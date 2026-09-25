@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { CatalogNav } from "@/components/dashboard/CatalogNav";
 import { EventCard } from "@/components/dashboard/EventCard";
 import { listEvents, createEvent, type EventType } from "@/lib/api";
+import { GoldenShell } from "@/layouts/GoldenShell";
 import { useAuthStore } from "@/store/auth";
 
 export function CatalogPage() {
@@ -12,6 +13,7 @@ export function CatalogPage() {
   const token = useAuthStore((s) => s.accessToken);
   const user = useAuthStore((s) => s.user);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -46,7 +48,7 @@ export function CatalogPage() {
         type: selectedType,
       });
     },
-    onSuccess: () => {
+    onSuccess: (newEvent) => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       setShowCreateModal(false);
       setName("");
@@ -55,6 +57,7 @@ export function CatalogPage() {
       setLocation("");
       setBannerImage("");
       setDescription("");
+      navigate(`/organizer/dashboard?event_id=${newEvent.id}`);
     },
   });
 
@@ -69,29 +72,29 @@ export function CatalogPage() {
   const isOrganizer = user?.role === "event_organizer" || user?.role === "admin";
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
-      <div className="mx-auto max-w-7xl">
+    <GoldenShell>
+      <div className="space-y-34">
         {/* Header navigation bar */}
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-13">
           <div>
             <div className="flex items-center gap-3">
               <Link
                 to={isOrganizer ? "/organizer/dashboard" : "/user/dashboard"}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+                className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3.5 py-1.5 text-xs font-semibold text-gold-soft transition-all hover:bg-gold/20"
               >
                 ← Back to Dashboard
               </Link>
-              <span className="rounded-md bg-amber-500/20 px-2 py-0.5 text-[11px] font-bold text-amber-300 border border-amber-500/30">
+              <span className="rounded-full bg-gold/20 px-2.5 py-0.5 text-[10px] font-bold text-gold-soft border border-gold/30">
                 Catalog Mode
               </span>
             </div>
-            <h1 className="mt-2 text-2xl font-black tracking-tight text-white md:text-3xl">
+            <h1 className="mt-2 font-display text-3xl font-normal italic text-ink-light dark:text-ink-dark">
               {type === "meetup" && "👥 Community Meetups"}
               {type === "event" && "🎪 Conferences & Keynote Events"}
               {type === "speech" && "🎤 Speeches, Panels & Tech Talks"}
               {(!type || type === "all") && "🌐 All Event Catalogs"}
             </h1>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="text-xs text-ink-dim mt-1">
               Browse organized sessions and access AI-generated blogs, newsletters, and social summaries.
             </p>
           </div>
@@ -99,7 +102,7 @@ export function CatalogPage() {
           <div className="flex items-center gap-3">
             <Link
               to="/community"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-slate-200 transition-all hover:border-amber-500/30 hover:bg-amber-500/10 hover:text-amber-300"
+              className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-2 text-xs font-semibold text-gold-soft hover:bg-gold/20 transition-all"
             >
               <span>💬 Community Feed</span>
             </Link>
@@ -108,7 +111,7 @@ export function CatalogPage() {
               <button
                 type="button"
                 onClick={() => setShowCreateModal(true)}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-105 hover:from-amber-400 hover:to-orange-500"
+                className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gradient-to-r from-gold/20 via-orange-500/20 to-teal/20 px-5 py-2 text-xs font-semibold text-gold-soft shadow-lg hover:scale-105 transition-all"
               >
                 <span>➕ Create New Event</span>
               </button>
@@ -325,6 +328,6 @@ export function CatalogPage() {
           </div>
         )}
       </div>
-    </div>
+    </GoldenShell>
   );
 }

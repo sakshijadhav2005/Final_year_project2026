@@ -17,6 +17,8 @@ from app.services.quality import inspect_media
 from app.services.rag import index_transcript_chunks, retrieve_chunks
 from app.services.transcription import transcribe_file
 
+import asyncio
+
 AGENT_KEYS = [
     "quality_check",
     "topic_extraction",
@@ -39,6 +41,17 @@ TERMINAL = {
     "cancelled",
 }
 
+ACTIVE_JOB_TASKS: dict[str, asyncio.Task] = {}
+CANCELLED_JOB_IDS: set[str] = set()
+
+
+def cancel_job_task(job_id: str) -> None:
+    job_str = str(job_id)
+    CANCELLED_JOB_IDS.add(job_str)
+    task = ACTIVE_JOB_TASKS.get(job_str)
+    if task and not task.done():
+        task.cancel()
+
 
 def _queued_progress() -> dict[str, str]:
     return {key: "queued" for key in AGENT_KEYS}
@@ -47,27 +60,38 @@ def _queued_progress() -> dict[str, str]:
 async def _save(db: AsyncSession, job: Job, **kwargs) -> None:
     for key, value in kwargs.items():
         setattr(job, key, value)
+    db.add(job)
     await db.commit()
-    await db.refresh(job)
+    try:
+        await db.refresh(job)
+    except Exception:
+        pass
 
 
 async def _cancelled(db: AsyncSession, job_id: UUID) -> bool:
+    job_str = str(job_id)
+    if job_str in CANCELLED_JOB_IDS:
+        return True
     status = (await db.execute(select(Job.status).where(Job.id == job_id))).scalar_one_or_none()
-    return status == "cancelled"
+    return status is None or status == "cancelled"
 
 
 async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
-    settings = get_settings()
-    async with SessionLocal() as db:
-        job = (await db.execute(select(Job).where(Job.id == UUID(job_id)))).scalar_one_or_none()
-        if job is None:
-            return
-        if job.status == "cancelled":
-            return
+    job_str = str(job_id)
+    current_task = asyncio.current_task()
+    if current_task:
+        ACTIVE_JOB_TASKS[job_str] = current_task
 
-        recording = (
-            await db.execute(select(Recording).where(Recording.id == job.recording_id))
-        ).scalar_one_or_none()
+    try:
+        settings = get_settings()
+        async with SessionLocal() as db:
+            job = (await db.execute(select(Job).where(Job.id == UUID(job_id)))).scalar_one_or_none()
+            if job is None or job.status == "cancelled" or job_str in CANCELLED_JOB_IDS:
+                return
+
+            recording = (
+                await db.execute(select(Recording).where(Recording.id == job.recording_id))
+            ).scalar_one_or_none()
         if recording is None:
             await _save(
                 db,
@@ -272,47 +296,45 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                 for node_name, update in event.items():
                     if isinstance(update, dict):
                         final_state.update(update)
-                    if node_name in progress:
-                        progress[node_name] = "complete"
-                    next_status = {
-                        "topic_extraction": "analyzing",
-                        "highlight_detection": "analyzing",
-                        "speaker_analysis": "analyzing",
-                        "sentiment_analysis": "analyzing",
-                        "content_planner": "planning",
-                        "rag_retrieve": "planning",
-                        "generator": "generating",
-                        "guardrail": "guarding",
-                        "translation": "translating",
-                    }.get(node_name)
-                    running = {
-                        "content_planner": "content_planner",
-                        "rag_retrieve": "rag_retrieve",
-                        "generator": "generator",
-                        "guardrail": "guardrail",
-                        "translation": "translation",
-                    }.get(node_name)
-                    if running and running in progress and progress[running] == "queued":
-                        pass
-                    for key in AGENT_KEYS:
-                        if progress[key] == "queued" and key == node_name:
-                            progress[key] = "complete"
-                    nxt = {
-                        "fan_out": [
-                            "topic_extraction",
-                            "highlight_detection",
-                            "speaker_analysis",
-                            "sentiment_analysis",
-                        ],
-                        "quality_check": ["topic_extraction"],
-                        "content_planner": ["rag_retrieve"],
-                        "rag_retrieve": ["generator"],
-                        "generator": ["guardrail"],
-                        "guardrail": ["translation"],
-                    }.get(node_name, [])
-                    for key in nxt:
-                        if progress.get(key) == "queued":
-                            progress[key] = "running"
+
+                    # Map LangGraph node names to stepper progress keys
+                    if node_name == "parallel_analysis":
+                        progress["topic_extraction"] = "complete"
+                        progress["highlight_detection"] = "complete"
+                        progress["speaker_analysis"] = "complete"
+                        progress["sentiment_analysis"] = "complete"
+                        progress["content_planner"] = "running"
+                        next_status = "planning"
+                    elif node_name == "content_planner":
+                        progress["content_planner"] = "complete"
+                        progress["generator"] = "running"
+                        next_status = "generating"
+                    elif node_name in ("dynamic_generator", "generator"):
+                        progress["generator"] = "complete"
+                        progress["guardrail"] = "running"
+                        next_status = "guarding"
+                    elif node_name in ("guardrail_node", "guardrail"):
+                        progress["guardrail"] = "complete"
+                        progress["translation"] = "running"
+                        next_status = "translating"
+                    elif node_name == "translation":
+                        progress["translation"] = "complete"
+                        next_status = "pending_review"
+                    else:
+                        if node_name in progress:
+                            progress[node_name] = "complete"
+                        next_status = {
+                            "topic_extraction": "analyzing",
+                            "highlight_detection": "analyzing",
+                            "speaker_analysis": "analyzing",
+                            "sentiment_analysis": "analyzing",
+                            "content_planner": "planning",
+                            "rag_retrieve": "planning",
+                            "generator": "generating",
+                            "guardrail": "guarding",
+                            "translation": "translating",
+                        }.get(node_name)
+
                     await _save(
                         db,
                         job,
@@ -412,6 +434,11 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             finished_at=datetime.now(UTC),
             progress={key: "complete" for key in AGENT_KEYS},
         )
+    except asyncio.CancelledError:
+        return
+    finally:
+        ACTIVE_JOB_TASKS.pop(job_str, None)
+        CANCELLED_JOB_IDS.discard(job_str)
 
 
 async def purge_expired_media() -> int:

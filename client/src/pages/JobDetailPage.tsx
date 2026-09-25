@@ -13,13 +13,21 @@ export function JobDetailPage() {
   const { jobId = "" } = useParams();
   const navigate = useNavigate();
   const token = useAuthStore((s) => s.accessToken) as string;
+  const user = useAuthStore((s) => s.user);
   const queryClient = useQueryClient();
+
+  const targetDashboard = user?.role === "regular_user" ? "/user/dashboard" : "/organizer/dashboard";
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteJob(token, jobId),
     onSuccess: () => {
+      queryClient.setQueryData(["jobs"], (old: any) =>
+        Array.isArray(old) ? old.filter((j: any) => j.id !== jobId) : []
+      );
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
-      navigate("/dashboard");
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["my_events"] });
+      navigate(targetDashboard);
     },
   });
 
@@ -144,7 +152,15 @@ export function JobDetailPage() {
             Job <span className="text-gold-soft font-mono">{jobId.slice(0, 8)}</span>
           </h1>
         </div>
-        <div className="flex items-center gap-13">
+        <div className="flex flex-wrap items-center gap-13">
+          {job.data?.event_id && (
+            <Link
+              to={`/events/${job.data.event_id}`}
+              className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/20 px-21 py-8 text-xs font-bold text-amber-300 hover:bg-amber-500/30 transition-all shadow-md"
+            >
+              <span>🎪 View in Event Hub →</span>
+            </Link>
+          )}
           <button
             type="button"
             onClick={handleDeleteSession}

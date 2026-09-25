@@ -22,8 +22,8 @@ class Settings(BaseSettings):
     debug: bool = False
     api_v1_prefix: str = "/api/v1"
     secret_key: str = Field(default="change-me-in-production-use-long-random-string")
-    access_token_expire_minutes: int = 15
-    refresh_token_expire_days: int = 7
+    access_token_expire_minutes: int = 10080
+    refresh_token_expire_days: int = 30
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173,http://localhost:8080"
 
     database_url: str = f"sqlite+aiosqlite:///{(SERVER_DIR / 'data' / 'eventai.db').as_posix()}"

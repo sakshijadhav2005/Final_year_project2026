@@ -142,27 +142,6 @@ export function LandingPage() {
                 </span>
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </button>
-
-              {!selectedFile && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    fetch("/data/samples/clean_event_session.txt")
-                      .then((r) => r.text())
-                      .then((txt) => {
-                        const f = new File([txt], "clean_event_session.txt", { type: "text/plain" });
-                        setSelectedFile(f);
-                      })
-                      .catch(() => {
-                        const f = new File(["Welcome to the EventAI keynote demo session."], "clean_event_session.txt", { type: "text/plain" });
-                        setSelectedFile(f);
-                      });
-                  }}
-                  className="rounded-full border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.04] px-21 py-13 text-xs text-ink-light/60 dark:text-ink-dim hover:text-gold dark:hover:text-gold-soft hover:border-gold/30 transition-all"
-                >
-                  ⚡ Try Sample Recording
-                </button>
-              )}
             </div>
           </div>
 

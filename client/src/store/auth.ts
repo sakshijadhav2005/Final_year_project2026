@@ -9,6 +9,7 @@ type AuthState = {
   user: UserPublic | null;
   setSession: (accessToken: string, refreshToken: string, user: UserPublic) => void;
   clear: () => void;
+  logout: () => void;
 };
 
 export type { UserRole };
@@ -21,6 +22,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       setSession: (accessToken, refreshToken, user) => set({ accessToken, refreshToken, user }),
       clear: () => set({ accessToken: null, refreshToken: null, user: null }),
+      logout: () => set({ accessToken: null, refreshToken: null, user: null }),
     }),
     { name: "eventai-auth" },
   ),

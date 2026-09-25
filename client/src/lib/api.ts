@@ -102,6 +102,13 @@ export async function request<T>(
     body: json !== undefined ? JSON.stringify(json) : rest.body,
   });
   if (!response.ok) {
+    if (response.status === 401 && token) {
+      try {
+        useAuthStore.getState().logout();
+      } catch {
+        /* ignore */
+      }
+    }
     let message = `Request failed (${response.status})`;
     try {
       const payload = (await response.json()) as { detail?: unknown };
@@ -191,8 +198,8 @@ export async function uploadRecording(
   return request<JobPublic>("/api/v1/uploads", { method: "POST", token, body });
 }
 
-export const listEvents = (token: string, type?: EventType) =>
-  request<EventPublic[]>(`/api/v1/events${type ? `?type=${type}` : ""}`, { token });
+export const listEvents = (token: string, type?: EventType | "all") =>
+  request<EventPublic[]>(`/api/v1/events${type && type !== "all" ? `?type=${type}` : ""}`, { token });
 
 export const getEvent = (token: string, id: string) =>
   request<EventPublic>(`/api/v1/events/${id}`, { token });
