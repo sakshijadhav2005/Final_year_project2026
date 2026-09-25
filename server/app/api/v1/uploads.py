@@ -1,14 +1,18 @@
+import uuid
 from pathlib import Path
 from typing import Annotated
 from uuid import uuid4
 
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, UploadFile, status
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user
 from app.core.config import get_settings
 from app.core.exceptions import http_error
+from app.core.security import UserRole
 from app.db.session import get_db
+from app.models.event import Event
 from app.models.job import Job
 from app.models.recording import Recording
 from app.models.user import User
@@ -38,6 +42,35 @@ async def create_upload(
             "Confirm that recorded participants were informed.",
             "consent_required",
         )
+
+    validated_event_id: uuid.UUID | None = None
+    if event_id is not None and event_id.strip():
+        try:
+            validated_event_id = uuid.UUID(event_id.strip())
+        except ValueError as exc:
+            raise http_error(
+                status.HTTP_400_BAD_REQUEST,
+                "Invalid event_id UUID format",
+                "invalid_event_id",
+            ) from exc
+
+        event = (
+            await db.execute(select(Event).where(Event.id == validated_event_id))
+        ).scalar_one_or_none()
+        if event is None:
+            raise http_error(
+                status.HTTP_404_NOT_FOUND,
+                "Event not found",
+                "event_not_found",
+            )
+
+        if user.role != UserRole.ADMIN and event.organizer_id != user.id:
+            raise http_error(
+                status.HTTP_403_FORBIDDEN,
+                "You are not authorized to associate recordings with this event",
+                "forbidden",
+            )
+
     settings = get_settings()
     filename = file.filename or "upload.bin"
     
@@ -92,6 +125,7 @@ async def create_upload(
     job = Job(
         user_id=user.id,
         recording_id=recording.id,
+        event_id=validated_event_id,
         status="queued",
         requested_types=types or DEFAULT_CONTENT_TYPES,
         target_languages=langs or ["en"],

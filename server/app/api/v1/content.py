@@ -1,7 +1,8 @@
+import json
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -31,6 +32,16 @@ async def _load_piece(db: AsyncSession, user: User, content_id: UUID) -> Content
     if piece.job_id is not None:
         job = (await db.execute(select(Job).where(Job.id == piece.job_id))).scalar_one_or_none()
         if job and not _can_access_job(user, job):
+            raise http_error(status.HTTP_404_NOT_FOUND, "Content not found", "not_found")
+        if (
+            job is None
+            and piece.user_id is not None
+            and user.role != UserRole.ADMIN
+            and piece.user_id != user.id
+        ):
+            raise http_error(status.HTTP_404_NOT_FOUND, "Content not found", "not_found")
+    elif piece.user_id is not None:
+        if user.role != UserRole.ADMIN and piece.user_id != user.id:
             raise http_error(status.HTTP_404_NOT_FOUND, "Content not found", "not_found")
     return piece
 
@@ -166,3 +177,47 @@ async def reject_content(
     await db.commit()
     await db.refresh(piece)
     return piece
+
+
+@router.get("/content/{content_id}/download")
+async def download_content(
+    content_id: UUID,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+    format: str = Query("markdown", description="Export format: markdown, text, or json"),
+) -> Response:
+    piece = await _load_piece(db, user, content_id)
+    safe_id = str(piece.id)
+    fmt = format.lower().strip()
+
+    if fmt == "markdown":
+        if piece.title:
+            content_str = f"# {piece.title}\n\n{piece.body}"
+        else:
+            content_str = piece.body
+        media_type = "text/markdown; charset=utf-8"
+        filename = f"EventAI_{safe_id}.md"
+    elif fmt == "text":
+        if piece.title:
+            content_str = f"{piece.title}\n\n{piece.body}"
+        else:
+            content_str = piece.body
+        media_type = "text/plain; charset=utf-8"
+        filename = f"EventAI_{safe_id}.txt"
+    elif fmt == "json":
+        data = ContentPublic.model_validate(piece).model_dump(mode="json")
+        content_str = json.dumps(data, indent=2, ensure_ascii=False)
+        media_type = "application/json"
+        filename = f"EventAI_{safe_id}.json"
+    else:
+        raise http_error(
+            status.HTTP_400_BAD_REQUEST,
+            f"Unsupported format '{format}'. Supported formats: markdown, text, json.",
+            "invalid_format",
+        )
+
+    return Response(
+        content=content_str,
+        media_type=media_type,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )

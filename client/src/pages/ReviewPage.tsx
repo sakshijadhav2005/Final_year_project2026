@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 
 import { approveContent, getJobContent, listJobs, rejectContent } from "@/lib/api";
@@ -8,6 +8,8 @@ import { useAuthStore } from "@/store/auth";
 export function ReviewPage() {
   const { contentId = "" } = useParams();
   const token = useAuthStore((s) => s.accessToken) as string;
+  const queryClient = useQueryClient();
+
   const jobs = useQuery({
     queryKey: ["jobs-for-review", contentId],
     queryFn: async () => {
@@ -19,13 +21,22 @@ export function ReviewPage() {
       }
       return null;
     },
+    enabled: Boolean(token && contentId),
   });
   const piece = jobs.data?.piece;
   const approve = useMutation({
     mutationFn: () => approveContent(token, contentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobs-for-review", contentId] });
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+    },
   });
   const reject = useMutation({
     mutationFn: () => rejectContent(token, contentId, "Rejected from review screen"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobs-for-review", contentId] });
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+    },
   });
 
   return (
@@ -54,7 +65,13 @@ export function ReviewPage() {
               <span className="rounded-full bg-gold/15 px-13 py-4 text-xs font-semibold uppercase tracking-wider text-gold-soft">
                 {piece.type} · {piece.language.toUpperCase()}
               </span>
-              <span className="text-xs opacity-60">Human approval required for release</span>
+              <span className="text-xs opacity-60">
+                {piece.status === "approved"
+                  ? "✓ Approved"
+                  : piece.status === "rejected"
+                  ? "✕ Rejected"
+                  : "Human approval required for release"}
+              </span>
             </div>
             <h2 className="font-display text-xl text-ink-light dark:text-ink-dark">{piece.title}</h2>
             <div className="whitespace-pre-wrap font-sans text-sm leading-relaxed opacity-90">
@@ -63,22 +80,30 @@ export function ReviewPage() {
             <div className="flex gap-13 pt-13 border-t border-[#D8B478]/15">
               <button
                 type="button"
-                className="rounded-full border border-teal/40 bg-teal/20 px-21 py-13 text-sm font-semibold text-teal hover:bg-teal/30 transition-all"
+                disabled={approve.isPending || reject.isPending}
+                className="rounded-full border border-teal/40 bg-teal/20 px-21 py-13 text-sm font-semibold text-teal hover:bg-teal/30 transition-all disabled:opacity-50"
                 onClick={() => approve.mutate()}
               >
-                ✓ Approve &amp; Mark Ready
+                {approve.isPending ? "Approving..." : "✓ Approve & Mark Ready"}
               </button>
               <button
                 type="button"
-                className="rounded-full border border-danger/40 bg-danger/20 px-21 py-13 text-sm font-semibold text-danger hover:bg-danger/30 transition-all"
+                disabled={approve.isPending || reject.isPending}
+                className="rounded-full border border-danger/40 bg-danger/20 px-21 py-13 text-sm font-semibold text-danger hover:bg-danger/30 transition-all disabled:opacity-50"
                 onClick={() => reject.mutate()}
               >
-                ✕ Reject Draft
+                {reject.isPending ? "Rejecting..." : "✕ Reject Draft"}
               </button>
             </div>
           </div>
+        ) : jobs.isLoading ? (
+          <p className="mt-21 opacity-70 text-xs animate-pulse">Loading content for review…</p>
         ) : (
-          <p className="mt-21 opacity-70">Loading content…</p>
+          <div className="mt-21 rounded-card border border-black/10 dark:border-white/10 p-21 text-center">
+            <p className="text-xs text-ink-light/60 dark:text-ink-dim">
+              Content piece not found or has been removed.
+            </p>
+          </div>
         )}
       </div>
     </GoldenShell>

@@ -11,6 +11,7 @@ class ORMModel(BaseModel):
 class JobPublic(ORMModel):
     id: UUID
     status: str
+    event_id: UUID | None = None
     requested_types: list | None = None
     target_languages: list | None = None
     progress: dict | None = None
@@ -28,6 +29,7 @@ class TranscriptPublic(BaseModel):
     segments: list | None
     provider: str
     badge: str
+    job_id: UUID | None = None
 
 
 class RegenerRequest(BaseModel):

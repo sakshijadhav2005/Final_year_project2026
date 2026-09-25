@@ -1,10 +1,93 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { getEvent, listCommunityContent, listJobs, getTranscript, type ContentPublic } from "@/lib/api";
+import { GoldenShell } from "@/layouts/GoldenShell";
+import {
+  getEvent,
+  listCommunityContent,
+  getEventTranscript,
+  type ContentPublic,
+  type TranscriptSegment,
+} from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { EventChatWidget } from "@/components/chat/EventChatWidget";
+import { getEventCity, getCityBadge } from "@/lib/eventLocation";
+
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function formatTimestamp(sec: number | null | undefined): string {
+  if (sec === null || sec === undefined || isNaN(sec)) return "00:00";
+  const totalSeconds = Math.max(0, Math.floor(sec));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  if (minutes >= 60) {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return `${pad(hours)}:${pad(remainingMinutes)}:${pad(seconds)}`;
+  }
+  return `${pad(minutes)}:${pad(seconds)}`;
+}
+
+function formatDuration(sec: number | null | undefined): string | null {
+  if (sec === null || sec === undefined || isNaN(sec) || sec <= 0) return null;
+  const totalSeconds = Math.round(sec);
+  if (totalSeconds < 60) {
+    return `${totalSeconds}s`;
+  }
+  const minutes = Math.floor(totalSeconds / 60);
+  const remainingSeconds = totalSeconds % 60;
+  if (minutes < 60) {
+    return `${minutes}m ${remainingSeconds}s`;
+  }
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return `${hours}h ${remainingMinutes}m`;
+}
+
+function getSegmentConfidenceMeta(confidence?: number | null) {
+  if (confidence === null || confidence === undefined || isNaN(confidence)) return null;
+  const pct = Math.round(confidence * 100);
+  if (confidence >= 0.85) {
+    return {
+      percentage: pct,
+      label: "High",
+      className: "border-teal/30 bg-teal/10 text-teal",
+    };
+  }
+  if (confidence >= 0.70) {
+    return {
+      percentage: pct,
+      label: "Medium",
+      className: "border-gold/30 bg-gold/10 text-gold dark:text-gold-soft",
+    };
+  }
+  return {
+    percentage: pct,
+    label: "Low",
+    className: "border-danger/30 bg-danger/10 text-danger",
+  };
+}
+
+function renderHighlightedText(text: string, search: string) {
+  const trimmed = search.trim();
+  if (!trimmed || !text) return text;
+  const escaped = escapeRegExp(trimmed);
+  const regex = new RegExp(`(${escaped})`, "gi");
+  const parts = text.split(regex);
+  return parts.map((part, i) =>
+    part.toLowerCase() === trimmed.toLowerCase() ? (
+      <mark key={i} className="rounded bg-accent/40 text-inherit font-semibold px-1 py-0.5">
+        {part}
+      </mark>
+    ) : (
+      part
+    ),
+  );
+}
 
 export function EventDetailPage() {
   const { eventId } = useParams<{ eventId: string }>();
@@ -14,7 +97,10 @@ export function EventDetailPage() {
   const [activeTab, setActiveTab] = useState<"content" | "transcript">("content");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [transcriptSearch, setTranscriptSearch] = useState("");
+  const [transcriptViewMode, setTranscriptViewMode] = useState<"dialogue" | "continuous">("dialogue");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [copiedSegmentIdx, setCopiedSegmentIdx] = useState<number | null>(null);
+  const [isCopiedTranscript, setIsCopiedTranscript] = useState(false);
 
   // Fetch Event Details
   const eventQuery = useQuery({
@@ -30,23 +116,23 @@ export function EventDetailPage() {
     enabled: !!token && !!eventId,
   });
 
-  // Also fetch any jobs associated or latest job transcript for rich transcript view
-  const jobsQuery = useQuery({
-    queryKey: ["jobs"],
-    queryFn: () => (token ? listJobs(token) : []),
-    enabled: !!token,
-  });
-
-  // Find transcript from associated job or first available job
-  const associatedJob = jobsQuery.data?.[0];
-  const transcriptQuery = useQuery({
-    queryKey: ["transcript", associatedJob?.id],
-    queryFn: () => (token && associatedJob?.id ? getTranscript(token, associatedJob.id) : null),
-    enabled: !!token && !!associatedJob?.id,
-  });
-
   const event = eventQuery.data;
   const posts: ContentPublic[] = contentQuery.data || [];
+
+  // Fetch event transcript directly via event ID (does NOT depend on generated community posts)
+  const transcriptQuery = useQuery({
+    queryKey: ["event-transcript", eventId],
+    queryFn: () => (token && eventId ? getEventTranscript(token, eventId) : null),
+    enabled: !!token && !!eventId,
+    retry: false,
+  });
+
+  // Retain the associated job ID only where needed for chat
+  const eventJobId =
+    transcriptQuery.data?.job_id ?? posts.find((post) => Boolean(post.job_id))?.job_id ?? undefined;
+
+  const detectedCity = event ? getEventCity(event) : null;
+  const cityBadge = detectedCity ? getCityBadge(detectedCity) : null;
 
   const filteredPosts = selectedType === "all" ? posts : posts.filter((p) => p.type === selectedType);
 
@@ -56,45 +142,131 @@ export function EventDetailPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const TYPE_BADGES: Record<string, { label: string; icon: string; color: string }> = {
-    linkedin: { label: "LinkedIn Post", icon: "💼", color: "bg-blue-500/20 text-blue-300 border-blue-500/30" },
-    instagram: { label: "Instagram Carousel", icon: "📸", color: "bg-pink-500/20 text-pink-300 border-pink-500/30" },
-    newsletter: { label: "Email Newsletter", icon: "📧", color: "bg-purple-500/20 text-purple-300 border-purple-500/30" },
-    blog: { label: "Blog Article", icon: "📝", color: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30" },
-    summary: { label: "Executive Summary", icon: "📊", color: "bg-amber-500/20 text-amber-300 border-amber-500/30" },
-    flyer: { label: "Event Flyer", icon: "🎨", color: "bg-orange-500/20 text-orange-300 border-orange-500/30" },
+  const fullTranscriptText = transcriptQuery.data?.full_text || "";
+  const hasTranscript = Boolean(transcriptQuery.data && fullTranscriptText.trim());
+  const segments: TranscriptSegment[] | null = transcriptQuery.data?.segments ?? null;
+  const hasSegments = Boolean(segments && segments.length > 0);
+  const activeTranscriptMode = hasSegments ? transcriptViewMode : "continuous";
+
+  const qualityReport = transcriptQuery.data?.quality_json;
+  const formattedDuration = formatDuration(qualityReport?.duration_sec);
+
+  const handleCopyTranscript = async () => {
+    if (!fullTranscriptText) return;
+    try {
+      await navigator.clipboard.writeText(fullTranscriptText);
+      setIsCopiedTranscript(true);
+      setTimeout(() => setIsCopiedTranscript(false), 2000);
+    } catch {
+      // Do not crash page if clipboard access fails
+    }
   };
 
-  const fullTranscriptText = transcriptQuery.data?.full_text || "No audio transcript recorded for this session yet. Upload a media recording in the Dashboard to index speech-to-text.";
+  const handleCopySegment = async (text: string, idx: number) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedSegmentIdx(idx);
+      setTimeout(() => setCopiedSegmentIdx(null), 2000);
+    } catch {
+      // Do not crash page if clipboard access fails
+    }
+  };
+
+  // Transcript statistics
+  const wordCount = useMemo(() => {
+    if (!fullTranscriptText.trim()) return 0;
+    return fullTranscriptText.trim().split(/\s+/).length;
+  }, [fullTranscriptText]);
+
+  const avgConfidence = transcriptQuery.data?.avg_confidence;
+  const confidencePercentage =
+    avgConfidence !== null && avgConfidence !== undefined
+      ? Math.round(avgConfidence * 100)
+      : null;
+
+  const confidenceLevel = transcriptQuery.data?.badge
+    ? transcriptQuery.data.badge.charAt(0).toUpperCase() + transcriptQuery.data.badge.slice(1)
+    : avgConfidence !== null && avgConfidence !== undefined
+    ? avgConfidence >= 0.85
+      ? "High"
+      : avgConfidence >= 0.7
+      ? "Medium"
+      : "Low"
+    : null;
+
+  // Search highlighting & match count with regex escaping (continuous text)
+  const { highlightedTranscript, matchCount } = useMemo(() => {
+    const trimmedSearch = transcriptSearch.trim();
+    if (!trimmedSearch || !fullTranscriptText) {
+      return { highlightedTranscript: fullTranscriptText, matchCount: 0 };
+    }
+
+    const escaped = escapeRegExp(trimmedSearch);
+    const regex = new RegExp(`(${escaped})`, "gi");
+    const matches = fullTranscriptText.match(regex);
+    const count = matches ? matches.length : 0;
+
+    const parts = fullTranscriptText.split(regex);
+    const highlighted = parts.map((part, i) =>
+      part.toLowerCase() === trimmedSearch.toLowerCase() ? (
+        <mark key={i} className="rounded bg-accent/40 text-inherit font-semibold px-1 py-0.5">
+          {part}
+        </mark>
+      ) : (
+        part
+      ),
+    );
+
+    return { highlightedTranscript: highlighted, matchCount: count };
+  }, [fullTranscriptText, transcriptSearch]);
+
+  // Search filtering for timestamped dialogue segments
+  const filteredSegments = useMemo(() => {
+    if (!segments || segments.length === 0) return [];
+    const trimmed = transcriptSearch.trim();
+    if (!trimmed) return segments;
+    const escaped = escapeRegExp(trimmed);
+    const regex = new RegExp(escaped, "i");
+    return segments.filter((seg) => regex.test(seg.text));
+  }, [segments, transcriptSearch]);
+
+  const TYPE_BADGES: Record<string, { label: string; icon: string; color: string }> = {
+    linkedin: { label: "LinkedIn Post", icon: "💼", color: "border-blue-500/30 bg-blue-500/10 text-blue-400" },
+    instagram: { label: "Instagram Carousel", icon: "📸", color: "border-pink-500/30 bg-pink-500/10 text-pink-400" },
+    newsletter: { label: "Email Newsletter", icon: "📧", color: "border-purple-500/30 bg-purple-500/10 text-purple-400" },
+    blog: { label: "Blog Article", icon: "📝", color: "border-teal/30 bg-teal/10 text-teal" },
+    summary: { label: "Executive Summary", icon: "📊", color: "border-gold/30 bg-gold/10 text-gold dark:text-gold-soft" },
+    flyer: { label: "Event Flyer", icon: "🎨", color: "border-orange-500/30 bg-orange-500/10 text-orange-400" },
+  };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
-      <div className="mx-auto max-w-6xl">
+    <GoldenShell>
+      <div className="space-y-34">
         {/* Navigation Breadcrumb */}
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-13">
+          <div className="flex items-center gap-13">
             <Link
               to="/catalog/all"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-surface-light/80 dark:bg-white/[0.03] px-13 py-4 text-xs font-medium text-gold hover:border-gold transition-all dark:text-gold-soft"
             >
               ← All Catalogs
             </Link>
-            <span className="text-slate-600">/</span>
-            <span className="text-xs text-amber-400 font-semibold uppercase tracking-wider">
+            <span className="text-ink-light/30 dark:text-white/20">/</span>
+            <span className="text-xs text-gold dark:text-gold-soft font-semibold uppercase tracking-wider">
               {event?.type || "Event"} Hub
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-13">
             <Link
               to="/community"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200 hover:border-amber-500/30 hover:bg-amber-500/10 hover:text-amber-300 transition-all"
+              className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-surface-light/80 dark:bg-white/[0.03] px-21 py-8 text-xs font-medium text-gold hover:border-gold transition-all dark:text-gold-soft"
             >
               <span>💬 Community Feed</span>
             </Link>
             <Link
               to={user?.role === "regular_user" ? "/user/dashboard" : "/organizer/dashboard"}
-              className="rounded-xl border border-white/10 bg-slate-900 px-4 py-2 text-xs font-medium text-slate-300 hover:text-white"
+              className="rounded-full border border-black/10 dark:border-white/10 px-13 py-8 text-xs font-medium text-ink-light/70 hover:text-ink-light dark:text-ink-dim dark:hover:text-ink-dark transition-colors"
             >
               Dashboard
             </Link>
@@ -102,65 +274,91 @@ export function EventDetailPage() {
         </div>
 
         {/* Hero Event Banner */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 p-8 shadow-2xl backdrop-blur-xl">
-          <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent blur-2xl" />
-
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div className="relative overflow-hidden rounded-card border border-gold/20 bg-surface-light p-21 sm:p-34 shadow-xl backdrop-blur-xl dark:border-gold/20 dark:bg-surface-dark">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-21">
             <div>
-              <div className="flex flex-wrap items-center gap-2.5 mb-3">
-                <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/20 px-3 py-1 text-xs font-bold text-amber-300">
-                  <span>🎪</span>
-                  <span className="capitalize">{event?.type || "Event"}</span>
+              <div className="flex flex-wrap items-center gap-8 mb-8">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold dark:text-gold-soft">
+                  <span>{event?.type === "meetup" ? "👥" : event?.type === "speech" ? "🎤" : event?.type === "event" ? "🎪" : "📌"}</span>
+                  <span className="capitalize">{event?.type === "other" ? "Session" : event?.type || "Event"}</span>
                 </span>
-                <span className="text-xs text-slate-400">
+                {cityBadge && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold dark:text-gold-soft">
+                    <span>{cityBadge.icon}</span>
+                    <span>{cityBadge.label}</span>
+                  </span>
+                )}
+                <span className="text-xs text-ink-light/60 dark:text-ink-dim">
                   📅 {event?.date ? new Date(event.date).toLocaleDateString(undefined, { dateStyle: "full" }) : "Scheduled Date"}
                 </span>
               </div>
 
-              <h1 className="text-2xl md:text-4xl font-black text-white tracking-tight">
+              <h1 className="font-display text-2xl sm:text-4xl font-semibold text-ink-light dark:text-ink-dark tracking-tight">
                 {event?.name || "Event Overview"}
               </h1>
 
               {event?.topic && (
-                <p className="mt-2 text-sm text-slate-300 flex items-center gap-2">
-                  <span className="text-amber-400">💡 Theme:</span> {event.topic}
+                <p className="mt-8 text-xs sm:text-sm text-ink-light/80 dark:text-ink-dim flex items-center gap-2">
+                  <span className="text-gold dark:text-gold-soft font-medium">💡 Theme:</span> {event.topic}
                 </p>
               )}
 
-              <div className="mt-4 flex items-center gap-2 text-xs text-slate-400">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500/20 font-bold text-amber-300 text-xs">
+              <div className="mt-13 flex items-center gap-8 text-xs text-ink-light/60 dark:text-ink-dim">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-gold/30 bg-gold/10 font-bold text-gold dark:text-gold-soft text-xs">
                   {event?.organizer_name ? event.organizer_name[0].toUpperCase() : "O"}
                 </span>
-                <span>Organized by <strong className="text-white font-semibold">{event?.organizer_name || "Community Organizer"}</strong></span>
+                <span>Organized by <strong className="text-ink-light dark:text-ink-dark font-semibold">{event?.organizer_name || "Community Organizer"}</strong></span>
               </div>
             </div>
 
             {/* Quick Stats */}
-            <div className="flex flex-wrap md:flex-col gap-3">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center min-w-[120px]">
-                <span className="block text-2xl font-black text-amber-400">{posts.length}</span>
-                <span className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">AI Posts</span>
+            <div className="flex flex-wrap md:flex-col gap-13">
+              <div className="rounded-card border border-black/10 dark:border-white/10 bg-canvas-light/60 dark:bg-white/[0.02] p-13 text-center min-w-[120px]">
+                <span className="block font-display text-2xl font-bold text-gold dark:text-gold-soft">{posts.length}</span>
+                <span className="text-[10px] text-ink-light/60 dark:text-ink-dim uppercase tracking-wider font-semibold">AI Posts</span>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center min-w-[120px]">
-                <span className="block text-2xl font-black text-emerald-400">
-                  {transcriptQuery.data?.avg_confidence ? `${Math.round(transcriptQuery.data.avg_confidence * 100)}%` : "100%"}
+              <div className="rounded-card border border-black/10 dark:border-white/10 bg-canvas-light/60 dark:bg-white/[0.02] p-13 text-center min-w-[120px]">
+                <span className="block font-display text-2xl font-bold text-teal">
+                  {confidencePercentage !== null ? `${confidencePercentage}%` : "—"}
                 </span>
-                <span className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Transcript Grounding</span>
+                <span className="text-[10px] text-ink-light/60 dark:text-ink-dim uppercase tracking-wider font-semibold">
+                  {confidenceLevel ? `${confidenceLevel} Grounding` : "Transcript Grounding"}
+                </span>
               </div>
+              {formattedDuration && (
+                <div className="rounded-card border border-black/10 dark:border-white/10 bg-canvas-light/60 dark:bg-white/[0.02] p-13 text-center min-w-[120px]">
+                  <span className="block font-display text-xl sm:text-2xl font-bold text-ink-light dark:text-ink-dark">
+                    {formattedDuration}
+                  </span>
+                  <span className="text-[10px] text-ink-light/60 dark:text-ink-dim uppercase tracking-wider font-semibold">
+                    Duration
+                  </span>
+                </div>
+              )}
+              {qualityReport?.ok !== undefined && (
+                <div className="rounded-card border border-black/10 dark:border-white/10 bg-canvas-light/60 dark:bg-white/[0.02] p-13 text-center min-w-[120px]">
+                  <span className={`block font-display text-base font-bold sm:text-lg ${qualityReport.ok ? "text-teal" : "text-danger"}`}>
+                    {qualityReport.ok ? "Clean Audio" : "Issue Detected"}
+                  </span>
+                  <span className="text-[10px] text-ink-light/60 dark:text-ink-dim uppercase tracking-wider font-semibold">
+                    Audio Quality
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Tab Switching: Generated Content vs Full Transcript */}
-        <div className="mt-8 flex items-center justify-between border-b border-white/10 pb-4">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-13 sm:flex-row sm:items-center sm:justify-between border-b border-black/10 dark:border-white/10 pb-13">
+          <div className="flex flex-wrap items-center gap-8">
             <button
               type="button"
               onClick={() => setActiveTab("content")}
-              className={`rounded-xl px-5 py-2.5 text-xs font-bold transition-all ${
+              className={`rounded-full px-21 py-8 text-xs font-semibold transition-all ${
                 activeTab === "content"
-                  ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-orange-500/20"
-                  : "border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
+                  ? "border border-gold/40 bg-gold/20 text-gold dark:text-gold-soft shadow-sm"
+                  : "border border-black/10 dark:border-white/10 bg-surface-light/50 dark:bg-white/[0.02] text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark"
               }`}
             >
               📄 Generated Content Pieces ({posts.length})
@@ -168,10 +366,10 @@ export function EventDetailPage() {
             <button
               type="button"
               onClick={() => setActiveTab("transcript")}
-              className={`rounded-xl px-5 py-2.5 text-xs font-bold transition-all ${
+              className={`rounded-full px-21 py-8 text-xs font-semibold transition-all ${
                 activeTab === "transcript"
-                  ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-orange-500/20"
-                  : "border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
+                  ? "border border-gold/40 bg-gold/20 text-gold dark:text-gold-soft shadow-sm"
+                  : "border border-black/10 dark:border-white/10 bg-surface-light/50 dark:bg-white/[0.02] text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark"
               }`}
             >
               🎙️ Full Searchable Transcript
@@ -179,12 +377,12 @@ export function EventDetailPage() {
           </div>
 
           {activeTab === "content" && (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400 hidden sm:inline">Filter format:</span>
+            <div className="flex items-center gap-8">
+              <span className="text-xs text-ink-light/60 dark:text-ink-dim hidden sm:inline">Filter format:</span>
               <select
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
-                className="rounded-xl border border-white/10 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 focus:border-amber-500/50 focus:outline-none"
+                className="rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-surface-dark px-13 py-4 text-xs text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
               >
                 <option value="all">All Formats</option>
                 <option value="linkedin">💼 LinkedIn</option>
@@ -200,68 +398,70 @@ export function EventDetailPage() {
 
         {/* Tab 1: Generated Content Feed */}
         {activeTab === "content" && (
-          <div className="mt-6 space-y-6">
+          <div className="space-y-21">
             {filteredPosts.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-white/10 bg-slate-900/40 p-12 text-center">
+              <div className="rounded-card border border-dashed border-black/15 dark:border-white/15 bg-surface-light/40 dark:bg-surface-dark/40 p-34 text-center">
                 <span className="text-4xl">📝</span>
-                <h3 className="mt-3 text-lg font-bold text-white">No posts generated for this filter</h3>
-                <p className="mt-1 text-xs text-slate-400 max-w-sm mx-auto">
+                <h3 className="mt-13 font-display text-lg font-semibold text-ink-light dark:text-ink-dark">
+                  No posts generated for this filter
+                </h3>
+                <p className="mt-4 text-xs text-ink-light/60 dark:text-ink-dim max-w-sm mx-auto">
                   When the organizer processes an audio or video session, all 6 specialized creator agents generate publish-ready drafts automatically.
                 </p>
                 <Link
                   to="/community"
-                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-amber-500/20 px-4 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-500/30"
+                  className="mt-21 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-21 py-8 text-xs font-semibold text-gold hover:bg-gold/20 dark:text-gold-soft transition-all"
                 >
                   Write Community Reflection
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-21">
                 {filteredPosts.map((post) => {
-                  const badge = TYPE_BADGES[post.type] || { label: post.type, icon: "📌", color: "bg-slate-500/20 text-slate-300 border-slate-500/30" };
+                  const badge = TYPE_BADGES[post.type] || { label: post.type, icon: "📌", color: "border-black/10 dark:border-white/10 bg-black/[0.03] dark:bg-white/[0.03] text-ink-light dark:text-ink-dark" };
                   const isCopied = copiedId === post.id;
 
                   return (
                     <div
                       key={post.id}
-                      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-xl backdrop-blur-xl transition-all hover:border-white/20"
+                      className="group flex flex-col justify-between rounded-card border border-black/10 bg-surface-light p-21 shadow-sm dark:border-white/10 dark:bg-surface-dark dark:shadow-none hover:border-gold/30 transition-all"
                     >
                       <div>
-                        <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
-                          <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${badge.color}`}>
+                        <div className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-13 mb-13">
+                          <span className={`inline-flex items-center gap-1.5 rounded-full border px-13 py-2 text-xs font-semibold ${badge.color}`}>
                             <span>{badge.icon}</span>
                             <span>{badge.label}</span>
                           </span>
 
-                          <div className="flex items-center gap-2 text-xs text-slate-400">
-                            <span>Author: <strong className="text-slate-200">{post.author_name || "Speaker"}</strong></span>
+                          <div className="flex items-center gap-8 text-xs text-ink-light/60 dark:text-ink-dim">
+                            <span>Author: <strong className="text-ink-light dark:text-ink-dark font-medium">{post.author_name || "Speaker"}</strong></span>
                           </div>
                         </div>
 
                         {post.title && (
-                          <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
+                          <h3 className="font-display text-base font-semibold text-ink-light dark:text-ink-dark group-hover:text-gold transition-colors">
                             {post.title}
                           </h3>
                         )}
 
-                        <div className="mt-3 text-xs text-slate-300 whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto rounded-xl bg-black/20 p-4 font-sans">
+                        <div className="mt-13 text-xs text-ink-light/80 dark:text-ink-dim whitespace-pre-wrap leading-relaxed max-h-64 overflow-y-auto rounded-card bg-canvas-light dark:bg-canvas-dark/60 p-13 border border-black/5 dark:border-white/5 font-sans">
                           {post.body}
                         </div>
                       </div>
 
                       {/* Post Actions */}
-                      <div className="mt-5 flex items-center justify-between pt-4 border-t border-white/5">
+                      <div className="mt-21 flex items-center justify-between pt-13 border-t border-black/5 dark:border-white/5">
                         <button
                           type="button"
                           onClick={() => handleCopy(`${post.title ? post.title + '\n\n' : ''}${post.body}`, post.id)}
-                          className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-black/10 dark:border-white/10 bg-canvas-light/80 dark:bg-white/[0.03] px-13 py-4 text-xs font-medium text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark transition-colors"
                         >
                           {isCopied ? "✓ Copied!" : "📋 Copy Post"}
                         </button>
 
                         <Link
                           to={`/community?repurpose=${post.id}&event_id=${eventId}`}
-                          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 px-3.5 py-1.5 text-xs font-semibold text-amber-300 hover:bg-amber-500/30 transition-all"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/20 transition-all"
                         >
                           <span>✍️ Repurpose Post</span>
                         </Link>
@@ -276,40 +476,253 @@ export function EventDetailPage() {
 
         {/* Tab 2: Searchable Full Audio Transcript */}
         {activeTab === "transcript" && (
-          <div className="mt-6 rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-xl backdrop-blur-xl">
-            <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="rounded-card border border-black/10 bg-surface-light p-21 shadow-sm dark:border-white/10 dark:bg-surface-dark dark:shadow-none space-y-13">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-13">
               <div>
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <h3 className="font-display text-base font-semibold text-ink-light dark:text-ink-dark flex items-center gap-2">
                   <span>🎙️</span> Grounded Speech-to-Text Transcription
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-ink-light/60 dark:text-ink-dim mt-1">
                   Full text indexed by VideoDB and verified with confidence scoring.
                 </p>
               </div>
 
-              <div className="relative max-w-xs w-full">
-                <input
-                  type="text"
-                  value={transcriptSearch}
-                  onChange={(e) => setTranscriptSearch(e.target.value)}
-                  placeholder="Search transcript text..."
-                  className="w-full rounded-xl border border-white/10 bg-white/5 pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
-                />
-                <span className="absolute inset-y-0 left-3 flex items-center text-xs text-slate-400">
-                  🔍
-                </span>
-              </div>
+              {hasTranscript && (
+                <div className="flex flex-wrap items-center gap-8">
+                  {/* View Mode Toggle: Timestamped Dialogue vs Continuous Text */}
+                  {hasSegments && (
+                    <div className="inline-flex items-center rounded-full border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-surface-dark p-1">
+                      <button
+                        type="button"
+                        onClick={() => setTranscriptViewMode("dialogue")}
+                        className={`rounded-full px-13 py-4 text-xs font-semibold transition-all ${
+                          activeTranscriptMode === "dialogue"
+                            ? "border border-gold/40 bg-gold/20 text-gold dark:text-gold-soft shadow-xs"
+                            : "text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark"
+                        }`}
+                      >
+                        ⏱️ Timestamped Dialogue ({segments?.length})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTranscriptViewMode("continuous")}
+                        className={`rounded-full px-13 py-4 text-xs font-semibold transition-all ${
+                          activeTranscriptMode === "continuous"
+                            ? "border border-gold/40 bg-gold/20 text-gold dark:text-gold-soft shadow-xs"
+                            : "text-ink-light/70 dark:text-ink-dim hover:text-ink-light dark:hover:text-ink-dark"
+                        }`}
+                      >
+                        📄 Continuous Text
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Copy Full Transcript */}
+                  <button
+                    type="button"
+                    onClick={handleCopyTranscript}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/20 transition-all"
+                    title="Copy full transcript to clipboard"
+                  >
+                    <span>{isCopiedTranscript ? "✓ Copied!" : "📋 Copy Full Transcript"}</span>
+                  </button>
+
+                  {/* Search Bar */}
+                  <div className="relative max-w-xs w-full">
+                    <span className="absolute inset-y-0 left-3 flex items-center text-xs text-ink-light/40 dark:text-ink-dim">
+                      🔍
+                    </span>
+                    <input
+                      type="text"
+                      value={transcriptSearch}
+                      onChange={(e) => setTranscriptSearch(e.target.value)}
+                      placeholder={
+                        activeTranscriptMode === "dialogue"
+                          ? "Search dialogue segments..."
+                          : "Search transcript text..."
+                      }
+                      className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] pl-34 pr-21 py-4 text-xs text-ink-light dark:text-ink-dark placeholder-ink-light/40 dark:placeholder-ink-dim/50 focus:border-gold focus:outline-none"
+                    />
+                    {transcriptSearch && (
+                      <button
+                        type="button"
+                        onClick={() => setTranscriptSearch("")}
+                        className="absolute inset-y-0 right-2 flex items-center text-xs text-ink-light/40 hover:text-ink-light dark:text-ink-dim dark:hover:text-ink-dark"
+                        title="Clear search"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
-            <div className="max-h-[500px] overflow-y-auto rounded-xl bg-black/30 p-6 font-mono text-xs text-slate-200 leading-relaxed whitespace-pre-wrap">
-              {fullTranscriptText}
-            </div>
+            {/* Transcript Statistics & Match Count */}
+            {hasTranscript && (
+              <div className="flex flex-wrap items-center justify-between gap-8 pt-8 border-t border-black/5 dark:border-white/5 text-xs text-ink-light/60 dark:text-ink-dim">
+                <div className="flex flex-wrap items-center gap-13">
+                  <span>
+                    Words: <strong className="text-ink-light dark:text-ink-dark font-medium">{wordCount.toLocaleString()}</strong>
+                  </span>
+                  {formattedDuration && (
+                    <span>
+                      Duration: <strong className="text-ink-light dark:text-ink-dark font-medium">{formattedDuration}</strong>
+                    </span>
+                  )}
+                  {confidencePercentage !== null && (
+                    <span className="inline-flex items-center gap-1 rounded-full border border-teal/30 bg-teal/10 px-8 py-2 text-[10px] font-semibold text-teal">
+                      <span>🎯</span>
+                      <span>{confidencePercentage}% Grounding ({confidenceLevel})</span>
+                    </span>
+                  )}
+                  {qualityReport?.ok !== undefined && (
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-full border px-8 py-2 text-[10px] font-semibold ${
+                        qualityReport.ok
+                          ? "border-teal/30 bg-teal/10 text-teal"
+                          : "border-danger/30 bg-danger/10 text-danger"
+                      }`}
+                    >
+                      <span>{qualityReport.ok ? "✓" : "⚠️"}</span>
+                      <span>{qualityReport.ok ? "Clean Audio" : "Audio Warning"}</span>
+                    </span>
+                  )}
+                  {typeof qualityReport?.silence_ratio === "number" && (
+                    <span className="text-[10px] text-ink-light/50 dark:text-ink-dim hidden md:inline">
+                      Silence: {Math.round(qualityReport.silence_ratio * 100)}%
+                    </span>
+                  )}
+                  {typeof qualityReport?.sample_rate === "number" && (
+                    <span className="text-[10px] text-ink-light/50 dark:text-ink-dim hidden md:inline">
+                      Rate: {qualityReport.sample_rate} Hz
+                    </span>
+                  )}
+                </div>
+
+                {transcriptSearch.trim() && (
+                  <span className="rounded-full border border-gold/30 bg-gold/10 px-8 py-2 text-[11px] font-medium text-gold dark:text-gold-soft">
+                    {activeTranscriptMode === "dialogue"
+                      ? `${filteredSegments.length} of ${segments?.length || 0} segments (${matchCount} ${
+                          matchCount === 1 ? "match" : "matches"
+                        })`
+                      : `${matchCount} ${matchCount === 1 ? "match found" : "matches found"}`}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Content states */}
+            {transcriptQuery.isLoading ? (
+              <div className="py-34 text-center">
+                <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-gold border-t-transparent" />
+                <p className="mt-8 text-xs text-ink-light/60 dark:text-ink-dim">
+                  Fetching grounded transcript from speech-to-text engine...
+                </p>
+              </div>
+            ) : transcriptQuery.isError &&
+              !(transcriptQuery.error as Error).message.toLowerCase().includes("not found") &&
+              !(transcriptQuery.error as Error).message.includes("404") ? (
+              <div className="rounded-card border border-danger/30 bg-danger/10 p-21 text-center">
+                <p className="text-xs text-danger">
+                  ⚠️ Unable to retrieve transcript: {(transcriptQuery.error as Error).message}
+                </p>
+              </div>
+            ) : !hasTranscript ? (
+              <div className="rounded-card border border-dashed border-gold/20 bg-surface-light/40 dark:bg-surface-dark/40 p-34 text-center">
+                <span className="text-3xl">🎙️</span>
+                <h4 className="mt-8 font-display text-base font-semibold text-ink-light dark:text-ink-dark">
+                  No media recording or transcript has been linked to this event yet.
+                </h4>
+                <p className="mt-4 text-xs text-ink-light/60 dark:text-ink-dim max-w-md mx-auto">
+                  Once an organizer uploads and processes an audio or video session for this event, the grounded speech-to-text transcript and verified speaker takeaways will appear here.
+                </p>
+                <div className="mt-13">
+                  <Link
+                    to="/community"
+                    className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-21 py-8 text-xs font-semibold text-gold dark:text-gold-soft hover:bg-gold/20 transition-all"
+                  >
+                    <span>💬</span>
+                    <span>Browse Community Discussion</span>
+                  </Link>
+                </div>
+              </div>
+            ) : activeTranscriptMode === "dialogue" && hasSegments ? (
+              /* Timestamped Dialogue View */
+              <div className="space-y-13 max-h-[550px] overflow-y-auto pr-8">
+                {filteredSegments.length === 0 ? (
+                  <div className="rounded-card border border-dashed border-black/15 dark:border-white/15 p-34 text-center">
+                    <span className="text-2xl">🔍</span>
+                    <p className="mt-8 text-xs font-semibold text-ink-light dark:text-ink-dark">
+                      No dialogue segments match &ldquo;{transcriptSearch}&rdquo;
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setTranscriptSearch("")}
+                      className="mt-8 text-xs text-gold dark:text-gold-soft hover:underline"
+                    >
+                      Clear search filter
+                    </button>
+                  </div>
+                ) : (
+                  filteredSegments.map((segment, idx) => {
+                    const confMeta = getSegmentConfidenceMeta(segment.confidence);
+                    const speakerLabel = segment.speaker?.trim() ? segment.speaker.trim() : "Speaker";
+                    const isSegmentCopied = copiedSegmentIdx === idx;
+
+                    return (
+                      <div
+                        key={`${segment.start}-${idx}`}
+                        className="group rounded-card border border-black/10 dark:border-white/10 bg-canvas-light/60 dark:bg-canvas-dark/60 p-13 sm:p-21 hover:border-gold/30 transition-all"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-8 pb-8 mb-8 border-b border-black/5 dark:border-white/5">
+                          <div className="flex items-center gap-8">
+                            <span className="inline-flex items-center font-mono text-xs font-semibold px-8 py-2 rounded-full border border-gold/30 bg-gold/10 text-gold dark:text-gold-soft">
+                              ⏱️ {formatTimestamp(segment.start)}
+                            </span>
+                            <span className="inline-flex items-center font-display text-xs font-semibold uppercase tracking-wider text-ink-light dark:text-ink-dark">
+                              🎙️ {speakerLabel}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-8">
+                            {confMeta && (
+                              <span className={`inline-flex items-center gap-1 rounded-full border px-8 py-2 text-[10px] font-semibold ${confMeta.className}`}>
+                                <span>🎯</span>
+                                <span>{confMeta.percentage}% ({confMeta.label})</span>
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleCopySegment(segment.text, idx)}
+                              className="opacity-70 group-hover:opacity-100 text-[11px] font-medium text-ink-light/60 hover:text-gold dark:text-ink-dim dark:hover:text-gold-soft transition-colors"
+                              title="Copy segment text"
+                            >
+                              {isSegmentCopied ? "✓ Copied" : "📋 Copy"}
+                            </button>
+                          </div>
+                        </div>
+
+                        <p className="text-xs sm:text-sm text-ink-light dark:text-ink-dark font-sans leading-relaxed whitespace-pre-wrap">
+                          {renderHighlightedText(segment.text, transcriptSearch)}
+                        </p>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            ) : (
+              /* Continuous Text View */
+              <div className="max-h-[500px] overflow-y-auto rounded-card bg-canvas-light dark:bg-canvas-dark/70 p-21 font-mono text-xs text-ink-light dark:text-ink-dark leading-relaxed whitespace-pre-wrap border border-black/5 dark:border-white/5">
+                {highlightedTranscript}
+              </div>
+            )}
           </div>
         )}
 
         {/* Member 4 Attendee Q&A Assistant */}
-        <EventChatWidget eventId={eventId} eventName={event?.name} />
+        <EventChatWidget eventId={eventId} jobId={eventJobId} eventName={event?.name} />
       </div>
-    </div>
+    </GoldenShell>
   );
 }

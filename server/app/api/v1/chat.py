@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.deps import get_current_user, get_db
 from app.db.session import SessionLocal
 from app.models.chat import ChatMessage, ChatSession
+from app.models.job import Job, Transcript
 from app.models.recording import Recording
 from app.models.user import User
 from app.schemas.chat import (
@@ -100,13 +101,19 @@ async def stream_message(
     transcript_text = None
     target_event_id = body.event_id or session.event_id
     if target_event_id:
-        recording = (
-            (await db.execute(select(Recording).where(Recording.event_id == target_event_id)))
+        target_job = (
+            (await db.execute(select(Job).where(Job.event_id == target_event_id).order_by(Job.created_at.desc())))
             .scalars()
             .first()
         )
-        if recording and hasattr(recording, "transcript_text"):
-            transcript_text = recording.transcript_text
+        if target_job:
+            transcript = (
+                (await db.execute(select(Transcript).where(Transcript.job_id == target_job.id)))
+                .scalars()
+                .first()
+            )
+            if transcript:
+                transcript_text = transcript.full_text
 
     # Build history
     history = [{"role": msg.role, "content": msg.content} for msg in session.messages]

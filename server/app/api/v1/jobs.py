@@ -74,6 +74,7 @@ async def get_transcript(
         segments=row.segments,
         provider=row.provider,
         badge=confidence_badge(row.avg_confidence),
+        job_id=row.job_id,
     )
 
 

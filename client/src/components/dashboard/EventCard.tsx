@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { EventPublic } from "@/lib/api";
+import { getEventCity, getCityBadge } from "@/lib/eventLocation";
 
 type EventCardProps = {
   event: EventPublic;
@@ -31,6 +32,8 @@ const TYPE_CONFIG: Record<string, { label: string; icon: string; badgeClass: str
 
 export function EventCard({ event, onSelect }: EventCardProps) {
   const config = TYPE_CONFIG[event.type] ?? TYPE_CONFIG.other;
+  const detectedCity = getEventCity(event);
+  const cityBadge = detectedCity ? getCityBadge(detectedCity) : null;
 
   const formattedDate = new Date(event.date).toLocaleDateString(undefined, {
     year: "numeric",
@@ -43,13 +46,22 @@ export function EventCard({ event, onSelect }: EventCardProps) {
       <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-gradient-to-br from-amber-500/10 via-purple-500/5 to-transparent blur-xl transition-all duration-300 group-hover:scale-150" />
 
       <div>
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${config.badgeClass}`}
-          >
-            <span>{config.icon}</span>
-            <span>{config.label}</span>
-          </span>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${config.badgeClass}`}
+            >
+              <span>{config.icon}</span>
+              <span>{config.label}</span>
+            </span>
+
+            {cityBadge && (
+              <span className="inline-flex items-center gap-1 rounded-full border border-gold/30 bg-gold/10 px-2.5 py-1 text-xs font-medium text-gold dark:text-gold-soft">
+                <span>{cityBadge.icon}</span>
+                <span>{cityBadge.label}</span>
+              </span>
+            )}
+          </div>
 
           <span className="text-xs font-medium text-slate-400">📅 {formattedDate}</span>
         </div>

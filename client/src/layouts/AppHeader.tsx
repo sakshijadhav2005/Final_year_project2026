@@ -1,9 +1,10 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { useAuthStore } from "@/store/auth";
 import { useThemeStore } from "@/store/theme";
 
 export function AppHeader() {
+  const location = useLocation();
   const toggleTheme = useThemeStore((s) => s.toggleTheme);
   const theme = useThemeStore((s) => s.theme);
   const user = useAuthStore((s) => s.user);
@@ -12,6 +13,8 @@ export function AppHeader() {
   const links = user
     ? [
         { to: "/", label: "Upload" },
+        { to: "/catalog/all", label: "Catalog" },
+        { to: "/community", label: "Community" },
         { to: "/dashboard", label: "Dashboard" },
         { to: "/settings", label: "Settings" },
         ...(user.role === "admin" ? [{ to: "/admin", label: "Admin" }] : []),
@@ -54,13 +57,18 @@ export function AppHeader() {
               key={link.to}
               to={link.to}
               end={link.to === "/"}
-              className={({ isActive }) =>
-                `text-xs uppercase tracking-widest transition-all ${
-                  isActive
+              className={({ isActive }) => {
+                const isCatalog =
+                  link.to === "/catalog/all" && location.pathname.startsWith("/catalog");
+                const isDashboard =
+                  link.to === "/dashboard" && location.pathname.includes("/dashboard");
+                const active = isActive || isCatalog || isDashboard;
+                return `text-xs uppercase tracking-widest transition-all ${
+                  active
                     ? "font-semibold text-gold dark:text-gold-soft"
                     : "text-ink-light/70 hover:text-ink-light dark:text-ink-dim dark:hover:text-ink-dark"
-                }`
-              }
+                }`;
+              }}
             >
               {link.label}
             </NavLink>

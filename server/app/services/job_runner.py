@@ -361,7 +361,7 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             )
             return
 
-        event_id = recording.event_id if hasattr(recording, "event_id") else None
+        event_id = getattr(job, "event_id", None) or (recording.event_id if hasattr(recording, "event_id") else None)
         author_name = user_memory.get("full_name") or "Event Speaker"
         generated = list(final_state.get("generated") or [])
         for piece in generated:

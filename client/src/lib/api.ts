@@ -21,6 +21,8 @@ export type UserPublic = {
   email: string;
   role: UserRole;
   is_active: boolean;
+  created_at?: string | null;
+  profile?: UserProfilePublic | null;
 };
 
 export type TokenResponse = {
@@ -37,18 +39,36 @@ export type JobPublic = {
   progress: Record<string, string> | null;
   error_code: string | null;
   error_message: string | null;
+  event_id?: string | null;
   created_at: string | null;
   finished_at: string | null;
+};
+
+export type TranscriptSegment = {
+  text: string;
+  start: number;
+  end: number;
+  confidence?: number | null;
+  speaker?: string | null;
+};
+
+export type TranscriptQuality = {
+  duration_sec?: number | null;
+  sample_rate?: number | null;
+  silence_ratio?: number | null;
+  ok?: boolean;
+  reason?: string | null;
 };
 
 export type TranscriptPublic = {
   full_text: string;
   language: string;
   avg_confidence: number | null;
-  quality_json: Record<string, unknown> | null;
-  segments: unknown[] | null;
+  quality_json: TranscriptQuality | null;
+  segments: TranscriptSegment[] | null;
   provider: string;
   badge: "high" | "medium" | "low";
+  job_id?: string | null;
 };
 
 export type ContentPublic = {
@@ -137,6 +157,9 @@ export const rejectContent = (token: string, id: string, reason: string) =>
   request<ContentPublic>(`/api/v1/content/${id}/reject`, { method: "POST", token, json: { reason } });
 export const listAdminJobs = (token: string) => request<JobPublic[]>("/api/v1/admin/jobs", { token });
 export const listAudit = (token: string) => request<Record<string, string | null>[]>("/api/v1/admin/audit", { token });
+export const listAdminUsers = (token: string) => request<UserPublic[]>("/api/v1/admin/users", { token });
+export const setUserRole = (token: string, userId: string, role: UserRole) =>
+  request<UserPublic>(`/api/v1/admin/users/${userId}/role`, { method: "POST", token, json: { role } });
 
 export const patchContent = (
   token: string,
@@ -196,6 +219,9 @@ export const listEvents = (token: string, type?: EventType) =>
 
 export const getEvent = (token: string, id: string) =>
   request<EventPublic>(`/api/v1/events/${id}`, { token });
+
+export const getEventTranscript = (token: string, eventId: string) =>
+  request<TranscriptPublic>(`/api/v1/events/${eventId}/transcript`, { token });
 
 export const createEvent = (
   token: string,
