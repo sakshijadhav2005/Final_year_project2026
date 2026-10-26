@@ -16,7 +16,7 @@ from app.services.audit import write_audit
 from app.services.av_scan import scan_file
 from app.services.guardrails import should_use_rag
 from app.services.quality import inspect_media
-from app.services.rag import index_transcript_chunks, retrieve_chunks
+from app.services.rag import index_transcript_chunks, load_rag_pool
 from app.services.transcription import transcribe_file
 
 AGENT_KEYS = [
@@ -232,14 +232,16 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             progress["quality_check"] = "complete"
             await _save(db, job, progress=progress)
 
-        rag_chunks: list[dict] = []
+        # Candidate chunks only; the rag_retrieve graph node ranks them against the brief.
+        rag_pool: list[dict] = []
         if settings.rag_enabled and should_use_rag(
             transcript_row.full_text, job.use_org_memory, settings.rag_token_threshold
         ):
-            rag_chunks = await retrieve_chunks(
+            rag_pool = await load_rag_pool(
                 db,
                 user_id=job.user_id,
-                query=transcript_row.full_text,
+                job_id=str(job.id),
+                transcript=transcript_row.full_text,
                 use_org_memory=job.use_org_memory,
             )
 
@@ -285,7 +287,8 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             "use_org_memory": job.use_org_memory,
             "user_memory": user_memory,
             "retry_count": 0,
-            "rag_chunks": rag_chunks,
+            "rag_pool": rag_pool,
+            "rag_chunks": [],
         }
         await _save(db, job, status="analyzing", progress=progress)
 
@@ -314,6 +317,10 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                         next_status = "planning"
                     elif node_name == "content_planner":
                         progress["content_planner"] = "complete"
+                        progress["rag_retrieve"] = "running"
+                        next_status = "planning"
+                    elif node_name == "rag_retrieve":
+                        progress["rag_retrieve"] = "complete"
                         progress["generator"] = "running"
                         next_status = "generating"
                     elif node_name in ("dynamic_generator", "generator"):
@@ -374,6 +381,11 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             ("sentiment", final_state.get("sentiment")),
             ("brief", final_state.get("brief")),
             ("guardrail", final_state.get("guardrail")),
+            (
+                "rag",
+                final_state.get("rag_chunks")
+                and {"chunks": final_state["rag_chunks"], **(final_state.get("rag_meta") or {})},
+            ),
         ):
             if payload:
                 db.add(AgentOutput(job_id=job.id, agent_name=name, payload=payload))

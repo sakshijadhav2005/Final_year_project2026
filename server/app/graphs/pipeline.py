@@ -8,6 +8,7 @@ from app.graphs.nodes import (
     parallel_analysis,
     persist_fail,
     quality_check,
+    rag_retrieve,
     translation,
 )
 from app.graphs.state import JobGraphState
@@ -58,7 +59,8 @@ def build_graph():
     graph.add_node("quality_check", quality_check)
     graph.add_node("parallel_analysis", parallel_analysis)
     graph.add_node("content_planner", content_planner)
-    
+    graph.add_node("rag_retrieve", rag_retrieve)
+
     # We replace the static generator with our dynamic generator node
     graph.add_node("dynamic_generator", generator)
     
@@ -77,8 +79,9 @@ def build_graph():
     # Stage 2: Parallel extraction fan-out (topics, highlights, speakers, sentiment)
     graph.add_edge("parallel_analysis", "content_planner")
 
-    # Stage 3: Master brief synthesis -> Stage 4: Dynamic Send Router
-    graph.add_conditional_edges("content_planner", dynamic_router, ["dynamic_generator"])
+    # Stage 3: Master brief synthesis -> selective RAG -> Stage 4: Dynamic Send Router
+    graph.add_edge("content_planner", "rag_retrieve")
+    graph.add_conditional_edges("rag_retrieve", dynamic_router, ["dynamic_generator"])
 
     # Stage 4 outputs automatically gather and proceed to Guardrails
     graph.add_edge("dynamic_generator", "guardrail_node")

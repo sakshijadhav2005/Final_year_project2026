@@ -5,7 +5,8 @@ from typing import Any
 import structlog
 
 from app.core.config import get_settings
-from app.graphs.agents.base import BaseCreatorAgent
+from app.graphs.agents.base import BaseCreatorAgent, _retrieved_block
+from app.services.rag import AGENT_TRANSCRIPT_CHARS
 from app.graphs.tools import get_trending_hashtags
 
 logger = structlog.get_logger("linkedin_agent")
@@ -21,6 +22,7 @@ class LinkedInAgent(BaseCreatorAgent):
         brief: dict | None = None,
         user_memory: dict | None = None,
         temperature: float = 0.35,
+        context_chunks: list[dict] | None = None,
     ) -> dict[str, Any]:
         """Overrides the standard generation to use a LangGraph ReAct agent with custom tools!"""
         try:
@@ -33,7 +35,7 @@ class LinkedInAgent(BaseCreatorAgent):
             settings = get_settings()
             if not settings.gemini_api_key or not settings.agent_tools_enabled:
                 # Offline mode or tools switched off: one plain generation call (fastest).
-                return await super().generate(transcript_text, brief, user_memory, temperature)
+                return await super().generate(transcript_text, brief, user_memory, temperature, context_chunks)
             
             # 1. Initialize the LLM with native tool support
             model_name = settings.gemini_model_generate or "gemini-3.6-flash"
@@ -57,7 +59,8 @@ class LinkedInAgent(BaseCreatorAgent):
             user_prompt = (
                 "Here is the context you must use to generate the post:\n\n"
                 f"<EDITORIAL_BRIEF>\n{brief_str}\n</EDITORIAL_BRIEF>\n\n"
-                f"<TRANSCRIPT>\n{transcript_text[:12000]}\n</TRANSCRIPT>\n\n"
+                f"<TRANSCRIPT>\n{transcript_text[:AGENT_TRANSCRIPT_CHARS]}\n</TRANSCRIPT>\n\n"
+                f"{_retrieved_block(context_chunks)}"
                 f"Now, please generate the final {self.agent_name} post matching your system instructions. "
                 "CRITICAL: Before writing the hashtags at the bottom of the post, you MUST use your "
                 "`get_trending_hashtags` tool to fetch the absolute best viral hashtags for the topic!"
@@ -96,5 +99,5 @@ class LinkedInAgent(BaseCreatorAgent):
         except Exception as exc:
             logger.error("linkedin_agent_tool_error", error=str(exc))
             # Fallback to the standard base agent without tools
-            return await super().generate(transcript_text, brief, user_memory, temperature)
+            return await super().generate(transcript_text, brief, user_memory, temperature, context_chunks)
 

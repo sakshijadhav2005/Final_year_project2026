@@ -7,7 +7,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.prebuilt import create_react_agent
 
 from app.core.config import get_settings
-from app.graphs.agents.base import BaseCreatorAgent
+from app.graphs.agents.base import BaseCreatorAgent, _retrieved_block
+from app.services.rag import AGENT_TRANSCRIPT_CHARS
 from app.graphs.tools import fetch_industry_news
 
 logger = structlog.get_logger("newsletter_agent")
@@ -22,13 +23,14 @@ class NewsletterAgent(BaseCreatorAgent):
         brief: dict | None = None,
         user_memory: dict | None = None,
         temperature: float = 0.35,
+        context_chunks: list[dict] | None = None,
     ) -> dict[str, Any]:
         try:
             
             settings = get_settings()
             if not settings.gemini_api_key or not settings.agent_tools_enabled:
                 # Offline mode or tools switched off: one plain generation call (fastest).
-                return await super().generate(transcript_text, brief, user_memory, temperature)
+                return await super().generate(transcript_text, brief, user_memory, temperature, context_chunks)
             
             model_name = settings.gemini_model_generate or "gemini-3.6-flash"
             llm = ChatGoogleGenerativeAI(
@@ -49,7 +51,8 @@ class NewsletterAgent(BaseCreatorAgent):
             user_prompt = (
                 "Here is the context you must use to generate the post:\n\n"
                 f"<EDITORIAL_BRIEF>\n{brief_str}\n</EDITORIAL_BRIEF>\n\n"
-                f"<TRANSCRIPT>\n{transcript_text[:12000]}\n</TRANSCRIPT>\n\n"
+                f"<TRANSCRIPT>\n{transcript_text[:AGENT_TRANSCRIPT_CHARS]}\n</TRANSCRIPT>\n\n"
+                f"{_retrieved_block(context_chunks)}"
                 f"Now, please generate the final {self.agent_name} post matching your system instructions. "
                 "IMPORTANT: You MUST return a pure JSON string. Do not use Markdown code blocks. Just start with { and end with }."
             )
@@ -86,4 +89,4 @@ class NewsletterAgent(BaseCreatorAgent):
             
         except Exception as exc:
             logger.error("newsletter_agent_tool_error", error=str(exc))
-            return await super().generate(transcript_text, brief, user_memory, temperature)
+            return await super().generate(transcript_text, brief, user_memory, temperature, context_chunks)

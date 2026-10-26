@@ -30,6 +30,7 @@ for key in (
     "OPENAI_API_KEY",
     "GROQ_API_KEY",
     "ANTHROPIC_API_KEY",
+    "GOOGLE_CLOUD_PROJECT",
 ):
     os.environ[key] = ""
 os.environ["LLM_PROVIDER"] = "gemini"

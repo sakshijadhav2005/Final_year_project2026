@@ -10,6 +10,7 @@ from app.graphs.nodes.generator import generator
 from app.graphs.nodes.guardrails import guardrail, persist_fail
 from app.graphs.nodes.planner import content_planner
 from app.graphs.nodes.quality import quality_check
+from app.graphs.nodes.rag import rag_retrieve
 from app.graphs.nodes.translator import translation
 
 __all__ = [
@@ -21,6 +22,7 @@ __all__ = [
     "parallel_analysis",
     "persist_fail",
     "quality_check",
+    "rag_retrieve",
     "sentiment_analysis",
     "speaker_analysis",
     "topic_extraction",

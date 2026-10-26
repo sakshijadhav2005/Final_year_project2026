@@ -66,8 +66,14 @@ class Settings(BaseSettings):
     agent_timeout_seconds: float = 45.0  # a tool-using agent falls back to a plain call after this
     tool_timeout_seconds: float = 8.0  # max time for one web search
 
-    rag_token_threshold: int = 12000
+    # Words. The writing agents see the first ~12,000 characters (~2,000 words);
+    # longer transcripts get the rest through retrieval.
+    rag_token_threshold: int = 2000
     rag_enabled: bool = True
+    rag_top_k: int = 6
+    # Vertex AI embedding model (needs GOOGLE_CLOUD_PROJECT); else hashed bag-of-words.
+    rag_embedding_model: str = "gemini-embedding-001"
+    rag_embedding_dims: int = 768
 
     max_upload_mb: int = 500
     max_duration_sec: int = 10800

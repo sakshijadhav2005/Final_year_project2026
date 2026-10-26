@@ -18,7 +18,7 @@ All core stages (Stages 1 through 10) are implemented and verified:
 - **LangGraph Multi-Agent Pipeline:**
   - Parallel fan-out: **Topic Extraction**, **Highlight Detection**, **Speaker Analysis**, **Sentiment Analysis**.
   - **Content Planner** brief synthesis.
-  - **Selective RAG:** Conditional retrieval of earlier transcript chunks when tokens > threshold or org-memory is enabled. Chunks are stored with lightweight hashed bag-of-words vectors (JSON column) and ranked by cosine similarity, so no database extension is required.
+  - **Selective RAG:** Transcripts are split into overlapping 250-word chunks and embedded with Vertex AI `gemini-embedding-001` (hashed bag-of-words fallback when no Google Cloud project is set), stored in a JSON column, so no database extension is required. When a transcript is longer than the writers' context window (`RAG_TOKEN_THRESHOLD`, ~2,000 words) or org-memory is enabled, a `rag_retrieve` graph node ranks the unseen chunks (and past-event chunks) against the editorial brief by cosine similarity and passes the top-k (`RAG_TOP_K`) to every writer agent. The retrieved chunks are saved per job as the `rag` agent output.
   - **Gemini Generator:** Structured generation with prompt injection protection.
   - **Dual Guardrails:** Automated moderation and transcript grounding checks.
   - **Multi-Language Translation:** Output translation for international audiences.

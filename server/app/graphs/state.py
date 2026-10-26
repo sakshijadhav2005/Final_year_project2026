@@ -28,7 +28,9 @@ class JobGraphState(TypedDict, total=False):
     speakers: dict[str, Any] | None
     sentiment: dict[str, Any] | None
     brief: dict[str, Any] | None
-    rag_chunks: list[dict[str, Any]]
+    rag_pool: list[dict[str, Any]]  # candidate chunks with vectors (job_runner)
+    rag_chunks: list[dict[str, Any]]  # top-k picked by rag_retrieve, read by the writers
+    rag_meta: dict[str, Any]
     requested_types: list[str]
     target_languages: list[str]
     generated: Annotated[list[dict[str, Any]], merge_generated]

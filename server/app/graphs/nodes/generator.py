@@ -25,6 +25,7 @@ async def generator(state: dict[str, Any]) -> dict[str, Any]:
         transcript_text=transcript,
         brief=brief,
         user_memory=user_memory,
+        context_chunks=state.get("rag_chunks") or [],
     )
 
     # Return as a list so the Annotated[list, operator.add] reducer can safely aggregate it 

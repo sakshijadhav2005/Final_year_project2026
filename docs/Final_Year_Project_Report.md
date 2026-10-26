@@ -16,7 +16,7 @@ EventAI is built on a modern, robust, and asynchronous tech stack to ensure high
 - **Backend**: FastAPI (Python 3.11+), Pydantic v2.
 - **AI & Pipeline**: LangGraph (`StateGraph`), Google Gemini API for generation/translation.
 - **Media Ingestion**: VideoDB for transcription, indexing, and search.
-- **Database**: PostgreSQL (SQLite for local development); transcript chunks for selective RAG are stored with lightweight hashed vectors and ranked by cosine similarity.
+- **Database**: PostgreSQL (SQLite for local development); transcript chunks for selective RAG are stored with Vertex AI embeddings (hashed bag-of-words fallback offline) and ranked by cosine similarity.
 - **Queueing**: In-process asynchronous background tasks by default, with optional Celery & Redis workers (`USE_CELERY=true`).
 - **Cloud Storage**: S3-compatible cloud storage adapter (Cloudflare R2, AWS S3/MinIO) with local disk fallback.
 
@@ -31,7 +31,7 @@ Instead of a linear script, EventAI orchestrates AI operations via a **StateGrap
 - **Quality Check**: Validates audio silence ratio and duration.
 - **Parallel Analysis Agents**: Extracts **Topics**, **Highlights**, **Speakers**, and **Sentiment** concurrently to reduce latency.
 - **Content Planner**: Synthesizes the analysis into a comprehensive brief.
-- **Selective RAG**: Conditionally retrieves past organizational memory (stored transcript chunks ranked by vector similarity) if the transcript exceeds token thresholds or org-memory is enabled.
+- **Selective RAG**: When the transcript exceeds the writers' context window or org-memory is enabled, retrieves the transcript chunks (and past-event chunks) most similar to the editorial brief and gives them to every writer agent.
 - **Gemini Generator**: Formats the brief into structured pieces (blogs, newsletters, etc.).
 - **Guardrails**: Automated checks for moderation, schema validation, and transcript grounding.
 
