@@ -11,3 +11,5 @@ results/pilot/
 results/incidents/*.json
 results/incidents/stt/
 results/logs/ui_api.log
+# The paper (LaTeX source and PDFs) is kept locally, not published.
+paper/
