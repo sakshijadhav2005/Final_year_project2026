@@ -1,7 +1,8 @@
 # EventAI evaluation package
 
-Everything behind the numbers, tables and figures in `paper/main.tex`. Every figure and table
-is produced by a script from saved raw results; nothing is typed in by hand.
+Everything behind the numbers, tables and figures in the paper. Every figure and table
+is produced by a script from saved raw results; nothing is typed in by hand. The paper itself
+(`paper/`) is kept locally and is not published in this repository.
 
 ## Result labels
 
