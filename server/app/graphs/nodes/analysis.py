@@ -1,4 +1,3 @@
-import asyncio
 from typing import Any
 
 from app.graphs.state import JobGraphState
@@ -52,6 +51,8 @@ async def parallel_analysis(state: JobGraphState) -> dict[str, Any]:
             "2. 'highlights': list of standout takeaways, notable quotes, or milestone points\n"
             "3. 'speakers': list of speaker insights, roles, or speaking styles\n"
             "4. 'sentiment': session tone (e.g. {'tone': 'inspiring and technical', 'energy': 'high'})\n"
+            "5. 'brief': editorial brief for the writers with keys 'angle', 'key_messages' (list), "
+            "'audience', 'tone', 'quotes' (list of exact quotes from the transcript)\n"
         )
         return await llm.generate_json(
             system=analysis_system(),
@@ -64,11 +65,16 @@ async def parallel_analysis(state: JobGraphState) -> dict[str, Any]:
     topics = result.get("topics") if isinstance(result.get("topics"), list) else [result.get("topics", "Event topics")]
     highlights = result.get("highlights") if isinstance(result.get("highlights"), list) else [result.get("highlights", "Key takeaways")]
     speakers = result.get("speakers") if isinstance(result.get("speakers"), list) else [result.get("speakers", "Session speaker")]
-    sentiment = result.get("sentiment") if isinstance(result.get("sentiment"), (dict, str)) else {"tone": "engaging"}
+    sentiment = result.get("sentiment") if isinstance(result.get("sentiment"), dict | str) else {"tone": "engaging"}
 
-    return {
+    out = {
         "topics": {"topics": topics},
         "highlights": {"highlights": highlights},
         "speakers": {"speakers": speakers},
         "sentiment": {"sentiment": sentiment if isinstance(sentiment, dict) else {"tone": sentiment}},
     }
+    # The brief comes back in the same call, so the planner step needs no extra round trip.
+    brief = result.get("brief")
+    if isinstance(brief, dict) and (brief.get("angle") or brief.get("key_messages")):
+        out["brief"] = brief
+    return out

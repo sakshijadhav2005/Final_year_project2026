@@ -12,6 +12,7 @@ AGENT_REGISTRY: dict[str, type[BaseCreatorAgent]] = {
     "linkedin": LinkedInAgent,
     "newsletter": NewsletterAgent,
     "ig_caption": InstagramAgent,
+    "instagram": InstagramAgent,  # alias sent by the event detail page
     "flyer": FlyerAgent,
 }
 

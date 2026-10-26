@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { CatalogNav } from "@/components/dashboard/CatalogNav";
@@ -12,8 +12,6 @@ import { useAuthStore } from "@/store/auth";
 export function UserDashboard() {
   const token = useAuthStore((s) => s.accessToken);
   const user = useAuthStore((s) => s.user);
-  const clearAuth = useAuthStore((s) => s.clear);
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const [showCreatePost, setShowCreatePost] = useState(false);
@@ -68,19 +66,18 @@ export function UserDashboard() {
         {/* Top Header */}
         <div className="flex flex-wrap items-center justify-between gap-13">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gold">Community &amp; Attendee Portal</p>
-            <h1 className="font-display text-3xl font-normal italic text-ink-light dark:text-ink-dark">
-              Attendee <em className="not-italic text-gold-soft">Workspace</em>
+            <h1 className="font-display text-h1 font-semibold text-ink-light dark:text-ink-dark">
+              Attendee Workspace
             </h1>
             <p className="text-xs text-ink-dim mt-1">
               Welcome back, <strong className="text-gold-soft">{user?.email}</strong>
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-13">
             <Link
               to="/community"
-              className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-4 py-2 text-xs font-semibold text-gold-soft hover:bg-gold/20 transition-all"
+              className="btn-ghost btn-sm"
             >
               <span>💬 Community Feed</span>
             </Link>
@@ -88,7 +85,7 @@ export function UserDashboard() {
             <button
               type="button"
               onClick={() => setShowCreatePost((p) => !p)}
-              className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gradient-to-r from-gold/20 via-orange-500/20 to-teal/20 px-5 py-2 text-xs font-semibold text-gold-soft shadow-lg hover:scale-105 transition-all"
+              className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-all"
             >
               <span>{showCreatePost ? "✕ Close Form" : "✍️ Write Post / Upload Recording"}</span>
             </button>
@@ -99,16 +96,16 @@ export function UserDashboard() {
         <CatalogNav />
 
         {/* Past Recording Sessions Section (Above Highlights with RBAC) */}
-        <div className="mb-8 rounded-2xl border border-white/10 bg-slate-900/60 p-5 shadow-xl backdrop-blur-xl">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/20 text-lg">
+        <div className="mb-34 rounded-panel border border-white/[0.08] bg-surface p-21">
+          <div className="flex flex-wrap items-center justify-between gap-13">
+            <div className="flex items-center gap-13">
+              <div className="flex h-10 w-10 items-center justify-center rounded-panel bg-amber-500/10 border border-amber-500/20 text-lg">
                 🎙️
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-base font-bold text-white">Past Recording Sessions</h2>
-                  <span className="rounded-full bg-amber-500/20 px-2.5 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-500/30">
+                <div className="flex items-center gap-8">
+                  <h2 className="text-h2 font-semibold text-white">Past Recording Sessions</h2>
+                  <span className="rounded-full bg-amber-500/20 px-8 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-500/30">
                     {userSessions.length} {userSessions.length === 1 ? "Session" : "Sessions"}
                   </span>
                 </div>
@@ -123,10 +120,10 @@ export function UserDashboard() {
             <button
               type="button"
               onClick={() => setShowPastSessions((prev) => !prev)}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-200 transition-all"
+              className="inline-flex items-center gap-8 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs font-semibold text-slate-200 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-200 transition-all"
             >
               <span>{showPastSessions ? "▲ Hide Previous Sessions" : "▼ Show All Previous Sessions"}</span>
-              <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold">
+              <span className="rounded-full bg-white/10 px-8 py-0.5 text-[10px] font-bold">
                 {userSessions.length}
               </span>
             </button>
@@ -134,17 +131,17 @@ export function UserDashboard() {
 
           {/* Expanded Previous Sessions List */}
           {showPastSessions && (
-            <div className="mt-5 space-y-3 animate-fadeIn">
+            <div className="mt-21 space-y-13 border-t border-white/[0.08] pt-21">
               {userSessions.length === 0 ? (
-                <div className="rounded-xl border border-white/5 bg-slate-950/40 p-6 text-center">
+                <div className="rounded-card border border-white/5 bg-white/[0.02] p-21 text-center">
                   <span className="text-3xl">📭</span>
-                  <p className="mt-2 text-xs font-semibold text-slate-300">No recording sessions found for your account</p>
+                  <p className="mt-8 text-xs font-semibold text-slate-300">No recording sessions found for your account</p>
                   <p className="mt-1 text-[11px] text-slate-400">
                     When you or your team process an event recording, it will appear here for full transcript search and AI takeaways.
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[360px] overflow-y-auto pr-1">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-13 max-h-[360px] overflow-y-auto pr-1">
                   {userSessions.map((job) => {
                     const isReady = job.status === "ready_to_publish";
                     const isPending = job.status === "pending_review";
@@ -154,11 +151,11 @@ export function UserDashboard() {
                       <Link
                         key={job.id}
                         to={`/jobs/${job.id}`}
-                        className="group flex flex-col justify-between rounded-xl border border-white/10 bg-slate-950/60 p-4 transition-all hover:border-amber-500/40 hover:bg-slate-900/90"
+                        className="glass-interactive neu-raised group flex flex-col justify-between rounded-card border border-white/[0.08] bg-white/[0.02] p-13"
                       >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-center gap-2.5">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 border border-white/10 text-xs font-bold text-amber-300 group-hover:border-amber-500/40">
+                        <div className="flex items-start justify-between gap-13">
+                          <div className="flex items-center gap-8">
+                            <div className="flex h-[32px] w-[32px] items-center justify-center rounded-lg bg-white/5 border border-white/[0.08] text-xs font-bold text-amber-300 group-hover:border-amber-500/40">
                               ⚡
                             </div>
                             <div>
@@ -172,21 +169,21 @@ export function UserDashboard() {
                           </div>
 
                           <span
-                            className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                            className={`rounded-full px-8 py-0.5 text-[10px] font-bold ${
                               isReady
-                                ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                                ? "bg-emerald-500/15 text-emerald-400 border border-white/[0.08]"
                                 : isPending
                                 ? "bg-amber-500/15 text-amber-300 border border-amber-500/30"
                                 : isFailed
                                 ? "bg-rose-500/15 text-rose-400 border border-rose-500/30"
-                                : "bg-sky-500/15 text-sky-400 border border-sky-500/30"
+                                : "bg-sky-500/15 text-sky-400 border border-white/[0.08]"
                             }`}
                           >
                             {job.status.replace("_", " ")}
                           </span>
                         </div>
 
-                        <div className="mt-3 flex items-center justify-between border-t border-white/5 pt-2 text-[11px]">
+                        <div className="mt-13 flex items-center justify-between border-t border-white/5 pt-8 text-[11px]">
                           <span className="text-amber-400 font-semibold group-hover:underline">
                             View Session & Transcripts →
                           </span>
@@ -209,16 +206,16 @@ export function UserDashboard() {
         </div>
 
         {/* Contributions & Post Creation Section (Prominently Above) */}
-        <div className="mb-10 rounded-2xl border border-white/10 bg-slate-900/60 p-6 shadow-xl backdrop-blur-xl">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4 mb-5">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 font-bold text-white shadow-md shadow-orange-500/20 text-lg">
+        <div className="mb-34 rounded-panel border border-white/[0.08] bg-surface p-21">
+          <div className="flex flex-wrap items-center justify-between gap-13 border-b border-white/[0.08] pb-13 mb-21">
+            <div className="flex items-center gap-13">
+              <div className="flex h-10 w-10 items-center justify-center rounded-panel bg-amber-400 font-bold text-on-accent text-lg">
                 ✍️
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-base font-bold text-white">Your Contributions &amp; Content Hub</h2>
-                  <span className="rounded-full bg-amber-500/20 px-2.5 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-500/30">
+                <div className="flex items-center gap-8">
+                  <h2 className="text-h2 font-semibold text-white">Your Contributions &amp; Content Hub</h2>
+                  <span className="rounded-full bg-amber-500/20 px-8 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-500/30">
                     {myPosts.length} {myPosts.length === 1 ? "Post" : "Posts"}
                   </span>
                 </div>
@@ -231,7 +228,7 @@ export function UserDashboard() {
             <button
               type="button"
               onClick={() => setShowCreatePost((p) => !p)}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-orange-500/20 hover:scale-105 transition-all"
+              className="inline-flex items-center gap-[2px] rounded-card bg-amber-400 px-[4px] py-[2px] text-xs font-bold text-on-accent transition-all"
             >
               <span>{showCreatePost ? "✕ Close Creator" : "✍️ Write Post / Upload Recording"}</span>
             </button>
@@ -239,7 +236,7 @@ export function UserDashboard() {
 
           {/* Quick Post Creator & Full AI Workflow */}
           {showCreatePost && (
-            <div className="mb-6">
+            <div className="mb-21">
               <CreatePostForm
                 events={events}
                 onSuccess={() => setShowCreatePost(false)}
@@ -250,11 +247,11 @@ export function UserDashboard() {
 
           {/* User's Existing Posts or Empty State Callout */}
           {postsLoading ? (
-            <div className="h-28 rounded-xl bg-white/5 animate-pulse" />
+            <div className="h-28 rounded-card bg-white/5 animate-pulse" />
           ) : myPosts.length === 0 ? (
-            <div className="rounded-2xl border border-white/5 bg-slate-950/40 p-8 text-center">
+            <div className="rounded-panel border border-white/5 bg-white/[0.02] p-34 text-center">
               <span className="text-4xl">✍️</span>
-              <p className="mt-3 text-sm font-semibold text-slate-200">
+              <p className="mt-13 text-sm font-semibold text-slate-200">
                 You haven't posted in the community yet. Share key takeaways from a session!
               </p>
               <p className="mt-1 text-xs text-slate-400 max-w-md mx-auto">
@@ -264,7 +261,7 @@ export function UserDashboard() {
                 <button
                   type="button"
                   onClick={() => setShowCreatePost(true)}
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-orange-500/20 hover:scale-105 transition-all"
+                  className="mt-5 inline-flex items-center gap-[2px] rounded-card bg-amber-400 px-5 py-2.5 text-xs font-bold text-on-accent transition-all"
                 >
                   Write Your First Post
                 </button>
@@ -272,28 +269,28 @@ export function UserDashboard() {
             </div>
           ) : (
             <div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-13">
                 {myPosts.slice(0, 3).map((p) => (
                   <div
                     key={p.id}
-                    className="flex flex-col justify-between rounded-xl border border-white/10 bg-slate-950/60 p-4 transition-all hover:border-amber-500/30"
+                    className="flex flex-col justify-between rounded-card border border-white/[0.08] bg-white/[0.02] p-13 transition-all hover:border-amber-500/30"
                   >
                     <div>
                       <div className="flex items-center justify-between text-xs text-slate-400">
-                        <span className="rounded bg-white/10 px-2 py-0.5 text-[10px] font-bold text-amber-300 uppercase">
+                        <span className="rounded bg-white/10 px-8 py-0.5 text-[10px] font-bold text-amber-300">
                           {p.type}
                         </span>
                         <span className="text-[10px]">
                           {p.created_at ? new Date(p.created_at).toLocaleDateString() : ""}
                         </span>
                       </div>
-                      <h4 className="mt-2 text-xs font-bold text-white line-clamp-1">{p.title}</h4>
+                      <h4 className="mt-8 text-xs font-bold text-white line-clamp-1">{p.title}</h4>
                       <p className="mt-1 text-[11px] text-slate-300 line-clamp-2">{p.body}</p>
                     </div>
 
                     <Link
                       to="/community"
-                      className="mt-3 text-[11px] font-semibold text-amber-400 hover:underline pt-2 border-t border-white/5"
+                      className="mt-13 text-[11px] font-semibold text-amber-400 hover:underline pt-8 border-t border-white/5"
                     >
                       View in Community Feed →
                     </Link>
@@ -302,7 +299,7 @@ export function UserDashboard() {
               </div>
 
               {myPosts.length > 3 && (
-                <div className="mt-3 text-right">
+                <div className="mt-13 text-right">
                   <Link
                     to="/community"
                     className="text-xs font-semibold text-amber-400 hover:underline"
@@ -316,18 +313,18 @@ export function UserDashboard() {
         </div>
 
         {/* Feature Highlights Grid */}
-        <div className="mb-10 grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <div className="mb-34 grid grid-cols-1 gap-21 sm:grid-cols-3">
           <Link
             to="/catalog/meetup"
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-950/40 via-slate-900/60 to-slate-900/60 p-5 backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/10"
+            className="glass-interactive group relative overflow-hidden rounded-panel border border-white/[0.08] bg-surface p-21"
           >
             <div className="flex items-center justify-between">
               <span className="text-3xl">👥</span>
-              <span className="text-xs font-bold text-emerald-400 group-hover:translate-x-1 transition-transform">
+              <span className="text-xs font-semibold text-amber-300">
                 Explore →
               </span>
             </div>
-            <h3 className="mt-3 text-base font-bold text-white">Local Meetups</h3>
+            <h3 className="mt-13 text-base font-bold text-white">Local Meetups</h3>
             <p className="mt-1 text-xs text-slate-400">
               Discover networking meetups and read discussion highlights from recent gatherings.
             </p>
@@ -335,15 +332,15 @@ export function UserDashboard() {
 
           <Link
             to="/catalog/event"
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-purple-950/40 via-slate-900/60 to-slate-900/60 p-5 backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-purple-500/40 hover:shadow-xl hover:shadow-purple-500/10"
+            className="glass-interactive group relative overflow-hidden rounded-panel border border-white/[0.08] bg-surface p-21"
           >
             <div className="flex items-center justify-between">
               <span className="text-3xl">🎪</span>
-              <span className="text-xs font-bold text-purple-400 group-hover:translate-x-1 transition-transform">
+              <span className="text-xs font-semibold text-amber-300">
                 Explore →
               </span>
             </div>
-            <h3 className="mt-3 text-base font-bold text-white">Conferences &amp; Summits</h3>
+            <h3 className="mt-13 text-base font-bold text-white">Conferences &amp; Summits</h3>
             <p className="mt-1 text-xs text-slate-400">
               Access full keynote recaps, newsletters, and slides from headline tech conferences.
             </p>
@@ -351,15 +348,15 @@ export function UserDashboard() {
 
           <Link
             to="/catalog/speech"
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-sky-950/40 via-slate-900/60 to-slate-900/60 p-5 backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-sky-500/40 hover:shadow-xl hover:shadow-sky-500/10"
+            className="glass-interactive group relative overflow-hidden rounded-panel border border-white/[0.08] bg-surface p-21"
           >
             <div className="flex items-center justify-between">
               <span className="text-3xl">🎤</span>
-              <span className="text-xs font-bold text-sky-400 group-hover:translate-x-1 transition-transform">
+              <span className="text-xs font-semibold text-amber-300">
                 Explore →
               </span>
             </div>
-            <h3 className="mt-3 text-base font-bold text-white">Tech Talks &amp; Speeches</h3>
+            <h3 className="mt-13 text-base font-bold text-white">Tech Talks &amp; Speeches</h3>
             <p className="mt-1 text-xs text-slate-400">
               Deep-dive into individual speaker sessions, transcripts, and bite-sized takeaways.
             </p>
@@ -367,9 +364,9 @@ export function UserDashboard() {
         </div>
 
         {/* Featured Events Section */}
-        <div className="space-y-4">
+        <div className="space-y-13">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <h2 className="text-h2 font-semibold text-white flex items-center gap-8">
               <span>📅</span> Featured Event Catalogs
             </h2>
             <Link to="/catalog/all" className="text-xs font-semibold text-amber-400 hover:underline">
@@ -378,17 +375,17 @@ export function UserDashboard() {
           </div>
 
           {eventsLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-13">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-44 rounded-2xl bg-white/5 animate-pulse" />
+                <div key={i} className="h-44 rounded-panel bg-white/5 animate-pulse" />
               ))}
             </div>
           ) : events.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-8 text-center text-sm text-slate-400">
+            <div className="rounded-panel border border-white/[0.08] bg-surface p-34 text-center text-sm text-slate-400">
               No events currently scheduled. Check back soon!
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-13">
               {events.slice(0, 4).map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}

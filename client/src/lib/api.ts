@@ -1,3 +1,5 @@
+import { authFetch, refreshSession } from "@/lib/session";
+
 const API_BASE = import.meta.env.VITE_API_URL ?? "";
 
 export type UserRole = "admin" | "content_creator" | "event_organizer" | "regular_user";
@@ -10,6 +12,9 @@ export type EventPublic = {
   date: string;
   topic?: string | null;
   organizer_name?: string | null;
+  location?: string | null;
+  banner_image?: string | null;
+  description?: string | null;
   type: EventType;
   organizer_id: string;
   created_at?: string | null;
@@ -31,6 +36,8 @@ export type TokenResponse = {
 
 export type JobPublic = {
   id: string;
+  user_id?: string | null;
+  event_id?: string | null;
   status: string;
   requested_types: string[] | null;
   target_languages: string[] | null;
@@ -92,23 +99,24 @@ export async function request<T>(
   init: RequestInit & { token?: string | null; json?: unknown } = {},
 ): Promise<T> {
   const { token, json, headers, ...rest } = init;
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...rest,
-    headers: {
-      ...(json !== undefined ? { "Content-Type": "application/json" } : {}),
-      ...authHeaders(token),
-      ...(headers ?? {}),
-    },
-    body: json !== undefined ? JSON.stringify(json) : rest.body,
-  });
+  const send = (bearer?: string | null) =>
+    fetch(`${API_BASE}${path}`, {
+      ...rest,
+      headers: {
+        ...(json !== undefined ? { "Content-Type": "application/json" } : {}),
+        ...authHeaders(bearer),
+        ...(headers ?? {}),
+      },
+      body: json !== undefined ? JSON.stringify(json) : rest.body,
+    });
+  let response = await send(token);
+  // An expired access token is not a reason to sign out: renew it and retry once.
+  // refreshSession() signs the user out only if the refresh token is rejected too.
+  if (response.status === 401 && token) {
+    const fresh = await refreshSession(token);
+    if (fresh) response = await send(fresh);
+  }
   if (!response.ok) {
-    if (response.status === 401 && token) {
-      try {
-        useAuthStore.getState().logout();
-      } catch {
-        /* ignore */
-      }
-    }
     let message = `Request failed (${response.status})`;
     try {
       const payload = (await response.json()) as { detail?: unknown };
@@ -132,7 +140,9 @@ export const registerAccount = (email: string, password: string, role: UserRole)
 export const loginAccount = (email: string, password: string) =>
   request<TokenResponse>("/api/v1/auth/login", { method: "POST", json: { email, password } });
 export const fetchMe = (token: string) => request<UserPublic>("/api/v1/auth/me", { token });
-export const listJobs = (token: string) => request<JobPublic[]>("/api/v1/jobs", { token });
+/** The signed-in user's own sessions. `all` (admins only) returns every user's. */
+export const listJobs = (token: string, opts?: { all?: boolean }) =>
+  request<JobPublic[]>(`/api/v1/jobs${opts?.all ? "?scope=all" : ""}`, { token });
 export const getJob = (token: string, id: string) => request<JobPublic>(`/api/v1/jobs/${id}`, { token });
 export const getTranscript = (token: string, id: string) =>
   request<TranscriptPublic>(`/api/v1/jobs/${id}/transcript`, { token });
@@ -166,7 +176,7 @@ export async function downloadContent(
   format: "markdown" | "text" | "json" = "markdown",
   filename?: string,
 ) {
-  const res = await fetch(`${API_BASE}/api/v1/content/${contentId}/download?format=${format}`, {
+  const res = await authFetch(`/api/v1/content/${contentId}/download?format=${format}`, {
     headers: authHeaders(token),
   });
   if (!res.ok) throw new Error("Download failed");
@@ -200,6 +210,8 @@ export async function uploadRecording(
 
 export const listEvents = (token: string, type?: EventType | "all") =>
   request<EventPublic[]>(`/api/v1/events${type && type !== "all" ? `?type=${type}` : ""}`, { token });
+/** Only the events the signed-in user created (for "which event is this recording for?"). */
+export const listMyEvents = (token: string) => request<EventPublic[]>("/api/v1/events?mine=true", { token });
 
 export const getEvent = (token: string, id: string) =>
   request<EventPublic>(`/api/v1/events/${id}`, { token });

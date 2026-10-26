@@ -1,9 +1,10 @@
+import uuid
 from datetime import UTC, datetime, timedelta
 from enum import StrEnum
 from typing import Any
 
-from jose import JWTError, jwt
 import bcrypt
+from jose import JWTError, jwt
 
 from app.core.config import get_settings
 
@@ -52,8 +53,6 @@ def create_access_token(user_id: str, role: UserRole) -> str:
         extra={"role": role},
     )
 
-
-import uuid
 
 
 def create_refresh_token(user_id: str) -> str:

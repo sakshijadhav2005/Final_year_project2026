@@ -9,6 +9,6 @@ async def quality_check(state: JobGraphState) -> dict[str, Any]:
     if quality.get("ok") is False:
         return {"route": "needs_reupload"}
     avg = state.get("avg_confidence")
-    if isinstance(avg, (int, float)) and avg < 0.35:
+    if isinstance(avg, int | float) and avg < 0.35:
         return {"route": "needs_reupload"}
     return {"route": "continue"}

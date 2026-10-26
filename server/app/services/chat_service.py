@@ -36,6 +36,41 @@ def _build_chat_system_prompt(persona: str, transcript_text: str | None = None) 
     )
 
 
+async def _stream_claude(messages: list[dict[str, str]], system_prompt: str) -> AsyncIterator[str]:
+    """Stream a co-pilot reply from Claude, token by token, as SSE events."""
+    from app.providers.anthropic_llm import candidate_models, effort_config, get_client
+
+    settings = get_settings()
+    history = [
+        {"role": "assistant" if m.get("role") == "assistant" else "user", "content": m.get("content") or ""}
+        for m in messages
+        if (m.get("content") or "").strip()
+    ]
+    # The API needs the conversation to start with a user turn and end with one.
+    while history and history[0]["role"] != "user":
+        history.pop(0)
+    if not history or history[-1]["role"] != "user":
+        history.append({"role": "user", "content": "Hello"})
+
+    kwargs = {"output_config": effort_config()} if effort_config() else {}
+    models = candidate_models() or [settings.anthropic_model]
+    sent_any = False
+    async with get_client().messages.stream(
+        model=models[0],
+        max_tokens=2000,
+        system=system_prompt,
+        messages=history,
+        **kwargs,
+    ) as stream:
+        async for text in stream.text_stream:
+            if text:
+                sent_any = True
+                yield f"data: {json.dumps({'chunk': text, 'done': False})}\n\n"
+    if not sent_any:
+        raise RuntimeError("Claude returned an empty reply")
+    yield f"data: {json.dumps({'chunk': '', 'done': True})}\n\n"
+
+
 async def stream_chat_response(
     messages: list[dict[str, str]],
     persona: str = "general_assistant",
@@ -45,14 +80,26 @@ async def stream_chat_response(
     settings = get_settings()
     system_prompt = _build_chat_system_prompt(persona, transcript_text)
 
+    provider = (settings.llm_provider or "").strip().lower()
+    use_claude = settings.anthropic_api_key and (
+        provider in {"anthropic", "claude"} or (provider != "fake" and not settings.gemini_api_key)
+    )
+    if use_claude:
+        try:
+            async for event in _stream_claude(messages, system_prompt):
+                yield event
+            return
+        except Exception:
+            pass
+
     # Check if real Gemini is available and configured
-    if settings.gemini_api_key and settings.llm_provider != "fake":
+    if settings.gemini_api_key and provider != "fake":
         try:
             import google.generativeai as genai
 
             genai.configure(api_key=settings.gemini_api_key)
             model = genai.GenerativeModel(
-                model_name=settings.gemini_model_generate or "gemini-2.5-flash",
+                model_name=settings.gemini_model_generate or "gemini-3.6-flash",
                 system_instruction=system_prompt,
             )
 

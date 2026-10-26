@@ -70,7 +70,7 @@ export function LandingPage() {
         <input
           ref={fileInputRef}
           type="file"
-          accept="audio/*,video/*,.txt,.md"
+          accept="audio/*,video/*,.ogg,.oga,.opus,.flac,.aac,.weba,.mkv,.avi,.m4v,.3gp,.txt,.md"
           className="hidden"
           onChange={handleFileSelect}
         />
@@ -78,21 +78,11 @@ export function LandingPage() {
         {/* Hero Section (1.618fr : 1fr Golden Split) */}
         <div className="grid items-center gap-34 lg:grid-cols-[1.618fr_1fr]">
           <div>
-            <div className="reveal r2 mb-13 text-xs font-semibold tracking-[0.2em] text-gold uppercase">
-              From Recording to Content
-            </div>
-
-            <h1 className="reveal r3 font-display text-4xl font-normal italic leading-tight text-ink-light sm:text-5xl dark:text-ink-dark">
-              Every recording, quietly{" "}
-              <em className="not-italic bg-gradient-to-r from-gold-soft via-lavender to-teal bg-clip-text text-transparent drop-shadow-[0_0_18px_rgba(216,180,120,0.25)]">
-                composed
-              </em>{" "}
-              into a story.
+            <h1 className="reveal r3 max-w-[16ch] font-display text-[42px] font-semibold leading-[1.05] tracking-[-0.025em] text-ink sm:text-display">
+              Every recording, composed into a story.
             </h1>
 
-            <div className="reveal r4 my-21 h-[1px] w-16 bg-gradient-to-r from-gold to-transparent" />
-
-            <p className="reveal r5 max-w-lg text-base font-light leading-relaxed text-ink-light/70 dark:text-ink-dim">
+            <p className="reveal r5 mt-21 max-w-[52ch] text-[17px] leading-relaxed text-ink-dim">
               Drop in an event recording and let it unfold — topics, highlights, sentiment, and speakers, drawn out and rewoven into content worth publishing.
             </p>
 
@@ -129,7 +119,7 @@ export function LandingPage() {
                 type="button"
                 onClick={handleTriggerUpload}
                 disabled={upload.isPending}
-                className="group inline-flex items-center gap-13 rounded-full border border-gold/30 bg-gradient-to-r from-[#D8B478]/20 via-[#B9A6DA]/15 to-[#6FCFC4]/10 px-34 py-13 font-sans text-sm font-medium tracking-wide text-gold dark:text-gold-soft shadow-[0_10px_28px_rgba(216,180,120,0.15)] transition-all hover:scale-105 hover:border-gold"
+                className="btn-primary py-13"
               >
                 <span>
                   {upload.isPending
@@ -140,7 +130,6 @@ export function LandingPage() {
                     ? "Select Event Recording"
                     : "Register Account to Begin Session"}
                 </span>
-                <span className="transition-transform group-hover:translate-x-1">→</span>
               </button>
             </div>
           </div>
@@ -148,7 +137,7 @@ export function LandingPage() {
           {/* Neuromorphic Stage Upload Target */}
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="glass neo-stage reveal r4 cursor-pointer p-34 text-center transition-transform hover:scale-[1.02]"
+            className="glass neo-stage reveal r4 cursor-pointer p-34 text-center transition-colors hover:border-amber-400/40"
             title="Click to choose a file"
           >
             <div className="relative my-21">
@@ -158,47 +147,47 @@ export function LandingPage() {
                 <div className="dot" />
               </div>
             </div>
-            <div className="neo-label text-xs uppercase tracking-widest text-ink-dim">
-              {selectedFile ? `READY: ${selectedFile.name}` : "LISTENING FOR UPLOAD"}
+            <div className="text-sm font-medium text-ink">
+              {selectedFile ? `Ready: ${selectedFile.name}` : "Drop a recording here"}
             </div>
-            <p className="mt-8 text-[11px] opacity-50">Audio, Video, or .txt Transcripts</p>
+            <p className="mt-8 text-xs text-ink-dim">Audio, video or a .txt transcript</p>
           </div>
         </div>
 
         {/* 3 Specialist Agent Tiles */}
         <div className="grid gap-21 md:grid-cols-3">
-          <div className="glass p-21 reveal r7 group cursor-default transition-all">
-            <div className="mb-13 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-lavender to-teal text-base font-bold text-[#101322] shadow-[0_0_15px_rgba(185,166,218,0.4)] transition-transform group-hover:scale-110">
+          <div className="neu-tile p-34 reveal r7">
+            <div className="neu-tile-icon mb-21 font-semibold" aria-hidden="true">
               ◎
             </div>
-            <h3 className="font-display text-lg font-medium text-ink-light dark:text-ink-dark">
+            <h3 className="font-display text-h3 text-ink">
               Topic extraction
             </h3>
-            <p className="mt-8 text-xs leading-relaxed text-ink-light/60 dark:text-ink-dim">
+            <p className="mt-8 text-sm leading-relaxed text-ink-dim">
               Surfaces the core architectural themes and concepts your audience actually leaned into.
             </p>
           </div>
 
-          <div className="glass p-21 reveal r8 group cursor-default transition-all">
-            <div className="mb-13 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-lavender to-teal text-base font-bold text-[#101322] shadow-[0_0_15px_rgba(185,166,218,0.4)] transition-transform group-hover:scale-110">
+          <div className="neu-tile p-34 reveal r8">
+            <div className="neu-tile-icon mb-21 font-semibold" aria-hidden="true">
               ✦
             </div>
-            <h3 className="font-display text-lg font-medium text-ink-light dark:text-ink-dark">
+            <h3 className="font-display text-h3 text-ink">
               Highlight detection
             </h3>
-            <p className="mt-8 text-xs leading-relaxed text-ink-light/60 dark:text-ink-dim">
+            <p className="mt-8 text-sm leading-relaxed text-ink-dim">
               Pinpoints high-impact quotable moments worth clipping, sharing, or leading with.
             </p>
           </div>
 
-          <div className="glass p-21 reveal r9 group cursor-default transition-all">
-            <div className="mb-13 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-lavender to-teal text-base font-bold text-[#101322] shadow-[0_0_15px_rgba(185,166,218,0.4)] transition-transform group-hover:scale-110">
+          <div className="neu-tile p-34 reveal r9">
+            <div className="neu-tile-icon mb-21 font-semibold" aria-hidden="true">
               ◐
             </div>
-            <h3 className="font-display text-lg font-medium text-ink-light dark:text-ink-dark">
+            <h3 className="font-display text-h3 text-ink">
               Sentiment &amp; tone
             </h3>
-            <p className="mt-8 text-xs leading-relaxed text-ink-light/60 dark:text-ink-dim">
+            <p className="mt-8 text-sm leading-relaxed text-ink-dim">
               Reads the room so every piece of generated copy matches the energy and mood of the session.
             </p>
           </div>
@@ -207,7 +196,7 @@ export function LandingPage() {
         {/* Live Status Strip */}
         <div className="glass reveal r9 flex flex-wrap items-center justify-between gap-13 px-21 py-13 text-xs">
           <div className="flex items-center gap-13">
-            <div className="h-2 w-2 rounded-full bg-teal animate-ping" />
+            <div className="h-2 w-2 rounded-full bg-teal" />
             <span className="text-ink-light/60 dark:text-ink-dim">
               Transcribing —{" "}
               <span className="font-semibold text-gold dark:text-gold-soft">

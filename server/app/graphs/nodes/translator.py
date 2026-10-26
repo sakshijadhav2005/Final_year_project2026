@@ -1,65 +1,74 @@
 import asyncio
+import json
 from typing import Any
 
 from app.graphs.state import JobGraphState
 from app.providers.factory import get_llm_provider
-from app.providers.gemini_llm import build_user_prompt, generation_system
 from app.services.resilience import llm_circuit, with_backoff
+
+LANG_MAP = {
+    "hi": "Hindi",
+    "es": "Spanish",
+    "fr": "French",
+    "de": "German",
+    "ja": "Japanese",
+    "pt": "Portuguese",
+    "it": "Italian",
+    "zh": "Chinese",
+    "ar": "Arabic",
+    "ru": "Russian",
+    "ko": "Korean",
+}
+
+SYSTEM = (
+    "You are a professional translator for event marketing copy. Translate every draft "
+    "faithfully, keep Markdown structure, emojis, @handles and #hashtags unchanged. "
+    "Reply with JSON only."
+)
+
+
+async def _translate_language(llm, pieces: list[dict[str, Any]], code: str) -> list[dict[str, Any]]:
+    """Translate ALL drafts into one language with a single LLM call."""
+    name = LANG_MAP.get(code, code)
+    drafts = {str(p.get("type")): {"title": p.get("title") or "", "body": p.get("body") or ""} for p in pieces}
+    user = (
+        "TASK=translation_batch\n"
+        f"Translate each draft into {name}. Return JSON exactly as "
+        '{"drafts": {"<draft_type>": {"title": "...", "body": "..."}}} using the same keys.\n'
+        f"<DRAFTS_JSON>\n{json.dumps(drafts, ensure_ascii=False)}\n</DRAFTS_JSON>"
+    )
+    try:
+        result = await with_backoff(
+            lambda: llm.generate_json(system=SYSTEM, user=user, temperature=0.2, fast=True),
+            circuit=llm_circuit,
+            attempts=2,
+        )
+        translated = result.get("drafts") if isinstance(result.get("drafts"), dict) else {}
+    except Exception:
+        translated = {}
+
+    out = []
+    for p in pieces:
+        ctype = str(p.get("type"))
+        t = translated.get(ctype) if isinstance(translated.get(ctype), dict) else {}
+        out.append(
+            {
+                "type": ctype,
+                "language": code,
+                "title": t.get("title") or p.get("title"),
+                "body": t.get("body") or t.get("text") or p.get("body"),
+                "parent_type": ctype,
+            }
+        )
+    return out
 
 
 async def translation(state: JobGraphState) -> dict[str, Any]:
-    languages = [
-        lang for lang in (state.get("target_languages") or ["en"]) if lang and lang != "en"
-    ]
-    if not languages:
+    """One call per target language (all drafts batched), languages run in parallel."""
+    languages = [lang for lang in (state.get("target_languages") or ["en"]) if lang and lang != "en"]
+    pieces = state.get("generated") or []
+    if not languages or not pieces:
         return {"translations": []}
     llm = get_llm_provider()
-    LANG_MAP = {
-        "hi": "Hindi",
-        "es": "Spanish",
-        "fr": "French",
-        "de": "German",
-        "ja": "Japanese",
-        "pt": "Portuguese",
-        "it": "Italian",
-        "zh": "Chinese",
-        "ar": "Arabic",
-        "ru": "Russian",
-        "ko": "Korean",
-    }
-    
-    generated_pieces = state.get("generated") or []
-    if not generated_pieces:
-        return {"translations": []}
-
-    tasks = []
-    
-    for lang in languages:
-        full_lang_name = LANG_MAP.get(lang, lang)
-        for piece in generated_pieces:
-            async def _translate_task(p=piece, l_code=lang, l_name=full_lang_name):
-                async def _call() -> dict[str, Any]:
-                    return await llm.generate_json(
-                        system=generation_system(),
-                        user=build_user_prompt(
-                            "translation",
-                            state.get("transcript_text", "")[:4000],
-                            f"Translate this {p.get('type')} into {l_name}. Return JSON with keys 'title', 'body'.\n"
-                            f"Title={p.get('title')}\nBody={p.get('body')}",
-                        ),
-                        temperature=0.2,
-                    )
-
-                result = await with_backoff(_call, circuit=llm_circuit)
-                return {
-                    "type": p.get("type"),
-                    "language": l_code,
-                    "title": result.get("title") or p.get("title"),
-                    "body": result.get("text") or result.get("body") or p.get("body"),
-                    "parent_type": p.get("type"),
-                }
-
-            tasks.append(_translate_task())
-
-    translations = await asyncio.gather(*tasks)
-    return {"translations": list(translations)}
+    per_lang = await asyncio.gather(*(_translate_language(llm, pieces, code) for code in languages))
+    return {"translations": [item for batch in per_lang for item in batch]}

@@ -18,7 +18,7 @@ All core stages (Stages 1 through 10) are implemented and verified:
 - **LangGraph Multi-Agent Pipeline:**
   - Parallel fan-out: **Topic Extraction**, **Highlight Detection**, **Speaker Analysis**, **Sentiment Analysis**.
   - **Content Planner** brief synthesis.
-  - **Selective RAG:** Conditional retrieval using PostgreSQL `pgvector` embeddings when tokens > threshold or org-memory is enabled.
+  - **Selective RAG:** Conditional retrieval of earlier transcript chunks when tokens > threshold or org-memory is enabled. Chunks are stored with lightweight hashed bag-of-words vectors (JSON column) and ranked by cosine similarity, so no database extension is required.
   - **Gemini Generator:** Structured generation with prompt injection protection.
   - **Dual Guardrails:** Automated moderation and transcript grounding checks.
   - **Multi-Language Translation:** Output translation for international audiences.
@@ -33,7 +33,7 @@ All core stages (Stages 1 through 10) are implemented and verified:
   - 📋 **One-Click Actions:** Animated copy-to-clipboard and multi-format export (`.md`, `.txt`, `.json`).
   - ⚡ **Live Real-Time SSE:** Dynamic agent chip pulsing via Server-Sent Events without polling lag.
   - ⚙️ **Settings & Diagnostics:** Theme toggle (dark/light), media retention auto-purge policies, and target languages.
-- **Test Suite:** 19 automated unit and integration tests covering all critical paths.
+- **Test Suite:** 34 automated unit and integration tests (auth, RBAC, uploads, full pipeline, translations, content access control, downloads, chat, job recovery). They run against SQLite by default and against PostgreSQL with `TEST_DATABASE_URL`.
 
 ---
 
@@ -46,8 +46,8 @@ All core stages (Stages 1 through 10) are implemented and verified:
 | **Multi-Agent** | LangGraph (`StateGraph`) | Stateful orchestration, parallel nodes, conditional branching. |
 | **Cloud Storage** | Cloudflare R2 / AWS S3 (`boto3`) | S3-compatible zero-egress object storage with local disk fallback. |
 | **Media & AI** | VideoDB & Google Gemini (`gemini-3.6-flash`) | Speech-to-text, scene index, structured content generation. |
-| **Database** | PostgreSQL + `pgvector`, Redis | Relational data, audit logs, vector similarity search. |
-| **Task Queue** | Celery + Redis | Asynchronous background processing. |
+| **Database** | PostgreSQL (or SQLite for local dev), Redis | Relational data, audit logs, transcript-chunk retrieval. |
+| **Task Queue** | In-process background tasks (default) or Celery + Redis (`USE_CELERY=true`) | Asynchronous pipeline processing and the daily media-retention purge. |
 
 ---
 
@@ -106,6 +106,15 @@ cd server
 .venv\Scripts\pytest
 ```
 
+The suite never touches your `.env` database or API keys: it uses a temporary SQLite database and the offline fake AI providers. To run it against PostgreSQL instead:
+
+```bash
+# Windows PowerShell
+$env:TEST_DATABASE_URL="postgresql+asyncpg://eventai:eventai@localhost:5432/eventai_test"; .venv\Scripts\pytest
+```
+
+> **No API keys?** With `GEMINI_API_KEY` / `VIDEODB_API_KEY` empty, EventAI uses built-in offline providers that produce template content, which is ideal for demos. If a real Gemini call fails (wrong key or model name), the server logs `gemini_unavailable_using_fake_llm` and falls back to the offline provider.
+
 ---
 
 ## Demo Files & Viva Presentation Guide
@@ -126,5 +135,5 @@ For viva evaluation and demonstration, sample files are provided in [`data/sampl
    - Click **✏️ Edit Copy** on the Blog post, adjust a sentence, and click **💾 Save Changes**.
    - Click **📋 Copy** to demonstrate one-click clipboard copying.
    - Click **📥 Download** to download the Markdown or JSON asset.
-   - Hit **✓ Approve** on the draft to observe the status transition to `ready_to_publish`.
+   - Hit **✓ Approve** on the draft: the piece becomes `approved`, and once every piece in the job has been reviewed the job becomes `ready_to_publish`.
 5. **Architectural Justification:** Explain how selective RAG prevents unnecessary vector search cost on short recordings, and why the Human-in-the-Loop review gate ensures zero unverified AI output reaches the public.

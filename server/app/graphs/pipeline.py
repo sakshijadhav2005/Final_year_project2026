@@ -1,4 +1,5 @@
 from langgraph.graph import END, START, StateGraph
+from langgraph.types import Send
 
 from app.graphs.nodes import (
     content_planner,
@@ -10,6 +11,7 @@ from app.graphs.nodes import (
     translation,
 )
 from app.graphs.state import JobGraphState
+from app.schemas.content import DEFAULT_CONTENT_TYPES
 
 
 def rag_should_run(transcript_tokens: int, use_org_memory: bool, threshold: int) -> bool:
@@ -20,20 +22,23 @@ def _after_quality(state: JobGraphState) -> str:
     return "needs_reupload" if state.get("route") == "needs_reupload" else "parallel_analysis"
 
 
-def _after_guardrail(state: JobGraphState) -> str:
+def _after_guardrail(state: JobGraphState):
+    """Route after the guardrail: regenerate ONLY the failed drafts (straight to the
+    generators, skipping the planner), park for review, or continue to translation."""
     route = state.get("route")
     if route == "retry_generate":
-        return "generator"
+        retry = state.get("retry_types") or []
+        if retry:
+            return [Send("dynamic_generator", {**state, "agent_type": t}) for t in retry]
+        return "translation"
     if route == "needs_review":
         return "persist_fail"
     return "translation"
 
 
-from langgraph.types import Send
-
 def dynamic_router(state: JobGraphState):
     """Dynamically spawns parallel nodes based on user's requested_types."""
-    requested = state.get("requested_types") or ["linkedin", "blog", "newsletter", "summary", "flyer", "instagram"]
+    requested = list(dict.fromkeys(state.get("requested_types") or DEFAULT_CONTENT_TYPES))
     
     # We use LangGraph's Send API to fan-out dynamically.
     # Each Send object creates a new instance of the 'dynamic_generator' node.
@@ -82,7 +87,7 @@ def build_graph():
     graph.add_conditional_edges(
         "guardrail_node",
         _after_guardrail,
-        {"generator": "content_planner", "persist_fail": "persist_fail", "translation": "translation"},
+        ["dynamic_generator", "persist_fail", "translation"],
     )
     graph.add_edge("persist_fail", END)
     graph.add_edge("translation", END)

@@ -52,7 +52,7 @@ export function FlyerPreview({ title, body, structured, onCopy }: FlyerPreviewPr
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-8 rounded-card border border-primary/30 bg-primary/10 px-13 py-8 text-xs font-medium text-primary transition-all hover:bg-primary hover:text-white"
+          className="flex items-center gap-8 rounded-card border border-white/[0.12] px-13 py-8 text-xs font-medium text-ink transition-colors hover:border-amber-400/50"
         >
           {copied ? "✓ Copied!" : "📋 Copy Flyer Text"}
         </button>
@@ -64,25 +64,22 @@ export function FlyerPreview({ title, body, structured, onCopy }: FlyerPreviewPr
         </pre>
       ) : (
         /* Visual Flyer Poster (1 : 1.618 golden-portrait aspect) */
-        <div className="relative aspect-golden-portrait w-full max-w-md overflow-hidden rounded-card border border-primary/40 bg-gradient-to-b from-[#1E1B4B] via-[#0F1115] to-[#0A0B0E] p-34 text-white shadow-2xl">
-          {/* Ambient Glows */}
-          <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-accent/20 blur-3xl"></div>
-          <div className="pointer-events-none absolute -bottom-20 -left-20 h-48 w-48 rounded-full bg-primary/30 blur-3xl"></div>
+        <div className="relative aspect-golden-portrait w-full max-w-md overflow-hidden rounded-panel border border-amber-400/40 bg-canvas p-34 text-white">
 
           {/* Flyer Top Header */}
           <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-13 text-xs">
-            <span className="flex items-center gap-8 font-semibold tracking-wider text-accent">
-              <span className="h-2 w-2 rounded-full bg-accent animate-pulse"></span>
-              EVENT RECAP
+            <span className="flex items-center gap-8 font-semibold text-amber-300">
+              <span className="h-2 w-2 rounded-full bg-amber-400"></span>
+              Event recap
             </span>
-            <span className="rounded-full bg-white/10 px-8 py-2 text-[10px] uppercase tracking-widest text-white/80">
+            <span className="rounded-full bg-white/10 px-8 py-[2px] text-[10px] text-white/80">
               Official Brief
             </span>
           </div>
 
           {/* Headline & Subhead */}
           <div className="relative z-10 my-21">
-            <h2 className="font-display text-2xl font-bold leading-tight tracking-tight text-white md:text-3xl">
+            <h2 className="font-display text-h2 font-semibold leading-tight tracking-tight text-white md:text-3xl">
               {headline}
             </h2>
             <p className="mt-8 text-sm font-medium text-white/70">{subhead}</p>
@@ -90,7 +87,7 @@ export function FlyerPreview({ title, body, structured, onCopy }: FlyerPreviewPr
 
           {/* Highlights Box */}
           <div className="relative z-10 my-21 rounded-card border border-white/10 bg-white/5 p-21 backdrop-blur-md">
-            <p className="mb-13 text-xs font-semibold uppercase tracking-wider text-accent">Key Highlights</p>
+            <p className="mb-13 text-xs font-semibold text-accent">Key Highlights</p>
             <ul className="space-y-13 text-xs leading-relaxed text-white/90">
               {bullets.map((point, index) => (
                 <li key={index} className="flex items-start gap-8">

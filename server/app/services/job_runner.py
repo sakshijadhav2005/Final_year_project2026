@@ -1,3 +1,4 @@
+import asyncio
 from datetime import UTC, datetime
 from uuid import UUID
 
@@ -7,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import get_settings
 from app.db.session import SessionLocal
 from app.graphs.pipeline import get_compiled_graph
+from app.graphs.state import merge_generated
 from app.models.content import ContentPiece
 from app.models.job import AgentOutput, Job, Transcript
 from app.models.recording import Recording
@@ -16,8 +18,6 @@ from app.services.guardrails import should_use_rag
 from app.services.quality import inspect_media
 from app.services.rag import index_transcript_chunks, retrieve_chunks
 from app.services.transcription import transcribe_file
-
-import asyncio
 
 AGENT_KEYS = [
     "quality_check",
@@ -82,16 +82,17 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
     if current_task:
         ACTIVE_JOB_TASKS[job_str] = current_task
 
+    # One session for the whole job; it is closed in the `finally` block below.
+    db = SessionLocal()
     try:
         settings = get_settings()
-        async with SessionLocal() as db:
-            job = (await db.execute(select(Job).where(Job.id == UUID(job_id)))).scalar_one_or_none()
-            if job is None or job.status == "cancelled" or job_str in CANCELLED_JOB_IDS:
-                return
+        job = (await db.execute(select(Job).where(Job.id == UUID(job_id)))).scalar_one_or_none()
+        if job is None or job.status == "cancelled" or job_str in CANCELLED_JOB_IDS:
+            return
 
-            recording = (
-                await db.execute(select(Recording).where(Recording.id == job.recording_id))
-            ).scalar_one_or_none()
+        recording = (
+            await db.execute(select(Recording).where(Recording.id == job.recording_id))
+        ).scalar_one_or_none()
         if recording is None:
             await _save(
                 db,
@@ -295,7 +296,13 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                     return
                 for node_name, update in event.items():
                     if isinstance(update, dict):
-                        final_state.update(update)
+                        for key, value in update.items():
+                            if key == "generated":
+                                final_state["generated"] = merge_generated(
+                                    final_state.get("generated"), value
+                                )
+                            else:
+                                final_state[key] = value
 
                     # Map LangGraph node names to stepper progress keys
                     if node_name == "parallel_analysis":
@@ -437,6 +444,7 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
     except asyncio.CancelledError:
         return
     finally:
+        await db.close()
         ACTIVE_JOB_TASKS.pop(job_str, None)
         CANCELLED_JOB_IDS.discard(job_str)
 
@@ -467,3 +475,52 @@ async def purge_expired_media() -> int:
             recording.storage_uri = ""
         await db.commit()
     return removed
+
+
+IN_FLIGHT_STATUSES = (
+    "queued",
+    "validating",
+    "transcribing",
+    "analyzing",
+    "planning",
+    "generating",
+    "guarding",
+    "translating",
+)
+
+
+async def recover_interrupted_jobs() -> int:
+    """Jobs run inside the API process (unless Celery is enabled). If the server
+    stopped mid-job, those jobs would stay "running" forever, so on startup we
+    mark them failed; the user can press Regenerate to run them again."""
+    from sqlalchemy import update
+
+    async with SessionLocal() as db:
+        result = await db.execute(
+            update(Job)
+            .where(Job.status.in_(IN_FLIGHT_STATUSES))
+            .values(
+                status="failed",
+                error_code="interrupted",
+                error_message="Processing was interrupted by a server restart. "
+                "Click Regenerate to run it again.",
+                finished_at=datetime.now(UTC),
+            )
+        )
+        await db.commit()
+        return result.rowcount or 0
+
+
+async def purge_media_periodically(interval_seconds: int = 3600) -> None:
+    """Background retention loop (used when Celery beat is not running)."""
+    import structlog
+
+    logger = structlog.get_logger("retention")
+    while True:
+        try:
+            removed = await purge_expired_media()
+            if removed:
+                logger.info("retention_purge_complete", count=removed)
+        except Exception as exc:  # keep the loop alive
+            logger.error("retention_purge_failed", error=str(exc))
+        await asyncio.sleep(interval_seconds)

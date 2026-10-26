@@ -2,45 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg1: #0A0E1B;
-  --bg2: #1B1030;
-  --bg3: #0E1B2E;
-  --gold: #D8B478;
-  --gold-soft: #EAD9B0;
-  --lavender: #B9A6DA;
-  --teal: #6FCFC4;
-  --glass: rgba(255, 255, 255, 0.045);
-  --glass-hi: rgba(255, 255, 255, 0.09);
-  --glass-brd: rgba(216, 180, 120, 0.22);
-  --ink: #F4F0E6;
-  --ink-dim: #9D97AE;
-  --space-8: 8px;
-  --space-13: 13px;
-  --space-21: 21px;
-  --space-34: 34px;
-  --space-55: 55px;
-  --space-89: 89px;
-  --phi: 61.8%;
-  --phi-side: 38.2%;
+/* "Lavender mist" theme (ice · mist · teal · deep slate · violet · lavender).
+   Every colour token used by tailwind.config.js lives here. */
+:root,
+html.dark {
+  color-scheme: dark;
+  --n-50: 238 245 247;  --n-100: 220 233 236;  --n-200: 180 216 223;  --n-300: 149 185 192;  --n-400: 116 147 154;  --n-500: 84 110 118;  --n-600: 62 87 98;  --n-700: 40 60 70;  --n-800: 26 42 50;  --n-900: 16 28 35;  --n-950: 8 17 22;
+  --a-50: 246 242 252;  --a-100: 236 229 248;  --a-200: 216 205 239;  --a-300: 199 186 229;  --a-400: 185 169 218;  --a-500: 154 137 192;  --a-600: 123 104 148;  --a-700: 98 82 120;  --a-800: 74 61 92;  --a-900: 49 40 62;  --a-950: 30 24 39;
+  --g-50: 238 248 243;  --g-100: 212 238 226;  --g-200: 171 221 198;  --g-300: 133 203 170;  --g-400: 106 184 148;  --g-500: 79 156 121;  --g-600: 61 125 97;  --g-700: 48 98 77;  --g-800: 36 73 58;  --g-900: 24 49 40;  --g-950: 12 28 22;
+  --l-50: 236 247 249;  --l-100: 214 236 240;  --l-200: 180 216 223;  --l-300: 149 185 192;  --l-400: 120 165 173;  --l-500: 106 147 154;  --l-600: 80 120 128;  --l-700: 62 95 108;  --l-800: 45 70 80;  --l-900: 30 48 56;  --l-950: 17 29 34;
+  --r-50: 253 238 239;  --r-100: 250 213 216;  --r-200: 243 170 176;  --r-300: 236 129 137;  --r-400: 227 93 104;  --r-500: 200 65 77;  --r-600: 166 51 61;  --r-700: 146 58 61;  --r-800: 106 38 41;  --r-900: 69 24 27;  --r-950: 41 13 15;
+  --canvas: 7 15 19;
+  --canvas-end: 24 28 44;
+  --surface: 17 30 37;
+  --raised: 26 42 50;
+  --line: 236 245 247;
+  --ink: 236 245 247;
+  --ink-dim: 149 177 184;
+  --on: 240 247 249;
+  --shade: 0 0 0;
+  --on-accent: 22 17 34;
+  --spot: 185 169 218;
+  /* glass + soft-UI depth */
+  --glass-fill: 17 30 37;
+  --glass-alpha: 0.58;
+  --glass-edge: 255 255 255;
+  --glass-edge-alpha: 0.07;
+  --neu-hi: 255 255 255;
+  --neu-hi-alpha: 0.05;
+  --neu-lo: 0 0 0;
+  --neu-lo-alpha: 0.55;
 }
 
-/* ── Light theme overrides ────────────────────────────────── */
 html:not(.dark) {
-  --bg1: #F8F9FC;
-  --bg2: #EEF0F7;
-  --bg3: #F0F4F8;
-  --gold: #B8943E;
-  --gold-soft: #8A6D2F;
-  --lavender: #8872B8;
-  --teal: #0F9D8E;
-  --glass: rgba(255, 255, 255, 0.72);
-  --glass-hi: rgba(255, 255, 255, 0.88);
-  --glass-brd: rgba(180, 150, 100, 0.18);
-  --ink: #1E1E24;
-  --ink-dim: #6B6880;
+  color-scheme: light;
+  --n-50: 8 17 22;  --n-100: 16 28 35;  --n-200: 26 42 50;  --n-300: 40 60 70;  --n-400: 62 87 98;  --n-500: 84 110 118;  --n-600: 116 147 154;  --n-700: 149 185 192;  --n-800: 180 216 223;  --n-900: 220 233 236;  --n-950: 238 245 247;
+  --a-50: 30 24 39;  --a-100: 49 40 62;  --a-200: 74 61 92;  --a-300: 98 82 120;  --a-400: 123 104 148;  --a-500: 154 137 192;  --a-600: 185 169 218;  --a-700: 199 186 229;  --a-800: 216 205 239;  --a-900: 236 229 248;  --a-950: 246 242 252;
+  --g-50: 12 28 22;  --g-100: 24 49 40;  --g-200: 36 73 58;  --g-300: 48 98 77;  --g-400: 61 125 97;  --g-500: 79 156 121;  --g-600: 106 184 148;  --g-700: 133 203 170;  --g-800: 171 221 198;  --g-900: 212 238 226;  --g-950: 238 248 243;
+  --l-50: 17 29 34;  --l-100: 30 48 56;  --l-200: 45 70 80;  --l-300: 62 95 108;  --l-400: 80 120 128;  --l-500: 106 147 154;  --l-600: 120 165 173;  --l-700: 149 185 192;  --l-800: 180 216 223;  --l-900: 214 236 240;  --l-950: 236 247 249;
+  --r-50: 41 13 15;  --r-100: 69 24 27;  --r-200: 106 38 41;  --r-300: 146 58 61;  --r-400: 166 51 61;  --r-500: 200 65 77;  --r-600: 227 93 104;  --r-700: 236 129 137;  --r-800: 243 170 176;  --r-900: 250 213 216;  --r-950: 253 238 239;
+  --canvas: 245 249 250;
+  --canvas-end: 237 235 247;
+  --surface: 255 255 255;
+  --raised: 250 252 253;
+  --line: 26 42 50;
+  --ink: 26 42 50;
+  --ink-dim: 84 110 118;
+  --on: 26 42 50;
+  --shade: 26 42 50;
+  --on-accent: 255 255 255;
+  --spot: 123 104 148;
+  --glass-fill: 255 255 255;
+  --glass-alpha: 0.62;
+  --glass-edge: 255 255 255;
+  --glass-edge-alpha: 0.9;
+  --neu-hi: 255 255 255;
+  --neu-hi-alpha: 0.95;
+  --neu-lo: 62 95 108;
+  --neu-lo-alpha: 0.16;
 }
 
+/* ── Base ─────────────────────────────────────────────────── */
 html,
 body,
 #root {
@@ -48,197 +70,350 @@ body,
 }
 
 body {
-  @apply bg-canvas-light text-ink-light font-sans text-body antialiased;
+  @apply font-sans text-body antialiased;
+  color: rgb(var(--ink));
+  background-color: rgb(var(--canvas));
+  /* The decorative background lives on a fixed layer (body::before) so it always
+     fills the screen, including browsers that ignore background-attachment. */
 }
 
-/* ── Dark theme body ────────────────────────────────── */
-.dark body,
-html.dark body {
-  color: var(--ink);
-  background: radial-gradient(120% 90% at 15% 0%, var(--bg2) 0%, var(--bg1) 45%, var(--bg3) 100%);
-  background-attachment: fixed;
+/* Still background: a soft lavender light from above over a deep teal-to-violet fade
+   (the palette's own gradient). Nothing here moves or follows the mouse. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(61.8% 38.2% at 50% 0%, rgb(var(--spot) / 0.10) 0%, transparent 100%),
+    radial-gradient(34% 34% at 8% 38%, rgb(var(--l-600) / 0.30) 0%, transparent 100%),
+    radial-gradient(38.2% 38.2% at 96% 72%, rgb(var(--a-500) / 0.16) 0%, transparent 100%),
+    linear-gradient(180deg, rgb(var(--canvas)) 0%, rgb(var(--canvas-end)) 100%);
 }
-
-/* ── Light theme body ────────────────────────────────── */
-html:not(.dark) body {
-  color: #1E1E24;
-  background: linear-gradient(145deg, #F8F9FC 0%, #EEF0F7 40%, #F0F4F8 100%);
-  background-attachment: fixed;
+html:not(.dark) body::before {
+  background-image:
+    radial-gradient(61.8% 38.2% at 50% 0%, rgb(var(--spot) / 0.10) 0%, transparent 100%),
+    radial-gradient(34% 34% at 8% 38%, rgb(149 185 192 / 0.30) 0%, transparent 100%),
+    radial-gradient(38.2% 38.2% at 96% 72%, rgb(185 169 218 / 0.30) 0%, transparent 100%),
+    linear-gradient(180deg, rgb(var(--canvas)) 0%, rgb(var(--canvas-end)) 100%);
 }
 
 h1,
 h2,
-h3 {
-  font-family: 'Playfair Display', serif;
+h3,
+h4 {
+  font-family: "Bricolage Grotesque Variable", "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 
-/* Fine film-grain texture */
-.grain {
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-html:not(.dark) .grain {
-  opacity: 0.025;
-  mix-blend-mode: multiply;
+p {
+  text-wrap: pretty;
 }
 
-/* Ambient Drifting Blur Blobs */
-.blob {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(90px);
-  z-index: 0;
-  pointer-events: none;
-}
-.blob-a {
-  width: 460px;
-  height: 460px;
-  background: var(--lavender);
-  opacity: 0.18;
-  top: -140px;
-  left: -120px;
-  animation: driftA 26s ease-in-out infinite;
-}
-.blob-b {
-  width: 380px;
-  height: 380px;
-  background: var(--teal);
-  opacity: 0.14;
-  bottom: -160px;
-  right: -100px;
-  animation: driftB 30s ease-in-out infinite;
-}
-.blob-c {
-  width: 220px;
-  height: 220px;
-  background: var(--gold);
-  opacity: 0.16;
-  top: 38%;
-  right: 8%;
-  animation: driftC 34s ease-in-out infinite;
-}
-/* Light mode: softer, more subtle blobs */
-html:not(.dark) .blob-a {
-  opacity: 0.08;
-  filter: blur(120px);
-}
-html:not(.dark) .blob-b {
-  opacity: 0.06;
-  filter: blur(120px);
-}
-html:not(.dark) .blob-c {
-  opacity: 0.07;
-  filter: blur(120px);
+::selection {
+  background: rgb(var(--a-400) / 0.35);
+  color: rgb(var(--ink));
 }
 
-@keyframes driftA {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(50px, 70px); }
-}
-@keyframes driftB {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(-60px, -40px); }
-}
-@keyframes driftC {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-30px, 30px) scale(1.12); }
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid rgb(var(--a-400));
+  outline-offset: 2px;
+  border-radius: 6px;
 }
 
-/* Twinkling Sparks */
-.spark {
-  position: fixed;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--gold-soft);
-  z-index: 1;
-  animation: twinkle 4s ease-in-out infinite;
-}
-html:not(.dark) .spark {
-  background: var(--gold);
-  opacity: 0.3;
-}
-@keyframes twinkle {
-  0%, 100% { opacity: 0.15; transform: scale(1); }
-  50% { opacity: 0.9; transform: scale(1.6); }
+/* Scrollbars that match the surface */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--n-600)) transparent;
 }
 
-/* Blueprint Grid Lines & Vignette */
-.thin-lines {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background-image:
-    repeating-linear-gradient(0deg, rgba(216, 180, 120, 0.04) 0px, rgba(216, 180, 120, 0.04) 1px, transparent 1px, transparent 120px),
-    repeating-linear-gradient(90deg, rgba(216, 180, 120, 0.04) 0px, rgba(216, 180, 120, 0.04) 1px, transparent 1px, transparent 120px);
-}
-html:not(.dark) .thin-lines {
-  background-image:
-    repeating-linear-gradient(0deg, rgba(180, 150, 100, 0.05) 0px, rgba(180, 150, 100, 0.05) 1px, transparent 1px, transparent 120px),
-    repeating-linear-gradient(90deg, rgba(180, 150, 100, 0.05) 0px, rgba(180, 150, 100, 0.05) 1px, transparent 1px, transparent 120px);
+/* ── Buttons: three roles, one shape ──────────────────────── */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-8 rounded-full px-21 py-8 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-amber-400 font-semibold text-on-accent hover:bg-amber-300;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.25),
+      -2px -2px 6px rgb(var(--neu-hi) / var(--neu-hi-alpha)),
+      4px 6px 13px rgb(var(--neu-lo) / var(--neu-lo-alpha));
+  }
+  .btn-primary:active:not(:disabled) {
+    box-shadow: inset 3px 3px 8px rgb(0 0 0 / 0.3);
+  }
+  .btn-ghost {
+    @apply btn border border-white/[0.1] text-ink hover:border-amber-400/50;
+    background-color: rgb(var(--glass-fill) / 0.35);
+    box-shadow:
+      -2px -2px 6px rgb(var(--neu-hi) / var(--neu-hi-alpha)),
+      3px 4px 10px rgb(var(--neu-lo) / calc(var(--neu-lo-alpha) * 0.8));
+  }
+  .btn-ghost:active {
+    box-shadow:
+      inset 3px 3px 8px rgb(var(--neu-lo) / var(--neu-lo-alpha)),
+      inset -2px -2px 6px rgb(var(--neu-hi) / var(--neu-hi-alpha));
+  }
+  .btn-sm {
+    @apply px-13 py-[5px] text-xs;
+  }
+  .btn-danger {
+    @apply btn border border-rose-400/40 text-rose-300 hover:bg-rose-400/10;
+  }
 }
 
-.vignette {
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: radial-gradient(120% 100% at 50% 40%, transparent 45%, rgba(6, 8, 16, 0.65) 100%);
+/* ── Glass panels ─────────────────────────────────────────── */
+/* Every top-level panel (rounded-panel + bg-surface) and .glass is frosted glass:
+   translucent fill, backdrop blur, a light top edge and a soft drop shadow. */
+.glass,
+.rounded-panel.bg-surface,
+.glass-panel {
+  background-color: rgb(var(--glass-fill) / var(--glass-alpha)) !important;
+  -webkit-backdrop-filter: blur(21px) saturate(1.35);
+  backdrop-filter: blur(21px) saturate(1.35);
+  border: 1px solid rgb(var(--line) / 0.09);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--glass-edge) / var(--glass-edge-alpha)),
+    0 21px 55px -21px rgb(var(--neu-lo) / calc(var(--neu-lo-alpha) * 0.9));
 }
-html:not(.dark) .vignette {
-  background: radial-gradient(120% 100% at 50% 40%, transparent 60%, rgba(0, 0, 0, 0.04) 100%);
-}
-
-/* Glassmorphism Classes */
 .glass {
-  background: var(--glass);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-  border: 1px solid var(--glass-brd);
-  border-radius: 20px;
+  border-radius: 21px;
   position: relative;
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease;
 }
-html:not(.dark) .glass {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.03);
+/* Panels nested inside a panel stay calm: tint only, no second blur layer. */
+.rounded-panel.bg-surface .rounded-panel.bg-surface,
+.glass .rounded-panel.bg-surface {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background-color: rgb(var(--line) / 0.025) !important;
+  box-shadow: inset 0 1px 0 rgb(var(--glass-edge) / calc(var(--glass-edge-alpha) * 0.6));
 }
 
-.glass::before {
-  content: '';
+/* ── Soft UI (neumorphism) for things you touch ───────────── */
+/* raised: can be pressed */
+.neu-raised {
+  box-shadow:
+    -3px -3px 8px rgb(var(--neu-hi) / var(--neu-hi-alpha)),
+    5px 5px 13px rgb(var(--neu-lo) / var(--neu-lo-alpha));
+}
+/* pressed: selected / active */
+.neu-pressed {
+  box-shadow:
+    inset 3px 3px 8px rgb(var(--neu-lo) / var(--neu-lo-alpha)),
+    inset -2px -2px 6px rgb(var(--neu-hi) / var(--neu-hi-alpha));
+}
+/* inset: a well you put something into (drop zone, fields, tab tracks) */
+.neu-inset {
+  background-color: rgb(var(--n-950) / 0.35);
+  box-shadow:
+    inset 4px 4px 13px rgb(var(--neu-lo) / calc(var(--neu-lo-alpha) * 0.9)),
+    inset -3px -3px 8px rgb(var(--neu-hi) / var(--neu-hi-alpha));
+}
+html:not(.dark) .neu-inset {
+  background-color: rgb(var(--n-950) / 0.7);
+}
+.neu-raised:active {
+  box-shadow:
+    inset 3px 3px 8px rgb(var(--neu-lo) / var(--neu-lo-alpha)),
+    inset -2px -2px 6px rgb(var(--neu-hi) / var(--neu-hi-alpha));
+}
+
+/* ── Interactive depth ────────────────────────────────────── */
+/* Things answer the user: hover deepens the shadow (no movement), pressing
+   sinks the surface 1px, and raised <-> pressed changes animate smoothly. */
+.neu-raised,
+.neu-pressed,
+.neu-inset,
+.btn,
+.glass-interactive {
+  transition:
+    box-shadow 0.22s ease,
+    background-color 0.22s ease,
+    border-color 0.22s ease,
+    color 0.22s ease,
+    transform 0.12s ease;
+}
+.neu-raised:hover {
+  box-shadow:
+    -4px -4px 10px rgb(var(--neu-hi) / calc(var(--neu-hi-alpha) * 1.4)),
+    7px 8px 18px rgb(var(--neu-lo) / calc(var(--neu-lo-alpha) * 1.15));
+}
+.neu-raised:active,
+.neu-pressed:active,
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* Clickable glass cards: hover brightens the edge and deepens the glass. */
+.glass-interactive:hover {
+  border-color: rgb(var(--a-400) / 0.32) !important;
+  background-color: rgb(var(--glass-fill) / calc(var(--glass-alpha) + 0.12)) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(var(--glass-edge) / calc(var(--glass-edge-alpha) * 1.8)),
+    0 0 0 1px rgb(var(--a-400) / 0.08),
+    0 34px 55px -21px rgb(var(--neu-lo) / var(--neu-lo-alpha)) !important;
+}
+.glass-interactive:active {
+  transform: translateY(1px);
+}
+.glass-interactive:focus-visible {
+  outline: 2px solid rgb(var(--a-400));
+  outline-offset: 3px;
+}
+
+/* A glass panel you are typing in lights up its edge. */
+.rounded-panel.bg-surface:focus-within,
+.glass:focus-within {
+  border-color: rgb(var(--a-400) / 0.28) !important;
+}
+
+/* Selection tick pops when a choice is made. */
+@keyframes tick-pop {
+  0% { transform: scale(0.4); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.tick-pop {
+  animation: tick-pop 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.4);
+}
+
+/* Drop zone reacts while a file is dragged over it. */
+.drop-active {
+  border-color: rgb(var(--a-400)) !important;
+  background-color: rgb(var(--a-400) / 0.07) !important;
+  box-shadow:
+    inset 0 0 34px rgb(var(--a-400) / 0.22),
+    inset 4px 4px 13px rgb(var(--neu-lo) / var(--neu-lo-alpha)) !important;
+}
+
+/* Status glow for the pipeline stage that is running right now. */
+@keyframes stage-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(var(--a-400) / 0); }
+  50% { box-shadow: 0 0 21px 0 rgb(var(--a-400) / 0.25); }
+}
+.stage-live {
+  animation: stage-glow 2.4s ease-in-out infinite;
+}
+
+/* ── Neumorphic switch ─────────────────────────────────────── */
+.neu-switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 46px;
+  height: 26px;
+  border-radius: 999px;
+  background-color: rgb(var(--n-950) / 0.35);
+  box-shadow:
+    inset 3px 3px 7px rgb(var(--neu-lo) / var(--neu-lo-alpha)),
+    inset -2px -2px 5px rgb(var(--neu-hi) / var(--neu-hi-alpha));
+  transition: background-color 0.25s ease;
+}
+html:not(.dark) .neu-switch {
+  background-color: rgb(var(--n-950) / 0.8);
+}
+.neu-switch.is-on {
+  background-color: rgb(var(--a-400) / 0.85);
+}
+.neu-switch-knob {
   position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  padding: 1px;
-  background: linear-gradient(160deg, rgba(216, 180, 120, 0.35), transparent 40%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(var(--ink-dim));
+  background: linear-gradient(145deg, rgb(var(--raised)), rgb(var(--surface)));
+  box-shadow:
+    -1px -1px 3px rgb(var(--neu-hi) / calc(var(--neu-hi-alpha) * 1.5)),
+    2px 2px 5px rgb(var(--neu-lo) / var(--neu-lo-alpha));
+  transition: transform 0.25s cubic-bezier(0.3, 0.9, 0.3, 1.2);
 }
-html:not(.dark) .glass::before {
-  background: linear-gradient(160deg, rgba(180, 150, 100, 0.12), transparent 40%);
+html:not(.dark) .neu-switch-knob {
+  background: #fff;
+}
+.neu-switch.is-on .neu-switch-knob {
+  transform: translateX(20px);
+  color: rgb(var(--a-500));
+}
+.neu-switch:not(.is-on):active .neu-switch-knob {
+  width: 23px;
 }
 
-.glass:hover {
-  border-color: rgba(216, 180, 120, 0.45);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(216, 180, 120, 0.15) inset;
+/* Neumorphic feature tile: a soft, solid slab pushed out of the page, with its
+   icon sunk into a well. On hover the slab lifts (deeper shadow, no movement)
+   and the icon rises out of its well and lights up coral. */
+.neu-tile {
+  position: relative;
+  border-radius: 21px;
+  border: 1px solid rgb(var(--glass-edge) / calc(var(--glass-edge-alpha) * 0.5));
+  background: linear-gradient(145deg, rgb(var(--n-800) / 0.55), rgb(var(--n-950) / 0.55));
+  box-shadow:
+    -8px -8px 21px rgb(var(--neu-hi) / var(--neu-hi-alpha)),
+    13px 13px 34px rgb(var(--neu-lo) / var(--neu-lo-alpha));
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
-html:not(.dark) .glass:hover {
-  border-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04) inset;
+html:not(.dark) .neu-tile {
+  background: linear-gradient(145deg, rgb(var(--surface) / 0.92), rgb(var(--n-950) / 0.85));
+}
+.neu-tile:hover {
+  border-color: rgb(var(--a-400) / 0.22);
+  box-shadow:
+    -10px -10px 26px rgb(var(--neu-hi) / calc(var(--neu-hi-alpha) * 1.5)),
+    18px 18px 44px rgb(var(--neu-lo) / calc(var(--neu-lo-alpha) * 1.2));
+}
+.neu-tile-icon {
+  display: flex;
+  height: 46px;
+  width: 46px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  font-size: 17px;
+  /* Resting state: the icon sits raised on the tile, lit in the accent colour. */
+  color: rgb(var(--a-400));
+  background-color: rgb(var(--a-400) / 0.1);
+  box-shadow:
+    -3px -3px 8px rgb(var(--neu-hi) / calc(var(--neu-hi-alpha) * 1.4)),
+    5px 5px 13px rgb(var(--neu-lo) / var(--neu-lo-alpha));
+  transition: box-shadow 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+}
+/* Hover: the icon rises a little higher and glows softly. */
+.neu-tile:hover .neu-tile-icon {
+  color: rgb(var(--a-300));
+  background-color: rgb(var(--a-400) / 0.16);
+  box-shadow:
+    -4px -4px 10px rgb(var(--neu-hi) / calc(var(--neu-hi-alpha) * 1.8)),
+    7px 7px 18px rgb(var(--neu-lo) / calc(var(--neu-lo-alpha) * 1.15)),
+    0 0 21px -5px rgb(var(--a-400) / 0.45);
+}
+@media (prefers-reduced-motion: reduce) {
+  .neu-tile,
+  .neu-tile-icon {
+    transition: none;
+  }
 }
 
-/* Orbit Brand Icon */
+/* Form fields are wells */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input:not([type]),
+textarea,
+select {
+  box-shadow:
+    inset 3px 3px 8px rgb(var(--neu-lo) / calc(var(--neu-lo-alpha) * 0.7)),
+    inset -2px -2px 5px rgb(var(--neu-hi) / var(--neu-hi-alpha));
+}
+
+/* ── Brand mark ───────────────────────────────────────────── */
 .orbit-icon {
   position: relative;
   width: 28px;
@@ -248,33 +423,16 @@ html:not(.dark) .glass:hover {
   position: absolute;
   inset: 8px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold));
-  box-shadow: 0 0 10px rgba(216, 180, 120, 0.5);
+  background: rgb(var(--a-400));
 }
 .orbit-icon .ring {
   position: absolute;
   inset: 0;
-  border: 1px solid var(--glass-brd);
+  border: 1.5px solid rgb(var(--a-400) / 0.45);
   border-radius: 50%;
-  animation: spin 8s linear infinite;
-}
-.orbit-icon .ring::after {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  margin-left: -2.5px;
-  border-radius: 50%;
-  background: var(--lavender);
-  box-shadow: 0 0 8px var(--lavender);
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
-/* Live Equalizer Bars */
+/* ── Live indicator (status, not decoration) ──────────────── */
 .live-bars {
   display: inline-flex;
   align-items: flex-end;
@@ -284,19 +442,19 @@ html:not(.dark) .glass:hover {
 }
 .live-bars span {
   width: 2px;
-  background: var(--gold-soft);
+  background: rgb(var(--g-400));
   border-radius: 1px;
-  animation: barpulse 1s ease-in-out infinite;
+  animation: barpulse 1.2s ease-in-out infinite;
 }
 .live-bars span:nth-child(1) { height: 40%; animation-delay: 0s; }
 .live-bars span:nth-child(2) { height: 100%; animation-delay: 0.15s; }
 .live-bars span:nth-child(3) { height: 65%; animation-delay: 0.3s; }
 @keyframes barpulse {
-  0%, 100% { transform: scaleY(0.5); opacity: 0.6; }
-  50% { transform: scaleY(1); opacity: 1; }
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1); }
 }
 
-/* Neuromorphic Stage & Pulse Rings */
+/* ── Landing upload stage ─────────────────────────────────── */
 .neo-stage {
   position: relative;
   overflow: hidden;
@@ -304,106 +462,92 @@ html:not(.dark) .glass:hover {
   flex-direction: column;
   align-items: center;
 }
-.neo-stage::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(75deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-  animation: sheen 7s ease-in-out infinite;
-}
-html:not(.dark) .neo-stage::after {
-  background: linear-gradient(75deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-}
-@keyframes sheen {
-  0% { left: -60%; }
-  35% { left: 130%; }
-  100% { left: 130%; }
-}
 
 .neo-btn {
   position: relative;
-  width: 126px;
-  height: 126px;
+  width: 144px;
+  height: 144px;
   border-radius: 50%;
-  background: linear-gradient(155deg, #1E2438, #141826);
-  box-shadow: 12px 12px 26px rgba(0, 0, 0, 0.55), -10px -10px 24px rgba(255, 255, 255, 0.035), inset 0 0 0 1px rgba(216, 180, 120, 0.10);
+  background: linear-gradient(145deg, rgb(var(--raised)), rgb(var(--surface)));
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
   cursor: pointer;
+  box-shadow:
+    -8px -8px 21px rgb(var(--neu-hi) / calc(var(--neu-hi-alpha) * 1.3)),
+    13px 13px 34px rgb(var(--neu-lo) / var(--neu-lo-alpha));
 }
-html:not(.dark) .neo-btn {
-  background: linear-gradient(155deg, #FFFFFF, #F0EDFA);
-  box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.08), -4px -4px 12px rgba(255, 255, 255, 0.9), inset 0 0 0 1px rgba(180, 150, 100, 0.12);
-}
-.neo-btn:hover {
-  transform: scale(1.05);
+.neo-btn::before {
+  content: "";
+  position: absolute;
+  inset: 21px;
+  border-radius: 50%;
+  box-shadow:
+    inset 5px 5px 13px rgb(var(--neu-lo) / var(--neu-lo-alpha)),
+    inset -4px -4px 10px rgb(var(--neu-hi) / var(--neu-hi-alpha));
 }
 .neo-btn:active {
-  transform: scale(0.96);
-  box-shadow: inset 8px 8px 18px rgba(0, 0, 0, 0.55), inset -6px -6px 16px rgba(255, 255, 255, 0.03);
+  box-shadow:
+    inset 8px 8px 21px rgb(var(--neu-lo) / var(--neu-lo-alpha)),
+    inset -6px -6px 16px rgb(var(--neu-hi) / var(--neu-hi-alpha));
 }
-html:not(.dark) .neo-btn:active {
-  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.08), inset -3px -3px 8px rgba(255, 255, 255, 0.6);
-}
-
 .neo-btn .dot {
+  position: relative;
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: radial-gradient(circle at 32% 28%, var(--gold-soft), var(--gold) 55%, #8a6a2f);
-  box-shadow: 0 0 16px rgba(216, 180, 120, 0.4);
+  background: radial-gradient(circle at 35% 30%, rgb(var(--a-300)), rgb(var(--a-400)) 60%, rgb(var(--a-600)));
+  box-shadow:
+    0 0 21px rgb(var(--a-400) / 0.35),
+    3px 4px 8px rgb(var(--neu-lo) / var(--neu-lo-alpha));
 }
 
+/* A slow ripple says "ready for a file"; it is the page's one ambient motion. */
 .pulse-ring {
   position: absolute;
   inset: -16px;
   border-radius: 50%;
-  border: 1px solid var(--gold);
+  border: 1px solid rgb(var(--a-400) / 0.6);
   opacity: 0;
-  animation: pulse 2.8s ease-out infinite;
+  animation: pulse 3.2s ease-out infinite;
 }
 .pulse-ring.d2 {
-  animation-delay: 1.4s;
+  animation-delay: 1.6s;
 }
 @keyframes pulse {
-  0% { transform: scale(0.82); opacity: 0.55; }
-  100% { transform: scale(1.4); opacity: 0; }
+  0% { transform: scale(0.82); opacity: 0.5; }
+  100% { transform: scale(1.35); opacity: 0; }
 }
 
-/* Staggered entrance animations */
+/* ── Page-load entrance (one orchestrated sequence) ───────── */
 .reveal {
   opacity: 0;
-  transform: translateY(18px);
-  animation: revealUp 0.8s cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
+  transform: translateY(13px);
+  animation: revealUp 0.6s cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
 }
 @keyframes revealUp {
   to { opacity: 1; transform: translateY(0); }
 }
-.r1 { animation-delay: 0.05s; }
-.r2 { animation-delay: 0.18s; }
-.r3 { animation-delay: 0.30s; }
-.r4 { animation-delay: 0.42s; }
-.r5 { animation-delay: 0.54s; }
-.r6 { animation-delay: 0.62s; }
-.r7 { animation-delay: 0.70s; }
-.r8 { animation-delay: 0.78s; }
-.r9 { animation-delay: 0.86s; }
+.r1 { animation-delay: 0.04s; }
+.r2 { animation-delay: 0.1s; }
+.r3 { animation-delay: 0.16s; }
+.r4 { animation-delay: 0.22s; }
+.r5 { animation-delay: 0.28s; }
+.r6 { animation-delay: 0.32s; }
+.r7 { animation-delay: 0.36s; }
+.r8 { animation-delay: 0.4s; }
+.r9 { animation-delay: 0.44s; }
 
-/* ── Light mode header adjustments ────────────────────────── */
-html:not(.dark) header {
-  border-bottom-color: rgba(0, 0, 0, 0.06);
-  background: rgba(255, 255, 255, 0.7);
-}
-html:not(.dark) .live-bars span {
-  background: var(--gold);
+/* ── Header ───────────────────────────────────────────────── */
+header {
+  background: rgb(var(--canvas) / 0.55) !important;
+  -webkit-backdrop-filter: blur(21px) saturate(1.4);
+  backdrop-filter: blur(21px) saturate(1.4);
+  border-bottom: 1px solid rgb(var(--line) / 0.08) !important;
+  box-shadow: inset 0 -1px 0 rgb(var(--glass-edge) / calc(var(--glass-edge-alpha) * 0.5));
 }
 
-/* ── Global Interactive Cursor Rules ─────────────────────────── */
+/* ── Cursor rules ─────────────────────────────────────────── */
 button,
 a,
 select,
@@ -415,8 +559,30 @@ summary,
 .cursor-pointer {
   cursor: pointer !important;
 }
-
 input:not([type="checkbox"]):not([type="radio"]),
 textarea {
   cursor: text;
+}
+button:disabled {
+  cursor: not-allowed !important;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: rgb(var(--a-400));
+}
+
+/* ── Respect reduced motion ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }

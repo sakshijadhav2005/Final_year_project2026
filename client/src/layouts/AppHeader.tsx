@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 
+import { NeuSwitch } from "@/components/ui/NeuSwitch";
 import { useAuthStore } from "@/store/auth";
 import { useThemeStore } from "@/store/theme";
 
@@ -13,52 +14,38 @@ export function AppHeader() {
     ? [
         { to: "/", label: "Upload" },
         { to: "/dashboard", label: "Dashboard" },
+        { to: "/community", label: "Community" },
         { to: "/settings", label: "Settings" },
         ...(user.role === "admin" ? [{ to: "/admin", label: "Admin" }] : []),
       ]
     : [
-        { to: "/", label: "Studio" },
-        { to: "/login", label: "Sign In" },
-        { to: "/register", label: "Join" },
+        { to: "/", label: "Home" },
+        { to: "/login", label: "Sign in" },
       ];
 
   return (
-    <header className="relative z-20 flex items-center justify-between border-b border-black/5 dark:border-[#D8B478]/15 px-34 py-21 backdrop-blur-md bg-white/70 dark:bg-transparent">
-      {/* Brand with Orbiting Icon */}
-      <NavLink to="/" className="flex items-center gap-13 group">
-        <div className="orbit-icon">
-          <div className="ring" />
-          <div className="core" />
-        </div>
-        <span className="font-display text-xl font-medium tracking-wide text-ink-light transition-colors group-hover:text-gold dark:text-ink-dark dark:group-hover:text-gold-soft">
-          EventAI
-        </span>
-      </NavLink>
+    <header className="sticky top-0 z-30 backdrop-blur-md">
+      {/* Same container + gutters as the page body so the logo lines up with content */}
+      <div className="mx-auto flex h-[68px] w-full max-w-7xl items-center justify-between gap-21 px-21 sm:px-34">
+        <NavLink to="/" className="flex items-center gap-13">
+          <div className="orbit-icon">
+            <div className="ring" />
+            <div className="core" />
+          </div>
+          <span className="font-display text-[20px] font-semibold tracking-[-0.01em] text-ink">EventAI</span>
+        </NavLink>
 
-      {/* Center / Right Controls */}
-      <div className="flex items-center gap-21">
-        {/* Live Session Equalizer Indicator */}
-        <div className="hidden items-center gap-8 rounded-full border border-black/10 dark:border-[#D8B478]/25 bg-black/[0.02] dark:bg-white/[0.04] px-13 py-4 text-xs tracking-wider text-gold dark:text-gold-soft sm:flex">
-          <span className="live-bars">
-            <span />
-            <span />
-            <span />
-          </span>
-          <span className="text-[11px] font-medium uppercase">Session Live</span>
-        </div>
-
-        {/* Navigation Links */}
-        <nav className="flex items-center gap-13 sm:gap-21">
+        <nav className="flex items-center gap-8 sm:gap-13">
           {links.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
               end={link.to === "/"}
               className={({ isActive }) =>
-                `text-xs uppercase tracking-widest transition-all ${
+                `${link.to === "/dashboard" ? "inline-flex" : "hidden sm:inline-flex"} rounded-full px-13 py-8 text-sm transition-colors ${
                   isActive
-                    ? "font-semibold text-gold dark:text-gold-soft"
-                    : "text-ink-light/70 hover:text-ink-light dark:text-ink-dim dark:hover:text-ink-dark"
+                    ? "neu-pressed bg-white/[0.03] font-medium text-ink"
+                    : "text-ink-dim hover:text-ink"
                 }`
               }
             >
@@ -66,25 +53,39 @@ export function AppHeader() {
             </NavLink>
           ))}
 
-          {user && (
+          {user ? (
             <button
               type="button"
-              className="text-xs uppercase tracking-widest text-ink-light/70 hover:text-danger dark:text-ink-dim dark:hover:text-danger"
+              className="rounded-full px-13 py-8 text-sm text-ink-dim transition-colors hover:text-danger"
               onClick={clear}
             >
-              Sign Out
+              Sign out
             </button>
+          ) : (
+            <NavLink
+              to="/register"
+              className="rounded-full bg-amber-400 px-21 py-8 text-sm font-semibold text-on-accent transition-colors hover:bg-amber-300"
+            >
+              Create account
+            </NavLink>
           )}
 
-          {/* Theme Toggle Button */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-black/10 dark:border-[#D8B478]/20 bg-black/[0.03] dark:bg-white/[0.04] text-xs text-gold dark:text-gold-soft transition-all hover:scale-110 hover:border-gold/50 dark:hover:border-[#D8B478]/50"
-            title="Toggle theme"
-          >
-            {theme === "dark" ? "☀️" : "🌙"}
-          </button>
+          <NeuSwitch
+            checked={theme === "dark"}
+            onChange={toggleTheme}
+            ariaLabel={theme === "dark" ? "Dark theme on. Switch to light theme" : "Light theme on. Switch to dark theme"}
+            offIcon={
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="4.5" />
+                <path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5" />
+              </svg>
+            }
+            onIcon={
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" />
+              </svg>
+            }
+          />
         </nav>
       </div>
     </header>

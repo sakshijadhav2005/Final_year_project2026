@@ -54,7 +54,6 @@ async def with_backoff(
     attempts: int = 4,
 ) -> T:
     circuit.allow()
-    last: BaseException | None = None
     try:
         async for attempt in AsyncRetrying(
             stop=stop_after_attempt(attempts),

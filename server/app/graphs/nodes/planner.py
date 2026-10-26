@@ -7,7 +7,12 @@ from app.services.resilience import llm_circuit, with_backoff
 
 
 async def content_planner(state: JobGraphState) -> dict[str, Any]:
-    """Synthesizes topic, highlight, speaker, and sentiment analysis into a master brief."""
+    """Synthesizes topic, highlight, speaker, and sentiment analysis into a master brief.
+
+    The analysis call already returns a brief in most cases; then no extra LLM call is made.
+    """
+    if isinstance(state.get("brief"), dict) and state.get("brief"):
+        return {"brief": state["brief"]}
     llm = get_llm_provider()
     extra = (
         f"Topics={state.get('topics')}\nHighlights={state.get('highlights')}\n"

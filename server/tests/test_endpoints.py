@@ -5,7 +5,6 @@ from app.main import app
 from fastapi.testclient import TestClient
 
 
-
 def get_auth_token(client: TestClient) -> str:
     email = f"test_{uuid.uuid4().hex[:8]}@example.com"
     client.post(

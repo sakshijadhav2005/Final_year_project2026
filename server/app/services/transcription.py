@@ -53,6 +53,22 @@ def _from_plain_text(path: str) -> TranscriptResult:
     )
 
 
+def _fallback_provider(current):
+    from app.core.config import get_settings
+
+    settings = get_settings()
+    name = getattr(current, "name", "")
+    if name != "gemini-stt" and settings.gemini_api_key:
+        from app.providers.gemini_stt import GeminiSTTProvider
+
+        return GeminiSTTProvider()
+    if name != "videodb" and settings.videodb_api_key:
+        from app.providers.videodb_stt import VideoDBSTTProvider
+
+        return VideoDBSTTProvider()
+    return None
+
+
 async def transcribe_file(path: str) -> TranscriptResult:
     suffix = Path(path).suffix.lower()
     if suffix in {".txt", ".md"}:
@@ -72,7 +88,17 @@ async def transcribe_file(path: str) -> TranscriptResult:
     provider = get_stt_provider()
 
     async def _run(target: str) -> TranscriptResult:
-        return await with_backoff(lambda: provider.transcribe(target), circuit=stt_circuit)
+        try:
+            return await with_backoff(
+                lambda: provider.transcribe(target), circuit=stt_circuit, attempts=2
+            )
+        except Exception:
+            # One engine failed (e.g. VideoDB timeout): try the other one instead of
+            # re-uploading the same file to the same service again and again.
+            fallback = _fallback_provider(provider)
+            if fallback is None:
+                raise
+            return await fallback.transcribe(target)
 
     result = await _run(path)
     avg = result.avg_confidence

@@ -18,7 +18,18 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     from app.db.session import init_db
 
     await init_db()
+
+    retention_task = None
+    if not settings.use_celery and settings.eventai_env != "test":
+        import asyncio
+
+        from app.services.job_runner import purge_media_periodically, recover_interrupted_jobs
+
+        await recover_interrupted_jobs()
+        retention_task = asyncio.create_task(purge_media_periodically())
     yield
+    if retention_task is not None:
+        retention_task.cancel()
 
 
 def create_app() -> FastAPI:

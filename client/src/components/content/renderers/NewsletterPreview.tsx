@@ -1,3 +1,4 @@
+import { MarkdownText } from "./MarkdownText";
 import { useState } from "react";
 
 interface NewsletterPreviewProps {
@@ -17,7 +18,7 @@ export function NewsletterPreview({ title, body, onCopy }: NewsletterPreviewProp
   }
 
   return (
-    <div className="w-full max-w-2xl overflow-hidden rounded-card border border-black/10 bg-surface-light shadow-lg dark:border-white/10 dark:bg-surface-dark">
+    <div className="w-full max-w-2xl overflow-hidden rounded-card border border-black/10 bg-surface-light dark:border-white/10 dark:bg-surface-dark">
       {/* Email Client Header Bar */}
       <div className="border-b border-black/5 bg-canvas-light/60 p-21 dark:border-white/5 dark:bg-canvas-dark/60">
         <div className="flex items-center justify-between">
@@ -30,13 +31,13 @@ export function NewsletterPreview({ title, body, onCopy }: NewsletterPreviewProp
           <button
             type="button"
             onClick={handleCopy}
-            className="flex items-center gap-8 rounded-card border border-accent/40 bg-accent/10 px-13 py-8 text-xs font-medium text-accent transition-all hover:bg-accent hover:text-white"
+            className="flex items-center gap-8 rounded-card border border-white/[0.12] px-13 py-8 text-xs font-medium text-ink transition-colors hover:border-amber-400/50"
           >
             {copied ? "✓ Copied!" : "📋 Copy Email Text"}
           </button>
         </div>
 
-        <div className="mt-13 space-y-4 text-xs">
+        <div className="mt-13 space-y-[4px] text-xs">
           <div className="flex gap-8">
             <span className="w-16 font-semibold opacity-60">From:</span>
             <span>EventAI Editorial &lt;newsletter@eventai.app&gt;</span>
@@ -52,24 +53,22 @@ export function NewsletterPreview({ title, body, onCopy }: NewsletterPreviewProp
       <div className="p-34">
         {/* Email Header / Branding */}
         <div className="mb-21 border-b border-primary/20 pb-21 text-center">
-          <p className="text-xs uppercase tracking-[0.25em] text-accent">Event Intelligence Digest</p>
-          <h2 className="mt-8 font-display text-h3 font-bold text-ink-light dark:text-ink-dark">
+          <p className="text-xs text-accent">Event Intelligence Digest</p>
+          <h2 className="mt-8 font-display text-h3 font-semibold text-ink-light dark:text-ink-dark">
             {title || "Special Edition: Session Insights"}
           </h2>
         </div>
 
         {/* Formatted Content */}
-        <div className="whitespace-pre-wrap text-sm leading-relaxed text-ink-light/90 dark:text-ink-dark/90">
-          {body}
-        </div>
+        <MarkdownText source={body} />
 
         {/* Email Call-To-Action Box */}
         <div className="mt-34 rounded-card border border-primary/20 bg-primary/5 p-21 text-center">
           <h4 className="font-semibold text-primary">Enjoyed this recap?</h4>
-          <p className="mt-4 text-xs opacity-70">Share this digest with your team or read the full discussion transcript.</p>
+          <p className="mt-[4px] text-xs opacity-70">Share this digest with your team or read the full discussion transcript.</p>
           <button
             type="button"
-            className="mt-13 rounded-card bg-primary px-21 py-8 text-xs font-medium text-white shadow hover:bg-primary-dark"
+            className="mt-13 rounded-card bg-primary px-21 py-8 text-xs font-medium text-on-accent hover:bg-primary-dark"
           >
             View Event Archive →
           </button>

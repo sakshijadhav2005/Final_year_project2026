@@ -1,5 +1,8 @@
 import re
 
+from app.providers.factory import get_llm_provider
+from app.services.resilience import llm_circuit, with_backoff
+
 BLOCKLIST = ("kill all", "hate speech-demo-token")
 
 
@@ -40,8 +43,6 @@ def grounding_check(body: str, transcript: str) -> dict:
     }
 
 
-from app.providers.factory import get_llm_provider
-from app.services.resilience import llm_circuit, with_backoff
 
 async def verify_content_with_llm(body: str, transcript: str) -> dict:
     """Uses LLM-as-a-judge to semantically verify facts and screen for moderation."""
@@ -79,6 +80,62 @@ async def verify_content_with_llm(body: str, transcript: str) -> dict:
             "grounding": {"pass": True, "issues": [str(e)]},
             "moderation": {"pass": True, "hits": []}
         }
+
+
+async def verify_batch_with_llm(pieces: list[dict], transcript: str) -> dict[str, dict]:
+    """One LLM-as-a-judge call for ALL drafts (instead of one call per draft).
+
+    Returns {content_type: {"grounding": {...}, "moderation": {...}}}. Any draft the
+    judge does not return a verdict for falls back to the fast local checks, so a
+    malformed reply never blocks the pipeline.
+    """
+    import json
+
+    llm = get_llm_provider()
+    drafts = {
+        str(p.get("type")): {"title": p.get("title") or "", "body": str(p.get("body") or "")[:6000]}
+        for p in pieces
+    }
+    system_prompt = (
+        "You are an elite fact-checker and moderation guardrail. For EACH draft, check "
+        "(1) whether it invents claims not present in the transcript and (2) whether it "
+        "contains toxic, profane or harmful content. Reply with JSON only, exactly: "
+        '{"results": {"<draft_type>": {"grounding_pass": true/false, '
+        '"moderation_pass": true/false, "issues": ["short quote of any problem"]}}}'
+    )
+    user_prompt = (
+        "TASK=guardrail_batch\n"
+        f"<TRANSCRIPT>\n{transcript[:12000]}\n</TRANSCRIPT>\n\n"
+        f"<DRAFTS_JSON>\n{json.dumps(drafts, ensure_ascii=False)}\n</DRAFTS_JSON>"
+    )
+
+    verdicts: dict = {}
+    try:
+        res = await with_backoff(
+            lambda: llm.generate_json(system=system_prompt, user=user_prompt, temperature=0.1, fast=True),
+            circuit=llm_circuit,
+            attempts=2,
+        )
+        verdicts = res.get("results") if isinstance(res.get("results"), dict) else {}
+    except Exception:
+        verdicts = {}
+
+    out: dict[str, dict] = {}
+    for ctype, draft in drafts.items():
+        v = verdicts.get(ctype)
+        if isinstance(v, dict):
+            issues = v.get("issues") or []
+            m_pass = bool(v.get("moderation_pass", True))
+            out[ctype] = {
+                "grounding": {"pass": bool(v.get("grounding_pass", True)), "issues": issues},
+                "moderation": {"pass": m_pass, "hits": issues if not m_pass else []},
+            }
+        else:  # no verdict: cheap local checks, no extra API call
+            out[ctype] = {
+                "grounding": grounding_check(draft["body"], transcript),
+                "moderation": moderate_text(draft["body"]),
+            }
+    return out
 
 
 def should_use_rag(transcript: str, use_org_memory: bool, threshold: int) -> bool:

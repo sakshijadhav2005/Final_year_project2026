@@ -20,9 +20,10 @@ class Settings(BaseSettings):
     app_name: str = "EventAI"
     eventai_env: Literal["development", "staging", "production", "test"] = "development"
     debug: bool = False
+    sql_echo: bool = False  # print every SQL query (slow; only for debugging the database)
     api_v1_prefix: str = "/api/v1"
     secret_key: str = Field(default="change-me-in-production-use-long-random-string")
-    access_token_expire_minutes: int = 10080
+    access_token_expire_minutes: int = 240  # 4 hours
     refresh_token_expire_days: int = 30
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173,http://localhost:8080"
 
@@ -32,14 +33,38 @@ class Settings(BaseSettings):
 
     videodb_api_key: str = ""
     videodb_collection: str = ""
-    stt_provider: str = "videodb"
+    # auto = Gemini speech-to-text when a Gemini key exists (fastest), else VideoDB
+    stt_provider: str = "auto"
     gemini_api_key: str = ""
     gemini_model_generate: str = "gemini-3.6-flash"
     gemini_model_analyze: str = "gemini-3.6-flash"
+    # Quick model for the checking steps (safety check, translation). Posts keep
+    # GEMINI_MODEL_GENERATE. Leave empty to use one model for everything.
+    gemini_model_fast: str = "gemini-3.1-flash-lite"
+    # Gemini on Vertex AI (LLM_PROVIDER=vertex). Uses gcloud credentials, no API key.
+    google_cloud_project: str = ""
+    google_cloud_location: str = "global"
+    vertex_model: str = ""  # empty = GEMINI_MODEL_GENERATE
+    vertex_fast_model: str = ""  # empty = GEMINI_MODEL_FAST
     portkey_api_key: str = ""
     openai_api_key: str = ""
     groq_api_key: str = ""
+    # Claude (Anthropic API). Use it with LLM_PROVIDER=anthropic (or "claude").
+    anthropic_api_key: str = ""
+    anthropic_model: str = "claude-sonnet-5-5"
+    anthropic_fallback_model: str = "claude-haiku-5-5"
+    anthropic_fast_model: str = "claude-haiku-5-5"  # safety check + translation
+    anthropic_effort: str = "low"  # low = fastest; medium / high think longer
+    anthropic_max_tokens: int = 8000
+    # gemini | vertex | anthropic (alias: claude) | portkey | fake
     llm_provider: str = "gemini"
+    # Speed controls
+    llm_timeout_seconds: float = 60.0
+    # Web-search tools for the writing agents. Off = one fast call per draft.
+    # Set AGENT_TOOLS_ENABLED=true in .env to let agents look up citations (slower).
+    agent_tools_enabled: bool = False
+    agent_timeout_seconds: float = 45.0  # a tool-using agent falls back to a plain call after this
+    tool_timeout_seconds: float = 8.0  # max time for one web search
 
     rag_token_threshold: int = 12000
     rag_enabled: bool = True

@@ -3,7 +3,7 @@ import json
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, BackgroundTasks, Depends, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, Query, Request, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -13,6 +13,7 @@ from app.core.exceptions import http_error
 from app.core.security import UserRole
 from app.db.session import SessionLocal, get_db
 from app.models.job import Job, Transcript
+from app.models.recording import Recording
 from app.models.user import User
 from app.schemas.common import JobPublic, RegenerRequest, TranscriptPublic
 from app.services.guardrails import confidence_badge
@@ -37,9 +38,14 @@ async def _load_job(db: AsyncSession, user: User, job_id: UUID) -> Job:
 async def list_jobs(
     user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
+    scope: Annotated[
+        str, Query(description="mine (default): your own sessions. all: every user's (admin only)")
+    ] = "mine",
 ) -> list[Job]:
+    """Sessions of the signed-in user. Every role, admins included, sees only their
+    own sessions here; an admin can ask for scope=all (the Admin page does)."""
     stmt = select(Job).order_by(Job.created_at.desc())
-    if user.role != UserRole.ADMIN:
+    if not (scope == "all" and user.role == UserRole.ADMIN):
         stmt = stmt.where(Job.user_id == user.id)
     result = await db.execute(stmt)
     return list(result.scalars().all())
@@ -110,11 +116,17 @@ async def regenerate_job(
         await db.execute(select(Transcript).where(Transcript.job_id == job_id))
     ).scalar_one_or_none()
     if transcript is None:
-        raise http_error(
-            status.HTTP_400_BAD_REQUEST,
-            "Transcript is not available to regenerate",
-            "no_transcript",
+        # No transcript yet (e.g. the job was interrupted while transcribing):
+        # re-run the whole pipeline from the stored recording if it still exists.
+        recording = (
+            await db.get(Recording, job.recording_id) if job.recording_id else None
         )
+        if recording is None or not recording.storage_uri:
+            raise http_error(
+                status.HTTP_400_BAD_REQUEST,
+                "Neither a transcript nor the original recording is available to regenerate",
+                "no_transcript",
+            )
     payload = body or RegenerRequest()
     if payload.requested_types:
         job.requested_types = payload.requested_types
@@ -126,7 +138,9 @@ async def regenerate_job(
     job.finished_at = None
     await db.commit()
     await db.refresh(job)
-    enqueue_process_job(str(job.id), background_tasks, reuse_transcript=True)
+    enqueue_process_job(
+        str(job.id), background_tasks, reuse_transcript=transcript is not None
+    )
     return job
 
 
@@ -175,7 +189,6 @@ async def delete_job(
 
     from app.models.content import ContentPiece
     from app.models.job import AgentOutput, Transcript
-    from app.models.recording import Recording
     from app.services.job_runner import cancel_job_task
 
     cancel_job_task(str(job_id))

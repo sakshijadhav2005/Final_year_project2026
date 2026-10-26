@@ -10,6 +10,8 @@ class ORMModel(BaseModel):
 
 class JobPublic(ORMModel):
     id: UUID
+    user_id: UUID | None = None
+    event_id: UUID | None = None
     status: str
     requested_types: list | None = None
     target_languages: list | None = None

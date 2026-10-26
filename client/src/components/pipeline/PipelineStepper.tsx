@@ -1,4 +1,3 @@
-import type { AgentStatus } from "@/types/pipeline";
 
 type Props = {
   progress?: Record<string, string>;
@@ -134,32 +133,30 @@ export function PipelineStepper({
   ];
 
   return (
-    <div className={`glass p-21 border-gold/20 ${className}`}>
-      <div className="flex flex-wrap items-center justify-between gap-8 mb-13 border-b border-[#D8B478]/15 pb-13">
+    <div className={`glass p-21 sm:p-34 ${className}`}>
+      <div className="mb-21 flex flex-wrap items-center justify-between gap-13">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-gold">AI Execution Pipeline</span>
-          <h3 className="font-display text-lg text-ink-light dark:text-ink-dark">
-            End-to-End Workflow Progression
-          </h3>
+          <h3 className="font-display text-h2 text-ink">Pipeline</h3>
+          <p className="mt-[4px] text-sm text-ink-dim">Eight stages from upload to your approval.</p>
         </div>
         <div className="flex items-center gap-8">
           <span
-            className={`rounded-full px-13 py-2 text-xs font-semibold uppercase tracking-wider ${
+            className={`rounded-full px-13 py-[2px] text-xs font-semibold ${
               jobStatus === "ready_to_publish"
                 ? "bg-success/15 text-success border border-success/30"
                 : jobStatus === "pending_review"
-                ? "bg-gold/15 text-gold-soft border border-gold/30 animate-pulse"
+                ? "bg-amber-400/15 text-amber-300 border border-amber-400/30"
                 : isFailed
                 ? "bg-danger/15 text-danger border border-danger/30"
-                : "bg-teal/15 text-teal border border-teal/30 animate-pulse"
+                : "bg-white/[0.06] text-ink border border-white/[0.12]"
             }`}
           >
-            {jobStatus.replace("_", " ")}
+            {jobStatus === "pending_review" ? "Awaiting review" : jobStatus === "ready_to_publish" ? "Ready to publish" : jobStatus.replace(/_/g, " ")}
           </span>
         </div>
       </div>
 
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid auto-rows-fr gap-13 sm:grid-cols-2 lg:grid-cols-4">
         {steps.map((s) => {
           const isDone = s.status === "complete";
           const isRunning = s.status === "running";
@@ -170,49 +167,49 @@ export function PipelineStepper({
               key={s.id}
               className={`relative flex flex-col justify-between rounded-card border p-13 transition-all ${
                 isRunning
-                  ? "border-gold bg-gold/10 shadow-[0_0_15px_rgba(216,180,120,0.2)]"
+                  ? "stage-live border-amber-400/70 bg-amber-400/[0.06]"
                   : isDone
-                  ? "border-success/30 bg-success/[0.04]"
+                  ? "border-white/[0.08] bg-white/[0.02]"
                   : isStepFailed
                   ? "border-danger/40 bg-danger/[0.04]"
-                  : "border-white/5 bg-white/[0.02] opacity-70"
+                  : "border-dashed border-white/[0.1] text-ink-dim"
               }`}
             >
               <div>
                 <div className="flex items-center justify-between mb-8">
                   <span className="text-base">{s.icon}</span>
                   <span
-                    className={`rounded-full px-8 py-1 text-[10px] font-semibold uppercase tracking-wider ${
+                    className={`rounded-full px-8 py-1 text-[10px] font-semibold ${
                       isRunning
-                        ? "bg-gold/20 text-gold-soft animate-pulse"
+                        ? "bg-amber-400/20 text-amber-300"
                         : isDone
-                        ? "bg-success/20 text-success"
+                        ? "bg-success/15 text-success"
                         : isStepFailed
                         ? "bg-danger/20 text-danger"
                         : "bg-white/10 text-ink-dim"
                     }`}
                   >
-                    {isRunning ? "In Progress" : isDone ? "Done ✓" : isStepFailed ? "Failed" : "Pending"}
+                    {isRunning ? "In progress" : isDone ? "Done" : isStepFailed ? "Failed" : "Waiting"}
                   </span>
                 </div>
-                <h4 className="font-sans text-xs font-semibold text-ink-light dark:text-ink-dark">
+                <h4 className="font-sans text-sm font-semibold text-ink">
                   {s.title}
                 </h4>
-                <p className="mt-4 text-[11px] leading-snug text-ink-dim">
+                <p className="mt-[4px] text-xs leading-snug text-ink-dim">
                   {s.description}
                 </p>
               </div>
 
               {s.subAgents && (
-                <div className="mt-8 flex flex-wrap gap-4 border-t border-white/5 pt-8">
+                <div className="mt-13 flex flex-wrap gap-[4px]">
                   {s.subAgents.map((sa) => (
                     <span
                       key={sa.name}
-                      className={`rounded px-4 py-1 text-[9px] font-mono ${
+                      className={`rounded-full px-8 py-[2px] text-[11px] ${
                         sa.status === "complete"
                           ? "bg-success/20 text-success"
                           : sa.status === "running"
-                          ? "bg-gold/20 text-gold-soft animate-pulse"
+                          ? "bg-amber-400/20 text-amber-300"
                           : "bg-white/5 text-ink-dim"
                       }`}
                     >
@@ -229,19 +226,3 @@ export function PipelineStepper({
   );
 }
 
-function getStepStatus(
-  statuses: (string | undefined)[],
-  _jobStatus: string,
-  isJobDone: boolean,
-  isFailed: boolean,
-): AgentStatus {
-  if (isFailed) {
-    if (statuses.some((s) => s === "failed")) return "failed";
-  }
-  if (isJobDone) return "complete";
-  if (statuses.some((s) => s === "running")) return "running";
-  if (statuses.every((s) => s === "complete")) return "complete";
-  if (statuses.some((s) => s === "complete")) return "running";
-  if (statuses.some((s) => s === "failed")) return "failed";
-  return "queued";
-}

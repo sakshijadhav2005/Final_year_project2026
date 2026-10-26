@@ -1,6 +1,8 @@
+import asyncio
 import json
-import structlog
 from typing import Any
+
+import structlog
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.prebuilt import create_react_agent
 
@@ -22,21 +24,26 @@ class FlyerAgent(BaseCreatorAgent):
         temperature: float = 0.35,
     ) -> dict[str, Any]:
         try:
-            import re
             
             settings = get_settings()
+            if not settings.gemini_api_key or not settings.agent_tools_enabled:
+                # Offline mode or tools switched off: one plain generation call (fastest).
+                return await super().generate(transcript_text, brief, user_memory, temperature)
             
+            model_name = settings.gemini_model_generate or "gemini-3.6-flash"
             llm = ChatGoogleGenerativeAI(
-                model="gemini-2.5-flash",
+                model=model_name,
                 api_key=settings.gemini_api_key,
-                temperature=temperature
+                temperature=temperature,
+                timeout=settings.llm_timeout_seconds,
+                max_retries=1,
             )
             
             tools = [generate_image_prompt, get_color_psychology]
             
             system_prompt = self._build_system_prompt(user_memory)
             
-            agent_executor = create_react_agent(llm, tools, state_modifier=system_prompt)
+            agent_executor = create_react_agent(llm, tools, prompt=system_prompt)
             
             brief_str = str(brief) if brief else "N/A"
             user_prompt = (
@@ -47,12 +54,21 @@ class FlyerAgent(BaseCreatorAgent):
                 "IMPORTANT: You MUST return a pure JSON string. Do not use Markdown code blocks. Just start with { and end with }."
             )
             
-            response = await agent_executor.ainvoke({
+            response = await asyncio.wait_for(agent_executor.ainvoke({
                 "messages": [("user", user_prompt)]
-            })
+            }), timeout=settings.agent_timeout_seconds)
             
-            last_message = response["messages"][-1].content
-            
+            content = response["messages"][-1].content
+            # Newer Gemini chat models may return a list of content parts.
+            last_message = (
+                "".join(
+                    part.get("text", "") if isinstance(part, dict) else str(part)
+                    for part in content
+                )
+                if isinstance(content, list)
+                else str(content)
+            )
+
             json_str = last_message.strip()
             if json_str.startswith("```json"):
                 json_str = json_str[7:]
@@ -63,8 +79,7 @@ class FlyerAgent(BaseCreatorAgent):
             json_str = json_str.strip()
             
             res = json.loads(json_str)
-            if "type" not in res:
-                res["type"] = self.agent_name
+            res["type"] = self.agent_name
             if "body" not in res and "text" in res:
                 res["body"] = res["text"]
             return res

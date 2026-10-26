@@ -21,8 +21,11 @@ async def list_events(
     user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
     type: str | None = Query(None, description="Filter events by type: meetup, event, speech, other, all"),
+    mine: bool = Query(False, description="Only events created by the signed-in user"),
 ) -> list[Event]:
     query = select(Event).order_by(Event.date.desc())
+    if mine:
+        query = query.where(Event.organizer_id == user.id)
     if type and type.lower() != "all":
         try:
             event_type_enum = EventType(type.lower())

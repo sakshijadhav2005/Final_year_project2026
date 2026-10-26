@@ -164,11 +164,11 @@ export function CreatePostForm({
   };
 
   return (
-    <div className="space-y-4 rounded-3xl border border-white/15 bg-slate-900/90 p-6 md:p-8 shadow-2xl backdrop-blur-2xl transition-all">
+    <div className="space-y-13 rounded-panel border border-white/15 bg-surface p-21 md:p-34 transition-all">
       {/* Header with Mode Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-white/10 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-13 border-b border-white/[0.08] pb-21">
         <div>
-          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+          <h3 className="text-lg font-bold text-white flex items-center gap-8">
             <span>✨</span> Create &amp; Generate Community Content
           </h3>
           <p className="text-xs text-slate-400">
@@ -176,14 +176,14 @@ export function CreatePostForm({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center rounded-xl bg-slate-950 p-1 border border-white/10">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center rounded-card bg-slate-950 p-1 border border-white/[0.08]">
             <button
               type="button"
               onClick={() => setActiveTab("ai_recording")}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+              className={`rounded-lg px-13 py-8 text-xs font-semibold transition-all ${
                 activeTab === "ai_recording"
-                  ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow"
+                  ? "bg-amber-400 text-on-accent"
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -192,9 +192,9 @@ export function CreatePostForm({
             <button
               type="button"
               onClick={() => setActiveTab("manual")}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+              className={`rounded-lg px-13 py-8 text-xs font-semibold transition-all ${
                 activeTab === "manual"
-                  ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow"
+                  ? "bg-amber-400 text-on-accent"
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -206,7 +206,7 @@ export function CreatePostForm({
             <button
               type="button"
               onClick={onCancel}
-              className="rounded-xl border border-white/10 p-2 text-xs text-slate-400 hover:bg-white/5 hover:text-white"
+              className="rounded-card border border-white/[0.08] p-8 text-xs text-slate-400 hover:bg-white/5 hover:text-white"
             >
               ✕
             </button>
@@ -218,27 +218,27 @@ export function CreatePostForm({
       {/* MODE 1: FULL AI RECORDING WORKFLOW */}
       {/* ------------------------------------------------------------- */}
       {activeTab === "ai_recording" && (
-        <form onSubmit={handleAiSubmit} className="space-y-6 animate-fadeIn">
+        <form onSubmit={handleAiSubmit} className="space-y-21 animate-fadeIn">
           {aiError && (
-            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-300">
+            <div className="rounded-card border border-rose-500/30 bg-rose-500/10 p-13 text-xs text-rose-300">
               ⚠️ {aiError}
             </div>
           )}
 
           {/* Step 1: Event Association */}
           <div>
-            <label className="mb-1.5 block text-xs font-bold text-slate-300 uppercase tracking-wider">
+            <label className="mb-8 block text-xs font-bold text-slate-300">
               1. Tag Target Event Catalog (Optional)
             </label>
             <select
               value={eventId}
               onChange={(e) => setEventId(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-xs text-slate-200 focus:border-amber-500 focus:outline-none"
+              className="w-full rounded-card border border-white/[0.08] bg-slate-950 px-13 py-8 text-xs text-slate-200 focus:border-amber-500 focus:outline-none"
             >
               <option value="">No Event (Standalone Workspace Session)</option>
               {events.map((ev) => (
                 <option key={ev.id} value={ev.id}>
-                  {ev.name} • {ev.type.toUpperCase()} ({ev.city || "Online"})
+                  {ev.name} • {ev.type.toUpperCase()} ({ev.location || "Online"})
                 </option>
               ))}
             </select>
@@ -246,7 +246,7 @@ export function CreatePostForm({
 
           {/* Step 2: Drag and Drop File Upload */}
           <div>
-            <label className="mb-1.5 block text-xs font-bold text-slate-300 uppercase tracking-wider">
+            <label className="mb-8 block text-xs font-bold text-slate-300">
               2. Upload Event Audio or Video Recording
             </label>
             <div
@@ -257,24 +257,24 @@ export function CreatePostForm({
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 text-center cursor-pointer transition-all ${
+              className={`flex flex-col items-center justify-center rounded-panel border-2 border-dashed p-21 text-center cursor-pointer transition-all ${
                 isDragging
                   ? "border-amber-500 bg-amber-500/10"
                   : selectedFile
-                  ? "border-emerald-500/60 bg-emerald-950/20"
-                  : "border-white/15 bg-slate-950/40 hover:border-amber-500/40 hover:bg-slate-950/70"
+                  ? "border-emerald-500/60 bg-surface"
+                  : "border-white/15 bg-white/[0.02] hover:border-amber-500/40 hover:bg-white/[0.02]"
               }`}
             >
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="audio/*,video/*"
+                accept="audio/*,video/*,.ogg,.oga,.opus,.flac,.aac,.weba,.mkv,.avi,.m4v,.3gp"
                 onChange={handleFileSelect}
                 className="hidden"
               />
 
               {selectedFile ? (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-13">
                   <span className="text-3xl">🎵</span>
                   <div className="text-left">
                     <p className="text-xs font-bold text-white">{selectedFile.name}</p>
@@ -285,9 +285,9 @@ export function CreatePostForm({
                 </div>
               ) : (
                 <>
-                  <span className="text-3xl mb-2">📥</span>
+                  <span className="text-3xl mb-8">📥</span>
                   <p className="text-xs font-semibold text-white">Click or drag event recording here</p>
-                  <p className="text-[10px] text-slate-400 mt-1">Supports MP3, MP4, WAV, M4A, WebM (up to 500MB)</p>
+                  <p className="text-[10px] text-slate-400 mt-1">Supports MP3, WAV, M4A, OGG, OPUS, FLAC, AAC, MP4, MOV, WebM, MKV (up to 500MB)</p>
                 </>
               )}
             </div>
@@ -295,8 +295,8 @@ export function CreatePostForm({
 
           {/* Step 3: Multi-Format Deliverable Selection */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+            <div className="flex items-center justify-between mb-8">
+              <label className="text-xs font-bold text-slate-300">
                 3. Choose AI Output Formats ({selectedTypes.length}/6 selected)
               </label>
               <button
@@ -307,7 +307,7 @@ export function CreatePostForm({
                 Select All
               </button>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8">
               {POST_FORMATS.map((format) => {
                 const active = selectedTypes.includes(format.id);
                 return (
@@ -315,10 +315,10 @@ export function CreatePostForm({
                     key={format.id}
                     type="button"
                     onClick={() => toggleType(format.id)}
-                    className={`flex flex-col items-start p-3 rounded-xl border text-left transition-all ${
+                    className={`flex flex-col items-start p-13 rounded-card border text-left transition-all ${
                       active
-                        ? "border-amber-500/60 bg-amber-500/15 text-white shadow-md shadow-amber-500/10"
-                        : "border-white/10 bg-slate-950/40 text-slate-400 hover:border-white/20"
+                        ? "border-amber-500/60 bg-amber-500/15 text-white"
+                        : "border-white/[0.08] bg-white/[0.02] text-slate-400 hover:border-white/20"
                     }`}
                   >
                     <span className="text-lg mb-1">{format.icon}</span>
@@ -333,20 +333,20 @@ export function CreatePostForm({
           </div>
 
           {/* Step 4: Multilingual Translation */}
-          <div className="rounded-2xl border border-teal-500/30 bg-teal-950/20 p-4">
-            <div className="flex items-center justify-between gap-3 mb-2.5">
-              <div className="flex items-center gap-2">
+          <div className="rounded-panel border border-teal-500/30 bg-surface p-13">
+            <div className="flex items-center justify-between gap-13 mb-8">
+              <div className="flex items-center gap-8">
                 <span className="text-sm">🌐</span>
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-400">
+                <span className="text-xs font-bold text-teal-400">
                   Multilingual Translation Pass
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-teal-300">
+              <span className="text-[10px] text-teal-300">
                 {selectedLanguages.length} Active Languages
               </span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-8">
               {AVAILABLE_LANGUAGES.map((lang) => {
                 const active = selectedLanguages.includes(lang.code);
                 return (
@@ -354,10 +354,10 @@ export function CreatePostForm({
                     key={lang.code}
                     type="button"
                     onClick={() => toggleLanguage(lang.code)}
-                    className={`flex items-center justify-center gap-1.5 rounded-xl px-2 py-1.5 text-xs font-medium transition-all ${
+                    className={`flex items-center justify-center gap-8 rounded-card px-8 py-8 text-xs font-medium transition-all ${
                       active
-                        ? "border border-teal-400 bg-teal-500/20 text-white shadow ring-1 ring-teal-400/40"
-                        : "border border-white/10 bg-slate-950/60 text-slate-400 hover:border-teal-500/40 hover:text-white"
+                        ? "border border-teal-400 bg-teal-500/20 text-white ring-1 ring-teal-400/40"
+                        : "border border-white/[0.08] bg-white/[0.02] text-slate-400 hover:border-amber-400/40 hover:text-white"
                     }`}
                   >
                     <span className="text-[9px] font-bold text-slate-400">{lang.country}</span>
@@ -370,7 +370,7 @@ export function CreatePostForm({
           </div>
 
           {/* Consent Checkbox */}
-          <label className="flex items-start gap-2.5 text-xs text-slate-300 cursor-pointer">
+          <label className="flex items-start gap-8 text-xs text-slate-300 cursor-pointer">
             <input
               type="checkbox"
               checked={consent}
@@ -383,7 +383,7 @@ export function CreatePostForm({
           </label>
 
           {/* Submit Action */}
-          <div className="flex items-center justify-between pt-2 border-t border-white/10">
+          <div className="flex items-center justify-between pt-8 border-t border-white/[0.08]">
             <span className="text-[11px] text-slate-400">
               Session will be saved under account: <strong className="text-slate-200">{user?.email}</strong>
             </span>
@@ -391,7 +391,7 @@ export function CreatePostForm({
             <button
               type="submit"
               disabled={aiUploadMutation.isPending || !selectedFile}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-6 py-2.5 text-xs font-bold text-white shadow-xl shadow-orange-500/25 hover:scale-105 transition-all disabled:opacity-50"
+              className="btn-primary btn-sm"
             >
               {aiUploadMutation.isPending ? (
                 <>
@@ -410,9 +410,9 @@ export function CreatePostForm({
       {/* MODE 2: DIRECT MANUAL COMMUNITY POST */}
       {/* ------------------------------------------------------------- */}
       {activeTab === "manual" && (
-        <form onSubmit={handleManualSubmit} className="space-y-4 animate-fadeIn">
+        <form onSubmit={handleManualSubmit} className="space-y-13 animate-fadeIn">
           {manualMutation.error && (
-            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-300">
+            <div className="rounded-card border border-rose-500/30 bg-rose-500/10 p-13 text-xs text-rose-300">
               {(manualMutation.error as Error).message}
             </div>
           )}
@@ -425,17 +425,17 @@ export function CreatePostForm({
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Key takeaways from the opening keynote..."
               required
-              className="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              className="w-full rounded-card border border-white/[0.08] bg-slate-950 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-13 sm:grid-cols-2">
             <div>
               <label className="mb-1 block text-xs font-semibold text-slate-300">Tag Event (Optional)</label>
               <select
                 value={eventId}
                 onChange={(e) => setEventId(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-amber-500/50 focus:outline-none"
+                className="w-full rounded-card border border-white/[0.08] bg-slate-950 px-13 py-8 text-sm text-slate-200 focus:border-amber-500/50 focus:outline-none"
               >
                 <option value="">General Community Discussion</option>
                 {events.map((ev) => (
@@ -451,7 +451,7 @@ export function CreatePostForm({
               <select
                 value={postType}
                 onChange={(e) => setPostType(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-amber-500/50 focus:outline-none"
+                className="w-full rounded-card border border-white/[0.08] bg-slate-950 px-13 py-8 text-sm text-slate-200 focus:border-amber-500/50 focus:outline-none"
               >
                 <option value="discussion">💬 Discussion / Feedback</option>
                 <option value="summary">📝 Session Summary</option>
@@ -469,11 +469,11 @@ export function CreatePostForm({
               rows={4}
               placeholder="Share your thoughts, session notes, or ideas with the community..."
               required
-              className="w-full rounded-xl border border-white/10 bg-slate-950 p-3 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              className="w-full rounded-card border border-white/[0.08] bg-slate-950 p-13 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             />
           </div>
 
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between pt-8">
             <span className="text-[11px] text-slate-500">
               Posting as: <strong className="text-slate-300">{user?.email}</strong>
             </span>
@@ -481,7 +481,7 @@ export function CreatePostForm({
             <button
               type="submit"
               disabled={manualMutation.isPending || !title.trim() || !body.trim()}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-5 py-2 text-xs font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-105 disabled:opacity-50"
+              className="btn-primary btn-sm"
             >
               {manualMutation.isPending ? "Publishing..." : "Publish Post 🚀"}
             </button>

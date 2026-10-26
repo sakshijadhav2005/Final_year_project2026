@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { PipelineStepper } from "@/components/pipeline/PipelineStepper";
 import { ContentStudio } from "@/components/content/ContentStudio";
-import { deleteJob, getJob, getJobContent, getTranscript, regenerateJob } from "@/lib/api";
+import { deleteJob, getJob, getJobContent, getTranscript, regenerateJob, type JobPublic } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { useAuthStore } from "@/store/auth";
 import { useJobEvents } from "@/hooks/useJobEvents";
@@ -21,8 +21,8 @@ export function JobDetailPage() {
   const deleteMutation = useMutation({
     mutationFn: () => deleteJob(token, jobId),
     onSuccess: () => {
-      queryClient.setQueryData(["jobs"], (old: any) =>
-        Array.isArray(old) ? old.filter((j: any) => j.id !== jobId) : []
+      queryClient.setQueryData(["jobs"], (old: JobPublic[] | undefined) =>
+        Array.isArray(old) ? old.filter((j) => j.id !== jobId) : []
       );
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
       queryClient.invalidateQueries({ queryKey: ["events"] });
@@ -50,7 +50,7 @@ export function JobDetailPage() {
     queryFn: () => getJob(token, jobId),
     refetchInterval: (query) => {
       const status = query.state.data?.status;
-      if (status && ["pending_review", "ready_to_publish", "needs_review", "failed", "cancelled"].includes(status)) {
+      if (status && ["pending_review", "ready_to_publish", "needs_review", "needs_reupload", "failed", "cancelled"].includes(status)) {
         return false;
       }
       return 3000;
@@ -119,20 +119,20 @@ export function JobDetailPage() {
       <GoldenShell>
         <div className="flex flex-col items-center justify-center py-48 text-center">
           <span className="text-5xl mb-13">🔍</span>
-          <h2 className="font-display text-2xl font-bold mb-8">Job Not Found</h2>
+          <h2 className="font-display text-h2 font-semibold mb-8">Job Not Found</h2>
           <p className="text-sm opacity-60 max-w-md mb-21">
-            Job <span className="font-mono text-gold-soft">{jobId}</span> does not exist in the current database. This happens if the database was reset or you visited an old session link.
+            Job <span className=" text-gold-soft">{jobId}</span> does not exist in the current database. This happens if the database was reset or you visited an old session link.
           </p>
           <div className="flex gap-13">
             <Link
               to="/dashboard"
-              className="rounded-full bg-gold/20 border border-gold/40 px-21 py-8 text-sm font-semibold text-gold-soft hover:bg-gold/30 transition-all"
+              className="btn-ghost"
             >
               Go to Dashboard
             </Link>
             <Link
               to="/"
-              className="rounded-full bg-white/[0.05] border border-white/10 px-21 py-8 text-sm font-medium hover:bg-white/[0.1] transition-all"
+              className="rounded-full bg-white/[0.05] border border-white/[0.08] px-21 py-8 text-sm font-medium hover:bg-white/[0.1] transition-all"
             >
               Upload New Recording
             </Link>
@@ -144,64 +144,57 @@ export function JobDetailPage() {
 
   return (
     <GoldenShell>
-      {/* Top Breadcrumb & Actions */}
-      <div className="mb-21 flex flex-wrap items-center justify-between gap-13">
+      {/* Header: title on the left, every page action in one row on the right */}
+      <div className="mb-34 flex flex-wrap items-end justify-between gap-21">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-gold">Session Content Hub</p>
-          <h1 className="font-display text-2xl font-bold md:text-3xl text-ink-light dark:text-ink-dark">
-            Job <span className="text-gold-soft font-mono">{jobId.slice(0, 8)}</span>
-          </h1>
+          <Link to="/dashboard" className="text-sm text-ink-dim transition-colors hover:text-ink">
+            ← Dashboard
+          </Link>
+          <h1 className="mt-8 font-display text-h1 font-semibold text-ink">Session {jobId.slice(0, 8)}</h1>
+          {isConnected && (
+            <p className="mt-8 flex items-center gap-8 text-xs text-teal">
+              <span className="live-bars" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </span>
+              Live updates on
+            </p>
+          )}
         </div>
-        <div className="flex flex-wrap items-center gap-13">
+        <div className="flex flex-wrap items-center gap-8">
           {job.data?.event_id && (
             <Link
               to={`/events/${job.data.event_id}`}
-              className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/20 px-21 py-8 text-xs font-bold text-amber-300 hover:bg-amber-500/30 transition-all shadow-md"
+              className="rounded-full border border-white/[0.12] px-21 py-8 text-sm text-ink transition-colors hover:border-amber-400/50"
             >
-              <span>🎪 View in Event Hub →</span>
+              Open event
             </Link>
+          )}
+          {["pending_review", "ready_to_publish", "needs_review", "failed"].includes(currentStatus) && (
+            <button
+              type="button"
+              onClick={() => regenMutation.mutate()}
+              disabled={regenMutation.isPending}
+              className="rounded-full border border-white/[0.12] px-21 py-8 text-sm text-ink transition-colors hover:border-amber-400/50"
+            >
+              {regenMutation.isPending ? "Regenerating…" : "Regenerate"}
+            </button>
           )}
           <button
             type="button"
             onClick={handleDeleteSession}
             disabled={deleteMutation.isPending}
-            className="rounded-full border border-danger/40 bg-danger/10 px-21 py-8 text-xs font-medium text-danger hover:bg-danger/20 transition-all"
+            className="btn-danger"
             title="Permanently delete this session"
           >
-            {deleteMutation.isPending ? "Deleting..." : "🗑️ Delete Session"}
+            {deleteMutation.isPending ? "Deleting…" : "Delete"}
           </button>
-          <Link
-            to="/dashboard"
-            className="rounded-full border border-gold/30 bg-white/[0.03] px-21 py-8 text-xs font-medium text-gold-soft hover:border-gold transition-all"
-          >
-            ← Back to Dashboard
-          </Link>
         </div>
       </div>
 
-      {/* Pipeline Status & Stepper Progression */}
-      <div className="mb-21 space-y-13">
-        <div className="flex flex-wrap items-center justify-between gap-13">
-          <div className="flex items-center gap-13">
-            {isConnected && (
-              <span className="flex items-center gap-4 text-xs font-semibold text-teal">
-                <span className="h-2 w-2 rounded-full bg-teal animate-pulse"></span>
-                LIVE SSE UPDATES ACTIVE
-              </span>
-            )}
-          </div>
-          {["pending_review", "ready_to_publish", "needs_review"].includes(currentStatus) && (
-            <button
-              type="button"
-              onClick={() => regenMutation.mutate()}
-              disabled={regenMutation.isPending}
-              className="rounded-full border border-gold/30 bg-gold/10 px-13 py-4 text-xs font-medium text-gold-soft hover:bg-gold/20 transition-all"
-            >
-              {regenMutation.isPending ? "Re-queuing..." : "🔄 Regenerate Content Pack"}
-            </button>
-          )}
-        </div>
-
+      {/* Pipeline progress */}
+      <div className="mb-34">
         <PipelineStepper
           progress={progress}
           jobStatus={currentStatus}
@@ -218,19 +211,19 @@ export function JobDetailPage() {
       )}
 
       {/* Main Switcher: Content Studio vs Source Transcript */}
-      <div className="mb-21 flex border-b border-black/10 dark:border-white/10">
+      <div className="mb-21 flex border-b border-white/[0.08]">
         <button
           type="button"
           onClick={() => setActiveTab("studio")}
           className={`flex items-center gap-8 border-b-2 px-21 py-13 text-sm font-semibold transition-all ${
             activeTab === "studio"
-              ? "border-primary text-primary"
-              : "border-transparent opacity-60 hover:opacity-100"
+              ? "border-amber-400 text-ink"
+              : "border-transparent text-ink-dim hover:text-ink"
           }`}
         >
-          <span>✨ Content Studio</span>
+          <span>Drafts</span>
           {content.data && content.data.length > 0 && (
-            <span className="rounded-full bg-primary/20 px-8 py-1 text-xs">{content.data.length}</span>
+            <span className="rounded-full bg-white/[0.08] px-8 py-[2px] text-xs text-ink-dim">{content.data.length}</span>
           )}
         </button>
 
@@ -239,12 +232,12 @@ export function JobDetailPage() {
           onClick={() => setActiveTab("transcript")}
           className={`flex items-center gap-8 border-b-2 px-21 py-13 text-sm font-semibold transition-all ${
             activeTab === "transcript"
-              ? "border-primary text-primary"
-              : "border-transparent opacity-60 hover:opacity-100"
+              ? "border-amber-400 text-ink"
+              : "border-transparent text-ink-dim hover:text-ink"
           }`}
         >
-          <span>📜 Source Transcript</span>
-          {transcript.data && <span className="text-xs opacity-60">({transcript.data.badge})</span>}
+          <span>Transcript</span>
+          {transcript.data && <span className="text-xs font-normal text-ink-dim">{transcript.data.badge} confidence</span>}
         </button>
       </div>
 
@@ -254,10 +247,10 @@ export function JobDetailPage() {
           {content.data && content.data.length > 0 ? (
             <ContentStudio token={token} jobId={jobId} pieces={content.data} />
           ) : (
-            <div className="rounded-card border border-dashed border-primary/30 p-55 text-center">
-              <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent mb-13"></div>
+            <div className="rounded-card border border-dashed border-white/20 p-55 text-center">
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-amber-400 border-t-transparent mb-13"></div>
               <p className="font-semibold">Agents are analyzing the recording...</p>
-              <p className="mt-4 text-xs opacity-60">
+              <p className="mt-[4px] text-xs opacity-60">
                 Topics, highlights, speakers, and generation will appear in real time.
               </p>
             </div>
@@ -274,14 +267,14 @@ export function JobDetailPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search transcript..."
-              className="w-full max-w-sm rounded-card border border-black/10 bg-canvas-light px-13 py-8 text-xs dark:border-white/10 dark:bg-canvas-dark"
+              className="w-full max-w-sm rounded-card border border-black/10 bg-canvas-light px-13 py-8 text-xs dark:border-white/[0.08] dark:bg-canvas-dark"
             />
             <span className="text-xs opacity-60">
               Words: {transcriptText.trim() ? transcriptText.trim().split(/\s+/).length : 0}
             </span>
           </div>
 
-          <div className="max-h-[65vh] overflow-auto rounded-card border border-black/10 bg-surface-light p-21 text-sm font-mono leading-relaxed dark:border-white/10 dark:bg-surface-dark">
+          <div className="max-h-[65vh] overflow-auto rounded-card border border-black/10 bg-surface-light p-21 text-sm leading-relaxed dark:border-white/[0.08] dark:bg-surface-dark">
             {transcript.data ? (
               <div className="whitespace-pre-wrap">{highlightedTranscript}</div>
             ) : (

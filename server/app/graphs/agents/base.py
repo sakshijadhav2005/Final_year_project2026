@@ -59,6 +59,7 @@ class BaseCreatorAgent:
         system_prompt = self._build_system_prompt(user_memory)
         brief_str = str(brief) if brief else "N/A"
         user_prompt = (
+            f"TASK={self.agent_name}\n"
             "Here is the context you must use to generate the post:\n\n"
             f"<EDITORIAL_BRIEF>\n{brief_str}\n</EDITORIAL_BRIEF>\n\n"
             f"<TRANSCRIPT>\n{transcript_text[:12000]}\n</TRANSCRIPT>\n\n"

@@ -7,8 +7,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user, get_db
+from app.core.security import UserRole
 from app.db.session import SessionLocal
 from app.models.chat import ChatMessage, ChatSession
+from app.models.job import Job, Transcript
 from app.models.recording import Recording
 from app.models.user import User
 from app.schemas.chat import (
@@ -71,50 +73,82 @@ async def get_chat_session(
     return session
 
 
+async def _load_transcript_text(
+    db: AsyncSession, user: User, job_id: UUID | None, event_id: UUID | None
+) -> str | None:
+    """Find the transcript that grounds the chat: the job's own transcript first,
+    otherwise the latest transcript recorded for the event."""
+    if job_id is not None:
+        job = (await db.execute(select(Job).where(Job.id == job_id))).scalar_one_or_none()
+        if job is not None and (job.user_id == user.id or user.role == UserRole.ADMIN):
+            row = (
+                await db.execute(select(Transcript).where(Transcript.job_id == job_id))
+            ).scalars().first()
+            if row is not None:
+                return row.full_text
+    if event_id is not None:
+        row = (
+            await db.execute(
+                select(Transcript)
+                .join(Recording, Recording.id == Transcript.recording_id)
+                .where(Recording.event_id == event_id)
+                .order_by(Transcript.created_at.desc())
+            )
+        ).scalars().first()
+        if row is not None:
+            return row.full_text
+    return None
+
+
 @router.post("/stream")
 async def stream_message(
     body: ChatMessageSend,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    session = (
-        await db.execute(
-            select(ChatSession).where(
-                ChatSession.id == body.session_id, ChatSession.user_id == current_user.id
+    if body.session_id is not None:
+        session = (
+            await db.execute(
+                select(ChatSession).where(
+                    ChatSession.id == body.session_id, ChatSession.user_id == current_user.id
+                )
             )
+        ).scalar_one_or_none()
+        if session is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found"
+            )
+    else:
+        session = ChatSession(
+            user_id=current_user.id,
+            event_id=body.event_id,
+            title=body.message[:60],
+            persona=body.resolved_persona or "general_assistant",
         )
-    ).scalar_one_or_none()
-    if session is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found")
+        db.add(session)
+        await db.flush()
 
-    # Save user message
-    user_msg = ChatMessage(
-        session_id=session.id,
-        role="user",
-        content=body.message,
+    # Build history before adding the new message (a brand-new session has none;
+    # touching its lazy relationship here would trigger IO outside the loop).
+    history = (
+        [{"role": msg.role, "content": msg.content} for msg in session.messages]
+        if body.session_id is not None
+        else []
     )
-    db.add(user_msg)
+    history.append({"role": "user", "content": body.message})
+
+    db.add(ChatMessage(session_id=session.id, role="user", content=body.message))
     await db.commit()
 
-    # Fetch transcript if event_id is available
-    transcript_text = None
-    target_event_id = body.event_id or session.event_id
-    if target_event_id:
-        recording = (
-            (await db.execute(select(Recording).where(Recording.event_id == target_event_id)))
-            .scalars()
-            .first()
-        )
-        if recording and hasattr(recording, "transcript_text"):
-            transcript_text = recording.transcript_text
-
-    # Build history
-    history = [{"role": msg.role, "content": msg.content} for msg in session.messages]
-    history.append({"role": "user", "content": body.message})
+    transcript_text = await _load_transcript_text(
+        db, current_user, body.job_id, body.event_id or session.event_id
+    )
     session_id = session.id
-    persona = body.persona or session.persona
+    persona = body.resolved_persona or session.persona
 
     async def _generator():
+        # First event tells the client which session to reuse for follow-ups.
+        yield f"data: {json.dumps({'session_id': str(session_id), 'chunk': '', 'done': False})}\n\n"
         full_reply = []
         async for chunk_str in stream_chat_response(
             messages=history,
