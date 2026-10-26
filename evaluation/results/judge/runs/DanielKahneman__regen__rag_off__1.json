@@ -1,0 +1,117 @@
+{
+ "run_id": "DanielKahneman__regen__rag_off__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "DanielKahneman",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 1,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    10
+   ],
+   "justification": "The flyer adheres strictly to all format constraints including the word count limit on the title and proper TBA placeholders."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    8,
+    9
+   ],
+   "justification": "Well-crafted LinkedIn post with strong insights, no banned buzzwords/clichés, and an engaging thought experiment call to action."
+  },
+  "summary": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [
+    "Lead Speaker: Daniel Kahneman"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "Adheres well to executive briefing formatting under 400 words, though it introduces Daniel Kahneman who was not named in the reference transcript."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    6
+   ],
+   "justification": "Meets all requirements including carousel slide cues, emoji usage, short lines, and exactly 10 targeted hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    10
+   ],
+   "justification": "The newsletter is well structured with three bold subheadings and editorial tone, but the subject line exceeds the 50-character limit."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "Excellent long-form blog post adhering to all structural requirements including numbered sections, Markdown table, and About the Author section."
+  }
+ }
+}

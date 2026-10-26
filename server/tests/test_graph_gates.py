@@ -25,6 +25,9 @@ def test_after_quality() -> None:
 
 def test_after_guardrail() -> None:
     # Test routing logic from guardrail
-    assert _after_guardrail({"route": "retry_generate"}) == "generator"
+    # Only the failed drafts are sent back to the generators (LangGraph Send objects).
+    sends = _after_guardrail({"route": "retry_generate", "retry_types": ["blog", "flyer"]})
+    assert [s.node for s in sends] == ["dynamic_generator", "dynamic_generator"]
+    assert [s.arg["agent_type"] for s in sends] == ["blog", "flyer"]
     assert _after_guardrail({"route": "needs_review"}) == "persist_fail"
     assert _after_guardrail({"route": "continue"}) == "translation"

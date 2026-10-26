@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "Thinking clearly about happiness is difficult due to several cognitive traps.",
+  "quote": "there are several cognitive traps that sort of make it almost impossible to think straight about happiness",
+  "position": 0.0241
+ },
+ {
+  "id": 2,
+  "point": "Human beings operate with two distinct entities: an experiencing self that lives in the present and a remembering self that maintains our life story.",
+  "quote": "there is an experiencing self who lives in the present and knows the present is capable of re living the past",
+  "position": 0.1483
+ },
+ {
+  "id": 3,
+  "point": "Memory constructs stories based primarily on changes, peak moments, and endings rather than total duration.",
+  "quote": "what defines a story are changes significant moments and endings endings are very very important",
+  "position": 0.3421
+ },
+ {
+  "id": 4,
+  "point": "Most moments of lived experience leave no permanent trace and are completely ignored by the remembering self.",
+  "quote": "most of them don't leave a trace most of them are completely ignored by the remembering self",
+  "position": 0.3803
+ },
+ {
+  "id": 5,
+  "point": "Future decisions are made by the remembering self choosing between memories rather than actual experiences.",
+  "quote": "we actually don't choose between experiences we choose between memories of experiences",
+  "position": 0.4758
+ },
+ {
+  "id": 6,
+  "point": "The way people choose vacations highlights the fundamental conflict between experiencing moments and accumulating memories.",
+  "quote": "why do we pick them the vacations we do is a problem that confronts us you know with a choice between the two selves",
+  "position": 0.6122
+ },
+ {
+  "id": 7,
+  "point": "A person's reflective life satisfaction correlates surprisingly weakly with their day-to-day emotional happiness.",
+  "quote": "you can know how satisfied somebody is with their life and that really doesn't teach you much about how happily they're living their life",
+  "position": 0.7151
+ },
+ {
+  "id": 8,
+  "point": "People overestimate the impact of factors like climate on happiness because focusing on contrasts distorts reality.",
+  "quote": "it turns out that climate is not very important to the experiencing self and is not even very important to the reflective self",
+  "position": 0.8259
+ },
+ {
+  "id": 9,
+  "point": "Above a certain income threshold, additional money ceases to improve day-to-day emotional well-being.",
+  "quote": "money does not buy you experiential happiness but lack of money certainly buys you misery",
+  "position": 0.9215
+ },
+ {
+  "id": 10,
+  "point": "Integrating happiness research into public policy will require deciding whether to prioritize lived experience or life evaluation.",
+  "quote": "people are recognizing that they ought to be thinking of policy of happiness when they think of public policy",
+  "position": 0.9549
+ }
+]

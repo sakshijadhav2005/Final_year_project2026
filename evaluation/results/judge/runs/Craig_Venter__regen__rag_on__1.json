@@ -1,0 +1,109 @@
+{
+ "run_id": "Craig_Venter__regen__rag_on__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Craig_Venter",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 1,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    9,
+    10
+   ],
+   "justification": "The draft clearly captures the talk's themes, but the title exceeds the maximum 6-word limit specified in the instructions."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    6,
+    7,
+    9,
+    10
+   ],
+   "justification": "The post adheres to all formatting constraints, avoids banned buzzwords, and covers several core key points accurately."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter follows all formatting rules, including the subject line character limit and three bold-subheaded sections."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    9
+   ],
+   "justification": "The caption includes visual carousel cues, emoji-bulleted key points, an engaging call to action, and exactly 10 relevant hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "The summary contains all required structural components, remains well under the 400-word limit, and accurately highlights key evidence and metrics."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The article is well structured in Markdown with numbered sections, a comparative takeaway table, and an author bio matching the profile."
+  }
+ }
+}

@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "The Large Hadron Collider is an enormous 27-kilometer circular machine representing the biggest scientific experiment ever built.",
+  "quote": "the lhc is the largest scientific experiment ever attempted twenty seven kilometers in circumference",
+  "position": 0.0564
+ },
+ {
+  "id": 2,
+  "point": "The LHC was designed to replicate the extreme conditions of the infant universe hundreds of millions of times every second.",
+  "quote": "its job is to recreate the conditions that were present less than a billionth of a second after the universe began",
+  "position": 0.0878
+ },
+ {
+  "id": 3,
+  "point": "The ATLAS detector is an immense instrument built to capture imagery of particle collisions beneath Geneva.",
+  "quote": "this is the one i work on it's called the atlas detector forty four meters wide twenty two meters in diameter",
+  "position": 0.1753
+ },
+ {
+  "id": 4,
+  "point": "The initial beam run on September 10th was a major triumph that proved the machine worked as intended.",
+  "quote": "when we saw that picture on september tenth we knew the machine worked which is a great triumph",
+  "position": 0.3412
+ },
+ {
+  "id": 5,
+  "point": "The successful startup created significant cultural awareness alongside its scientific accomplishments.",
+  "quote": "it means we made cultural impact as well as scientific impact",
+  "position": 0.4094
+ },
+ {
+  "id": 6,
+  "point": "The collider uses superconducting cables chilled to extreme temperatures to carry massive electrical currents.",
+  "quote": "at minus two hundred and seventy one degrees colder than the space between the stars those wires can take that current",
+  "position": 0.5479
+ },
+ {
+  "id": 7,
+  "point": "A manufacturing defect in a wire connection led to resistance and damage across approximately fifty heavy magnets.",
+  "quote": "in one of the joints between over nine thousand magnets in lhc there was a manufacturing defect",
+  "position": 0.585
+ },
+ {
+  "id": 8,
+  "point": "After repairing the damaged magnets, the team prepared to restart the collider to resume gathering universe data.",
+  "quote": "we will switch it on and we expect to take data in june or july and continue with our quest",
+  "position": 0.7534
+ },
+ {
+  "id": 9,
+  "point": "The intrinsic challenge and ambition of frontier engineering are fundamental to the value of large-scale scientific exploration.",
+  "quote": "the fact that it's so difficult the fact that we're overreaching is the value of things like the lhc",
+  "position": 0.8456
+ },
+ {
+  "id": 10,
+  "point": "Humphrey Davy emphasized that scientific progress is threatened when people presume all natural mysteries have been solved.",
+  "quote": "nothing is so dangerous to the progress of the human mind than to assume that our views of science are ultimate",
+  "position": 0.9303
+ }
+]

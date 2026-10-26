@@ -37,9 +37,8 @@ export function LoginPage() {
     <GoldenShell>
       <div className="w-full max-w-md mx-auto">
         <div className="mb-21">
-          <p className="text-xs font-semibold uppercase tracking-wider text-gold">Authentication</p>
-          <h1 className="font-display text-3xl font-normal italic text-ink-light dark:text-ink-dark">
-            Sign In to <em className="not-italic text-gold dark:text-gold-soft">EventAI</em>
+          <h1 className="font-display text-h1 font-semibold text-ink-light dark:text-ink-dark">
+            Sign in to EventAI
           </h1>
         </div>
 
@@ -50,9 +49,9 @@ export function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-ink-light/50 dark:text-ink-dim mb-4">Email Address</label>
+            <label className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Email Address</label>
             <input
-              className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+              className="w-full rounded-card border border-black/10 dark:border-white/[0.08] bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -62,10 +61,10 @@ export function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-ink-light/50 dark:text-ink-dim mb-4">Password</label>
+            <label className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Password</label>
             <div className="relative">
               <input
-                className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 pr-34 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+                className="w-full rounded-card border border-black/10 dark:border-white/[0.08] bg-canvas-light dark:bg-white/[0.04] px-13 py-8 pr-34 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -92,12 +91,12 @@ export function LoginPage() {
           </div>
 
           {error && (
-            <div className="rounded-card border border-danger/40 bg-danger/10 p-13 text-xs text-danger flex flex-col gap-4">
+            <div className="rounded-card border border-danger/40 bg-danger/10 p-13 text-xs text-danger flex flex-col gap-[4px]">
               <div className="flex items-center gap-8 font-semibold">
                 <span>⚠️ Sign In Failed</span>
               </div>
               <p>{error}</p>
-              <p className="mt-4 text-[11px] text-ink-light/80 dark:text-ink-dim">
+              <p className="mt-[4px] text-[11px] text-ink-light/80 dark:text-ink-dim">
                 If you haven't created an account yet, please <Link to="/register" className="text-gold dark:text-gold-soft font-semibold underline">Register First</Link>.
               </p>
             </div>
@@ -106,9 +105,9 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="mt-13 rounded-full border border-gold/30 bg-gradient-to-r from-gold/20 via-lavender/15 to-teal/10 px-21 py-13 font-sans text-sm font-medium text-gold dark:text-gold-soft hover:border-gold hover:scale-[1.02] transition-all"
+            className="btn-primary mt-13 w-full py-13"
           >
-            {mutation.isPending ? "Signing In…" : "Sign In to Workspace →"}
+            {mutation.isPending ? "Signing in…" : "Sign in"}
           </button>
         </form>
 

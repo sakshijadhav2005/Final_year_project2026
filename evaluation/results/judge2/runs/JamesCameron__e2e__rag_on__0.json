@@ -1,0 +1,110 @@
+{
+ "run_id": "JamesCameron__e2e__rag_on__0",
+ "judge_model": "gemini-3.6-flash",
+ "talk_id": "JamesCameron",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    8,
+    10
+   ],
+   "justification": "The flyer adheres well to format constraints with a short title, impact points, and placeholder logistics, accurately reflecting the transcript content."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post perfectly follows all Instagram formatting requirements including emojis, visual carousel cues, CTA, and 11 targeted hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter follows all format rules, including a short subject line under 50 characters, editorial tone, and bold subheadings."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    8,
+    10
+   ],
+   "justification": "The content is well-written and avoids clichés/filler words, but missed the requirement to include 3-5 relevant hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    3,
+    6,
+    7,
+    8,
+    10
+   ],
+   "justification": "An excellent executive briefing under 400 words adhering strictly to the structured Markdown format requirement."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "An exemplary long-form blog post that thoroughly covers all key points of the talk with a clear table, numbered sections, and author profile."
+  }
+ }
+}

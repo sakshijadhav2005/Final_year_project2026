@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "Manipulating physical blocks in childhood helps people learn to think and problem-solve through spatial reasoning.",
+  "quote": "you were actually learning how to think and solve problems by understanding and manipulating spatial relationships",
+  "position": 0.0292
+ },
+ {
+  "id": 2,
+  "point": "The researchers set out to create computers that allow users to physically grasp and arrange digital information with both hands.",
+  "quote": "what if we could reach in with both hands and grasp information physically arranging it the way we wanted",
+  "position": 0.1181
+ },
+ {
+  "id": 3,
+  "point": "Siftables are compact, cookie-sized interactive computers equipped with motion sensors, wireless radios, and screens.",
+  "quote": "they can sense each other they can sense their motion and they have a screen and a wireless radio",
+  "position": 0.1713
+ },
+ {
+  "id": 4,
+  "point": "Physical interfaces enable people to apply familiar real-world gestures directly to digital data manipulation.",
+  "quote": "we could use everyday gestures on data like pouring a color the way we might pour a liquid",
+  "position": 0.3443
+ },
+ {
+  "id": 5,
+  "point": "Siftables offer powerful educational possibilities in logic, math, and language by enabling rapid experimentation and instant feedback.",
+  "quote": "there are also some neat possibilities for education like language math and logic games where we want to give people the ability to try things quickly",
+  "position": 0.3932
+ },
+ {
+  "id": 6,
+  "point": "Physical computing tools are naturally intuitive to use, requiring very little instruction for people to get started.",
+  "quote": "one of the interesting things about this kind of application is that you don't have to give people many instructions",
+  "position": 0.5231
+ },
+ {
+  "id": 7,
+  "point": "Interactive storytelling tools allow language learners to direct open-ended narratives by physically moving and shaking characters.",
+  "quote": "by shaking the siftables and putting them next to each other he can make the characters interact inventing his own narrative",
+  "position": 0.6455
+ },
+ {
+  "id": 8,
+  "point": "Siftables can represent distinct musical elements that users assemble and manipulate into sequences.",
+  "quote": "in which siftables act as sounds like lead bass and drums each of these has four different variations",
+  "position": 0.6986
+ },
+ {
+  "id": 9,
+  "point": "The tangible music interface allows performers to actively improvise and restructure compositions live while they play.",
+  "quote": "i can rearrange the sequence while it plays i don't have to plan it out in advance but i can improvise",
+  "position": 0.8636
+ },
+ {
+  "id": 10,
+  "point": "The ultimate goal is building next-generation digital interfaces that naturally align with how human bodies and brains operate.",
+  "quote": "my passion is for making new human computer interfaces that are a better match to the way our brains and bodies work",
+  "position": 0.9104
+ }
+]

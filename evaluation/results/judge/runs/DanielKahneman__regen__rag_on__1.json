@@ -1,0 +1,112 @@
+{
+ "run_id": "DanielKahneman__regen__rag_on__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "DanielKahneman",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 1,
+ "verdicts": {
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    9,
+    10
+   ],
+   "justification": "The newsletter follows all formatting rules including character limits and bold subheadings while accurately capturing the core ideas of the talk."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    5,
+    9,
+    10
+   ],
+   "justification": "The flyer meets the title length constraint of 6 words and uses high-impact lines with TBA placeholders appropriately."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    5,
+    6,
+    8,
+    9
+   ],
+   "justification": "The post has an engaging hook, avoids forbidden buzzwords, and includes relevant hashtags alongside a thought-provoking vacation question."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    5,
+    9,
+    10
+   ],
+   "justification": "The caption effectively integrates carousel visual cues, emojis, a call to action, and the required number of targeted hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The executive summary perfectly organizes the required sections (TL;DR, evidence, discussion points, action items) under 400 words."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post adheres to all structural constraints, featuring numbered sections, a comparison table, and an About the Author section."
+  }
+ }
+}

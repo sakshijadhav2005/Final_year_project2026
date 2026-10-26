@@ -1,0 +1,104 @@
+{
+ "run_id": "JaneMcGonigal__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "JaneMcGonigal",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    3,
+    5,
+    10
+   ],
+   "justification": "The newsletter follows all structural constraints (short subject line, 3 bold subheadings, greeting, CTA) and accurately reflects the talk's themes."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    10
+   ],
+   "justification": "The caption includes an engaging hook, carousel visual cues, emojis, CTA, and 10 targeted hashtags in compliance with all instructions."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    5,
+    10
+   ],
+   "justification": "The flyer has a concise title under 6 words, high-impact bulleted highlights, and properly uses 'TBA' for unknown event logistics."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    9,
+    10
+   ],
+   "justification": "The executive summary incorporates all required sections (TL;DR, key evidence, discussion points, action items) under 400 words."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    5,
+    10
+   ],
+   "justification": "The LinkedIn post avoids banned cliches and filler words, utilizes short readable paragraphs, asks a concluding question, and includes 5 relevant hashtags."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post adheres cleanly to all formatting requirements, featuring numbered insight sections, a comparison table, and an 'About the Author' block."
+  }
+ }
+}

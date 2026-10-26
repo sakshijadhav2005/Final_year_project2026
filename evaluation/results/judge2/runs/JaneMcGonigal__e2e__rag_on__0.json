@@ -1,0 +1,101 @@
+{
+ "run_id": "JaneMcGonigal__e2e__rag_on__0",
+ "judge_model": "gemini-3.6-flash",
+ "talk_id": "JaneMcGonigal",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    3,
+    5,
+    10
+   ],
+   "justification": "The newsletter follows all structural guidelines with three bold subheadings and a clear call to action, accurately representing McGonigal's talk."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    10
+   ],
+   "justification": "The post adheres to Instagram formatting requirements with carousel cues, emojis, a call to action, and exactly ten relevant hashtags."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    5,
+    10
+   ],
+   "justification": "The flyer adheres to the 6-word title maximum and effectively utilizes 'TBA' placeholders for unknown event logistics."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    9,
+    10
+   ],
+   "justification": "The executive summary is under 400 words, formatted in Markdown, and includes accurate metrics and key discussion points from the transcript."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    5,
+    10
+   ],
+   "justification": "The post avoids buzzwords and cliches, features short paragraphs with a closing question, and includes five targeted hashtags."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    4,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post includes numbered sections, a comparative Markdown table, and an 'About the Author' section, faithfully representing the talk's core messages."
+  }
+ }
+}

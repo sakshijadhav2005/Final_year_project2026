@@ -1,0 +1,113 @@
+{
+ "run_id": "Craig_Venter__regen__rag_off__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Craig_Venter",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 2,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    8,
+    9,
+    10
+   ],
+   "justification": "The flyer adheres to all formatting constraints including the title word limit and accurately highlights the core themes of the talk."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    9
+   ],
+   "justification": "The Instagram caption includes carousel cues, engaging hooks, and exactly 10 targeted hashtags while remaining factually aligned with the transcript."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    9
+   ],
+   "justification": "The post is well structured without forbidden cliches, but it failed to include the required 3-5 relevant hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    7,
+    8,
+    9
+   ],
+   "justification": "The newsletter follows all structure and length instructions, featuring a concise subject line under 50 characters and three distinct bolded sections."
+  },
+  "summary": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [
+    "First-generation synthetic biology fuels utilizing CO2 as feedstock are projected for deployment within 18 months."
+   ],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    8,
+    9
+   ],
+   "justification": "The briefing is well structured and under 400 words, though it mistakenly labels fourth-generation fuels as 'First-generation'."
+  },
+  "blog": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [
+    "Utilizing the natural repair mechanisms of organisms like Deinococcus radiodurans to assemble massive DNA molecules"
+   ],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog meets all format requirements including numbered sections and a comparison table, but slightly conflates the illustrative example of Deinococcus with the yeast mechanism actually used for assembly."
+  }
+ }
+}

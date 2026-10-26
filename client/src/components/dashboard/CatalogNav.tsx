@@ -1,57 +1,49 @@
 import { Link, useLocation } from "react-router-dom";
 
+const SECTIONS = [
+  { name: "All events", path: "/catalog/all", icon: "🌐" },
+  { name: "Meetups", path: "/catalog/meetup", icon: "👥" },
+  { name: "Conferences", path: "/catalog/event", icon: "🎪" },
+  { name: "Talks", path: "/catalog/speech", icon: "🎤" },
+];
+
 export function CatalogNav() {
   const location = useLocation();
 
-  const sections = [
-    { name: "All Catalogs", path: "/catalog/all", icon: "🌐", badge: "Live" },
-    { name: "Meetups", path: "/catalog/meetup", icon: "👥", badge: "Network" },
-    { name: "Conferences & Events", path: "/catalog/event", icon: "🎪", badge: "Keynote" },
-    { name: "Speeches & Talks", path: "/catalog/speech", icon: "🎤", badge: "Sessions" },
-  ];
-
   return (
-    <div className="mb-8 rounded-2xl border border-white/10 bg-slate-900/60 p-4 shadow-xl backdrop-blur-xl">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Browse Event Catalogs
-            </h3>
-          </div>
-          <p className="text-sm font-medium text-slate-200">
-            Explore curated event sessions, talk transcripts & AI-generated content
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          {sections.map((s) => {
-            const isActive = location.pathname === s.path;
-            return (
-              <Link
-                key={s.name}
-                to={s.path}
-                className={`group relative inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200 ${
-                  isActive
-                    ? "bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-rose-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.2)]"
-                    : "border border-white/5 bg-white/5 text-slate-300 hover:border-white/20 hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                <span className="text-sm transition-transform group-hover:scale-110">{s.icon}</span>
-                <span>{s.name}</span>
-                <span
-                  className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
-                    isActive ? "bg-amber-400/20 text-amber-200" : "bg-white/10 text-slate-400"
-                  }`}
-                >
-                  {s.badge}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
+    <nav
+      aria-label="Event catalogs"
+      className="grid grid-cols-1 items-center gap-21 rounded-panel border border-white/[0.08] bg-surface p-21 lg:grid-cols-golden-reverse lg:gap-34"
+    >
+      {/* 38.2%: what this bar is for */}
+      <div className="min-w-0">
+        <h2 className="font-display text-h3 font-semibold text-ink">Browse events</h2>
+        <p className="mt-[4px] text-sm leading-relaxed text-ink-dim">
+          Transcripts and published posts from every recorded session.
+        </p>
       </div>
-    </div>
+
+      {/* 61.8%: four equal catalog buttons on one row */}
+      <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+        {SECTIONS.map((s) => {
+          const isActive = location.pathname === s.path;
+          return (
+            <Link
+              key={s.path}
+              to={s.path}
+              aria-current={isActive ? "page" : undefined}
+              className={`flex h-[55px] items-center justify-center gap-8 rounded-card border px-13 text-sm font-medium transition-colors ${
+                isActive
+                  ? "neu-pressed border-amber-400/60 bg-amber-400/[0.08] text-ink"
+                  : "neu-raised border-white/[0.06] bg-white/[0.02] text-ink-dim hover:text-ink"
+              }`}
+            >
+              <span aria-hidden="true">{s.icon}</span>
+              <span className="truncate">{s.name}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
   );
 }

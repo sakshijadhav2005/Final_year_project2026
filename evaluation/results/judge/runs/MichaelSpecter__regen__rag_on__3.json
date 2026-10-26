@@ -1,0 +1,117 @@
+{
+ "run_id": "MichaelSpecter__regen__rag_on__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "MichaelSpecter",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The flyer adheres strictly to formatting guidelines with a concise 6-word title, clear highlights, and appropriate placeholder logistics."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The LinkedIn post captures the core philosophical arguments of the talk, avoids forbidden cliches, and includes a relevant discussion question with appropriate hashtags."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post effectively incorporates visual carousel cues, emoji-spaced bullet points, a strong call to action, and exactly 10 targeted hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The executive summary succinctly delivers the key evidence, discussion points, and action items in clean Markdown well within the 400-word limit."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter follows all formatting rules including a subject line under 50 characters, three bold subheadings, and a conversational editorial tone."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post thoroughly covers all aspects of the transcript with engaging numbered sections, a comparative table, and an accurate About the Author section."
+  }
+ }
+}

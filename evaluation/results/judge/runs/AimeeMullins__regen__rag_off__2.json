@@ -1,0 +1,110 @@
+{
+ "run_id": "AimeeMullins__regen__rag_off__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "AimeeMullins",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 2,
+ "verdicts": {
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "The draft accurately reflects the talk's core messages and follows all formatting instructions, including carousel cues and 10 targeted hashtags."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    7
+   ],
+   "justification": "The flyer is well-formatted and faithful to the transcript, though the provided headline exceeds the 6-word limit constraint."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7
+   ],
+   "justification": "The post adheres to all LinkedIn formatting rules, avoids prohibited filler words, and captures key personal anecdotes and themes accurately."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7
+   ],
+   "justification": "The summary provides an excellent executive briefing under 400 words with all required sections and strong alignment with the transcript."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7
+   ],
+   "justification": "The newsletter follows all guidelines with an under-50-character subject line, three bolded subheadings, and a clear call to action."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7
+   ],
+   "justification": "The blog post effectively incorporates numbered insight sections, a comparison table, a strong conclusion, and the required author bio."
+  }
+ }
+}

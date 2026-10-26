@@ -1,4 +1,3 @@
-import asyncio
 from typing import Any
 
 from app.graphs.state import JobGraphState
@@ -18,6 +17,13 @@ async def _agent(task: str, state: JobGraphState, temperature: float = 0.2) -> d
         )
 
     return await with_backoff(_call, circuit=llm_circuit)
+
+
+ANALYSIS_KEYS = ("topics", "highlights", "speakers", "sentiment", "brief")
+
+
+def _has_analysis_keys(result: Any) -> bool:
+    return isinstance(result, dict) and any(key in result for key in ANALYSIS_KEYS)
 
 
 async def fan_out(state: JobGraphState) -> dict[str, Any]:
@@ -41,16 +47,50 @@ async def sentiment_analysis(state: JobGraphState) -> dict[str, Any]:
 
 
 async def parallel_analysis(state: JobGraphState) -> dict[str, Any]:
-    """Runs parallel extraction fan-out nodes (topics, highlights, speakers, sentiment) concurrently."""
-    topics_res, highlights_res, speakers_res, sentiment_res = await asyncio.gather(
-        _agent("topic_extraction", state),
-        _agent("highlight_detection", state),
-        _agent("speaker_analysis", state),
-        _agent("sentiment_analysis", state),
-    )
-    return {
-        "topics": topics_res,
-        "highlights": highlights_res,
-        "speakers": speakers_res,
-        "sentiment": sentiment_res,
+    """Runs high-speed unified 4-agent intelligence extraction (topics, highlights, speakers, sentiment) in one optimized pass."""
+    llm = get_llm_provider()
+
+    async def _call(strict: bool = False) -> dict[str, Any]:
+        prompt = (
+            "TASK=multi_agent_intelligence\n"
+            "Extract structured intelligence from this event recording. Return JSON with keys:\n"
+            "1. 'topics': list of main topics and themes covered (e.g. ['Keynote', 'AI Trends'])\n"
+            "2. 'highlights': list of standout takeaways, notable quotes, or milestone points\n"
+            "3. 'speakers': list of speaker insights, roles, or speaking styles\n"
+            "4. 'sentiment': session tone (e.g. {'tone': 'inspiring and technical', 'energy': 'high'})\n"
+            "5. 'brief': editorial brief for the writers with keys 'angle', 'key_messages' (list), "
+            "'audience', 'tone', 'quotes' (list of exact quotes from the transcript)\n"
+        )
+        if strict:
+            prompt += "Return ONE JSON object with exactly these five keys, not an array.\n"
+        return await llm.generate_json(
+            system=analysis_system(),
+            user=f"{prompt}\n<untrusted_transcript>\n{state.get('transcript_text', '')}\n</untrusted_transcript>",
+            temperature=0.2,
+        )
+
+    result = await with_backoff(_call, circuit=llm_circuit)
+    if not _has_analysis_keys(result):
+        # Wrong shape (e.g. a bare array): ask once more with an explicit instruction.
+        retry = await with_backoff(lambda: _call(strict=True), circuit=llm_circuit)
+        if _has_analysis_keys(retry):
+            result = retry
+    if not isinstance(result, dict):
+        result = {}
+
+    topics = result.get("topics") if isinstance(result.get("topics"), list) else [result.get("topics", "Event topics")]
+    highlights = result.get("highlights") if isinstance(result.get("highlights"), list) else [result.get("highlights", "Key takeaways")]
+    speakers = result.get("speakers") if isinstance(result.get("speakers"), list) else [result.get("speakers", "Session speaker")]
+    sentiment = result.get("sentiment") if isinstance(result.get("sentiment"), dict | str) else {"tone": "engaging"}
+
+    out = {
+        "topics": {"topics": topics},
+        "highlights": {"highlights": highlights},
+        "speakers": {"speakers": speakers},
+        "sentiment": {"sentiment": sentiment if isinstance(sentiment, dict) else {"tone": sentiment}},
     }
+    # The brief comes back in the same call, so the planner step needs no extra round trip.
+    brief = result.get("brief")
+    if isinstance(brief, dict) and (brief.get("angle") or brief.get("key_messages")):
+        out["brief"] = brief
+    return out

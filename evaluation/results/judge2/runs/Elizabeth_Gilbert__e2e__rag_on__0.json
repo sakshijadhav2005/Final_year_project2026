@@ -1,0 +1,107 @@
+{
+ "run_id": "Elizabeth_Gilbert__e2e__rag_on__0",
+ "judge_model": "gemini-3.6-flash",
+ "talk_id": "Elizabeth_Gilbert",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    6,
+    10
+   ],
+   "justification": "The flyer perfectly meets all formatting constraints including title length and placeholder usage, effectively highlighting the talk's core messages."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    6,
+    9,
+    10
+   ],
+   "justification": "Adheres strictly to Instagram caption requirements with visual cues, emojis, a call to action, and exactly 10 targeted hashtags."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "Well-crafted post avoiding corporate clichés and forbidden buzzwords while maintaining exact hashtag and formatting constraints."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "Subject line is strictly under 50 characters, and the body contains the exact required structure of three sections with bold subheadings and clear CTAs."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    9,
+    10
+   ],
+   "justification": "Thorough long-form Markdown article containing all required elements including numbered sections, a comparison table, and author bio."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    4,
+    6,
+    9,
+    10
+   ],
+   "justification": "Concise executive briefing in Markdown, comfortably under the 400-word limit while containing all mandatory structural sections."
+  }
+ }
+}

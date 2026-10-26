@@ -1,0 +1,107 @@
+{
+ "run_id": "JamesCameron__regen__rag_off__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "JamesCameron",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 2,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    8,
+    10
+   ],
+   "justification": "The flyer is well-structured and engaging, but the title exceeds the strict 6-word limit requirement."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    6,
+    8,
+    10
+   ],
+   "justification": "The post flows well and captures key insights without banned buzzwords, but it failed to include the required 3-5 hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    4,
+    6,
+    7,
+    10
+   ],
+   "justification": "The newsletter follows all formatting constraints precisely, including a short subject line, three structured bold subheadings, and strong editorial tone."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    10
+   ],
+   "justification": "The Instagram caption perfectly incorporates visual carousel cues, punchy emoji-bulleted lines, call to action, and exactly 10 relevant hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    5,
+    6,
+    8,
+    10
+   ],
+   "justification": "The executive summary effectively covers TL;DR, evidence, discussion points, and action items in clean Markdown under the word limit."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    7,
+    8,
+    10
+   ],
+   "justification": "The blog post adheres thoroughly to all format requirements, including numbered insights, comparison table, conclusion, and author bio."
+  }
+ }
+}

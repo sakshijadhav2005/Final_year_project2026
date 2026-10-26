@@ -1,0 +1,18 @@
+\section{Conclusion and Future Work}
+EventAI shows that a recording-to-publication pipeline built from a multimodal LLM, an explicit
+multi-agent graph, a batched guardrail and selective RAG can turn a 15-minute talk into six
+review-ready drafts and their translations in about one and a half minutes, at a word error
+rate of about 2\% on real talks. The evaluation supports three practical conclusions. First,
+parallel writer agents make generation a minor part of latency; transcription and local media
+analysis dominate. Second, for long talks a writer that sees only the beginning of the
+transcript under-reports the rest; brief-driven retrieval with modern embeddings fixes this
+imbalance, but does not by itself make drafts more complete overall. Third, evaluating the
+deployed system end to end on real inputs found defects that unit tests with fake providers
+could not, so live, instrumented evaluation should be part of building such systems.
+
+The defects found this way---sticky model fallback, an inert circuit breaker, silent offline
+fallback, an unguarded response shape and missing credential checks---have been fixed and the
+affected experiments re-run. Future work includes: validating every model response against a
+full per-step schema rather than only its shape; human evaluation of a sample of drafts to
+calibrate the automatic judge; noisy, multi-speaker and Indian-language recordings; and using
+event metadata so that flyers can include real logistics instead of ``TBA''.

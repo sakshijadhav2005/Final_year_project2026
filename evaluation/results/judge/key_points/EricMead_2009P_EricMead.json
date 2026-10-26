@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "The speaker is fascinated by the placebo effect because belief can transform something inherently fake into a real physical response.",
+  "quote": "something fake is believed in enough by somebody that it becomes something real",
+  "position": 0.0245
+ },
+ {
+  "id": 2,
+  "point": "A basic knife-holding trick serves as a foundational demonstration of how magic methods deceive an audience.",
+  "quote": "this is a trick that i often teach to young children that are interested in magic",
+  "position": 0.2354
+ },
+ {
+  "id": 3,
+  "point": "Deception succeeds partly because the human mind groups visual details together rather than counting them individually.",
+  "quote": "the mind and the way it processes information it doesn't count one two three it groups them",
+  "position": 0.3594
+ },
+ {
+  "id": 4,
+  "point": "Medical studies reveal that altering a placebo's appearance, such as changing its color or shape, measurably increases its perceived efficacy.",
+  "quote": "if you change the form that you give the placebo in like you make a smaller pill and color it blue",
+  "position": 0.4733
+ },
+ {
+  "id": 5,
+  "point": "The placebo response intensifies across different formats, culminating in injections having the strongest psychological impact.",
+  "quote": "the white pill is not as good as the blue pill is not as good as the capsule is not as good as the needle",
+  "position": 0.624
+ },
+ {
+  "id": 6,
+  "point": "The speaker decides to test whether the psychological power of needles can make a magic illusion feel genuinely real.",
+  "quote": "take that idea and apply it to a magic trick and take something that is obviously a fake trick and make it seem real",
+  "position": 0.6594
+ },
+ {
+  "id": 7,
+  "point": "The magician uses an authentic hat pin to pierce through the skin of his own arm.",
+  "quote": "this is really my flesh this is not damian's special grown flesh that's my skin right there",
+  "position": 0.6982
+ },
+ {
+  "id": 8,
+  "point": "Spectators typically assume a performer would not actually harm themselves solely for the sake of entertainment.",
+  "quote": "he's certainly not dumb enough to stab himself through the skin to entertain us for a few minutes",
+  "position": 0.8397
+ },
+ {
+  "id": 9,
+  "point": "To refute doubts that the effect is an optical illusion, the performer shows blood emerging from the puncture wounds.",
+  "quote": "if it were real he would be bleeding let me work up some blood for you yes there it is",
+  "position": 0.9368
+ },
+ {
+  "id": 10,
+  "point": "Rather than concluding the trick by removing the pin, the magician exits with it intact to preserve the illusion's reality.",
+  "quote": "with the idea of taking something fake and making it into something real i'm just going to leave it there",
+  "position": 0.9675
+ }
+]

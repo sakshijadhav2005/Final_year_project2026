@@ -1,0 +1,36 @@
+\section{Related Work}
+\textbf{Speech recognition for long-form talks.} Large weakly supervised models such as
+Whisper~\cite{radford2023whisper} made robust transcription of lectures and talks practical;
+the ESB benchmark~\cite{gandhi2022esb} standardised text normalisation for comparing systems
+across datasets, and TED-LIUM~3~\cite{hernandez2018tedlium} remains a standard corpus of
+real conference talks with human transcripts. Multimodal LLMs such as
+Gemini~\cite{gemini2023} accept audio directly, which lets a single model family serve both
+transcription and generation.
+
+\textbf{Summarising spoken content.} Meeting and lecture summarisation has been studied as
+query-focused and long-input summarisation~\cite{zhong2021qmsum}. Long inputs remain
+difficult: models under-use information in the middle and end of long
+contexts~\cite{liu2024lost}, which motivates retrieving relevant passages instead of relying
+on truncated context.
+
+\textbf{Retrieval-augmented generation.} RAG conditions generation on retrieved
+passages~\cite{lewis2020rag}. Dense retrievers~\cite{karpukhin2020dpr} and modern general
+embedding models~\cite{lee2025geminiembedding} usually outperform lexical
+BM25~\cite{robertson2009bm25}, although BM25 remains a strong baseline. Retrieval quality is
+measured with Recall@$k$, MRR and nDCG~\cite{jarvelin2002ndcg}; frameworks such as
+RAGAS~\cite{es2024ragas} evaluate the generation side.
+
+\textbf{Multi-agent LLM systems and guardrails.} Tool-using and multi-agent patterns such as
+ReAct~\cite{yao2023react} and AutoGen~\cite{wu2023autogen} decompose complex tasks into
+cooperating LLM roles; LangGraph~\cite{langgraph} expresses such workflows as explicit
+stateful graphs with conditional routing. Because LLMs hallucinate~\cite{ji2023hallucination}
+and can produce harmful text~\cite{gehman2020realtoxicity}, production systems add
+verification steps; LLM-as-a-judge~\cite{zheng2023judging,liu2023geval} is a common
+automatic proxy for human evaluation, with known biases that we mitigate by using a different
+and larger judge model and by measuring inter-judge agreement. Retry with back-off and the
+circuit-breaker pattern~\cite{nygard2018releaseit} are standard resilience techniques for
+calling remote services.
+
+EventAI combines these strands in one deployed application and evaluates them together on
+the same recordings, reporting accuracy, latency, token usage and failure behaviour of the
+whole recording-to-publication pipeline.

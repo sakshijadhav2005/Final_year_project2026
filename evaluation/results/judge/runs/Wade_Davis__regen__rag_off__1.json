@@ -1,0 +1,110 @@
+{
+ "run_id": "Wade_Davis__regen__rag_off__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Wade_Davis",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 1,
+ "verdicts": {
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    9
+   ],
+   "justification": "The post captures core anthropological themes well but fails to include the required 3-5 hashtags."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    10
+   ],
+   "justification": "Adheres strictly to all constraints, including the 6-word title maximum and appropriate TBA placeholders."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    10
+   ],
+   "justification": "Meets all structural requirements, including visual carousel cues, emoji styling, and 11 targeted hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    8,
+    10
+   ],
+   "justification": "Well-crafted newsletter adhering to the character limit on the subject line, three-section structure with bold subheadings, and engaging editorial tone."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    9
+   ],
+   "justification": "Concise executive briefing formatted properly under the 400-word limit with all required sections."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    9,
+    10
+   ],
+   "justification": "Structured effectively with numbered sections, comparison table, conclusion, and author profile details."
+  }
+ }
+}

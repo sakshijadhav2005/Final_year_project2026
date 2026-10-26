@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "Researchers are moving from digitizing biological information to designing and chemically synthesizing novel living organisms.",
+  "quote": "we've been digitizing biology and now we're trying to go from that digital code into a new phase of biology with designing and synthesizing life",
+  "position": 0.0136
+ },
+ {
+  "id": 2,
+  "point": "Synthesizing an entire chromosome became necessary to systematically test which genes are essential for cellular life.",
+  "quote": "we decided the only way forward was to actually synthesize this chromosome so we could vary the components",
+  "position": 0.1045
+ },
+ {
+  "id": 3,
+  "point": "Successfully booting up a synthetic viral genome demonstrated that digital biological software can construct its own physical hardware.",
+  "quote": "we think this is a situation where the software can actually build its own hardware in a biological system",
+  "position": 0.2417
+ },
+ {
+  "id": 4,
+  "point": "Researchers can use the amino acid translation of the genetic code to embed written words and synthetic watermarks into DNA.",
+  "quote": "we can use the genetic code to write out words sentences thoughts initially all we did was autograph it",
+  "position": 0.3411
+ },
+ {
+  "id": 5,
+  "point": "The team successfully constructed a bacterial genome that stands as the largest human-made molecule with a defined structure.",
+  "quote": "it's the largest molecule ever made by humans of a defined structure it's over three hundred million molecular weight",
+  "position": 0.5046
+ },
+ {
+  "id": 6,
+  "point": "Transplanting a synthetic chromosome transformed an existing bacterial cell entirely into a new species dictated by the imported software.",
+  "quote": "all the characteristics of one species were lost and it converted totally into the new species based on the new software that we put in the cell",
+  "position": 0.6518
+ },
+ {
+  "id": 7,
+  "point": "A rapidly growing global population creates urgent resource constraints for food, clean water, medicines, and energy.",
+  "quote": "we have trouble feeding providing fresh clean water medicines fuel for the six and a half billion",
+  "position": 0.7273
+ },
+ {
+  "id": 8,
+  "point": "High-throughput robotic automation makes it possible to generate and screen millions of synthetic chromosomes rapidly.",
+  "quote": "we have the ability now to build a large robot that can make a million chromosomes a day",
+  "position": 0.7964
+ },
+ {
+  "id": 9,
+  "point": "Next-generation synthetic biofuels must utilize carbon dioxide directly as a feedstock to avoid competing with global food supplies.",
+  "quote": "is if we start with co two as its feedstock and so we're working with designing cells to go down this road",
+  "position": 0.8827
+ },
+ {
+  "id": 10,
+  "point": "Synthetic genomics techniques can be used to rapidly assemble combinatorial vaccines ahead of emerging infectious outbreaks.",
+  "quote": "we're now working on using these same tools to come up with instant sets of vaccines",
+  "position": 0.9553
+ }
+]

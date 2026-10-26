@@ -21,7 +21,7 @@ export function LinkedInCard({ title, body, onCopy }: LinkedInCardProps) {
   const cleanBody = body.replace(/#[a-zA-Z0-9_]+/g, "").trim();
 
   return (
-    <div className="w-full max-w-2xl rounded-card border border-black/10 bg-surface-light shadow-lg transition-all dark:border-white/10 dark:bg-[#1B1F24]">
+    <div className="w-full max-w-2xl rounded-card border border-black/10 bg-surface-light transition-all dark:border-white/10 dark:bg-[#1B1F24]">
       {/* LinkedIn Post Header */}
       <div className="flex items-center justify-between border-b border-black/5 p-21 dark:border-white/5">
         <div className="flex items-center gap-13">
@@ -31,7 +31,7 @@ export function LinkedInCard({ title, body, onCopy }: LinkedInCardProps) {
           <div>
             <div className="flex items-center gap-8">
               <span className="font-medium text-ink-light dark:text-ink-dark">EventAI Team</span>
-              <span className="rounded bg-accent/15 px-8 py-2 text-[10px] font-semibold text-accent">PRO</span>
+              <span className="rounded bg-accent/15 px-8 py-[2px] text-[10px] font-semibold text-accent">PRO</span>
             </div>
             <p className="text-xs text-ink-light/60 dark:text-ink-dark/60">Content Operations • 1d • 🌐</p>
           </div>
@@ -39,7 +39,7 @@ export function LinkedInCard({ title, body, onCopy }: LinkedInCardProps) {
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-8 rounded-card border border-primary/30 bg-primary/10 px-13 py-8 text-xs font-medium text-primary transition-all hover:bg-primary hover:text-white"
+          className="flex items-center gap-8 rounded-card border border-white/[0.12] px-13 py-8 text-xs font-medium text-ink transition-colors hover:border-amber-400/50"
         >
           {copied ? "✓ Copied!" : "📋 Copy Post"}
         </button>
@@ -66,7 +66,7 @@ export function LinkedInCard({ title, body, onCopy }: LinkedInCardProps) {
 
       {/* Social Engagement Stats Mock */}
       <div className="flex items-center justify-between border-t border-black/5 px-21 py-8 text-xs text-ink-light/50 dark:border-white/5 dark:text-ink-dark/50">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-[2px]">
           <span>👍 💡 48 reactions</span>
         </div>
         <div className="flex gap-13">

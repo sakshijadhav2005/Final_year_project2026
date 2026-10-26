@@ -1,4 +1,5 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
+import { authFetch } from "@/lib/session";
 import { useAuthStore } from "@/store/auth";
 
 export type ChatMessage = {
@@ -13,6 +14,9 @@ export function useChatStream(sessionId?: string, contextType: string = "general
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // The server creates a chat session on the first message and reports its id
+  // in the first SSE event; reuse it so follow-up questions keep their history.
+  const sessionRef = useRef<string | undefined>(sessionId);
 
   const sendMessage = useCallback(
     async (userText: string) => {
@@ -31,19 +35,17 @@ export function useChatStream(sessionId?: string, contextType: string = "general
       setIsStreaming(true);
       setError(null);
 
-      const API_BASE = import.meta.env.VITE_API_URL ?? "";
-
       try {
-        const response = await fetch(`${API_BASE}/api/v1/chat/stream`, {
+        // authFetch renews an expired token and retries instead of failing.
+        const response = await authFetch(`/api/v1/chat/stream`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            session_id: sessionId || null,
+            session_id: sessionRef.current || null,
             message: userText,
-            context_type: contextType,
+            persona: contextType,
             event_id: eventId || null,
             job_id: jobId || null,
           }),
@@ -58,26 +60,36 @@ export function useChatStream(sessionId?: string, contextType: string = "general
         let accumulated = "";
 
         if (reader) {
-          while (true) {
+          let buffer = "";
+          let finished = false;
+          while (!finished) {
             const { done, value } = await reader.read();
             if (done) break;
 
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split("\n");
+            buffer += decoder.decode(value, { stream: true });
+            // SSE events are separated by a blank line; keep any partial event in the buffer.
+            const events = buffer.split("\n\n");
+            buffer = events.pop() ?? "";
 
-            for (const line of lines) {
-              if (line.startsWith("data: ")) {
-                const data = line.slice(6);
-                if (data === "[DONE]") {
-                  break;
-                }
-                accumulated += data;
-                setMessages((prev) =>
-                  prev.map((msg) =>
-                    msg.id === assistantMsgId ? { ...msg, content: accumulated } : msg,
-                  ),
-                );
+            for (const event of events) {
+              const line = event.trim();
+              if (!line.startsWith("data:")) continue;
+              const data = line.slice(5).trim();
+              if (data === "[DONE]") {
+                finished = true;
+                break;
               }
+              try {
+                const payload = JSON.parse(data) as { chunk?: string; done?: boolean; session_id?: string };
+                if (payload.session_id) sessionRef.current = payload.session_id;
+                if (payload.chunk) accumulated += payload.chunk;
+                if (payload.done) finished = true;
+              } catch {
+                accumulated += data;
+              }
+              setMessages((prev) =>
+                prev.map((msg) => (msg.id === assistantMsgId ? { ...msg, content: accumulated } : msg)),
+              );
             }
           }
         }
@@ -95,7 +107,7 @@ export function useChatStream(sessionId?: string, contextType: string = "general
         setIsStreaming(false);
       }
     },
-    [token, sessionId, contextType, eventId, jobId],
+    [token, contextType, eventId, jobId],
   );
 
   return {

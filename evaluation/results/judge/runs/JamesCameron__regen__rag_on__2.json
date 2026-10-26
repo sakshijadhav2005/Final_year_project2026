@@ -1,0 +1,106 @@
+{
+ "run_id": "JamesCameron__regen__rag_on__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "JamesCameron",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 2,
+ "verdicts": {
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    8,
+    10
+   ],
+   "justification": "The post captures core themes well, but fails the requirement to include 3-5 relevant hashtags."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    8,
+    10
+   ],
+   "justification": "Follows all flyer constraints with a concise title under 6 words, high-impact highlights, and TBA logistics placeholders."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    10
+   ],
+   "justification": "Succinct, well-structured executive briefing meeting all formatting, length, and section criteria."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 2,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    7,
+    8,
+    10
+   ],
+   "justification": "The draft misses the required 10-15 targeted hashtags and carousel/visual slide cues entirely."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    6,
+    7,
+    10
+   ],
+   "justification": "Well written with an engaging editorial tone, three distinct subheaded sections, and a subject line under 50 characters."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    8,
+    10
+   ],
+   "justification": "Accurately represents the talk in a well-formatted long-form structure complete with numbered sections, takeaway table, and author bio."
+  }
+ }
+}

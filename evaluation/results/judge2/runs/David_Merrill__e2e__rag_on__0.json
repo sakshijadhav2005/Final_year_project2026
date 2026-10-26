@@ -1,0 +1,117 @@
+{
+ "run_id": "David_Merrill__e2e__rag_on__0",
+ "judge_model": "gemini-3.6-flash",
+ "talk_id": "David_Merrill",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    7,
+    8,
+    10
+   ],
+   "justification": "The flyer adheres to all format constraints, using a bold title under 6 words, clear bulleted highlights, and appropriate TBA placeholders for logistics."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    8,
+    10
+   ],
+   "justification": "The caption effectively uses an engaging hook, visual formatting, line breaks, emojis, a call to action, and exactly 10 targeted hashtags."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    9,
+    10
+   ],
+   "justification": "The LinkedIn post is well-structured into short paragraphs, includes 5 relevant hashtags, ends with a strong prompt for discussion, and avoids banned cliches and filler words."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    7,
+    8,
+    10
+   ],
+   "justification": "The executive summary perfectly follows the required layout (TL;DR, key evidence, discussion points, action items) while remaining well under the 400-word limit."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "The draft features an engaging editorial tone and three subheaded sections, but the subject line slightly exceeds the 50-character limit."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post provides a comprehensive, highly readable exploration of the talk with numbered sections, a structured takeaway table, and an accurate About the Author section."
+  }
+ }
+}

@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "Western industrial society operates on the assumption that maximizing individual choice is the key to maximizing freedom and human welfare.",
+  "quote": "the more choice people have the more freedom they have and the more freedom they have the more welfare they have",
+  "position": 0.0471
+ },
+ {
+  "id": 2,
+  "point": "The dramatic explosion of choices across essential domains like healthcare shifts difficult decision-making burdens onto individuals.",
+  "quote": "what it really is is a shifting of the burden and the responsibility for decision making from somebody who knows something",
+  "position": 0.2053
+ },
+ {
+  "id": 3,
+  "point": "An overwhelming number of choices paradoxically leads to paralysis rather than personal liberation.",
+  "quote": "one effect paradoxically is that it produces paralysis rather than liberation with so many options to choose from",
+  "position": 0.4034
+ },
+ {
+  "id": 4,
+  "point": "Offering too many investment choices causes people to delay important financial decisions and miss out on valuable benefits.",
+  "quote": "for every ten mutual funds the employer offered rate of participation went down two percent",
+  "position": 0.4312
+ },
+ {
+  "id": 5,
+  "point": "Having numerous alternatives fosters regret, reducing the satisfaction we experience from the choices we make.",
+  "quote": "this imagined alternative induces you to regret the decision you made and this regret subtracts from the satisfaction you get",
+  "position": 0.5237
+ },
+ {
+  "id": 6,
+  "point": "Considering rejected alternatives incurs opportunity costs that detract from the enjoyment of our chosen option.",
+  "quote": "opportunity costs subtract from the satisfaction we get out of what we choose even when what we choose is terrific",
+  "position": 0.5951
+ },
+ {
+  "id": 7,
+  "point": "A surplus of options drastically escalates our expectations, making it almost impossible to be pleasantly surprised by the outcome.",
+  "quote": "adding options to people's lives can't help but increase the expectations people have about how good those options will be",
+  "position": 0.7233
+ },
+ {
+  "id": 8,
+  "point": "When numerous options exist, individuals blame themselves for imperfect outcomes, contributing to widespread depression.",
+  "quote": "when people make decisions and even though though the results of the decisions are good they feel disappointed about them they blame themselves",
+  "position": 0.8221
+ },
+ {
+  "id": 9,
+  "point": "Shifting resources and choices from affluent societies to option-poor societies would improve the well-being of everyone.",
+  "quote": "income redistribution will make everyone better off not just poor people because of how all this excess choice plagues us",
+  "position": 0.9434
+ },
+ {
+  "id": 10,
+  "point": "Establishing healthy boundaries is essential for human happiness because limitless possibilities create paralysis rather than freedom.",
+  "quote": "if you shatter the fishbowl so that everything is possible you don't have freedom you have paralysis",
+  "position": 0.9731
+ }
+]

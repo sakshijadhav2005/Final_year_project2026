@@ -1,0 +1,109 @@
+{
+ "run_id": "JaneMcGonigal__regen__rag_on__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "JaneMcGonigal",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 3,
+ "verdicts": {
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    5,
+    10
+   ],
+   "justification": "The draft meets all formatting requirements, including visual cues and hashtag count, accurately capturing the main themes of the talk."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    10
+   ],
+   "justification": "The post adheres to all LinkedIn constraints, avoiding forbidden buzzwords while clearly synthesizing the core insights from the presentation."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    10
+   ],
+   "justification": "The flyer adheres to the 6-word title limit, uses high-impact lines with appropriate TBA placeholders, and reflects the talk faithfully."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    10
+   ],
+   "justification": "The newsletter has a subject line under 50 characters, includes three distinct sections with bold subheadings, and maintains an engaging conversational tone."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    9,
+    10
+   ],
+   "justification": "The summary adheres to all required sections and remains well under the 400-word limit with excellent structure and accuracy."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post thoroughly covers the talk with numbered sections, a comparative table, and the required About the Author section."
+  }
+ }
+}

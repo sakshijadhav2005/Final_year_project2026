@@ -1,0 +1,117 @@
+{
+ "run_id": "BillGates__regen__rag_off__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "BillGates",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 1,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    10
+   ],
+   "justification": "The flyer captures the main theme well, though the title exceeds the strict 6-word limit by one word."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    8,
+    10
+   ],
+   "justification": "The post adheres to all formatting constraints, avoids banned buzzwords, and effectively conveys the primary arguments."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "The caption includes visual carousel cues, emoji-spaced lines, an appropriate call to action, and 11 targeted hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8
+   ],
+   "justification": "The briefing is concise, well under 400 words, and properly structured with TL;DR, evidence, discussion points, and action items."
+  },
+  "newsletter": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [
+    "\"If you gave me only one wish for the next 50 years... I could pick that this thing that's half the cost with no CO2 gets invented.\" — EventAI Research Team"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    8
+   ],
+   "justification": "The subject line exceeds 50 characters (58 characters), and a direct quote from the speaker was misattributed to the research team."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    10
+   ],
+   "justification": "The blog post meets all formatting specifications including numbered insight sections, a comparison table, and the author bio."
+  }
+ }
+}

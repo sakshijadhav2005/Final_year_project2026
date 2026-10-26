@@ -1,0 +1,113 @@
+{
+ "run_id": "BillGates__e2e__rag_on__0",
+ "judge_model": "gemini-3.6-flash",
+ "talk_id": "BillGates",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    8,
+    10
+   ],
+   "justification": "The flyer is well-structured, adheres strictly to word count and TBA constraints, and captures key themes accurately."
+  },
+  "instagram": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [
+    "gatesnotes.com"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    8,
+    10
+   ],
+   "justification": "Follows all formatting rules including visual cues and targeted hashtags, though it includes an external web URL not found in the transcript."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    8,
+    10
+   ],
+   "justification": "Well-written post avoiding banned cliches/fillers, but fails the format requirement to include 3-5 hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    8,
+    10
+   ],
+   "justification": "Excellent executive summary under 400 words adhering strictly to all structure and markdown requirements."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    6,
+    8
+   ],
+   "justification": "Adheres to all format requirements, including subject line character limit and editorial three-section layout."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    8,
+    10
+   ],
+   "justification": "Comprehensive, highly readable blog post that fulfills all structure requirements including table, numbered sections, and author bio."
+  }
+ }
+}

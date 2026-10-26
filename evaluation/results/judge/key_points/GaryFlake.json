@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "Exploring data collectively reveals invisible patterns and trends rather than causing information overload.",
+  "quote": "how we can use information so that patterns pop and we can see trends that would otherwise be invisible",
+  "position": 0.0387
+ },
+ {
+  "id": 2,
+  "point": "The Pivot tool allows users to dynamically filter and reorganize mortality data to uncover demographic trends.",
+  "quote": "with pivot what i can do is i can choose to filter in one particular cause of deaths say accidents",
+  "position": 0.0849
+ },
+ {
+  "id": 3,
+  "point": "Pivot can be applied to rich media archives, enabling users to explore decades of magazine covers seamlessly.",
+  "quote": "with pivot you can drill into a decade you can drill into a particular year you can jump right into a specific issue",
+  "position": 0.2661
+ },
+ {
+  "id": 4,
+  "point": "Moving dynamically between broader and narrower scopes creates a novel information experience between searching and browsing.",
+  "quote": "when you navigate over information this way going narrower broader backing in backing out you're not searching you're not browsing",
+  "position": 0.3639
+ },
+ {
+  "id": 5,
+  "point": "Condensing Wikipedia articles into concise visual summaries enables quick overviews of popular topical domains.",
+  "quote": "we've taken every single wikipedia page and we've reduced it down to a little summary",
+  "position": 0.43
+ },
+ {
+  "id": 6,
+  "point": "Stepping back to view collections of pages reveals insights that cannot be found within any individual page.",
+  "quote": "this is an insight that was not contained within any one wikipedia page it's only possible to see that insight when you step back",
+  "position": 0.5456
+ },
+ {
+  "id": 7,
+  "point": "Navigating the web at higher levels of abstraction allows users to treat it as a truly interconnected network.",
+  "quote": "we're navigating the web for the first time as if it's actually a web not page to page but at a higher level of abstraction",
+  "position": 0.6556
+ },
+ {
+  "id": 8,
+  "point": "The same zoomable visual interface can be repurposed to inspect and replay an individual's web browsing history.",
+  "quote": "by virtue of just viewing web pages in this way i can look at my entire browsing history in the exact same way",
+  "position": 0.7546
+ },
+ {
+  "id": 9,
+  "point": "Navigating across multiple items simultaneously enables users to detect patterns that are typically hidden.",
+  "quote": "we get used to the habit of being able to go from many things to many things and then being able to see the patterns",
+  "position": 0.9284
+ },
+ {
+  "id": 10,
+  "point": "Transforming how we interact with data allows us to extract meaningful information, knowledge, and wisdom.",
+  "quote": "instead of being trapped in data we might actually extract information and instead of dealing just with information we can tease out knowledge",
+  "position": 0.9579
+ }
+]

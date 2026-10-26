@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "Severe overfishing has decimated large wild fish populations, making aquaculture an inevitable part of the future.",
+  "quote": "for the past fifty years we've been fishing the seas like we clear cut forests it's hard to overstate the destruction",
+  "position": 0.0497
+ },
+ {
+  "id": 2,
+  "point": "Many conventional fish farms rely on unsustainable feed ingredients, such as processed poultry waste.",
+  "quote": "feathers skin bone meal scraps dried and processed into feed i said what percentage of your feed is chicken",
+  "position": 0.1978
+ },
+ {
+  "id": 3,
+  "point": "The Veta la Palma farm transformed degraded cattle land into a thriving wetland aquaculture system.",
+  "quote": "instead of pushing water out they used the channels to pull water back in they flooded the canals",
+  "position": 0.3514
+ },
+ {
+  "id": 4,
+  "point": "Truly sustainable farming requires understanding and nurturing complex ecological relationships rather than focusing solely on production.",
+  "quote": "he said fish i didn't know anything about fish i'm an expert in relationships",
+  "position": 0.434
+ },
+ {
+  "id": 5,
+  "point": "A healthy, self-renewing ecosystem can provide natural sustenance for fish without requiring any external feed.",
+  "quote": "the plant biomass the phytoplankton the zooplankton it's what feeds the fish the system is so healthy it's totally self renewing",
+  "position": 0.4929
+ },
+ {
+  "id": 6,
+  "point": "Veta la Palma measures its success by the thriving abundance of natural predators within its thriving bird sanctuary.",
+  "quote": "well the last year this property had six hundred thousand birds on it more than two hundred and fifty different species",
+  "position": 0.5488
+ },
+ {
+  "id": 7,
+  "point": "The extensive wetland farm naturally filters contaminated river water, discharging cleaner water back into the ocean.",
+  "quote": "when it works its way through the system and leaves the water is cleaner than when it entered",
+  "position": 0.7409
+ },
+ {
+  "id": 8,
+  "point": "Agribusiness has justified destructive environmental practices by narrowly focusing on producing cheap calories.",
+  "quote": "agribusiness has simply asked if we're feeding more people more cheaply how terrible could that be",
+  "position": 0.8738
+ },
+ {
+  "id": 9,
+  "point": "Industrial agriculture is undermining itself by rapidly depleting the essential ecological resources necessary for food production.",
+  "quote": "we should call it what it is a business in liquidation a business that's quickly eroding ecological capital",
+  "position": 0.89
+ },
+ {
+  "id": 10,
+  "point": "The future of sustainable and delicious food depends on adopting regenerative, extensive farming practices.",
+  "quote": "farms that aren't worlds unto themselves farms that restore instead of deplete farms that farm extensively instead of just intensively",
+  "position": 0.9655
+ }
+]

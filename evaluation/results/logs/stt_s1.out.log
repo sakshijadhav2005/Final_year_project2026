@@ -1,0 +1,35 @@
+2026-10-26 15:42:08 [info     ] vertex_stt_done                chunks=1 model=gemini-3.6-flash words=860
+Al_Gore gemini-3.6-flash 300s: 22.5s 
+2026-10-26 15:42:48 [info     ] vertex_stt_done                chunks=4 model=gemini-3.6-flash words=3212
+Barry_Schwartz gemini-3.6-flash 300s: 39.4s 
+2026-10-26 15:43:16 [info     ] vertex_stt_done                chunks=2 model=gemini-3.6-flash words=1389
+Blaise_Agueray_Arcas gemini-3.6-flash 300s: 28.7s 
+2026-10-26 15:43:34 [info     ] vertex_stt_done                chunks=1 model=gemini-3.6-flash words=573
+Brian_Cox gemini-3.6-flash 300s: 17.3s 
+2026-10-26 15:44:04 [info     ] vertex_stt_done                chunks=4 model=gemini-3.6-flash words=2418
+Craig_Venter gemini-3.6-flash 300s: 30.7s 
+2026-10-26 15:44:24 [info     ] vertex_stt_done                chunks=2 model=gemini-3.6-flash words=1102
+David_Merrill gemini-3.6-flash 300s: 19.6s 
+2026-10-26 15:52:40 [info     ] vertex_stt_done                chunks=4 model=gemini-3.6-flash words=3746
+Elizabeth_Gilbert gemini-3.6-flash 300s: 496.3s 
+2026-10-26 15:53:25 [info     ] vertex_stt_done                chunks=5 model=gemini-3.6-flash words=4127
+Wade_Davis gemini-3.6-flash 300s: 44.7s 
+2026-10-26 15:54:07 [info     ] vertex_stt_done                chunks=5 model=gemini-3.6-flash words=2860
+AimeeMullins gemini-3.6-flash 300s: 41.7s 
+2026-10-26 15:55:03 [info     ] vertex_stt_done                chunks=6 model=gemini-3.6-flash words=4309
+BillGates gemini-3.6-flash 300s: 55.8s 
+2026-10-26 15:55:40 [info     ] vertex_stt_done                chunks=3 model=gemini-3.6-flash words=2342
+DanBarber gemini-3.6-flash 300s: 37.2s 
+2026-10-26 15:56:12 [info     ] vertex_stt_done                chunks=4 model=gemini-3.6-flash words=2990
+DanielKahneman gemini-3.6-flash 300s: 32.3s 
+2026-10-26 15:56:38 [info     ] vertex_stt_done                chunks=2 model=gemini-3.6-flash words=1535
+EricMead_2009P_EricMead gemini-3.6-flash 300s: 26.3s 
+2026-10-26 15:56:58 [info     ] vertex_stt_done                chunks=2 model=gemini-3.6-flash words=1099
+GaryFlake gemini-3.6-flash 300s: 19.5s 
+2026-10-26 15:57:29 [info     ] vertex_stt_done                chunks=4 model=gemini-3.6-flash words=2976
+JamesCameron gemini-3.6-flash 300s: 30.8s 
+2026-10-26 15:58:04 [info     ] vertex_stt_done                chunks=4 model=gemini-3.6-flash words=3749
+JaneMcGonigal gemini-3.6-flash 300s: 34.9s 
+2026-10-26 15:58:33 [info     ] vertex_stt_done                chunks=4 model=gemini-3.6-flash words=2956
+MichaelSpecter gemini-3.6-flash 300s: 28.9s 
+RobertGupta gemini-3.6-flash 300s: 905.2s ServerNotFoundError: Unable to find the server at generativelanguage.googleapis.com

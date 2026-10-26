@@ -1,0 +1,103 @@
+{
+ "run_id": "Elizabeth_Gilbert__regen__rag_on__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Elizabeth_Gilbert",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 1,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    10
+   ],
+   "justification": "The draft captures the core message well, though the main title exceeds the 6-word limit."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    6,
+    9,
+    10
+   ],
+   "justification": "The LinkedIn post strictly adheres to all constraints, avoids forbidden buzzwords, and presents accurate takeaways from the transcript."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    10
+   ],
+   "justification": "The draft follows the carousel format accurately with the required hashtag count, engaging emojis, and accurate core themes."
+  },
+  "newsletter": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "The newsletter is well structured and meets all formatting criteria, though one subheading slightly confuses the transcript's vessel analogy."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    10
+   ],
+   "justification": "The executive summary adheres to all required sections and word count limits while maintaining factual consistency."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "The article is well written and includes the required table and numbered sections, but it omits the required 'About the Author' section."
+  }
+ }
+}

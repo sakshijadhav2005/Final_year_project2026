@@ -1,0 +1,104 @@
+{
+ "run_id": "JaneMcGonigal__regen__rag_off__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "JaneMcGonigal",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    5,
+    10
+   ],
+   "justification": "The flyer captures the main themes well but violates the instruction specifying a title of at most 6 words."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    5,
+    6,
+    10
+   ],
+   "justification": "The post adheres to all LinkedIn format constraints, avoiding banned buzzwords and presenting core talk takeaways clearly."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    5,
+    10
+   ],
+   "justification": "The caption meets all formatting requirements, including slide cues, emojis, call to action, and exactly 10 targeted hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    10
+   ],
+   "justification": "The briefing is well within the 400-word limit and clearly outlines the TL;DR, evidence, discussion points, and action items."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    5,
+    10
+   ],
+   "justification": "The newsletter body is fluent and properly organized into three sections, but the subject line exceeds the 50-character limit."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    10
+   ],
+   "justification": "The long-form article follows all structural guidelines, including numbered sections, a takeaway table, and an About the Author section."
+  }
+ }
+}

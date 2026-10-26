@@ -1,3 +1,4 @@
+import asyncio
 from datetime import UTC, datetime
 from uuid import UUID
 
@@ -7,14 +8,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import get_settings
 from app.db.session import SessionLocal
 from app.graphs.pipeline import get_compiled_graph
+from app.graphs.state import merge_generated
 from app.models.content import ContentPiece
 from app.models.job import AgentOutput, Job, Transcript
 from app.models.recording import Recording
+from app.services import degraded
 from app.services.audit import write_audit
 from app.services.av_scan import scan_file
 from app.services.guardrails import should_use_rag
 from app.services.quality import inspect_media
-from app.services.rag import index_transcript_chunks, retrieve_chunks
+from app.services.rag import index_transcript_chunks, load_rag_pool
 from app.services.transcription import transcribe_file
 
 AGENT_KEYS = [
@@ -39,6 +42,17 @@ TERMINAL = {
     "cancelled",
 }
 
+ACTIVE_JOB_TASKS: dict[str, asyncio.Task] = {}
+CANCELLED_JOB_IDS: set[str] = set()
+
+
+def cancel_job_task(job_id: str) -> None:
+    job_str = str(job_id)
+    CANCELLED_JOB_IDS.add(job_str)
+    task = ACTIVE_JOB_TASKS.get(job_str)
+    if task and not task.done():
+        task.cancel()
+
 
 def _queued_progress() -> dict[str, str]:
     return {key: "queued" for key in AGENT_KEYS}
@@ -47,22 +61,34 @@ def _queued_progress() -> dict[str, str]:
 async def _save(db: AsyncSession, job: Job, **kwargs) -> None:
     for key, value in kwargs.items():
         setattr(job, key, value)
+    db.add(job)
     await db.commit()
-    await db.refresh(job)
+    try:
+        await db.refresh(job)
+    except Exception:
+        pass
 
 
 async def _cancelled(db: AsyncSession, job_id: UUID) -> bool:
+    job_str = str(job_id)
+    if job_str in CANCELLED_JOB_IDS:
+        return True
     status = (await db.execute(select(Job.status).where(Job.id == job_id))).scalar_one_or_none()
-    return status == "cancelled"
+    return status is None or status == "cancelled"
 
 
 async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
-    settings = get_settings()
-    async with SessionLocal() as db:
+    job_str = str(job_id)
+    current_task = asyncio.current_task()
+    if current_task:
+        ACTIVE_JOB_TASKS[job_str] = current_task
+
+    # One session for the whole job; it is closed in the `finally` block below.
+    db = SessionLocal()
+    try:
+        settings = get_settings()
         job = (await db.execute(select(Job).where(Job.id == UUID(job_id)))).scalar_one_or_none()
-        if job is None:
-            return
-        if job.status == "cancelled":
+        if job is None or job.status == "cancelled" or job_str in CANCELLED_JOB_IDS:
             return
 
         recording = (
@@ -139,6 +165,27 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                 )
                 return
 
+            # --- VAD HALLUCINATION GUARDRAIL ---
+            # Reject known Whisper hallucinations caused by background noise/coughing
+            known_hallucinations = [
+                "अमर रहे, अमर रहे, नेताजी सुभाष चंद्र बोस अमर रहे।",
+                "अमर रहे, अमर रहे, नेताजी सुभाष चंद्र बोस अमर रहे",
+                "अमर रहे, अमर रहे, नेताजी सुभाष चंद्र बोस",
+            ]
+            
+            clean_text = transcript.text.strip()
+            if any(hallucination in clean_text for hallucination in known_hallucinations):
+                await _save(
+                    db,
+                    job,
+                    status="needs_reupload",
+                    error_code="vad_hallucination",
+                    error_message="Audio was mostly silence or noise (detected hallucinated output). Please upload a clearer recording with actual speech.",
+                    finished_at=datetime.now(UTC),
+                    progress={key: "failed" for key in AGENT_KEYS},
+                )
+                return
+
             if transcript.vendor_id:
                 recording.videodb_id = transcript.vendor_id
             recording.duration_sec = (
@@ -186,14 +233,16 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             progress["quality_check"] = "complete"
             await _save(db, job, progress=progress)
 
-        rag_chunks: list[dict] = []
+        # Candidate chunks only; the rag_retrieve graph node ranks them against the brief.
+        rag_pool: list[dict] = []
         if settings.rag_enabled and should_use_rag(
             transcript_row.full_text, job.use_org_memory, settings.rag_token_threshold
         ):
-            rag_chunks = await retrieve_chunks(
+            rag_pool = await load_rag_pool(
                 db,
                 user_id=job.user_id,
-                query=transcript_row.full_text,
+                job_id=str(job.id),
+                transcript=transcript_row.full_text,
                 use_org_memory=job.use_org_memory,
             )
 
@@ -239,59 +288,69 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             "use_org_memory": job.use_org_memory,
             "user_memory": user_memory,
             "retry_count": 0,
-            "rag_chunks": rag_chunks,
+            "rag_pool": rag_pool,
+            "rag_chunks": [],
         }
         await _save(db, job, status="analyzing", progress=progress)
 
         final_state = dict(initial)
+        degraded_events = degraded.start()
         try:
             async for event in graph.astream(initial, stream_mode="updates"):
                 if await _cancelled(db, job.id):
                     return
                 for node_name, update in event.items():
                     if isinstance(update, dict):
-                        final_state.update(update)
-                    if node_name in progress:
-                        progress[node_name] = "complete"
-                    next_status = {
-                        "topic_extraction": "analyzing",
-                        "highlight_detection": "analyzing",
-                        "speaker_analysis": "analyzing",
-                        "sentiment_analysis": "analyzing",
-                        "content_planner": "planning",
-                        "rag_retrieve": "planning",
-                        "generator": "generating",
-                        "guardrail": "guarding",
-                        "translation": "translating",
-                    }.get(node_name)
-                    running = {
-                        "content_planner": "content_planner",
-                        "rag_retrieve": "rag_retrieve",
-                        "generator": "generator",
-                        "guardrail": "guardrail",
-                        "translation": "translation",
-                    }.get(node_name)
-                    if running and running in progress and progress[running] == "queued":
-                        pass
-                    for key in AGENT_KEYS:
-                        if progress[key] == "queued" and key == node_name:
-                            progress[key] = "complete"
-                    nxt = {
-                        "fan_out": [
-                            "topic_extraction",
-                            "highlight_detection",
-                            "speaker_analysis",
-                            "sentiment_analysis",
-                        ],
-                        "quality_check": ["topic_extraction"],
-                        "content_planner": ["rag_retrieve"],
-                        "rag_retrieve": ["generator"],
-                        "generator": ["guardrail"],
-                        "guardrail": ["translation"],
-                    }.get(node_name, [])
-                    for key in nxt:
-                        if progress.get(key) == "queued":
-                            progress[key] = "running"
+                        for key, value in update.items():
+                            if key == "generated":
+                                final_state["generated"] = merge_generated(
+                                    final_state.get("generated"), value
+                                )
+                            else:
+                                final_state[key] = value
+
+                    # Map LangGraph node names to stepper progress keys
+                    if node_name == "parallel_analysis":
+                        progress["topic_extraction"] = "complete"
+                        progress["highlight_detection"] = "complete"
+                        progress["speaker_analysis"] = "complete"
+                        progress["sentiment_analysis"] = "complete"
+                        progress["content_planner"] = "running"
+                        next_status = "planning"
+                    elif node_name == "content_planner":
+                        progress["content_planner"] = "complete"
+                        progress["rag_retrieve"] = "running"
+                        next_status = "planning"
+                    elif node_name == "rag_retrieve":
+                        progress["rag_retrieve"] = "complete"
+                        progress["generator"] = "running"
+                        next_status = "generating"
+                    elif node_name in ("dynamic_generator", "generator"):
+                        progress["generator"] = "complete"
+                        progress["guardrail"] = "running"
+                        next_status = "guarding"
+                    elif node_name in ("guardrail_node", "guardrail"):
+                        progress["guardrail"] = "complete"
+                        progress["translation"] = "running"
+                        next_status = "translating"
+                    elif node_name == "translation":
+                        progress["translation"] = "complete"
+                        next_status = "pending_review"
+                    else:
+                        if node_name in progress:
+                            progress[node_name] = "complete"
+                        next_status = {
+                            "topic_extraction": "analyzing",
+                            "highlight_detection": "analyzing",
+                            "speaker_analysis": "analyzing",
+                            "sentiment_analysis": "analyzing",
+                            "content_planner": "planning",
+                            "rag_retrieve": "planning",
+                            "generator": "generating",
+                            "guardrail": "guarding",
+                            "translation": "translating",
+                        }.get(node_name)
+
                     await _save(
                         db,
                         job,
@@ -324,6 +383,11 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             ("sentiment", final_state.get("sentiment")),
             ("brief", final_state.get("brief")),
             ("guardrail", final_state.get("guardrail")),
+            (
+                "rag",
+                final_state.get("rag_chunks")
+                and {"chunks": final_state["rag_chunks"], **(final_state.get("rag_meta") or {})},
+            ),
         ):
             if payload:
                 db.add(AgentOutput(job_id=job.id, agent_name=name, payload=payload))
@@ -384,13 +448,31 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
         )
 
         status = "needs_review" if route == "needs_review" else "pending_review"
+        degraded_info: dict = {}
+        if degraded_events:
+            # Some step used fallback output (offline template, placeholder draft,
+            # untranslated copy): never present that as a normal result.
+            status = "needs_review"
+            reasons = sorted(set(degraded_events))
+            degraded_info = {
+                "error_code": "degraded_output",
+                "error_message": "Some drafts use fallback text because a model was "
+                f"unavailable ({', '.join(reasons)}). Review before publishing.",
+            }
         await _save(
             db,
             job,
             status=status,
             finished_at=datetime.now(UTC),
             progress={key: "complete" for key in AGENT_KEYS},
+            **degraded_info,
         )
+    except asyncio.CancelledError:
+        return
+    finally:
+        await db.close()
+        ACTIVE_JOB_TASKS.pop(job_str, None)
+        CANCELLED_JOB_IDS.discard(job_str)
 
 
 async def purge_expired_media() -> int:
@@ -419,3 +501,52 @@ async def purge_expired_media() -> int:
             recording.storage_uri = ""
         await db.commit()
     return removed
+
+
+IN_FLIGHT_STATUSES = (
+    "queued",
+    "validating",
+    "transcribing",
+    "analyzing",
+    "planning",
+    "generating",
+    "guarding",
+    "translating",
+)
+
+
+async def recover_interrupted_jobs() -> int:
+    """Jobs run inside the API process (unless Celery is enabled). If the server
+    stopped mid-job, those jobs would stay "running" forever, so on startup we
+    mark them failed; the user can press Regenerate to run them again."""
+    from sqlalchemy import update
+
+    async with SessionLocal() as db:
+        result = await db.execute(
+            update(Job)
+            .where(Job.status.in_(IN_FLIGHT_STATUSES))
+            .values(
+                status="failed",
+                error_code="interrupted",
+                error_message="Processing was interrupted by a server restart. "
+                "Click Regenerate to run it again.",
+                finished_at=datetime.now(UTC),
+            )
+        )
+        await db.commit()
+        return result.rowcount or 0
+
+
+async def purge_media_periodically(interval_seconds: int = 3600) -> None:
+    """Background retention loop (used when Celery beat is not running)."""
+    import structlog
+
+    logger = structlog.get_logger("retention")
+    while True:
+        try:
+            removed = await purge_expired_media()
+            if removed:
+                logger.info("retention_purge_complete", count=removed)
+        except Exception as exc:  # keep the loop alive
+            logger.error("retention_purge_failed", error=str(exc))
+        await asyncio.sleep(interval_seconds)

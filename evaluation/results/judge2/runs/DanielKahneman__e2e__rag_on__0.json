@@ -1,0 +1,118 @@
+{
+ "run_id": "DanielKahneman__e2e__rag_on__0",
+ "judge_model": "gemini-3.6-flash",
+ "talk_id": "DanielKahneman",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    8,
+    9,
+    10
+   ],
+   "justification": "Extremely clear and visually organized flyer draft that strictly adheres to the 6-word title rule and formatting requirements."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    9,
+    10
+   ],
+   "justification": "Follows all LinkedIn format requirements seamlessly, avoiding banned cliches/fillers while providing an engaging insight-focused post."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    9,
+    10
+   ],
+   "justification": "Well-crafted Instagram caption with visual cues, solid structure, engaging tone, call to action, and appropriate hashtag count."
+  },
+  "summary": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [
+    "Lead Speaker: Dr. Daniel Kahneman"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Under the 400-word limit and excellently structured into markdown tables/sections, though it introduces the speaker's name which was not present in the transcript or author profile."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    7,
+    9,
+    10
+   ],
+   "justification": "Conversational and well-formatted email newsletter, but the subject line slightly exceeds the 50-character limit (53 characters)."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Comprehensive, highly articulate Markdown blog post that perfectly satisfies all structural and formatting requirements."
+  }
+ }
+}

@@ -1,0 +1,11 @@
+metric,talks,rag_on_mean,rag_off_mean,mean_diff,talks_improved,talks_worse,wilcoxon_p
+"Late coverage, all formats",11,0.684,0.468,0.216,10,0,0.002
+"Early coverage, all formats",11,0.585,0.701,-0.116,1,10,0.0029
+"Late coverage, long formats",11,0.747,0.508,0.239,9,0,0.0039
+"All key points, all formats",11,0.591,0.598,-0.007,5,5,0.7148
+Factual cons.,11,4.985,4.955,0.03,4,1,0.1875
+Relevance,11,4.97,5.0,-0.03,0,2,0.5
+Completeness,11,4.283,4.202,0.081,7,3,0.3223
+Readability,11,4.965,4.995,-0.03,1,2,0.5
+Instr. adherence,11,4.692,4.672,0.02,4,6,0.709
+Unsupported claims per draft,11,0.01,0.045,-0.035,1,5,0.125

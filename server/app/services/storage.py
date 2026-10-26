@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import abc
+import typing
 from pathlib import Path
 
 import structlog
@@ -16,6 +17,11 @@ class StorageService(abc.ABC):
     @abc.abstractmethod
     def save_bytes(self, data: bytes, destination_name: str) -> str:
         """Saves bytes and returns storage URI/path."""
+        pass
+
+    @abc.abstractmethod
+    def save_stream(self, stream: typing.BinaryIO, destination_name: str, chunk_size: int = 5 * 1024 * 1024) -> tuple[str, str, int]:
+        """Saves a stream in chunks and returns (storage_uri, sha256_hash, total_bytes)."""
         pass
 
     @abc.abstractmethod
@@ -46,6 +52,18 @@ class LocalStorageService(StorageService):
         dest = self.media_root / destination_name
         dest.write_bytes(data)
         return str(dest)
+
+    def save_stream(self, stream: typing.BinaryIO, destination_name: str, chunk_size: int = 5 * 1024 * 1024) -> tuple[str, str, int]:
+        import hashlib
+        dest = self.media_root / destination_name
+        hasher = hashlib.sha256()
+        total_bytes = 0
+        with open(dest, "wb") as f:
+            while chunk := stream.read(chunk_size):
+                f.write(chunk)
+                hasher.update(chunk)
+                total_bytes += len(chunk)
+        return str(dest), hasher.hexdigest(), total_bytes
 
     def get_local_path(self, storage_uri: str) -> str:
         return storage_uri
@@ -115,6 +133,37 @@ class S3CompatibleStorageService(StorageService):
             return str(local_dest)
 
         return f"s3://{self.bucket_name}/{destination_name}"
+
+    def save_stream(self, stream: typing.BinaryIO, destination_name: str, chunk_size: int = 5 * 1024 * 1024) -> tuple[str, str, int]:
+        import hashlib
+        local_dest = self.local_cache / destination_name
+        hasher = hashlib.sha256()
+        total_bytes = 0
+        
+        # Write chunks to local cache and compute hash
+        with open(local_dest, "wb") as f:
+            while chunk := stream.read(chunk_size):
+                f.write(chunk)
+                hasher.update(chunk)
+                total_bytes += len(chunk)
+                
+        # Now stream from local cache to S3 using boto3's multipart upload
+        try:
+            with open(local_dest, "rb") as f:
+                self.s3.upload_fileobj(
+                    Fileobj=f,
+                    Bucket=self.bucket_name,
+                    Key=destination_name,
+                )
+            logger.info("cloud_upload_success", bucket=self.bucket_name, key=destination_name)
+        except Exception as exc:
+            logger.error(
+                "cloud_upload_failed", bucket=self.bucket_name, key=destination_name, error=str(exc)
+            )
+            # Even if cloud upload fails, local copy is saved
+            return str(local_dest), hasher.hexdigest(), total_bytes
+
+        return f"s3://{self.bucket_name}/{destination_name}", hasher.hexdigest(), total_bytes
 
     def get_local_path(self, storage_uri: str) -> str:
         if not storage_uri.startswith("s3://"):

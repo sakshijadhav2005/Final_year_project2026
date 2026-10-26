@@ -1,0 +1,121 @@
+{
+ "run_id": "DanBarber__regen__rag_on__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "DanBarber",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 1,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    4,
+    9,
+    10
+   ],
+   "justification": "The draft captures the core theme well and includes logistics placeholders, but the title exceeds the required maximum of 6 words."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    6,
+    7,
+    9,
+    10
+   ],
+   "justification": "The caption is engaging, factually accurate, and includes the requested 10 hashtags, though explicit visual or carousel cues are minimal."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post adheres closely to all formatting requirements, avoiding forbidden buzzwords while cleanly conveying key insights from the talk."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The summary provides an excellent structured breakdown under the 400-word limit with all required sections."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter is well written, covers the subject comprehensively, and adheres strictly to the structural and character length constraints."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The article is fluent and factually sound, but it omits the required numbered sections and comparison/takeaway table."
+  }
+ }
+}

@@ -1,0 +1,6 @@
+check,pass,n,rate
+linkedin 3-5 hashtags,12,18,0.667
+linkedin no banned phrases,18,18,1.0
+instagram 10-15 hashtags,18,18,1.0
+summary <= 400 words,18,18,1.0
+flyer no invented date (TBA or none),18,18,1.0

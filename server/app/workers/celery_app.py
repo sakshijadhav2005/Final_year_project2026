@@ -1,4 +1,5 @@
 from celery import Celery
+from celery.schedules import crontab
 
 from app.core.config import get_settings
 
@@ -19,3 +20,10 @@ celery_app.conf.update(
     enable_utc=True,
     task_track_started=True,
 )
+
+celery_app.conf.beat_schedule = {
+    "purge-expired-media-daily": {
+        "task": "jobs.purge_expired_media",
+        "schedule": crontab(hour="0", minute="0"),
+    }
+}

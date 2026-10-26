@@ -1,0 +1,103 @@
+{
+ "run_id": "Craig_Venter__regen__rag_off__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Craig_Venter",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 1,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    9
+   ],
+   "justification": "The flyer adheres strictly to all format instructions including word count limits and TBA placeholders, with completely accurate content."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    9
+   ],
+   "justification": "The caption follows all formatting requirements including carousel cues, emojis, call to action, and exactly 10 targeted hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    8,
+    9
+   ],
+   "justification": "The executive summary is under 400 words, clearly organized into required sections, and accurately conveys key data points from the talk."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post is well-written and avoids cliches/filler words, but fails the requirement to include 3-5 relevant hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter meets all constraints with a short subject line (<50 characters), greeting, three bold subheadings, and clear CTAs."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post thoroughly covers the talk's themes and fully adheres to all structure requirements, including numbered sections, comparison table, and author bio."
+  }
+ }
+}

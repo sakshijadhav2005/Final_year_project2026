@@ -15,6 +15,7 @@ class Job(TimestampMixin, Base):
     id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), nullable=False, index=True)
     recording_id: Mapped[uuid.UUID | None] = mapped_column(Uuid(as_uuid=True), nullable=True)
+    event_id: Mapped[uuid.UUID | None] = mapped_column(Uuid(as_uuid=True), nullable=True, index=True)
     status: Mapped[str] = mapped_column(String(32), nullable=False, default="queued", index=True)
     requested_types: Mapped[list | None] = mapped_column(JSON, nullable=True)
     target_languages: Mapped[list | None] = mapped_column(JSON, nullable=True)

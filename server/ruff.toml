@@ -4,3 +4,5 @@ src = ["app", "tests"]
 
 [lint]
 select = ["E", "F", "I", "UP"]
+# Long LLM prompt strings and skill instructions are kept on one line for readability.
+ignore = ["E501"]

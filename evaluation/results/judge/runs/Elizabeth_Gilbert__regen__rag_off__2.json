@@ -1,0 +1,104 @@
+{
+ "run_id": "Elizabeth_Gilbert__regen__rag_off__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Elizabeth_Gilbert",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 2,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    10
+   ],
+   "justification": "The flyer adheres closely to all formatting constraints and accurately captures key themes regarding creativity and mental health."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    10
+   ],
+   "justification": "The post avoids forbidden buzzwords, includes a strong call to action with appropriate hashtags, and effectively articulates the talk's core insights."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    10
+   ],
+   "justification": "Follows all Instagram formatting instructions including carousel cues, emojis, and a compliant hashtag count."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    10
+   ],
+   "justification": "Structured cleanly with all required briefing sections, well under the 400-word limit."
+  },
+  "newsletter": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [
+    "— EventAI Research Team (attributing Gilbert's direct quote to the research team)"
+   ],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    5,
+    10
+   ],
+   "justification": "Meets all structure requirements and character limits, though it erroneously attributes a direct transcript quote to the EventAI Research Team."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    5,
+    10
+   ],
+   "justification": "Meets all long-form formatting requirements including numbered sections, comparison table, and author bio."
+  }
+ }
+}

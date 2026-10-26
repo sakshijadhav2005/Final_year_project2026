@@ -1,0 +1,111 @@
+{
+ "run_id": "EricMead_2009P_EricMead__e2e__rag_on__0",
+ "judge_model": "gemini-3.6-flash",
+ "talk_id": "EricMead_2009P_EricMead",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "justification": "Adheres perfectly to flyer criteria with clean formatting and appropriate TBA placeholders, though it focuses mostly on high-level concepts."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "justification": "Follows all Instagram requirements including carousel cues, call to action, and exactly 10 targeted hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "justification": "Well-structured conversational email, though the subject line slightly exceeds the 50-character limit."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "justification": "Well-written post with a good narrative hook, but fails to include the required 3-5 hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5
+   ],
+   "justification": "Meets all word count and structural requirements for an executive briefing, framing the talk effectively for a business audience."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Thoroughly covers all key points of the talk with clear analysis, though it lacks a dedicated 'About the Author' section at the end."
+  }
+ }
+}

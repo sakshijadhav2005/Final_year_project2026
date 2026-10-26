@@ -1,0 +1,105 @@
+{
+ "run_id": "Wade_Davis__regen__rag_off__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Wade_Davis",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 2,
+ "verdicts": {
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    10
+   ],
+   "justification": "The draft clearly communicates key insights from the talk with excellent flow, proper formatting, and adherence to all LinkedIn constraints."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    10
+   ],
+   "justification": "The flyer is punchy and well-structured, but the title is 7 words long, slightly exceeding the 6-word limit."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    10
+   ],
+   "justification": "The executive summary adheres strictly to all format sections, keeps under the word count, and effectively summarizes key concepts."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    10
+   ],
+   "justification": "The caption includes an engaging hook, carousel visual cues, emojis, a clear call to action, and exactly 10 targeted hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [
+    "Attribution of the speaker's direct quote to 'EventAI Research Team'"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    8
+   ],
+   "justification": "The subject line exceeds the 50-character limit (64 characters) and directly attributes the speaker's quote to the EventAI Research Team."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    8,
+    10
+   ],
+   "justification": "The article fully adheres to the required blog structure with engaging prose, numbered sections, a comparative table, and an author bio."
+  }
+ }
+}

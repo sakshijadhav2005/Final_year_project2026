@@ -1,0 +1,108 @@
+{
+ "run_id": "Elizabeth_Gilbert__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Elizabeth_Gilbert",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    7,
+    10
+   ],
+   "justification": "The flyer is concise, high-impact, uses TBA placeholders appropriately, and adheres strictly to the title length requirement."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    7,
+    10
+   ],
+   "justification": "The caption features strong formatting, engaging emoji bullet points, an active call to action, and exactly 10 targeted hashtags."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    6,
+    7,
+    10
+   ],
+   "justification": "The post has an engaging hook, smooth paragraph flow, exactly 5 relevant hashtags, and avoids banned cliches and buzzwords."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    6,
+    7,
+    10
+   ],
+   "justification": "The subject line is under 50 characters, and the body includes a greeting, three bold-subheaded sections, and clear call-to-action links."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    10
+   ],
+   "justification": "The long-form article is well structured with numbered sections, detailed narrative examples, a comparison table, and an About the Author section."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    7,
+    10
+   ],
+   "justification": "The executive summary includes all required structural components (TL;DR, key evidence, discussion points, action items) well under the 400-word limit."
+  }
+ }
+}

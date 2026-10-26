@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "The language we use to define disability directly shapes how we value and perceive people.",
+  "quote": "our language affects our thinking and how we view the world and how we view other people",
+  "position": 0.1286
+ },
+ {
+  "id": 2,
+  "point": "Supportive adults can fundamentally transform how children perceive their own strength and identity.",
+  "quote": "this is an example of how adults in positions of power can ignite the power of a child",
+  "position": 0.2702
+ },
+ {
+  "id": 3,
+  "point": "Humanity's greatest strength lies in our innate ability to adapt to changes and challenges.",
+  "quote": "everyone has something rare and powerful to offer our society and that the human ability to adapt is our greatest asset",
+  "position": 0.3306
+ },
+ {
+  "id": 4,
+  "point": "Adversity is an intrinsic part of life that shapes us rather than an obstacle we must avoid.",
+  "quote": "adversity isn't an obstacle that we need to get around in order to resume living our life it's part of our life",
+  "position": 0.3923
+ },
+ {
+  "id": 5,
+  "point": "Focusing exclusively on fixing what is perceived as broken can be more harmful than the underlying condition.",
+  "quote": "perhaps the existing model of only looking at what is broken in you and how do we fix it serves to be more disabling",
+  "position": 0.4766
+ },
+ {
+  "id": 6,
+  "point": "Human growth and resilience are sparked when people struggle through conflict and transform.",
+  "quote": "the human ability to survive and flourish is driven by the the struggle of the human spirit through conflict into transformation",
+  "position": 0.5728
+ },
+ {
+  "id": 7,
+  "point": "Shifting away from the illusion of normalcy toward potential allows people to fully share their unique abilities.",
+  "quote": "if we can change this paradigm from one of achieving normalcy to one of possibility or potency",
+  "position": 0.6235
+ },
+ {
+  "id": 8,
+  "point": "Medical prognoses fail to account for the immense, unquantifiable power of the human will.",
+  "quote": "no prognosis can account for how powerful this could be and a as a determinant in the quality of someone's life",
+  "position": 0.7833
+ },
+ {
+  "id": 9,
+  "point": "True education is about drawing out and unlocking the inherent potential within an individual.",
+  "quote": "in fact the the exact meaning of the word educate comes from the root word educe it means to bring forth what is within",
+  "position": 0.8681
+ },
+ {
+  "id": 10,
+  "point": "The only genuine disability is a broken spirit that has lost hope, imagination, and curiosity.",
+  "quote": "i think that the only true disability is a crushed spirit a spirit that's been crushed doesn't have hope",
+  "position": 0.9468
+ }
+]

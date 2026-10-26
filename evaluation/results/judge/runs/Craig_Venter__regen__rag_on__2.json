@@ -1,0 +1,108 @@
+{
+ "run_id": "Craig_Venter__regen__rag_on__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Craig_Venter",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 2,
+ "verdicts": {
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The summary adheres perfectly to the executive briefing format requirements and word count limits while accurately summarizing key metrics and points."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    9,
+    10
+   ],
+   "justification": "The Instagram caption includes all required visual cues, engagement hooks, call to action, and exactly 10 targeted hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter follows all formatting constraints, including a concise subject line under 50 characters, three distinct sections with bold subheadings, and clear CTAs."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post avoids forbidden buzzwords and cliches, features concise paragraphing, provides an interactive closing question, and uses 5 relevant hashtags."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    8,
+    9
+   ],
+   "justification": "The flyer has a bold 4-word title, punchy event copy, and correctly applies 'TBA' placeholders for all unspecified logistical details."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    7,
+    8,
+    9
+   ],
+   "justification": "The blog post is well-structured in Markdown with numbered sections, quotes, a comparison table, and an accurate 'About the Author' section."
+  }
+ }
+}

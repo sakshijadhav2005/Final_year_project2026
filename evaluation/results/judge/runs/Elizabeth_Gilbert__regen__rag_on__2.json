@@ -1,0 +1,101 @@
+{
+ "run_id": "Elizabeth_Gilbert__regen__rag_on__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Elizabeth_Gilbert",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 2,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    10
+   ],
+   "justification": "The flyer adheres closely to all formatting requirements and captures key thematic elements accurately without factual errors."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "The post meets all LinkedIn constraints, effectively translating the core concepts into actionable insights with no forbidden buzzwords."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    10
+   ],
+   "justification": "The Instagram caption includes carousel cues, appropriate hashtag count, engaging emojis, and accurate thematic summaries."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    10
+   ],
+   "justification": "The summary is well within the word limit and accurately condenses the talk into professional executive sections and action items."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "The newsletter follows all formatting rules, including the subject line length constraint and three clear subheadings."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "The blog post adheres perfectly to all structural criteria, including numbered sections, a comparison table, and an author bio."
+  }
+ }
+}

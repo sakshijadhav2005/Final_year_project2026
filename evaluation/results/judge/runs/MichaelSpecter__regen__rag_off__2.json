@@ -1,0 +1,109 @@
+{
+ "run_id": "MichaelSpecter__regen__rag_off__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "MichaelSpecter",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 2,
+ "verdicts": {
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    8
+   ],
+   "justification": "The caption is engaging, follows all formatting rules including the required hashtag count and CTA, and faithfully captures the core message of the talk."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    8
+   ],
+   "justification": "The title exceeds the maximum constraint of 6 words (8 words), though the body copy is well-structured and uses appropriate TBA placeholders."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    8,
+    9
+   ],
+   "justification": "The newsletter is well written with three distinct bold sections, but the subject line exceeds the 50-character limit at 53 characters."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    5,
+    7,
+    8,
+    9
+   ],
+   "justification": "The executive summary perfectly follows the required structure, stays well under 400 words, and accurately presents the talk's evidence and action items."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    7,
+    8
+   ],
+   "justification": "The post adheres to all LinkedIn format constraints, avoiding forbidden clichés and filler words while including a clear discussion prompt and five hashtags."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    8,
+    9
+   ],
+   "justification": "The long-form article includes strong numbered sections and a takeaway table, but omits a dedicated 'About the Author' section."
+  }
+ }
+}

@@ -1,0 +1,113 @@
+{
+ "run_id": "Barry_Schwartz__regen__rag_off__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Barry_Schwartz",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    7,
+    10
+   ],
+   "justification": "The flyer is crisp and factual, but the title exceeds the required maximum limit of 6 words."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    10
+   ],
+   "justification": "The LinkedIn post strictly adheres to formatting rules, avoids prohibited cliches, and accurately synthesizes key insights from the talk."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    10
+   ],
+   "justification": "Well-structured executive summary that includes all required sections and stays well under the 400-word limit."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    7,
+    10
+   ],
+   "justification": "Captures the tone and format of Instagram well with visual cues, emojis, and exactly 10 targeted hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    7,
+    10
+   ],
+   "justification": "Follows all newsletter requirements including a subject line under 50 characters, three distinct subheaded sections, and an engaging conversational tone."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 2,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    10
+   ],
+   "justification": "While factually sound and well written, the blog post completely omitted the required comparison/takeaway table and the 'About the Author' section."
+  }
+ }
+}

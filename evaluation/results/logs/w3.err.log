@@ -1,0 +1,14 @@
+﻿python.exe : D:\FinalYearProject2026\Final_year_project\server\.venv\Lib\site-packages\google\api_core\_python_version_
+support.py:254: FutureWarning: You are using a Python version (3.11.7) which Google will stop supporting in new 
+releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, 
+or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+At line:1 char:553
++ ... on__0.json; & server\.venv\Scripts\python.exe evaluation\scripts\run_ ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D:\FinalYearPro...past that date.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  warnings.warn(message, FutureWarning)
+D:\FinalYearProject2026\Final_year_project\server\.venv\Lib\site-packages\pydub\utils.py:170: RuntimeWarning: Couldn't 
+find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+  warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)

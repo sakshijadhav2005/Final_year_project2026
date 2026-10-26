@@ -1,0 +1,8 @@
+{
+  "dataset": "TED-LIUM release 3, long-form merge (distil-whisper/tedlium-long-form)",
+  "url": "https://huggingface.co/datasets/distil-whisper/tedlium-long-form",
+  "original": "https://www.openslr.org/51/",
+  "license": "CC BY-NC-ND 3.0 (academic, non-commercial evaluation; not redistributed)",
+  "references": "Human transcripts distributed with TED-LIUM 3 (segments concatenated per talk)",
+  "talks": 19
+}

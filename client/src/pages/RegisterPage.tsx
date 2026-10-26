@@ -37,17 +37,16 @@ export function RegisterPage() {
     <GoldenShell>
       <div className="w-full max-w-md mx-auto py-21">
         <div className="mb-21">
-          <p className="text-xs font-semibold uppercase tracking-wider text-gold">Onboarding</p>
-          <h1 className="font-display text-3xl font-normal italic text-ink-light dark:text-ink-dark">
-            Create an <em className="not-italic text-gold dark:text-gold-soft">EventAI</em> Account
+          <h1 className="font-display text-h1 font-semibold text-ink-light dark:text-ink-dark">
+            Create your EventAI account
           </h1>
         </div>
 
         <form className="glass p-34 flex flex-col gap-13" onSubmit={onSubmit}>
           <div>
-            <label className="block text-xs uppercase tracking-wider text-ink-light/50 dark:text-ink-dim mb-4">Email</label>
+            <label className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Email</label>
             <input
-              className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+              className="w-full rounded-card border border-black/10 dark:border-white/[0.08] bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
               type="email"
               placeholder="organizer@conference.com"
               value={email}
@@ -57,10 +56,10 @@ export function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-ink-light/50 dark:text-ink-dim mb-4">Password</label>
+            <label className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Password</label>
             <div className="relative">
               <input
-                className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 pr-34 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+                className="w-full rounded-card border border-black/10 dark:border-white/[0.08] bg-canvas-light dark:bg-white/[0.04] px-13 py-8 pr-34 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -88,27 +87,27 @@ export function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-ink-light/50 dark:text-ink-dim mb-4">Account Role</label>
+            <label className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Account Role</label>
             <select
-              className="w-full rounded-card border border-black/10 dark:border-white/10 bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+              className="w-full rounded-card border border-black/10 dark:border-white/[0.08] bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
               value={role}
               onChange={(e) => setRole(e.target.value as UserRole)}
             >
-              <option value="event_organizer" className="bg-surface-light dark:bg-[#141826]">Event Organizer (Host events, uploads &amp; AI pipeline)</option>
-              <option value="regular_user" className="bg-surface-light dark:bg-[#141826]">Regular User / Attendee (Browse catalogs &amp; community)</option>
-              <option value="content_creator" className="bg-surface-light dark:bg-[#141826]">Content Creator (Review &amp; Edit Content)</option>
+              <option value="event_organizer" className="bg-surface-light bg-surface">Event Organizer (Host events, uploads &amp; AI pipeline)</option>
+              <option value="regular_user" className="bg-surface-light bg-surface">Regular User / Attendee (Browse catalogs &amp; community)</option>
+              <option value="content_creator" className="bg-surface-light bg-surface">Content Creator (Review &amp; Edit Content)</option>
             </select>
           </div>
 
           {error && (
-            <div className="rounded-card border border-danger/40 bg-danger/10 p-13 text-xs text-danger flex flex-col gap-4">
+            <div className="rounded-card border border-danger/40 bg-danger/10 p-13 text-xs text-danger flex flex-col gap-[4px]">
               <div className="flex items-center gap-8 font-semibold">
                 <span>⚠️ Registration Notice</span>
               </div>
               <p>{error}</p>
               {error.toLowerCase().includes("registered") || error.toLowerCase().includes("taken") ? (
-                <p className="mt-4 text-[11px] text-ink-light/80 dark:text-ink-dim">
-                  This email address already has an account. You can <Link to="/login" className="text-gold dark:text-gold-soft font-semibold underline">Sign In Here</Link>.
+                <p className="mt-[4px] text-[11px] text-ink-light/80 dark:text-ink-dim">
+                  This email address already has an account. You can <Link to="/login" className="text-gold dark:text-gold-soft font-semibold underline">Sign in here</Link>.
                 </p>
               ) : null}
             </div>
@@ -117,9 +116,9 @@ export function RegisterPage() {
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="mt-13 rounded-full border border-gold/30 bg-gradient-to-r from-gold/20 via-lavender/15 to-teal/10 px-21 py-13 font-sans text-sm font-medium text-gold dark:text-gold-soft hover:border-gold hover:scale-[1.02] transition-all"
+            className="btn-primary mt-13 w-full py-13"
           >
-            {mutation.isPending ? "Creating Account…" : "Register Workspace Account →"}
+            {mutation.isPending ? "Creating account…" : "Create account"}
           </button>
         </form>
 

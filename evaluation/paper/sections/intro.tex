@@ -1,0 +1,35 @@
+\section{Introduction}
+Conferences, meetups and college events are now routinely recorded, yet most recordings are
+never turned into the written material that organisers need afterwards: a summary for
+stakeholders, a blog article, posts for LinkedIn and Instagram, a newsletter and a flyer for
+the next edition. Producing these by hand takes hours per session, and generic large language
+model (LLM) chat interfaces do not solve the problem end to end: the user must transcribe the
+talk, paste text in pieces, prompt each format separately and check every claim against the
+recording~\cite{ji2023hallucination}.
+
+This paper presents \emph{EventAI}, an open web application that converts an event recording
+into six publish-ready content formats with a human approval step. EventAI combines Gemini
+speech-to-text on Google Cloud Vertex AI, a LangGraph~\cite{langgraph} multi-agent pipeline
+(analysis, planning, six format-specialised writer agents running in parallel, a guardrail
+and translation), \emph{selective} retrieval-augmented generation (RAG)~\cite{lewis2020rag}
+that supplies the parts of long talks the writers cannot see directly, and a review workflow
+in which no draft is marked ready to publish without approval.
+
+The contributions of this implementation paper are:
+\begin{enumerate}
+  \item The design and implementation of an end-to-end, human-in-the-loop recording-to-content
+        system with a stateful multi-agent graph, a batched LLM guardrail with targeted
+        regeneration of only the failing drafts, and a selective RAG stage driven by the
+        editorial brief (Section~\ref{sec:system}).
+  \item A reproducible, cost-aware evaluation on 18 full TED talks (about four hours of audio)
+        with human reference transcripts~\cite{hernandez2018tedlium}, covering speech
+        recognition accuracy, stage latency, token usage, retrieval quality, a controlled RAG
+        ablation, generated-content quality and reliability under injected faults
+        (Sections~\ref{sec:method}--\ref{sec:results}).
+  \item An honest account of the defects that the evaluation itself exposed in the system
+        (guardrail scope, few-shot template leakage, an inert circuit breaker, sticky model
+        fallback, silent offline fallback and an unguarded JSON shape), how each was found,
+        fixed and re-measured (Section~\ref{sec:discussion}).
+\end{enumerate}
+All raw measurements, scripts and figures are released with the code so that every number
+in this paper can be regenerated.

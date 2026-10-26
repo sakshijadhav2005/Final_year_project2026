@@ -1,0 +1,130 @@
+{
+ "label": "mock-based fault injection",
+ "primary_model": "gemini-3.1-flash-lite",
+ "scenarios": [
+  {
+   "scenario": "S0 no fault",
+   "trials": 20,
+   "outcomes": {
+    "primary model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 1,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.0,
+   "models_tried": "gemini-3.1-flash-lite",
+   "second_call_model": "gemini-3.1-flash-lite"
+  },
+  {
+   "scenario": "S1 transient 429 (once)",
+   "trials": 20,
+   "outcomes": {
+    "primary model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 2,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.0,
+   "models_tried": "gemini-3.1-flash-lite",
+   "second_call_model": "gemini-3.1-flash-lite"
+  },
+  {
+   "scenario": "S2 timeout (once)",
+   "trials": 20,
+   "outcomes": {
+    "primary model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 2,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.0,
+   "models_tried": "gemini-3.1-flash-lite",
+   "second_call_model": "gemini-3.1-flash-lite"
+  },
+  {
+   "scenario": "S3 persistent 429 on primary",
+   "trials": 20,
+   "outcomes": {
+    "fallback model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 4,
+   "latency_median_sec": 1.01,
+   "latency_max_sec": 1.017,
+   "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+   "second_call_model": "gemini-3.6-flash"
+  },
+  {
+   "scenario": "S4 model 404 not found",
+   "trials": 20,
+   "outcomes": {
+    "fallback model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 2,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.001,
+   "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+   "second_call_model": "gemini-3.6-flash"
+  },
+  {
+   "scenario": "S5 empty response",
+   "trials": 20,
+   "outcomes": {
+    "fallback model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 2,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.0,
+   "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+   "second_call_model": "gemini-3.6-flash"
+  },
+  {
+   "scenario": "S6 JSON in markdown fence",
+   "trials": 20,
+   "outcomes": {
+    "primary model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 1,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.0,
+   "models_tried": "gemini-3.1-flash-lite",
+   "second_call_model": "gemini-3.1-flash-lite"
+  },
+  {
+   "scenario": "S7 prose, no JSON",
+   "trials": 20,
+   "outcomes": {
+    "unparsed (raw text)": 20
+   },
+   "usable_output_rate": 0.0,
+   "mean_attempts": 1,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.0,
+   "models_tried": "gemini-3.1-flash-lite",
+   "second_call_model": "gemini-3.1-flash-lite"
+  },
+  {
+   "scenario": "S8 all models 500",
+   "trials": 20,
+   "outcomes": {
+    "offline template": 20
+   },
+   "usable_output_rate": 0.0,
+   "mean_attempts": 6,
+   "latency_median_sec": 2.0185,
+   "latency_max_sec": 2.033,
+   "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+   "second_call_model": "gemini-3.1-flash-lite"
+  }
+ ],
+ "circuit_breaker_probe": {
+  "consecutive_failing_calls": 8,
+  "fail_max": 5,
+  "upstream_invocations": 8,
+  "short_circuited": 0,
+  "breaker_open_until_set": true
+ }
+}

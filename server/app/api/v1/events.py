@@ -16,20 +16,27 @@ from app.schemas.event import EventCreate, EventRead
 router = APIRouter(prefix="/events", tags=["events"])
 
 
-@router.get("/", response_model=list[EventRead])
+@router.get("", response_model=list[EventRead])
 async def list_events(
     user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
-    type: EventType | None = Query(None, description="Filter events by type"),
+    type: str | None = Query(None, description="Filter events by type: meetup, event, speech, other, all"),
+    mine: bool = Query(False, description="Only events created by the signed-in user"),
 ) -> list[Event]:
     query = select(Event).order_by(Event.date.desc())
-    if type is not None:
-        query = query.where(Event.type == type)
+    if mine:
+        query = query.where(Event.organizer_id == user.id)
+    if type and type.lower() != "all":
+        try:
+            event_type_enum = EventType(type.lower())
+            query = query.where(Event.type == event_type_enum)
+        except ValueError:
+            pass
     result = await db.execute(query)
     return list(result.scalars().all())
 
 
-@router.post("/", response_model=EventRead, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=EventRead, status_code=status.HTTP_201_CREATED)
 async def create_event(
     body: EventCreate,
     user: Annotated[User, Depends(require_role([UserRole.EVENT_ORGANIZER, UserRole.ADMIN]))],
@@ -40,6 +47,9 @@ async def create_event(
         name=body.name,
         date=body.date,
         topic=body.topic,
+        location=body.location,
+        banner_image=body.banner_image,
+        description=body.description,
         organizer_name=organizer_display_name,
         type=body.type,
         organizer_id=user.id,

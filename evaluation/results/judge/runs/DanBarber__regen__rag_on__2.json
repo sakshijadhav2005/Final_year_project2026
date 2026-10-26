@@ -1,0 +1,125 @@
+{
+ "run_id": "DanBarber__regen__rag_on__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "DanBarber",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 2,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    3,
+    4,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Meets all format requirements including title length constraints and placeholder rules while capturing key themes accurately."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Includes hook, carousel cues, appropriate emojis, clear call to action, and exactly 10 targeted hashtags."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "Avoids forbidden buzzwords and clichés, includes five relevant hashtags, and frames the talk effectively for LinkedIn."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Under 400 words, structured with all required executive briefing sections and markdown formatting."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Subject line is under 50 characters, and the email contains three distinct sections with bold subheadings, greeting, and calls to action."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 2,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Failed to include a comparison/takeaway table and numbered insight sections as strictly required by the format specifications."
+  }
+ }
+}

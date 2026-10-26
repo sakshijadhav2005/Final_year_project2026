@@ -1,0 +1,113 @@
+{
+ "run_id": "RobertGupta__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "RobertGupta",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    8,
+    9,
+    10
+   ],
+   "justification": "The flyer adheres well to formatting constraints though the title is 7 words long instead of at most 6 words."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The summary adheres strictly to all executive brief requirements, including under 400 words, TL;DR, discussion points, and action items."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    4,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "Follows all Instagram formatting requirements including hook, visual cues, short lines with emojis, CTA, and 12 hashtags."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post adopts a first-person speaker persona and is missing the required 3-5 hashtags entirely."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The subject line is 51 characters long (exceeding the under 50 characters limit), but otherwise adheres well to the newsletter format."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The article is missing the required numbered sections and comparison/takeaway table, and mixes authorial voice with the original speaker's first-person perspective."
+  }
+ }
+}

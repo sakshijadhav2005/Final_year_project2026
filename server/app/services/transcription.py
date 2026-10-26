@@ -20,6 +20,27 @@ def denoise_file(path: str) -> str | None:
         return None
 
 
+def is_mostly_silent(path: str) -> bool:
+    """Uses Voice Activity Detection to determine if the audio is just background noise/silence."""
+    try:
+        from pydub import AudioSegment
+        from pydub.silence import detect_nonsilent
+        
+        audio = AudioSegment.from_file(path)
+        # If absolute volume is incredibly low, it's silence
+        if audio.dBFS < -45:
+            return True
+            
+        # Detect actual speech blocks (louder than -35dB)
+        nonsilent_ranges = detect_nonsilent(audio, min_silence_len=300, silence_thresh=-35)
+        total_nonsilent = sum(end - start for start, end in nonsilent_ranges)
+        
+        # If there is less than 0.5 seconds of total speech, it's basically silent/coughing
+        return total_nonsilent < 500
+    except Exception:
+        return False
+
+
 def _from_plain_text(path: str) -> TranscriptResult:
     text = Path(path).read_text(encoding="utf-8", errors="ignore").strip()
     return TranscriptResult(
@@ -32,15 +53,68 @@ def _from_plain_text(path: str) -> TranscriptResult:
     )
 
 
+def _fallback_provider(tried: set[str]):
+    """Next engine not tried yet for this file, skipping engines whose credentials were
+    rejected at start-up."""
+    from app.core.config import get_settings
+    from app.services.credentials import is_invalid
+
+    settings = get_settings()
+    if (
+        "vertex-stt" not in tried
+        and settings.google_cloud_project
+        and settings.llm_provider == "vertex"
+        and not is_invalid("vertex")
+    ):
+        from app.providers.vertex_stt import VertexSTTProvider
+
+        return VertexSTTProvider()
+    if "gemini-stt" not in tried and settings.gemini_api_key and not is_invalid("gemini"):
+        from app.providers.gemini_stt import GeminiSTTProvider
+
+        return GeminiSTTProvider()
+    if "videodb" not in tried and settings.videodb_api_key:
+        from app.providers.videodb_stt import VideoDBSTTProvider
+
+        return VideoDBSTTProvider()
+    return None
+
+
 async def transcribe_file(path: str) -> TranscriptResult:
     suffix = Path(path).suffix.lower()
     if suffix in {".txt", ".md"}:
         return _from_plain_text(path)
 
+    # VAD Pre-Check: Stop Whisper Hallucinations before they happen
+    if is_mostly_silent(path):
+        return TranscriptResult(
+            text="[NOISY_DATA_ALERT] Audio contains no detectable speech.",
+            language="en",
+            avg_confidence=0.0,
+            provider="vad_precheck",
+            vendor_id="local",
+            segments=[]
+        )
+
     provider = get_stt_provider()
 
     async def _run(target: str) -> TranscriptResult:
-        return await with_backoff(lambda: provider.transcribe(target), circuit=stt_circuit)
+        try:
+            return await with_backoff(
+                lambda: provider.transcribe(target), circuit=stt_circuit, attempts=2
+            )
+        except Exception as first_error:
+            # One engine failed (e.g. VideoDB timeout): try each remaining engine once
+            # instead of re-uploading the same file to the same service again and again.
+            tried = {getattr(provider, "name", "")}
+            last_error: Exception = first_error
+            while (fallback := _fallback_provider(tried)) is not None:
+                tried.add(fallback.name)
+                try:
+                    return await fallback.transcribe(target)
+                except Exception as exc:  # noqa: BLE001 - next engine
+                    last_error = exc
+            raise last_error from first_error
 
     result = await _run(path)
     avg = result.avg_confidence

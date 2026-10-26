@@ -1,0 +1,119 @@
+{
+ "run_id": "MichaelSpecter__regen__rag_off__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "MichaelSpecter",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 3,
+ "verdicts": {
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    6,
+    8
+   ],
+   "justification": "The draft accurately reflects the talk's core message on scientific progress and adheres well to all Instagram format requirements."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post captures the key themes seamlessly with strong formatting and without forbidden cliches or filler words."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The copy is impactful and well structured, though the title exceeds the strict 6-word limit by one word."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    3,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The executive summary effectively distills the evidence and discussion points within the specified word count and format structure."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    7,
+    8,
+    9
+   ],
+   "justification": "The newsletter is engaging and fluent, featuring the required three distinct subheadings and a concise subject line."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The article is comprehensive, beautifully written, and follows all structural requirements including numbered sections, a comparative table, and an author bio."
+  }
+ }
+}

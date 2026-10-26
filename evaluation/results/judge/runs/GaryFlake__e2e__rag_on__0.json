@@ -1,0 +1,122 @@
+{
+ "run_id": "GaryFlake__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "GaryFlake",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    4,
+    6,
+    7,
+    8,
+    10
+   ],
+   "justification": "The flyer adheres to all format instructions including the 6-word title limit, captures the core themes well, and uses appropriate placeholders."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7,
+    10
+   ],
+   "justification": "The post effectively follows the required structure with carousel cues, engaging visual hooks, short emoji-accented lines, and 11 targeted hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The executive summary perfectly executes all structural requirements under 400 words with thorough coverage of the talk's core takeaways."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    10
+   ],
+   "justification": "The newsletter keeps the subject line under 50 characters, provides three clear bold subheaded sections, and maintains an engaging editorial voice."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "A comprehensive long-form article covering all key points with numbered sections, comparison table, conclusion, and author bio."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    6,
+    7,
+    9,
+    10
+   ],
+   "justification": "The post delivers strong insights and an engaging hook, but omits the required 3-5 hashtags."
+  }
+ }
+}

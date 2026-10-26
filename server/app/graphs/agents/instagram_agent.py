@@ -1,6 +1,92 @@
-from app.graphs.agents.base import BaseCreatorAgent
+import asyncio
+import json
+from typing import Any
 
+import structlog
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langgraph.prebuilt import create_react_agent
+
+from app.core.config import get_settings
+from app.graphs.agents.base import BaseCreatorAgent, _retrieved_block
+from app.services.rag import AGENT_TRANSCRIPT_CHARS
+from app.graphs.tools import generate_image_prompt, get_trending_audio_tracks
+
+logger = structlog.get_logger("instagram_agent")
 
 class InstagramAgent(BaseCreatorAgent):
     def __init__(self):
-        super().__init__(agent_name="ig_caption", skill_filename="instagram_skill.md")
+        super().__init__(agent_name="instagram", skill_filename="instagram_skill.md")
+
+    async def generate(
+        self,
+        transcript_text: str,
+        brief: dict | None = None,
+        user_memory: dict | None = None,
+        temperature: float = 0.35,
+        context_chunks: list[dict] | None = None,
+    ) -> dict[str, Any]:
+        try:
+            
+            settings = get_settings()
+            if not settings.gemini_api_key or not settings.agent_tools_enabled:
+                # Offline mode or tools switched off: one plain generation call (fastest).
+                return await super().generate(transcript_text, brief, user_memory, temperature, context_chunks)
+            
+            model_name = settings.gemini_model_generate or "gemini-3.6-flash"
+            llm = ChatGoogleGenerativeAI(
+                model=model_name,
+                api_key=settings.gemini_api_key,
+                temperature=temperature,
+                timeout=settings.llm_timeout_seconds,
+                max_retries=1,
+            )
+            
+            tools = [generate_image_prompt, get_trending_audio_tracks]
+            
+            system_prompt = self._build_system_prompt(user_memory)
+            
+            agent_executor = create_react_agent(llm, tools, prompt=system_prompt)
+            
+            brief_str = str(brief) if brief else "N/A"
+            user_prompt = (
+                "Here is the context you must use to generate the instagram post:\n\n"
+                f"<EDITORIAL_BRIEF>\n{brief_str}\n</EDITORIAL_BRIEF>\n\n"
+                f"<TRANSCRIPT>\n{transcript_text[:AGENT_TRANSCRIPT_CHARS]}\n</TRANSCRIPT>\n\n"
+                f"{_retrieved_block(context_chunks)}"
+                f"Now, please generate the final {self.agent_name} matching your system instructions. "
+                "IMPORTANT: You MUST return a pure JSON string. Do not use Markdown code blocks. Just start with { and end with }."
+            )
+            
+            response = await asyncio.wait_for(agent_executor.ainvoke({
+                "messages": [("user", user_prompt)]
+            }), timeout=settings.agent_timeout_seconds)
+            
+            content = response["messages"][-1].content
+            # Newer Gemini chat models may return a list of content parts.
+            last_message = (
+                "".join(
+                    part.get("text", "") if isinstance(part, dict) else str(part)
+                    for part in content
+                )
+                if isinstance(content, list)
+                else str(content)
+            )
+
+            json_str = last_message.strip()
+            if json_str.startswith("```json"):
+                json_str = json_str[7:]
+            if json_str.startswith("```"):
+                json_str = json_str[3:]
+            if json_str.endswith("```"):
+                json_str = json_str[:-3]
+            json_str = json_str.strip()
+            
+            res = json.loads(json_str)
+            res["type"] = self.agent_name
+            if "body" not in res and "text" in res:
+                res["body"] = res["text"]
+            return res
+            
+        except Exception as exc:
+            logger.error("instagram_agent_tool_error", error=str(exc))
+            return await super().generate(transcript_text, brief, user_memory, temperature, context_chunks)

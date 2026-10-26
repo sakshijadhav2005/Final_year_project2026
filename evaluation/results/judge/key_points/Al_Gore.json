@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "The Arctic ice cap has experienced severe shrinkage over the past several decades.",
+  "quote": "arctic ice cap which for most of the last three million years has been the size of the lower forty eight states has shrunk by forty percent",
+  "position": 0.0136
+ },
+ {
+  "id": 2,
+  "point": "Thawing permafrost in the Arctic risks releasing massive quantities of methane into the atmosphere.",
+  "quote": "frozen carbon which when it thaws is turned into methane by microbes compared to the total amount of global warming pollution in the atmosphere",
+  "position": 0.2042
+ },
+ {
+  "id": 3,
+  "point": "Antarctica is now experiencing negative ice balance, which threatens substantial sea level rise.",
+  "quote": "scientists reported the entire continent is now in negative ice balance and west antarctica cropped up on top some under sea islands is particularly rapid",
+  "position": 0.3894
+ },
+ {
+  "id": 4,
+  "point": "The melting of Himalayan glaciers threatens critical drinking water supplies for billions of people.",
+  "quote": "forty percent of all the people in the world get half of their drinking water from that melting flow",
+  "position": 0.4601
+ },
+ {
+  "id": 5,
+  "point": "Climate-related disasters worldwide have escalated dramatically compared to previous decades.",
+  "quote": "the disasters around the world have been increasing at an absolutely extraordinary and unprecedented rate four times as many in the last thirty years",
+  "position": 0.561
+ },
+ {
+  "id": 6,
+  "point": "Massive daily carbon emissions are being absorbed by the oceans, contributing to significant oxygen depletion.",
+  "quote": "we've added seventy million tons of co two every twenty four hours twenty five million tons every day to the oceans",
+  "position": 0.6278
+ },
+ {
+  "id": 7,
+  "point": "Fossil fuel combustion is the primary driver of global warming.",
+  "quote": "the biggest single cause of global warming along with deforestation which is twenty percent of it is the burning of fossil fuels",
+  "position": 0.6921
+ },
+ {
+  "id": 8,
+  "point": "Fossil fuel companies spend hundreds of millions of dollars marketing misleading concepts like clean coal.",
+  "quote": "the coal industries and the oil industries spent a quarter of a billion dollars in the last calendar year promoting clean coal",
+  "position": 0.7983
+ },
+ {
+  "id": 9,
+  "point": "Coal waste represents one of the largest and most hazardous waste streams in the United States.",
+  "quote": "coal sludge was spilled you probably saw it on the news this all over the country is the second largest waste stream in america",
+  "position": 0.8497
+ },
+ {
+  "id": 10,
+  "point": "Addressing the climate crisis requires urgent, collective action across the world.",
+  "quote": "if you want to go quickly go alone if you want to go far go together we need to go far quickly",
+  "position": 0.9762
+ }
+]

@@ -1,0 +1,129 @@
+{
+ "run_id": "DanBarber__regen__rag_off__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "DanBarber",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 1,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10
+   ],
+   "justification": "The flyer adheres closely to all length and format requirements, including the bold 6-word title and TBA logistics."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10
+   ],
+   "justification": "The LinkedIn post features a strong hook, concise narrative insights, avoids forbidden buzzwords, and includes exactly five relevant hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The executive summary perfectly includes TL;DR, key evidence, discussion points, and action items within the 400-word limit."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter has an engaging subject line under 50 characters, three clear sections with bold subheadings, and an effective call to action."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The Instagram caption includes carousel cues, clean emoji-bulleted lines, a clear call to action, and 10 targeted hashtags."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The article is well written with a takeaway table and author profile, though the body sections are not explicitly numbered as requested in the format requirements."
+  }
+ }
+}

@@ -1,0 +1,131 @@
+{
+ "run_id": "DanBarber__regen__rag_off__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "DanBarber",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 2,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10
+   ],
+   "justification": "The flyer adheres to all constraints including the title word limit and logistics placeholders while capturing the core themes accurately."
+  },
+  "instagram": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 2,
+   "unsupported_claims": [
+    "Keynote by: Dan Barber"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post failed to include the required 10-15 hashtags and introduced an external speaker name not present in the transcript or author profile."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter is well written and structured with three bold subheadings, though the subject line exceeds the 50-character limit."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post avoids cliches and filler words but completely omits the required 3-5 relevant hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The executive summary perfectly follows the required structure, stays under 400 words, and accurately summarizes the talk."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post adheres to all formatting guidelines, including numbered sections, a comparative table, and an About the Author section."
+  }
+ }
+}

@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering
+\caption{RAG ablation: same stored transcript, 3 runs per condition, averaged per talk ($n=11$ long talks); two-sided Wilcoxon signed-rank test. Coverage from the automatic judge.}
+\label{tab:rag}
+\footnotesize
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Metric & RAG off & RAG on & $\Delta$ & $+$/$-$ & $p$ \\
+\midrule
+Late coverage, all formats (\%) & 46.8 & 68.4 & +21.6 & 10/0 & 0.0020 \\
+Early coverage, all formats (\%) & 70.1 & 58.5 & -11.6 & 1/10 & 0.0029 \\
+Late coverage, long formats (\%) & 50.8 & 74.7 & +23.9 & 9/0 & 0.0039 \\
+All key points, all formats (\%) & 59.8 & 59.1 & -0.7 & 5/5 & 0.7148 \\
+\midrule
+Factual cons. & 4.96 & 4.99 & +0.03 & 4/1 & 0.1875 \\
+Relevance & 5.00 & 4.97 & -0.03 & 0/2 & 0.5000 \\
+Completeness & 4.20 & 4.28 & +0.08 & 7/3 & 0.3223 \\
+Readability & 5.00 & 4.96 & -0.03 & 1/2 & 0.5000 \\
+Instr. adherence & 4.67 & 4.69 & +0.02 & 4/6 & 0.7090 \\
+Unsupported claims per draft & 0.04 & 0.01 & -0.04 & 1/5 & 0.1250 \\
+\bottomrule
+\end{tabular}
+\\[2pt]\parbox{\linewidth}{\scriptsize $+$/$-$: talks whose per-talk mean rose/fell with RAG.}
+\end{table}

@@ -1,0 +1,106 @@
+{
+ "run_id": "Elizabeth_Gilbert__regen__rag_off__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Elizabeth_Gilbert",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    10
+   ],
+   "justification": "The flyer is punchy, adheres strictly to word count and formatting constraints, and accurately reflects the talk's core theme."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    5,
+    9,
+    10
+   ],
+   "justification": "The newsletter is conversational and well-structured with clear subheadings, though the subject line slightly exceeds the 50-character limit."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    9,
+    10
+   ],
+   "justification": "Well-formatted LinkedIn post with an engaging hook, appropriate hashtag count, and no forbidden buzzwords or cliches."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    10
+   ],
+   "justification": "Includes carousel slide cues, emoji-spaced short lines, an engaging CTA, and exactly 10 targeted hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    9,
+    10
+   ],
+   "justification": "A crisp, structured executive summary under 400 words featuring TL;DR, evidence, discussion points, and action items."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    5,
+    9,
+    10
+   ],
+   "justification": "Follows all markdown blogging instructions, including numbered insight sections, a comparison table, and an About the Author section."
+  }
+ }
+}

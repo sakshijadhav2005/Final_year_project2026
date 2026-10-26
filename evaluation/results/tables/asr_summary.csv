@@ -1,0 +1,6 @@
+source,model,chunk_s,talks,corpus_wer,mean_wer,median_wer,max_wer,mean_cer,sub,del,ins,ref_words,median_rtf,median_stt_sec,audio_tokens_per_min
+app e2e,gemini-3.1-flash-lite,300,18,2.19,2.26,2.22,5.45,1.15,464,224,284,44283,0.0478,43.2,1619.9
+stt-only,gemini-3.1-flash-lite,120,18,2.19,2.28,2.17,5.03,1.17,460,229,279,44283,0.0366,25.5,1990.7
+stt-only,gemini-3.1-flash-lite,600,18,2.23,2.3,2.34,5.38,1.17,463,227,297,44283,0.0298,24.1,1503.1
+stt-only,gemini-3.6-flash,300,18,2.1,2.14,1.89,5.1,1.09,413,242,276,44283,0.0408,30.8,1505.7
+stt-only,gemini-3.7-flash,300,18,1.98,2.04,1.87,4.54,1.06,380,210,285,44283,0.1058,90.7,1561.5

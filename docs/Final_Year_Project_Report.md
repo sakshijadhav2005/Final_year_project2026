@@ -16,22 +16,22 @@ EventAI is built on a modern, robust, and asynchronous tech stack to ensure high
 - **Backend**: FastAPI (Python 3.11+), Pydantic v2.
 - **AI & Pipeline**: LangGraph (`StateGraph`), Google Gemini API for generation/translation.
 - **Media Ingestion**: VideoDB for transcription, indexing, and search.
-- **Database**: PostgreSQL with `pgvector` (for selective RAG embeddings).
-- **Queueing**: Celery & Redis for asynchronous background tasks.
+- **Database**: PostgreSQL (SQLite for local development); transcript chunks for selective RAG are stored with Vertex AI embeddings (hashed bag-of-words fallback offline) and ranked by cosine similarity.
+- **Queueing**: In-process asynchronous background tasks by default, with optional Celery & Redis workers (`USE_CELERY=true`).
 - **Cloud Storage**: S3-compatible cloud storage adapter (Cloudflare R2, AWS S3/MinIO) with local disk fallback.
 
 ## 4. System Architecture
 The application is separated into a decoupled client-server model:
 1. **Frontend (React)**: Handles JWT authentication, file uploads, real-time job progress (via WebSocket/SSE), and a rich Content Studio UI for live editing and human approval.
 2. **Backend API (FastAPI)**: Orchestrates the business logic, handles uploads, enforces role-based access control (Admin, Event Organizer, Content Creator), and manages database persistence.
-3. **Background Worker (Celery)**: Processes long-running tasks including media quality checks, VideoDB ingestion, and the AI agent pipeline.
+3. **Background Processing**: Long-running work (media quality checks, VideoDB ingestion and the AI agent pipeline) runs as asynchronous background tasks, either inside the API process or on a Celery worker when `USE_CELERY=true`. Jobs interrupted by a restart are detected on startup and can be regenerated.
 
 ### The LangGraph Pipeline
 Instead of a linear script, EventAI orchestrates AI operations via a **StateGraph**. The multi-agent pipeline includes:
 - **Quality Check**: Validates audio silence ratio and duration.
 - **Parallel Analysis Agents**: Extracts **Topics**, **Highlights**, **Speakers**, and **Sentiment** concurrently to reduce latency.
 - **Content Planner**: Synthesizes the analysis into a comprehensive brief.
-- **Selective RAG**: Conditionally retrieves past organizational memory (via `pgvector`) if the transcript exceeds token thresholds.
+- **Selective RAG**: When the transcript exceeds the writers' context window or org-memory is enabled, retrieves the transcript chunks (and past-event chunks) most similar to the editorial brief and gives them to every writer agent.
 - **Gemini Generator**: Formats the brief into structured pieces (blogs, newsletters, etc.).
 - **Guardrails**: Automated checks for moderation, schema validation, and transcript grounding.
 

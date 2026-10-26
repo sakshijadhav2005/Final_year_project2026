@@ -1,0 +1,115 @@
+{
+ "run_id": "DanielKahneman__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "DanielKahneman",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    8,
+    9
+   ],
+   "justification": "The flyer adheres strictly to formatting guidelines including the word count limit on the title and accurately summarizes key points from the talk."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    9,
+    10
+   ],
+   "justification": "The post avoids prohibited filler words and cliches while effectively outlining key takeaways with an engaging hook and appropriate hashtags."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    5,
+    9,
+    10
+   ],
+   "justification": "The draft adheres to all formatting constraints with visual cues, emojis, a call to action, and exactly 10 targeted hashtags."
+  },
+  "summary": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [
+    "Lead Speaker: Dr. Daniel Kahneman"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The executive briefing is well under 400 words and thoroughly structured, though it inserts the speaker's external name not present in the transcript or profile."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    9,
+    10
+   ],
+   "justification": "The newsletter is engaging and follows the three-section structure, but the subject line exceeds the 50-character limit at 54 characters."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "The long-form article includes all required structural components such as numbered sections, a comparison table, and an About the Author section while faithfully reflecting the transcript."
+  }
+ }
+}

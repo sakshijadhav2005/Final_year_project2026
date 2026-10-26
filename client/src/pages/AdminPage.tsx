@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 import { listAdminJobs, listAudit } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
@@ -14,7 +15,7 @@ export function AdminPage() {
     return (
       <GoldenShell>
         <div className="max-w-md mx-auto py-55 text-center">
-          <h1 className="font-display text-2xl font-bold text-ink-light dark:text-ink-dark">Admin Console</h1>
+          <h1 className="font-display text-h1 font-semibold text-ink-light dark:text-ink-dark">Admin Console</h1>
           <p className="mt-13 text-sm text-ink-dim">Admin role required. Sign in or register as an administrator.</p>
         </div>
       </GoldenShell>
@@ -24,17 +25,25 @@ export function AdminPage() {
   return (
     <GoldenShell>
       <div className="space-y-34">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-gold">System Management</p>
-          <h1 className="font-display text-3xl font-normal italic text-ink-light dark:text-ink-dark">
-            Administrative <em className="not-italic text-gold-soft">Overview</em>
-          </h1>
+        <div className="flex flex-wrap items-center justify-between gap-13">
+          <div>
+            <h1 className="font-display text-h1 font-semibold text-ink-light dark:text-ink-dark">
+              Administrative Overview
+            </h1>
+          </div>
+
+          <Link
+            to="/dashboard"
+            className="btn-ghost btn-sm"
+          >
+            ← Back to Dashboard
+          </Link>
         </div>
 
         <div className="grid md:grid-cols-2 gap-21">
           {/* Jobs List */}
           <div className="glass p-21 space-y-13">
-            <h2 className="font-display text-lg text-ink-light dark:text-ink-dark border-b border-[#D8B478]/15 pb-8">
+            <h2 className="font-display text-h2 text-ink-light dark:text-ink-dark border-b border-line/10 pb-8">
               All Workspace Jobs
             </h2>
             <div className="flex flex-col gap-8 max-h-[60vh] overflow-y-auto">
@@ -43,8 +52,8 @@ export function AdminPage() {
               ) : (
                 jobs.data?.map((job) => (
                   <div key={job.id} className="glass p-13 text-xs flex justify-between items-center">
-                    <span className="font-mono text-[11px] opacity-80">{job.id.slice(0, 10)}</span>
-                    <span className="font-semibold uppercase text-gold-soft text-[10px] bg-gold/10 px-8 py-2 rounded-full">
+                    <span className=" text-[11px] opacity-80">{job.id.slice(0, 10)}</span>
+                    <span className="font-semibold text-gold-soft text-[10px] bg-gold/10 px-8 py-[2px] rounded-full">
                       {job.status}
                     </span>
                   </div>
@@ -55,7 +64,7 @@ export function AdminPage() {
 
           {/* Audit Trail */}
           <div className="glass p-21 space-y-13">
-            <h2 className="font-display text-lg text-ink-light dark:text-ink-dark border-b border-[#D8B478]/15 pb-8">
+            <h2 className="font-display text-h2 text-ink-light dark:text-ink-dark border-b border-line/10 pb-8">
               Audit Trail
             </h2>
             <div className="flex flex-col gap-8 max-h-[60vh] overflow-y-auto">

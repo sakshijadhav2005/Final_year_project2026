@@ -1,0 +1,109 @@
+{
+ "run_id": "Wade_Davis__regen__rag_on__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Wade_Davis",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    10
+   ],
+   "justification": "The draft captures the core theme well with appropriate logistics placeholders, but the title exceeds the maximum limit of 6 words (8 words)."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    8,
+    10
+   ],
+   "justification": "The summary is well-structured, adheres strictly to word count and section constraints, and covers the primary takeaways accurately."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    9,
+    10
+   ],
+   "justification": "The post adheres to all requirements, including carousel cues, emojis, call to action, and exactly 10 targeted hashtags."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    9,
+    10
+   ],
+   "justification": "The draft avoids prohibited buzzwords/clichés, features an engaging hook and discussion question, and includes 5 relevant hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    10
+   ],
+   "justification": "The newsletter follows the editorial format with a subject line under 50 characters, three distinct bold subheadings, and a clear call to action."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    8,
+    10
+   ],
+   "justification": "The blog post is well-organized with numbered insight sections, an analytical comparison table, conclusion, and an Author profile section."
+  }
+ }
+}

@@ -1,0 +1,115 @@
+{
+ "run_id": "Wade_Davis__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Wade_Davis",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    10
+   ],
+   "justification": "The flyer captures the core message and logistics well, though the title exceeds the 6-word maximum limit."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post is well structured with clean takeaways, strong narrative flow, and adheres strictly to formatting and forbidden word constraints."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    8,
+    10
+   ],
+   "justification": "The briefing is concise, under 400 words, and accurately presents key metrics, discussion points, and action items."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    8,
+    10
+   ],
+   "justification": "The caption includes visual carousel prompts, engaging formatting with emojis, and exactly 10 targeted hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    7,
+    8,
+    10
+   ],
+   "justification": "The newsletter is conversational with three distinct sections, but the subject line exceeds the 50-character limit."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The long-form article follows all structural instructions, including numbered sections, a comparative table, and an author bio."
+  }
+ }
+}

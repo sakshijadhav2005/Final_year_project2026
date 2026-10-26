@@ -1,0 +1,12 @@
+2026-10-26 17:45:15 [info     ] vertex_stt_done                chunks=4 model=gemini-3.7-flash words=3218
+Barry_Schwartz gemini-3.7-flash 300s: 217.9s 
+AimeeMullins gemini-3.7-flash 300s: 492.5s HttpError: <HttpError 400 when requesting https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta&key=<redacted> returned "API key not valid. Please pass a valid API key.". Details: "[{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'AP
+DanBarber gemini-3.7-flash 300s: 489.2s HttpError: <HttpError 400 when requesting https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta&key=<redacted> returned "API key not valid. Please pass a valid API key.". Details: "[{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'AP
+2026-10-26 18:03:09 [info     ] vertex_stt_done                chunks=4 model=gemini-3.7-flash words=2995
+DanielKahneman gemini-3.7-flash 300s: 92.4s 
+EricMead_2009P_EricMead gemini-3.7-flash 300s: 856.3s ServerNotFoundError: Unable to find the server at generativelanguage.googleapis.com
+GaryFlake gemini-3.7-flash 300s: 5.3s ServerNotFoundError: Unable to find the server at generativelanguage.googleapis.com
+JamesCameron gemini-3.7-flash 300s: 10.8s ServerNotFoundError: Unable to find the server at generativelanguage.googleapis.com
+JaneMcGonigal gemini-3.7-flash 300s: 14.7s ServerNotFoundError: Unable to find the server at generativelanguage.googleapis.com
+MichaelSpecter gemini-3.7-flash 300s: 10.7s ServerNotFoundError: Unable to find the server at generativelanguage.googleapis.com
+RobertGupta gemini-3.7-flash 300s: 4.6s ServerNotFoundError: Unable to find the server at generativelanguage.googleapis.com

@@ -1,0 +1,113 @@
+{
+ "run_id": "Wade_Davis__regen__rag_on__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Wade_Davis",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 2,
+ "verdicts": {
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    10
+   ],
+   "justification": "The draft accurately captures the talk's core themes and adheres to all Instagram formatting requirements including visual cues and hashtag count."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    9,
+    10
+   ],
+   "justification": "The flyer is well-structured and accurate, but the title exceeds the required maximum of 6 words."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    8,
+    10
+   ],
+   "justification": "The summary provides an excellent, concise overview with clear structure, staying well within the 400-word limit."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post is insightful, fluent, and avoids forbidden buzzwords, but it completely omits the required 3-5 hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    9,
+    10
+   ],
+   "justification": "The newsletter is engaging and adheres to section formatting, but the subject line exceeds the 50-character limit."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "A comprehensive and beautifully written blog post that follows all markdown formatting, numbered section, table, and author requirements."
+  }
+ }
+}
