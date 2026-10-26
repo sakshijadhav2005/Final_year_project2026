@@ -38,7 +38,7 @@ export function PipelineStepper({
       title: "2. Source Transcription",
       description: transcriptConfidence
         ? `Confidence: ${transcriptConfidence.toUpperCase()} ${avgConfidence ? `(${(avgConfidence * 100).toFixed(0)}%)` : ""}`
-        : "VideoDB speech-to-text & timestamp indexing",
+        : "Speech-to-text & timestamp indexing",
       status:
         isJobDone || ["analyzing", "planning", "generating", "guarding", "translating", "pending_review", "ready_to_publish"].includes(jobStatus) || progress.topic_extraction === "complete"
           ? "complete"

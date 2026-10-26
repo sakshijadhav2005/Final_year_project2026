@@ -33,7 +33,6 @@ def claude(monkeypatch):
     monkeypatch.setattr(s, "anthropic_model", "claude-sonnet-5-5")
     monkeypatch.setattr(s, "anthropic_fallback_model", "claude-haiku-5-5")
     monkeypatch.setattr(s, "anthropic_effort", "low")
-    monkeypatch.setattr(anthropic_llm, "_WORKING_MODEL", None)
     monkeypatch.setattr(anthropic_llm, "_DEAD_MODELS", set())
 
     state = {"requests": [], "handler": lambda body: httpx.Response(200, json=_reply('{"ok": true}'))}

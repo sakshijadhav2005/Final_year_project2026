@@ -15,7 +15,7 @@ async def guardrail(state: JobGraphState) -> dict[str, Any]:
     if not generated:
         return {"route": "needs_review", "guardrail": {"pass": False, "issues": ["No content generated"]}}
 
-    verdicts = await verify_batch_with_llm(generated, transcript)
+    verdicts = await verify_batch_with_llm(generated, transcript, state.get("user_memory"))
 
     issues: list[str] = []
     failed_types: list[str] = []

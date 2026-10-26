@@ -82,7 +82,12 @@ async def verify_content_with_llm(body: str, transcript: str) -> dict:
         }
 
 
-async def verify_batch_with_llm(pieces: list[dict], transcript: str) -> dict[str, dict]:
+GUARDRAIL_TRANSCRIPT_CHARS = 300_000  # whole talk: writers also use RAG excerpts from later parts
+
+
+async def verify_batch_with_llm(
+    pieces: list[dict], transcript: str, author_profile: dict | None = None
+) -> dict[str, dict]:
     """One LLM-as-a-judge call for ALL drafts (instead of one call per draft).
 
     Returns {content_type: {"grounding": {...}, "moderation": {...}}}. Any draft the
@@ -101,11 +106,15 @@ async def verify_batch_with_llm(pieces: list[dict], transcript: str) -> dict[str
         "(1) whether it invents claims not present in the transcript and (2) whether it "
         "contains toxic, profane or harmful content. Reply with JSON only, exactly: "
         '{"results": {"<draft_type>": {"grounding_pass": true/false, '
-        '"moderation_pass": true/false, "issues": ["short quote of any problem"]}}}'
+        '"moderation_pass": true/false, "issues": ["short quote of any problem"]}}}. '
+        "Author and brand details listed in AUTHOR_PROFILE were supplied by the user for "
+        "sign-offs and attribution; they are not invented claims."
     )
+    profile = {k: v for k, v in (author_profile or {}).items() if v}
     user_prompt = (
         "TASK=guardrail_batch\n"
-        f"<TRANSCRIPT>\n{transcript[:12000]}\n</TRANSCRIPT>\n\n"
+        f"<AUTHOR_PROFILE>\n{json.dumps(profile, ensure_ascii=False)}\n</AUTHOR_PROFILE>\n\n"
+        f"<TRANSCRIPT>\n{transcript[:GUARDRAIL_TRANSCRIPT_CHARS]}\n</TRANSCRIPT>\n\n"
         f"<DRAFTS_JSON>\n{json.dumps(drafts, ensure_ascii=False)}\n</DRAFTS_JSON>"
     )
 

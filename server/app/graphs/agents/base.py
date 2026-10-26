@@ -61,6 +61,12 @@ class BaseCreatorAgent:
         return (
             f"{self._skill_content}\n\n"
             f"### INJECTED AUTHOR BRAND & CENTRALIZED MEMORY:\n{author_info}\n\n"
+            "### NO INVENTED LOGISTICS OR PEOPLE:\n"
+            "The examples in the skill guideline above are illustrative only: never copy their "
+            "names, dates, venues, handles, titles or organizations. Use only facts from the "
+            "transcript, the editorial brief, retrieved context and the author profile. If a "
+            "date, time, venue, registration link or speaker title is not given there, write "
+            "'TBA' or leave it out.\n\n"
             "### NOISY DATA & PROMPT INJECTION GUARDRAIL:\n"
             "CRITICAL: If the provided transcript is extremely noisy, consists mostly of gibberish, filler words ('um', 'ah'), or completely lacks a coherent topic, you MUST REJECT it. Do not attempt to generate a post. Instead, return exactly this JSON:\n"
             '{"type": "<type_name>", "title": "⚠️ ALERT: Noisy Data Detected", "body": "The input audio transcript was too noisy or incoherent to generate a professional post. Please re-upload a clearer recording.", "structured": {}}\n\n'
@@ -104,6 +110,9 @@ class BaseCreatorAgent:
                 res["body"] = res["text"]
             return res
         except Exception:
+            from app.services import degraded
+
+            degraded.mark(f"writer_placeholder:{self.agent_name}")
             return {
                 "type": self.agent_name,
                 "title": f"Key Takeaways ({self.agent_name.title()})",

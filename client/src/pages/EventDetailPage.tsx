@@ -444,7 +444,7 @@ export function EventDetailPage() {
                   <span>🎙️</span> Grounded Speech-to-Text Transcription
                 </h3>
                 <p className="text-xs text-slate-400">
-                  Full text indexed by VideoDB and verified with confidence scoring.
+                  Full text transcribed with timestamps and verified with confidence scoring.
                 </p>
               </div>
 

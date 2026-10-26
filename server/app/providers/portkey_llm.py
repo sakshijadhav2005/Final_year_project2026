@@ -7,7 +7,8 @@ from typing import Any
 from app.core.config import get_settings
 from app.providers.fake_llm import FakeLLMProvider
 from app.providers.llm import LLMProvider
-from app.services.resilience import llm_circuit, with_backoff
+from app.services import degraded
+from app.services.resilience import model_circuit, with_backoff
 
 
 def _extract_json(text: str) -> dict[str, Any]:
@@ -22,7 +23,6 @@ def _extract_json(text: str) -> dict[str, Any]:
 
 
 # Remember which route works so later calls skip the ones that fail.
-_WORKING_STRATEGY: str | None = None
 _DEAD_STRATEGIES: set[str] = set()
 
 
@@ -121,33 +121,38 @@ class PortkeyLLMProvider(LLMProvider):
                 system=system, user=user, temperature=temperature
             )
 
-        # Gateway priority order: Portkey -> OpenAI -> Groq -> Gemini, but the route that
-        # worked last time goes first and routes with permanent errors are skipped.
-        global _WORKING_STRATEGY
+        # Gateway priority order: Portkey -> OpenAI -> Groq -> Gemini; routes with
+        # permanent errors are skipped.
         strategies = {
             "portkey": call_portkey,
             "openai": call_openai,
             "groq": call_groq,
             "gemini": call_gemini,
         }
-        order = [_WORKING_STRATEGY, "portkey", "openai", "groq", "gemini"]
-        for name in [n for n in dict.fromkeys(order) if n and n not in _DEAD_STRATEGIES]:
+        order = [n for n in ("portkey", "openai", "groq", "gemini") if n not in _DEAD_STRATEGIES]
+        # A route whose circuit is open (failing right now) is tried last, not first.
+        order = [n for n in order if not model_circuit(f"route:{n}").is_open] + [
+            n for n in order if model_circuit(f"route:{n}").is_open
+        ]
+        for name in order:
             strategy = strategies[name]
+            circuit = model_circuit(f"route:{name}")
             try:
                 try:
                     result = await strategy()
                 except Exception as first:
                     if _is_permanent(first):
                         raise
-                    result = await with_backoff(strategy, circuit=llm_circuit, attempts=2)
-                _WORKING_STRATEGY = name
+                    result = await with_backoff(strategy, circuit=circuit, attempts=2)
+                circuit.success()
                 return result
             except Exception as exc:
                 if _is_permanent(exc):
                     _DEAD_STRATEGIES.add(name)
                 continue
 
-        # Fallback if all providers are unavailable or unset
+        # Fallback if all providers are unavailable or unset; the job is flagged as degraded.
+        degraded.mark("llm_offline_template")
         return await FakeLLMProvider().generate_json(
             system=system, user=user, temperature=temperature
         )

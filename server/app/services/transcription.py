@@ -53,16 +53,27 @@ def _from_plain_text(path: str) -> TranscriptResult:
     )
 
 
-def _fallback_provider(current):
+def _fallback_provider(tried: set[str]):
+    """Next engine not tried yet for this file, skipping engines whose credentials were
+    rejected at start-up."""
     from app.core.config import get_settings
+    from app.services.credentials import is_invalid
 
     settings = get_settings()
-    name = getattr(current, "name", "")
-    if name != "gemini-stt" and settings.gemini_api_key:
+    if (
+        "vertex-stt" not in tried
+        and settings.google_cloud_project
+        and settings.llm_provider == "vertex"
+        and not is_invalid("vertex")
+    ):
+        from app.providers.vertex_stt import VertexSTTProvider
+
+        return VertexSTTProvider()
+    if "gemini-stt" not in tried and settings.gemini_api_key and not is_invalid("gemini"):
         from app.providers.gemini_stt import GeminiSTTProvider
 
         return GeminiSTTProvider()
-    if name != "videodb" and settings.videodb_api_key:
+    if "videodb" not in tried and settings.videodb_api_key:
         from app.providers.videodb_stt import VideoDBSTTProvider
 
         return VideoDBSTTProvider()
@@ -92,13 +103,18 @@ async def transcribe_file(path: str) -> TranscriptResult:
             return await with_backoff(
                 lambda: provider.transcribe(target), circuit=stt_circuit, attempts=2
             )
-        except Exception:
-            # One engine failed (e.g. VideoDB timeout): try the other one instead of
-            # re-uploading the same file to the same service again and again.
-            fallback = _fallback_provider(provider)
-            if fallback is None:
-                raise
-            return await fallback.transcribe(target)
+        except Exception as first_error:
+            # One engine failed (e.g. VideoDB timeout): try each remaining engine once
+            # instead of re-uploading the same file to the same service again and again.
+            tried = {getattr(provider, "name", "")}
+            last_error: Exception = first_error
+            while (fallback := _fallback_provider(tried)) is not None:
+                tried.add(fallback.name)
+                try:
+                    return await fallback.transcribe(target)
+                except Exception as exc:  # noqa: BLE001 - next engine
+                    last_error = exc
+            raise last_error from first_error
 
     result = await _run(path)
     avg = result.avg_confidence

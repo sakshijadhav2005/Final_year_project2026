@@ -34,3 +34,20 @@ for key in (
 ):
     os.environ[key] = ""
 os.environ["LLM_PROVIDER"] = "gemini"
+
+
+import pytest  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def _fresh_resilience_state():
+    """Circuit breakers and credential results are process-wide; start each test clean."""
+    from app.services import credentials
+    from app.services.resilience import llm_circuit, reset_model_circuits, stt_circuit
+
+    reset_model_circuits()
+    llm_circuit.reset()
+    stt_circuit.reset()
+    credentials.INVALID.clear()
+    yield
+    reset_model_circuits()

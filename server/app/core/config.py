@@ -46,6 +46,10 @@ class Settings(BaseSettings):
     google_cloud_location: str = "global"
     vertex_model: str = ""  # empty = GEMINI_MODEL_GENERATE
     vertex_fast_model: str = ""  # empty = GEMINI_MODEL_FAST
+    vertex_stt_model: str = ""  # empty = GEMINI_MODEL_ANALYZE
+    stt_chunk_seconds: int = 300  # long recordings are transcribed in ~5 min chunks
+    stt_concurrency: int = 4
+    stt_chunk_timeout_seconds: float = 240.0  # per ~5 min chunk; measured 5-60 s normally
     portkey_api_key: str = ""
     openai_api_key: str = ""
     groq_api_key: str = ""
@@ -60,6 +64,12 @@ class Settings(BaseSettings):
     llm_provider: str = "gemini"
     # Speed controls
     llm_timeout_seconds: float = 60.0
+    # A model that fails this many calls in a row is skipped for the reset window,
+    # then tried again; the configured model always goes first otherwise.
+    model_circuit_fail_max: int = 3
+    model_circuit_reset_seconds: float = 60.0
+    # Check provider credentials at start-up and skip engines whose key is rejected.
+    validate_credentials_on_startup: bool = True
     # Web-search tools for the writing agents. Off = one fast call per draft.
     # Set AGENT_TOOLS_ENABLED=true in .env to let agents look up citations (slower).
     agent_tools_enabled: bool = False
@@ -74,6 +84,9 @@ class Settings(BaseSettings):
     # Vertex AI embedding model (needs GOOGLE_CLOUD_PROJECT); else hashed bag-of-words.
     rag_embedding_model: str = "gemini-embedding-001"
     rag_embedding_dims: int = 768
+    # Regional endpoint: embeddings on the "global" endpoint measured ~12 s per call
+    # vs ~0.6 s regionally. Pick the region nearest the server (e.g. asia-south1).
+    rag_embedding_location: str = "us-central1"
 
     max_upload_mb: int = 500
     max_duration_sec: int = 10800

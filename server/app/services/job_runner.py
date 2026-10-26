@@ -12,6 +12,7 @@ from app.graphs.state import merge_generated
 from app.models.content import ContentPiece
 from app.models.job import AgentOutput, Job, Transcript
 from app.models.recording import Recording
+from app.services import degraded
 from app.services.audit import write_audit
 from app.services.av_scan import scan_file
 from app.services.guardrails import should_use_rag
@@ -293,6 +294,7 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
         await _save(db, job, status="analyzing", progress=progress)
 
         final_state = dict(initial)
+        degraded_events = degraded.start()
         try:
             async for event in graph.astream(initial, stream_mode="updates"):
                 if await _cancelled(db, job.id):
@@ -446,12 +448,24 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
         )
 
         status = "needs_review" if route == "needs_review" else "pending_review"
+        degraded_info: dict = {}
+        if degraded_events:
+            # Some step used fallback output (offline template, placeholder draft,
+            # untranslated copy): never present that as a normal result.
+            status = "needs_review"
+            reasons = sorted(set(degraded_events))
+            degraded_info = {
+                "error_code": "degraded_output",
+                "error_message": "Some drafts use fallback text because a model was "
+                f"unavailable ({', '.join(reasons)}). Review before publishing.",
+            }
         await _save(
             db,
             job,
             status=status,
             finished_at=datetime.now(UTC),
             progress={key: "complete" for key in AGENT_KEYS},
+            **degraded_info,
         )
     except asyncio.CancelledError:
         return

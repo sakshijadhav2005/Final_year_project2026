@@ -14,7 +14,10 @@ from typing import Any
 import structlog
 
 from app.core.config import get_settings
+from app.providers.gemini_llm import _as_object
+from app.providers.gemini_llm import candidate_models as _ordered_models
 from app.providers.llm import LLMProvider
+from app.services.resilience import model_circuit
 
 logger = structlog.get_logger("anthropic_llm")
 
@@ -25,9 +28,8 @@ _JSON_RULE = (
     "no Markdown code fences, no text before or after the JSON."
 )
 
-# Process-wide memory, same idea as the Gemini provider: remember the model that
-# works and never retry a model that returned "not found" / "permission denied".
-_WORKING_MODEL: str | None = None
+# Process-wide memory, same idea as the Gemini provider: never retry a model that
+# returned "not found" / "permission denied".
 _DEAD_MODELS: set[str] = set()
 _CLIENT = None
 _CLIENT_KEY: str | None = None
@@ -40,6 +42,8 @@ def _extract_json(text: str) -> dict[str, Any]:
         text = fenced.group(1)
     try:
         value = json.loads(text)
+        if isinstance(value, list) and value and all(isinstance(v, dict) for v in value):
+            return _as_object(value, text)
         return value if isinstance(value, dict) else {"result": value}
     except json.JSONDecodeError:
         match = re.search(r"\{[\s\S]*\}", text)
@@ -71,10 +75,10 @@ def get_client():
 
 def candidate_models(fast: bool = False) -> list[str]:
     settings = get_settings()
-    ordered = [_WORKING_MODEL, settings.anthropic_model, settings.anthropic_fallback_model]
+    ordered = [settings.anthropic_model, settings.anthropic_fallback_model]
     if fast:  # checking steps: the quick model first
         ordered = [settings.anthropic_fast_model, *ordered]
-    return [m for m in dict.fromkeys(ordered) if m and m not in _DEAD_MODELS]
+    return _ordered_models(ordered, _DEAD_MODELS)
 
 
 def effort_config() -> dict[str, Any]:
@@ -88,7 +92,6 @@ class AnthropicLLMProvider(LLMProvider):
     async def generate_json(
         self, *, system: str, user: str, temperature: float = 0.3, fast: bool = False
     ) -> dict[str, Any]:
-        global _WORKING_MODEL
         settings = get_settings()
         client = get_client()
         kwargs: dict[str, Any] = {}
@@ -110,9 +113,9 @@ class AnthropicLLMProvider(LLMProvider):
                     block.text for block in response.content if getattr(block, "type", "") == "text"
                 )
                 if text.strip():
-                    if not fast:
-                        _WORKING_MODEL = model
+                    model_circuit(model).success()
                     return _extract_json(text)
+                model_circuit(model).failure()
             except Exception as exc:  # noqa: BLE001 - logged and handled by fallback
                 last_error = exc
                 if kwargs and getattr(exc, "status_code", None) == 400 and (
@@ -131,15 +134,14 @@ class AnthropicLLMProvider(LLMProvider):
                             b.text for b in response.content if getattr(b, "type", "") == "text"
                         )
                         if text.strip():
-                            if not fast:
-                                _WORKING_MODEL = model
+                            model_circuit(model).success()
                             return _extract_json(text)
                     except Exception as retry_exc:  # noqa: BLE001
                         exc = last_error = retry_exc
                 if _is_permanent(exc):
                     _DEAD_MODELS.add(model)
-                    if _WORKING_MODEL == model:
-                        _WORKING_MODEL = None
+                else:
+                    model_circuit(model).failure()
                 logger.warning("claude_model_failed", model=model, error=str(exc)[:300])
 
         # Same safety net as Gemini: keep the demo working, but make it loud in the logs.
@@ -149,5 +151,7 @@ class AnthropicLLMProvider(LLMProvider):
             error=str(last_error)[:300] if last_error else None,
         )
         from app.providers.fake_llm import FakeLLMProvider
+        from app.services import degraded
 
+        degraded.mark("llm_offline_template")
         return await FakeLLMProvider().generate_json(system=system, user=user, temperature=temperature)

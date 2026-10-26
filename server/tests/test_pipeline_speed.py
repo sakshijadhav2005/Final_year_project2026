@@ -93,7 +93,6 @@ def test_gemini_skips_dead_models_and_remembers_working_one(monkeypatch):
     settings = get_settings()
     monkeypatch.setattr(settings, "gemini_api_key", "test-key")
     monkeypatch.setattr(settings, "gemini_model_generate", "gemini-wrong-name")
-    monkeypatch.setattr(gemini_llm, "_WORKING_MODEL", None)
     monkeypatch.setattr(gemini_llm, "_DEAD_MODELS", set())
     monkeypatch.setattr(gemini_llm, "_CONFIGURED_KEY", None)
 
@@ -125,14 +124,13 @@ def test_portkey_key_alone_does_not_reroute_gemini(monkeypatch):
     assert get_llm_provider().name == "portkey"
 
 
-def test_portkey_remembers_working_route(monkeypatch):
+def test_portkey_skips_dead_route(monkeypatch):
     from app.core.config import get_settings
     from app.providers import portkey_llm
 
     s = get_settings()
     for k, v in {"portkey_api_key": "p", "openai_api_key": "", "groq_api_key": "", "gemini_api_key": "g"}.items():
         monkeypatch.setattr(s, k, v)
-    monkeypatch.setattr(portkey_llm, "_WORKING_STRATEGY", None)
     monkeypatch.setattr(portkey_llm, "_DEAD_STRATEGIES", set())
 
     hits: list[str] = []
@@ -187,7 +185,7 @@ def test_checking_steps_use_the_fast_model_and_posts_do_not(monkeypatch):
     monkeypatch.setattr(s, "gemini_api_key", "k")
     monkeypatch.setattr(s, "gemini_model_generate", "gemini-3.6-flash")
     monkeypatch.setattr(s, "gemini_model_fast", "gemini-3.1-flash-lite")
-    for name, value in {"_WORKING_MODEL": None, "_WORKING_FAST_MODEL": None, "_DEAD_MODELS": set(), "_CONFIGURED_KEY": None}.items():
+    for name, value in {"_DEAD_MODELS": set(), "_CONFIGURED_KEY": None}.items():
         monkeypatch.setattr(gemini_llm, name, value)
 
     p = gemini_llm.GeminiLLMProvider()

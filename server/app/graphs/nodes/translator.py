@@ -46,6 +46,10 @@ async def _translate_language(llm, pieces: list[dict[str, Any]], code: str) -> l
         translated = result.get("drafts") if isinstance(result.get("drafts"), dict) else {}
     except Exception:
         translated = {}
+    if not translated:
+        from app.services import degraded
+
+        degraded.mark(f"translation_missing:{code}")  # the English text is kept instead
 
     out = []
     for p in pieces:

@@ -64,7 +64,7 @@ async def embed_texts(texts: list[str], *, task_type: str) -> tuple[str, list[li
 
             from app.providers.vertex_llm import _client
 
-            client = _client()
+            client = _client(settings.rag_embedding_location)
             vectors: list[list[float]] = []
             for i in range(0, len(texts), EMBED_BATCH):
                 response = await client.aio.models.embed_content(
