@@ -1,0 +1,13 @@
+data/raw/
+data/audio/
+# TED-LIUM reference transcripts (CC BY-NC-ND): regenerate with scripts/prepare_dataset.py
+data/references/
+work/
+# Run records contain full talk transcripts and generated drafts (derived from CC BY-NC-ND
+# material): kept locally, not published. Aggregated results, tables and figures are tracked.
+results/raw/
+results/stt/
+results/pilot/
+results/incidents/*.json
+results/incidents/stt/
+results/logs/ui_api.log

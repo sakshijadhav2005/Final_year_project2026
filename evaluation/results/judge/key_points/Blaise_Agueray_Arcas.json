@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "Seadragon is a visual technology enabling smooth and continuous navigation through massive amounts of image and visual data.",
+  "quote": "this is seadragon and it's an environment in which you can either locally or remotely interact with vast amounts of of visual data",
+  "position": 0.0261
+ },
+ {
+  "id": 2,
+  "point": "System performance is bounded only by the physical display pixels on screen rather than the size or quantity of the source data.",
+  "quote": "the only thing that that ought to limit the performance of a system like this one is the number of pixels on your screen",
+  "position": 0.1134
+ },
+ {
+  "id": 3,
+  "point": "The architecture easily supports non-image and multi-scale media formats like complete books and digital newspapers.",
+  "quote": "this really gives you the the the joy and the good experience of reading the real paper version of of a magazine or a newspaper",
+  "position": 0.2064
+ },
+ {
+  "id": 4,
+  "point": "Embedding deep, high-resolution content directly into media eliminates screen real estate constraints and intrusive advertisements.",
+  "quote": "this really gets at some of these ideas about really doing away with with those limits on on screen real estate",
+  "position": 0.2812
+ },
+ {
+  "id": 5,
+  "point": "Photosynth merges Seadragon with computer vision algorithms to spatially map and register collections of photographs.",
+  "quote": "the computer vision algorithms have registered these images together so that they correspond to the real space in which these these shots",
+  "position": 0.4524
+ },
+ {
+  "id": 6,
+  "point": "Complete 3D architectural reconstructions can be generated automatically from unorganized photos sourced online.",
+  "quote": "this is a reconstruction of notre dame cathedral that was done entirely computationally from images scraped from flickr",
+  "position": 0.5733
+ },
+ {
+  "id": 7,
+  "point": "The system seamlessly integrates photographs taken from diverse devices, ranging from mobile phones to high-end cameras.",
+  "quote": "this is lots of different types of cameras it's everything from cell phone cameras to professional slrs quite a large number of them",
+  "position": 0.6655
+ },
+ {
+  "id": 8,
+  "point": "Connecting individual visual contributions creates an emergent collective model that far exceeds the sum of its individual parts.",
+  "quote": "all of those photos become linked together and they make something emergent that's greater than the sum of the parts",
+  "position": 0.7681
+ },
+ {
+  "id": 9,
+  "point": "User images automatically inherit descriptive metadata added by others who contributed to the shared space.",
+  "quote": "their own photos are getting tagged with meta data that somebody else entered",
+  "position": 0.8186
+ },
+ {
+  "id": 10,
+  "point": "Content-based visual hyperlinking drives massive semantic interconnection across disparate photos through network effects.",
+  "quote": "it's creating hyperlinks if you will between between images and it's doing that based on the content inside the images",
+  "position": 0.9178
+ }
+]

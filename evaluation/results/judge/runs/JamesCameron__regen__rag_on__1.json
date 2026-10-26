@@ -1,0 +1,98 @@
+{
+ "run_id": "JamesCameron__regen__rag_on__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "JamesCameron",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 1,
+ "verdicts": {
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 2,
+   "completeness": 1,
+   "readability": 1,
+   "instruction_adherence": 1,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1
+   ],
+   "justification": "The draft is simply a truncated raw transcript snippet that completely fails to follow the Instagram format guidelines."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    8,
+    10
+   ],
+   "justification": "The post is well structured with clean insights, avoided forbidden buzzwords, and included the requested engagement prompt and hashtag count."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    8,
+    10
+   ],
+   "justification": "The flyer is crisp and properly utilizes 'TBA' placeholders, though the title exceeds the strict 6-word limit."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    3,
+    6,
+    8,
+    10
+   ],
+   "justification": "The briefing is cleanly structured in Markdown, under 400 words, and fulfills all required executive summary components."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    6,
+    8,
+    10
+   ],
+   "justification": "The email newsletter follows all structural instructions with an engaging subject line under 50 characters, three distinct sections, and clear CTAs."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    8,
+    10
+   ],
+   "justification": "The blog post adheres perfectly to the long-form format, including numbered sections, an appropriate comparison table, conclusion, and author bio."
+  }
+ }
+}

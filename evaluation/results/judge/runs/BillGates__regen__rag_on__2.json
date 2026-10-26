@@ -1,0 +1,120 @@
+{
+ "run_id": "BillGates__regen__rag_on__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "BillGates",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 2,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    6,
+    8,
+    10
+   ],
+   "justification": "The flyer adheres closely to all format requirements, concise styling, and accurately represents the keynote's themes."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post effectively avoids prohibited buzzwords while maintaining high factual fidelity and covering key talk points."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    10
+   ],
+   "justification": "The caption includes visual cues and structured points, but fails to include the required 10-15 targeted hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    9
+   ],
+   "justification": "The executive summary perfectly captures all required briefing components concisely under the word count limit."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post provides a comprehensive and accurate overview with a comparison table, but lacks a dedicated 'About the Author' section."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter is engaging and follows the three-section format well, though the subject line slightly exceeds the 50-character limit."
+  }
+ }
+}

@@ -1,0 +1,181 @@
+scenario,outcome,attempts,models_tried,latency_sec,degraded_flagged,second_call_model
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S0 no fault,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S1 transient 429 (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.002,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.001,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S2 timeout (once),primary model,2,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.013,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.007,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.004,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.014,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.013,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.005,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.006,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.006,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.011,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.015,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.014,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.002,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.002,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.01,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.001,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.006,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.013,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.002,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.004,False,gemini-3.1-flash-lite
+S3 persistent 429 on primary,fallback model,4,gemini-3.1-flash-lite|gemini-3.6-flash,1.003,False,gemini-3.1-flash-lite
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.001,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.001,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.001,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S4 model 404 not found,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.6-flash
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S5 empty response,fallback model,2,gemini-3.1-flash-lite|gemini-3.6-flash,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.001,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S6 JSON in markdown fence,primary model,1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+"S7 prose, no JSON",unparsed (raw text),1,gemini-3.1-flash-lite,0.0,False,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.022,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.021,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.025,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.013,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.021,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.022,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.021,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.027,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.013,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.013,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.018,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.028,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.017,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.024,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.017,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.03,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.025,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.027,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.021,True,gemini-3.1-flash-lite
+S8 all models 500,offline template,6,gemini-3.1-flash-lite|gemini-3.6-flash,2.011,True,gemini-3.1-flash-lite

@@ -1,0 +1,113 @@
+{
+ "run_id": "Barry_Schwartz__e2e__rag_on__0",
+ "judge_model": "gemini-3.6-flash",
+ "talk_id": "Barry_Schwartz",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    10
+   ],
+   "justification": "The flyer captures the main concepts well, but the title length exceeds the 6-word maximum requirement."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    7,
+    8,
+    10
+   ],
+   "justification": "Adheres strictly to all formatting rules, avoiding banned filler words while clearly communicating core talk takeaways."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    10
+   ],
+   "justification": "Follows all Instagram formatting constraints including visual carousel cues and hashtag count while staying true to the talk."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    10
+   ],
+   "justification": "Well-structured executive briefing under 400 words that accurately summarizes key evidence and action items from the transcript."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    7,
+    8,
+    10
+   ],
+   "justification": "Meets subject line length limits and required structural sections while maintaining a conversational editorial tone."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    10
+   ],
+   "justification": "Comprehensive long-form post adhering to all Markdown formatting rules, numbered sections, takeaway matrix, and author bio."
+  }
+ }
+}

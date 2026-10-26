@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "Energy access and climate change are critical issues that impact the world's poorest people more severely than anyone else.",
+  "quote": "energy and climate are extremely important to these people in fact more important than to anyone else on the planet",
+  "position": 0.0117
+ },
+ {
+  "id": 2,
+  "point": "Global temperatures will continue to rise until net carbon dioxide emissions are brought down to near zero.",
+  "quote": "until we get near to zero the temperature will continue to rise and so that's that's a big challenge",
+  "position": 0.1004
+ },
+ {
+  "id": 3,
+  "point": "Efficiency improvements alone cannot solve the climate problem, requiring the creation of zero-emission energy miracles.",
+  "quote": "and so what we're going to have to do at a global scale is create a new system and so we need energy miracles",
+  "position": 0.2502
+ },
+ {
+  "id": 4,
+  "point": "Viable clean energy alternatives must provide massive scale and extreme reliability to meet global needs.",
+  "quote": "we need solutions either one or several that have unbelievable scale and unbelievable reliability",
+  "position": 0.3067
+ },
+ {
+  "id": 5,
+  "point": "Renewable sources face major limitations because existing battery technology can only store a few minutes of global electricity demand.",
+  "quote": "all the batteries we make now could store less than ten minutes of all the energy",
+  "position": 0.4394
+ },
+ {
+  "id": 6,
+  "point": "Advanced nuclear reactors like the traveling wave reactor can run on depleted uranium and consume existing nuclear waste as fuel.",
+  "quote": "you actually burn up the waste and you can actually use as fuel all the leftover waste from today's reactors",
+  "position": 0.5288
+ },
+ {
+  "id": 7,
+  "point": "Achieving the 2050 emissions target requires developed countries to completely transition their electricity generation to zero-emission sources.",
+  "quote": "for twenty fifty you've heard many people talk about this eighty percent reduction that really is very important that we get there",
+  "position": 0.5741
+ },
+ {
+  "id": 8,
+  "point": "International climate discussions must prioritize an innovation agenda backed by increased research funding and market incentives.",
+  "quote": "when countries get together in places like copenhagen they shouldn't just discuss the co two they should discuss this innovation agenda",
+  "position": 0.6778
+ },
+ {
+  "id": 9,
+  "point": "Environmental deadlines require inventing large-scale clean energy technologies within twenty years and deploying them over the following twenty years.",
+  "quote": "we have twenty years to invent and then twenty years to deploy that's sort of the deadline that the environment models",
+  "position": 0.8029
+ },
+ {
+  "id": 10,
+  "point": "Producing zero-carbon energy that is cheaper than existing fossil fuels is the most effective way to overcome skepticism and protect poor populations.",
+  "quote": "if you can make it economic and meet the co two constraints then the skeptics say okay i don't care",
+  "position": 0.9375
+ }
+]

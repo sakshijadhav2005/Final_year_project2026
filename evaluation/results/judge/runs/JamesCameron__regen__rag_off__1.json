@@ -1,0 +1,110 @@
+{
+ "run_id": "JamesCameron__regen__rag_off__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "JamesCameron",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 1,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    7,
+    8,
+    10
+   ],
+   "justification": "The flyer adheres closely to all format requirements, including title length constraints and placeholder usage, while faithfully representing the talk."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    5,
+    6,
+    10
+   ],
+   "justification": "The post has strong storytelling and insights from the talk, but it fails the instruction to include 3-5 relevant hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    10
+   ],
+   "justification": "The summary is well-structured, stays well under the 400-word limit, and accurately synthesizes key discussion points and action items."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    10
+   ],
+   "justification": "The Instagram caption fits all formatting guidelines, incorporating visual carousel cues, concise lines with emojis, and 13 targeted hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    6,
+    7,
+    10
+   ],
+   "justification": "The newsletter follows all instructions with a concise subject line under 50 characters, three distinct sections with bold subheadings, and an engaging conversational tone."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    7,
+    8,
+    10
+   ],
+   "justification": "The blog post thoroughly expands on the talk's themes with numbered sections, a takeaway table, and a dedicated About the Author section."
+  }
+ }
+}

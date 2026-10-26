@@ -1,0 +1,155 @@
+﻿server\.venv\Scripts\python.exe : D:\FinalYearProject2026\Final_year_project\server\.venv\Lib\site-packages\google\api_
+core\_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.7) which Google will stop 
+supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the 
+latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+At line:1 char:421
++ ... | Out-Null; server\.venv\Scripts\python.exe evaluation\scripts\run_pi ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D:\FinalYearPro...past that date.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  warnings.warn(message, FutureWarning)
+2026-10-26T16:07:40.309177Z [info     ] request                        duration_ms=95.16 method=POST path=/api/v1/auth/register status=201
+2026-10-26T16:07:40.328648Z [info     ] request                        duration_ms=16.83 method=PUT path=/api/v1/auth/profile status=200
+Calling on_part_begin with no data
+Calling on_header_field with data[36:55]
+Calling on_header_value with data[57:92]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[96:100]
+Calling on_part_end with no data
+Calling on_part_begin with no data
+Calling on_header_field with data[138:157]
+Calling on_header_value with data[159:192]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[196:244]
+Calling on_part_end with no data
+Calling on_part_begin with no data
+Calling on_header_field with data[282:301]
+Calling on_header_value with data[303:337]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[341:346]
+Calling on_part_end with no data
+Calling on_part_begin with no data
+Calling on_header_field with data[384:403]
+Calling on_header_value with data[405:461]
+Calling on_header_end with no data
+Calling on_header_field with data[463:475]
+Calling on_header_value with data[477:486]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[490:35843732]
+Calling on_part_end with no data
+Calling on_end with no data
+2026-10-26T16:07:40.568299Z [info     ] upload_integrity_verified      filename=Elizabeth_Gilbert.wav sha256=91cad2d70ed5167460302683ea2a1d89791e2561dd0f35d38249f87064a96408
+2026-10-26T16:07:40.594814Z [info     ] request                        duration_ms=262.52 method=POST path=/api/v1/uploads status=202
+D:\FinalYearProject2026\Final_year_project\server\.venv\Lib\site-packages\pydub\utils.py:170: RuntimeWarning: Couldn't 
+find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+  warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+2026-10-26T16:07:52.993325Z [warning  ] credential_unchecked           engine=gemini reason=unreachable
+2026-10-26T16:07:52.993325Z [info     ] credential_ok                  engine=vertex
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T16:10:08.524965Z [info     ] vertex_stt_done                chunks=4 model=gemini-3.1-flash-lite words=3760
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T16:10:40.486775Z [info     ] request                        duration_ms=20.8 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7 status=200
+2026-10-26T16:10:40.495245Z [info     ] request                        duration_ms=7.12 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/transcript status=200
+2026-10-26T16:10:40.505246Z [info     ] request                        duration_ms=9.06 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/content status=200
+[fix1] Elizabeth_Gilbert__e2e__rag_on__0: status=pending_review wall=180.1s llm_calls=13 pieces=12
+2026-10-26T16:10:40.528102Z [info     ] request                        duration_ms=13.47 method=POST path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T16:11:09.977470Z [info     ] request                        duration_ms=4.38 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7 status=200
+2026-10-26T16:11:09.984472Z [info     ] request                        duration_ms=5.68 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/transcript status=200
+2026-10-26T16:11:09.994469Z [info     ] request                        duration_ms=7.32 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/content status=200
+[fix1] Elizabeth_Gilbert__regen__rag_on__1: status=pending_review wall=29.5s llm_calls=9 pieces=12
+2026-10-26T16:11:10.021472Z [info     ] request                        duration_ms=15.86 method=POST path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T16:11:33.364969Z [info     ] request                        duration_ms=4.15 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7 status=200
+2026-10-26T16:11:33.369973Z [info     ] request                        duration_ms=4.36 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/transcript status=200
+2026-10-26T16:11:33.376978Z [info     ] request                        duration_ms=5.21 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/content status=200
+[fix1] Elizabeth_Gilbert__regen__rag_off__1: status=pending_review wall=23.4s llm_calls=9 pieces=12
+2026-10-26T16:11:33.398648Z [info     ] request                        duration_ms=14.18 method=POST path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T16:12:00.643223Z [info     ] request                        duration_ms=3.51 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7 status=200
+2026-10-26T16:12:00.649224Z [info     ] request                        duration_ms=4.56 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/transcript status=200
+2026-10-26T16:12:00.654225Z [info     ] request                        duration_ms=4.6 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/content status=200
+[fix1] Elizabeth_Gilbert__regen__rag_on__2: status=pending_review wall=27.3s llm_calls=9 pieces=12
+2026-10-26T16:12:00.673244Z [info     ] request                        duration_ms=12.81 method=POST path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T16:12:19.648569Z [info     ] request                        duration_ms=5.89 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7 status=200
+2026-10-26T16:12:19.655569Z [info     ] request                        duration_ms=5.4 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/transcript status=200
+2026-10-26T16:12:19.660583Z [info     ] request                        duration_ms=4.28 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/content status=200
+[fix1] Elizabeth_Gilbert__regen__rag_off__2: status=needs_review wall=19.0s llm_calls=10 pieces=6
+2026-10-26T16:12:19.678936Z [info     ] request                        duration_ms=11.5 method=POST path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T16:12:52.941881Z [info     ] request                        duration_ms=11.75 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7 status=200
+2026-10-26T16:12:52.949878Z [info     ] request                        duration_ms=5.68 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/transcript status=200
+2026-10-26T16:12:52.958877Z [info     ] request                        duration_ms=8.49 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/content status=200
+[fix1] Elizabeth_Gilbert__regen__rag_on__3: status=pending_review wall=33.3s llm_calls=9 pieces=12
+2026-10-26T16:12:52.981256Z [info     ] request                        duration_ms=13.66 method=POST path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T16:13:17.092080Z [info     ] request                        duration_ms=27.68 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7 status=200
+2026-10-26T16:13:17.114072Z [info     ] request                        duration_ms=14.4 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/transcript status=200
+2026-10-26T16:13:17.138073Z [info     ] request                        duration_ms=20.07 method=GET path=/api/v1/jobs/f041fa65-1ad1-47c4-99b1-d7384b96cff7/content status=200
+[fix1] Elizabeth_Gilbert__regen__rag_off__3: status=pending_review wall=24.1s llm_calls=9 pieces=12

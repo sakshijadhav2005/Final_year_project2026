@@ -1,0 +1,120 @@
+{
+ "run_id": "DanielKahneman__regen__rag_off__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "DanielKahneman",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    9,
+    10
+   ],
+   "justification": "The flyer perfectly matches the word count limit on the title, contains high-impact highlights, and uses standard TBA placeholders."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    9,
+    10
+   ],
+   "justification": "The post adheres to all LinkedIn formatting constraints, avoiding banned phrases and including exactly five relevant hashtags."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7
+   ],
+   "justification": "Meets all Instagram specifications including visual carousel cues, emoji-spaced lines, call-to-action, and 10 targeted hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    9,
+    10
+   ],
+   "justification": "The newsletter content is excellent and has three bold subheadings, but the subject line exceeds the 50-character limit at 53 characters."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "Well-structured executive briefing under 400 words with complete TL;DR, metrics/evidence, discussion points, and action items in Markdown."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10
+   ],
+   "justification": "Follows all blog requirements comprehensively, including numbered insight sections, comparison table, conclusion, and author profile."
+  }
+ }
+}

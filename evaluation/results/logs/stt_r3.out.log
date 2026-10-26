@@ -1,0 +1,4 @@
+2026-10-26 17:43:34 [info     ] vertex_stt_done                chunks=12 model=gemini-3.1-flash-lite words=4132
+Wade_Davis gemini-3.1-flash-lite 120s: 116.8s 
+2026-10-26 17:44:42 [info     ] vertex_stt_done                chunks=3 model=gemini-3.1-flash-lite words=4130
+Wade_Davis gemini-3.1-flash-lite 600s: 68.8s 

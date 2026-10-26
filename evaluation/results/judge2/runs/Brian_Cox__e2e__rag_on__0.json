@@ -1,0 +1,125 @@
+{
+ "run_id": "Brian_Cox__e2e__rag_on__0",
+ "judge_model": "gemini-3.6-flash",
+ "talk_id": "Brian_Cox",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    6,
+    7,
+    8,
+    10
+   ],
+   "justification": "The flyer title exceeds the 6-word limit (7 words), but otherwise adheres well to the format and facts."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Excellent post following all formatting constraints without cliches or forbidden filler words."
+  },
+  "summary": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [
+    "rigorous inspection of all 9,000+ magnet joins is now standard protocol"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Well-formatted executive briefing under 400 words, though it introduces one unverified detail about standard inspection protocols."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Adheres to all Instagram formatting requirements including carousel cues, emojis, CTA, and 10 hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Subject line is 49 characters (under 50), features three bold subheadings, CTA links, and conversational editorial tone."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Fails to include the required comparison/takeaway table specified in the format requirements."
+  }
+ }
+}

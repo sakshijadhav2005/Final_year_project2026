@@ -1,0 +1,117 @@
+{
+ "run_id": "Blaise_Agueray_Arcas__e2e__rag_on__0",
+ "judge_model": "gemini-3.6-flash",
+ "talk_id": "Blaise_Agueray_Arcas",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    5,
+    8,
+    10
+   ],
+   "justification": "The flyer title exceeds the strict 6-word limit (8 words), though all factual details are consistent with the transcript and placeholders."
+  },
+  "summary": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [
+    "Lead Speaker: Blaise Agüera y Arcas"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Includes external knowledge identifying the speaker by name which is not present in the reference transcript, but otherwise provides a well-structured summary adhering to all format requirements."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    7,
+    8,
+    10
+   ],
+   "justification": "Follows all Instagram formatting constraints, including emoji cues, visual structure, call to action, and 11 targeted hashtags."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    7,
+    8,
+    10
+   ],
+   "justification": "Adheres strictly to tone rules (no banned buzzwords), includes 5 relevant hashtags, and engages readers with a concluding question."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The subject line is under 50 characters, uses three subheaded sections, and maintains an engaging editorial tone throughout."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Comprehensive long-form markdown post that covers nearly all key points, includes the required comparison table, and concludes with an author profile."
+  }
+ }
+}

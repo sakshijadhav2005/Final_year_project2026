@@ -1,0 +1,121 @@
+{
+ "run_id": "DanielKahneman__regen__rag_off__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "DanielKahneman",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 2,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    9,
+    10
+   ],
+   "justification": "The flyer is punchy, adheres strictly to word count limits on the title, and correctly captures the main themes of the talk."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "Follows all Instagram formatting rules including carousel cues and exactly 10 targeted hashtags while accurately summarizing the talk."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    9,
+    10
+   ],
+   "justification": "Subject line is under 50 characters, includes three clearly structured sections with bold subheadings, and maintains an engaging editorial tone."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    9,
+    10
+   ],
+   "justification": "Meets all LinkedIn requirements by avoiding banned cliches and filler words, including short paragraphs, a closing question, and 5 hashtags."
+  },
+  "summary": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [
+    "Lead Speaker: Dr. Daniel Kahneman"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    7,
+    8,
+    10
+   ],
+   "justification": "Well-structured briefing under 400 words, though it specifies Daniel Kahneman by name which was not explicitly stated in the provided transcript text."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "Excellent long-form post containing numbered sections, a clear comparative markdown table, and the required author bio."
+  }
+ }
+}

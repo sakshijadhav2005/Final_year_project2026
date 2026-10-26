@@ -1,0 +1,114 @@
+{
+ "run_id": "BillGates__regen__rag_off__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "BillGates",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "justification": "The flyer adheres closely to all formatting requirements and accurately captures the high-impact themes of the talk without introducing unsupported claims."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8
+   ],
+   "justification": "The briefing is succinct, well under 400 words, clearly structured into all required executive sections, and accurately conveys the core metrics and takeaways."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8
+   ],
+   "justification": "The newsletter follows all editorial constraints, keeping the subject line under 50 characters while delivering three structured, engaging sections backed by the transcript."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    8
+   ],
+   "justification": "The post effectively incorporates visual cues, engaging copy, emojis, a call to action, and the required number of targeted hashtags."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    8,
+    10
+   ],
+   "justification": "The LinkedIn draft avoids prohibited buzzwords, adheres strictly to professional formatting, and provides strong narrative insights with an engaging discussion prompt."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    10
+   ],
+   "justification": "The blog post comprehensively covers the speaker's arguments with numbered sections, comparison tables, and full formatting compliance including author info."
+  }
+ }
+}

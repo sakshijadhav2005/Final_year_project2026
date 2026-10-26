@@ -1,0 +1,113 @@
+{
+ "run_id": "MichaelSpecter__regen__rag_off__1",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "MichaelSpecter",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 1,
+ "verdicts": {
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    8,
+    10
+   ],
+   "justification": "The Instagram caption adheres to all formatting guidelines including carousel cues and exactly 10 hashtags while accurately summarizing the talk."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    8,
+    10
+   ],
+   "justification": "The newsletter is well structured with three clear sections, though the subject line slightly exceeds the 50-character limit at 52 characters."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    7,
+    8,
+    10
+   ],
+   "justification": "The summary adheres strictly to all format constraints including TL;DR, evidence, discussion points, action items, and word count under 400 words."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    10
+   ],
+   "justification": "The flyer captures key messages and uses TBA placeholders correctly, but the title has 7 words, slightly exceeding the 6-word maximum constraint."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    8,
+    10
+   ],
+   "justification": "The LinkedIn post avoids banned cliches and filler words, utilizes short paragraphs, and contains an engaging call to action with 5 targeted hashtags."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post thoroughly covers the talk's themes with engaging numbered sections, a structured takeaway table, and an accurate About the Author section."
+  }
+ }
+}

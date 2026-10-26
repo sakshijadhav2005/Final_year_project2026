@@ -1,0 +1,976 @@
+﻿server\.venv\Scripts\python.exe : D:\FinalYearProject2026\Final_year_project\evaluation\scripts\analyze.py:251: 
+MatplotlibDeprecationWarning: vert: bool was deprecated in Matplotlib 3.11 and will be removed in 3.13. Use 
+orientation: {'vertical', 'horizontal'} instead.
+At line:1 char:349
++ ... ar_project; server\.venv\Scripts\python.exe evaluation\scripts\analyz ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D:\FinalYearPro...ntal'} instead.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ax.boxplot([[v for s, v in stage_rows if s == k] for k in keys], vert=False, widths=0.6,
+{
+ "dataset": {
+  "talks_total": 19,
+  "talks_used": 18,
+  "excluded": [
+   "DanBarber_2010_S103"
+  ],
+  "hours": 4.04,
+  "min_minutes": 3.1,
+  "max_minutes": 25.1,
+  "median_minutes": 15.2,
+  "ref_words_total": 43309,
+  "long_talks_gt2000": 11
+ },
+ "asr": [
+  {
+   "source": "app e2e",
+   "model": "gemini-3.1-flash-lite",
+   "chunk_s": 300,
+   "talks": 18,
+   "corpus_wer": 2.19,
+   "mean_wer": 2.26,
+   "median_wer": 2.22,
+   "max_wer": 5.45,
+   "mean_cer": 1.15,
+   "sub": 464,
+   "del": 224,
+   "ins": 284,
+   "ref_words": 44283,
+   "median_rtf": 0.0478,
+   "median_stt_sec": 43.2,
+   "audio_tokens_per_min": 1619.9
+  },
+  {
+   "source": "stt-only",
+   "model": "gemini-3.1-flash-lite",
+   "chunk_s": 120,
+   "talks": 18,
+   "corpus_wer": 2.19,
+   "mean_wer": 2.28,
+   "median_wer": 2.17,
+   "max_wer": 5.03,
+   "mean_cer": 1.17,
+   "sub": 460,
+   "del": 229,
+   "ins": 279,
+   "ref_words": 44283,
+   "median_rtf": 0.0366,
+   "median_stt_sec": 25.5,
+   "audio_tokens_per_min": 1990.7
+  },
+  {
+   "source": "stt-only",
+   "model": "gemini-3.1-flash-lite",
+   "chunk_s": 600,
+   "talks": 18,
+   "corpus_wer": 2.23,
+   "mean_wer": 2.3,
+   "median_wer": 2.34,
+   "max_wer": 5.38,
+   "mean_cer": 1.17,
+   "sub": 463,
+   "del": 227,
+   "ins": 297,
+   "ref_words": 44283,
+   "median_rtf": 0.0298,
+   "median_stt_sec": 24.1,
+   "audio_tokens_per_min": 1503.1
+  },
+  {
+   "source": "stt-only",
+   "model": "gemini-3.6-flash",
+   "chunk_s": 300,
+   "talks": 18,
+   "corpus_wer": 2.1,
+   "mean_wer": 2.14,
+   "median_wer": 1.89,
+   "max_wer": 5.1,
+   "mean_cer": 1.09,
+   "sub": 413,
+   "del": 242,
+   "ins": 276,
+   "ref_words": 44283,
+   "median_rtf": 0.0408,
+   "median_stt_sec": 30.8,
+   "audio_tokens_per_min": 1505.7
+  },
+  {
+   "source": "stt-only",
+   "model": "gemini-3.7-flash",
+   "chunk_s": 300,
+   "talks": 18,
+   "corpus_wer": 1.98,
+   "mean_wer": 2.04,
+   "median_wer": 1.87,
+   "max_wer": 4.54,
+   "mean_cer": 1.06,
+   "sub": 380,
+   "del": 210,
+   "ins": 285,
+   "ref_words": 44283,
+   "median_rtf": 0.1058,
+   "median_stt_sec": 90.7,
+   "audio_tokens_per_min": 1561.5
+  }
+ ],
+ "latency": {
+  "stages": [
+   {
+    "stage": "Media check",
+    "n": 18,
+    "median_s": 12.3,
+    "p25_s": 4.55,
+    "p75_s": 14.72,
+    "min_s": 3.0,
+    "max_s": 155.35
+   },
+   {
+    "stage": "Speech-to-text",
+    "n": 18,
+    "median_s": 43.24,
+    "p25_s": 21.13,
+    "p75_s": 51.99,
+    "min_s": 8.45,
+    "max_s": 135.53
+   },
+   {
+    "stage": "RAG indexing",
+    "n": 18,
+    "median_s": 1.74,
+    "p25_s": 1.09,
+    "p75_s": 2.99,
+    "min_s": 0.6,
+    "max_s": 10.09
+   },
+   {
+    "stage": "Analysis",
+    "n": 18,
+    "median_s": 3.14,
+    "p25_s": 2.92,
+    "p75_s": 3.27,
+    "min_s": 2.64,
+    "max_s": 3.7
+   },
+   {
+    "stage": "RAG retrieval",
+    "n": 18,
+    "median_s": 0.57,
+    "p25_s": 0.0,
+    "p75_s": 0.73,
+    "min_s": 0.0,
+    "max_s": 0.99
+   },
+   {
+    "stage": "Generation (6 agents)",
+    "n": 18,
+    "median_s": 5.41,
+    "p25_s": 5.02,
+    "p75_s": 5.78,
+    "min_s": 4.25,
+    "max_s": 10.13
+   },
+   {
+    "stage": "Guardrail (+retry)",
+    "n": 18,
+    "median_s": 2.04,
+    "p25_s": 1.73,
+    "p75_s": 2.37,
+    "min_s": 1.49,
+    "max_s": 8.4
+   },
+   {
+    "stage": "Translation (hi)",
+    "n": 18,
+    "median_s": 12.49,
+    "p25_s": 11.55,
+    "p75_s": 12.92,
+    "min_s": 11.1,
+    "max_s": 13.75
+   },
+   {
+    "stage": "Total (upload to drafts)",
+    "n": 18,
+    "median_s": 90.2,
+    "p25_s": 56.4,
+    "p75_s": 98.2,
+    "min_s": 32.9,
+    "max_s": 226.3
+   }
+  ],
+  "e2e_runs": 18,
+  "excluded_incident_runs": [
+   "DanielKahneman__regen__rag_off__2"
+  ],
+  "median_total_rtf": 0.122,
+  "spearman_duration_total": {
+   "rho": 0.7708978328173374,
+   "p": 0.0001805567537734165,
+   "n": 18
+  }
+ },
+ "tokens": {
+  "per_stage_mean_per_job": [
+   {
+    "stage": "generator",
+    "mean_prompt_tokens": 28845,
+    "mean_output_tokens": 4020
+   },
+   {
+    "stage": "stt",
+    "mean_prompt_tokens": 21790,
+    "mean_output_tokens": 3198
+   },
+   {
+    "stage": "guardrail",
+    "mean_prompt_tokens": 6958,
+    "mean_output_tokens": 210
+   },
+   {
+    "stage": "translation",
+    "mean_prompt_tokens": 3248,
+    "mean_output_tokens": 4010
+   },
+   {
+    "stage": "analysis",
+    "mean_prompt_tokens": 3178,
+    "mean_output_tokens": 507
+   },
+   {
+    "stage": "generator_retry",
+    "mean_prompt_tokens": 482,
+    "mean_output_tokens": 64
+   }
+  ],
+  "mean_llm_calls_per_job": 12.83,
+  "mean_prompt_tokens_per_job": 64500,
+  "mean_output_tokens_per_job": 12009,
+  "embedding_calls_total": 33
+ },
+ "live_reliability": {
+  "runs": 93,
+  "api_calls": 946,
+  "failed_calls": 22,
+  "error_kinds": {
+   "429 rate limit": 2,
+   "timeout/cancelled": 7,
+   "network (DNS/SSL/connection/auth refresh)": 13
+  },
+  "empty_responses": 0,
+  "runs_with_model_fallback": 0,
+  "job_status": {
+   "pending_review": 83,
+   "needs_review": 2,
+   "failed": 8
+  },
+  "failed_jobs": [
+   {
+    "run": "Barry_Schwartz__e2e__rag_on__0",
+    "error": "<HttpError 400 when requesting https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta&key=<redacted> r"
+   },
+   {
+    "run": "Elizabeth_Gilbert__e2e__rag_on__0",
+    "error": "'list' object has no attribute 'get'"
+   },
+   {
+    "run": "Elizabeth_Gilbert__regen__rag_off__1",
+    "error": "'list' object has no attribute 'get'"
+   },
+   {
+    "run": "Elizabeth_Gilbert__regen__rag_off__2",
+    "error": "'list' object has no attribute 'get'"
+   },
+   {
+    "run": "Elizabeth_Gilbert__regen__rag_off__3",
+    "error": "'list' object has no attribute 'get'"
+   },
+   {
+    "run": "Elizabeth_Gilbert__regen__rag_on__1",
+    "error": "'list' object has no attribute 'get'"
+   },
+   {
+    "run": "Elizabeth_Gilbert__regen__rag_on__2",
+    "error": "'list' object has no attribute 'get'"
+   },
+   {
+    "run": "Elizabeth_Gilbert__regen__rag_on__3",
+    "error": "'list' object has no attribute 'get'"
+   }
+  ],
+  "runs_with_guardrail_retry": 8,
+  "final_pieces_flagged": 2,
+  "final_pieces_total": 510,
+  "flagged_by_type": {
+   "newsletter": 2
+  }
+ },
+ "incidents": [
+  {
+   "run_id": "Barry_Schwartz__e2e__rag_on__0",
+   "status": "failed",
+   "max_call_sec": 148.8,
+   "error": "<HttpError 400 when requesting https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta&key=<redacted> returned \"API key not valid. Please pass "
+  },
+  {
+   "run_id": "DanielKahneman__regen__rag_off__2",
+   "status": "pending_review",
+   "max_call_sec": 5209.4,
+   "error": ""
+  },
+  {
+   "run_id": "Elizabeth_Gilbert__e2e__rag_on__0",
+   "status": "failed",
+   "max_call_sec": 39.6,
+   "error": "'list' object has no attribute 'get'"
+  },
+  {
+   "run_id": "Elizabeth_Gilbert__regen__rag_off__1",
+   "status": "failed",
+   "max_call_sec": 3.5,
+   "error": "'list' object has no attribute 'get'"
+  },
+  {
+   "run_id": "Elizabeth_Gilbert__regen__rag_off__2",
+   "status": "failed",
+   "max_call_sec": 3.6,
+   "error": "'list' object has no attribute 'get'"
+  },
+  {
+   "run_id": "Elizabeth_Gilbert__regen__rag_off__3",
+   "status": "failed",
+   "max_call_sec": 3.6,
+   "error": "'list' object has no attribute 'get'"
+  },
+  {
+   "run_id": "Elizabeth_Gilbert__regen__rag_on__1",
+   "status": "failed",
+   "max_call_sec": 3.7,
+   "error": "'list' object has no attribute 'get'"
+  },
+  {
+   "run_id": "Elizabeth_Gilbert__regen__rag_on__2",
+   "status": "failed",
+   "max_call_sec": 3.7,
+   "error": "'list' object has no attribute 'get'"
+  },
+  {
+   "run_id": "Elizabeth_Gilbert__regen__rag_on__3",
+   "status": "failed",
+   "max_call_sec": 3.4,
+   "error": "'list' object has no attribute 'get'"
+  },
+  {
+   "run_id": "EricMead_2009P_EricMead__e2e__rag_on__0",
+   "status": "pending_review",
+   "max_call_sec": 5205.8,
+   "error": ""
+  }
+ ],
+ "quality_rubric": [
+  {
+   "format": "summary",
+   "n": 18,
+   "factual_consistency": 4.94,
+   "relevance": 5.0,
+   "completeness": 4.72,
+   "readability": 5.0,
+   "instruction_adherence": 5.0,
+   "mean_unsupported_claims": 0.06
+  },
+  {
+   "format": "blog",
+   "n": 18,
+   "factual_consistency": 5.0,
+   "relevance": 5.0,
+   "completeness": 4.83,
+   "readability": 5.0,
+   "instruction_adherence": 4.5,
+   "mean_unsupported_claims": 0
+  },
+  {
+   "format": "linkedin",
+   "n": 18,
+   "factual_consistency": 5.0,
+   "relevance": 5.0,
+   "completeness": 4.33,
+   "readability": 5.0,
+   "instruction_adherence": 4.33,
+   "mean_unsupported_claims": 0
+  },
+  {
+   "format": "newsletter",
+   "n": 18,
+   "factual_consistency": 4.94,
+   "relevance": 5.0,
+   "completeness": 4.44,
+   "readability": 5.0,
+   "instruction_adherence": 4.67,
+   "mean_unsupported_claims": 0.06
+  },
+  {
+   "format": "instagram",
+   "n": 18,
+   "factual_consistency": 4.94,
+   "relevance": 5.0,
+   "completeness": 4.06,
+   "readability": 5.0,
+   "instruction_adherence": 4.94,
+   "mean_unsupported_claims": 0.06
+  },
+  {
+   "format": "flyer",
+   "n": 18,
+   "factual_consistency": 4.94,
+   "relevance": 5.0,
+   "completeness": 3.72,
+   "readability": 5.0,
+   "instruction_adherence": 4.44,
+   "mean_unsupported_claims": 0.06
+  }
+ ],
+ "quality_overall": {
+  "factual_consistency": 4.96,
+  "relevance": 5.0,
+  "completeness": 4.35,
+  "readability": 5.0,
+  "instruction_adherence": 4.65
+ },
+ "format_checks": {
+  "linkedin 3-5 hashtags": {
+   "pass": 12,
+   "n": 18
+  },
+  "linkedin no banned phrases": {
+   "pass": 18,
+   "n": 18
+  },
+  "instagram 10-15 hashtags": {
+   "pass": 18,
+   "n": 18
+  },
+  "summary <= 400 words": {
+   "pass": 18,
+   "n": 18
+  },
+  "flyer no invented date (TBA or none)": {
+   "pass": 18,
+   "n": 18
+  }
+ },
+ "rag_ablation": [
+  {
+   "metric": "Late coverage, all formats",
+   "talks": 11,
+   "rag_on_mean": 0.684,
+   "rag_off_mean": 0.468,
+   "mean_diff": 0.216,
+   "talks_improved": 10,
+   "talks_worse": 0,
+   "wilcoxon_p": 0.002
+  },
+  {
+   "metric": "Early coverage, all formats",
+   "talks": 11,
+   "rag_on_mean": 0.585,
+   "rag_off_mean": 0.701,
+   "mean_diff": -0.116,
+   "talks_improved": 1,
+   "talks_worse": 10,
+   "wilcoxon_p": 0.0029
+  },
+  {
+   "metric": "Late coverage, long formats",
+   "talks": 11,
+   "rag_on_mean": 0.747,
+   "rag_off_mean": 0.508,
+   "mean_diff": 0.239,
+   "talks_improved": 9,
+   "talks_worse": 0,
+   "wilcoxon_p": 0.0039
+  },
+  {
+   "metric": "All key points, all formats",
+   "talks": 11,
+   "rag_on_mean": 0.591,
+   "rag_off_mean": 0.598,
+   "mean_diff": -0.007,
+   "talks_improved": 5,
+   "talks_worse": 5,
+   "wilcoxon_p": 0.7148
+  },
+  {
+   "metric": "Factual cons.",
+   "talks": 11,
+   "rag_on_mean": 4.985,
+   "rag_off_mean": 4.955,
+   "mean_diff": 0.03,
+   "talks_improved": 4,
+   "talks_worse": 1,
+   "wilcoxon_p": 0.1875
+  },
+  {
+   "metric": "Relevance",
+   "talks": 11,
+   "rag_on_mean": 4.97,
+   "rag_off_mean": 5.0,
+   "mean_diff": -0.03,
+   "talks_improved": 0,
+   "talks_worse": 2,
+   "wilcoxon_p": 0.5
+  },
+  {
+   "metric": "Completeness",
+   "talks": 11,
+   "rag_on_mean": 4.283,
+   "rag_off_mean": 4.202,
+   "mean_diff": 0.081,
+   "talks_improved": 7,
+   "talks_worse": 3,
+   "wilcoxon_p": 0.3223
+  },
+  {
+   "metric": "Readability",
+   "talks": 11,
+   "rag_on_mean": 4.965,
+   "rag_off_mean": 4.995,
+   "mean_diff": -0.03,
+   "talks_improved": 1,
+   "talks_worse": 2,
+   "wilcoxon_p": 0.5
+  },
+  {
+   "metric": "Instr. adherence",
+   "talks": 11,
+   "rag_on_mean": 4.692,
+   "rag_off_mean": 4.672,
+   "mean_diff": 0.02,
+   "talks_improved": 4,
+   "talks_worse": 6,
+   "wilcoxon_p": 0.709
+  },
+  {
+   "metric": "Unsupported claims per draft",
+   "talks": 11,
+   "rag_on_mean": 0.01,
+   "rag_off_mean": 0.045,
+   "mean_diff": -0.035,
+   "talks_improved": 1,
+   "talks_worse": 5,
+   "wilcoxon_p": 0.125
+  }
+ ],
+ "judge_agreement": [
+  {
+   "dimension": "Factual cons.",
+   "n": 108,
+   "exact": 0.907,
+   "within_1": 1.0,
+   "qwk": 0.246,
+   "mean_j1": 4.96,
+   "mean_j2": 4.91
+  },
+  {
+   "dimension": "Relevance",
+   "n": 108,
+   "exact": 1.0,
+   "within_1": 1.0,
+   "qwk": NaN,
+   "mean_j1": 5.0,
+   "mean_j2": 5.0
+  },
+  {
+   "dimension": "Completeness",
+   "n": 108,
+   "exact": 0.731,
+   "within_1": 1.0,
+   "qwk": 0.62,
+   "mean_j1": 4.35,
+   "mean_j2": 4.32
+  },
+  {
+   "dimension": "Readability",
+   "n": 108,
+   "exact": 0.991,
+   "within_1": 1.0,
+   "qwk": 0.0,
+   "mean_j1": 5.0,
+   "mean_j2": 4.99
+  },
+  {
+   "dimension": "Instr. adherence",
+   "n": 108,
+   "exact": 0.898,
+   "within_1": 1.0,
+   "qwk": 0.877,
+   "mean_j1": 4.65,
+   "mean_j2": 4.69
+  }
+ ],
+ "retrieval": {
+  "talks": [
+   "Barry_Schwartz",
+   "Craig_Venter",
+   "Elizabeth_Gilbert",
+   "Wade_Davis",
+   "AimeeMullins",
+   "BillGates",
+   "DanBarber",
+   "DanielKahneman",
+   "JamesCameron",
+   "JaneMcGonigal",
+   "MichaelSpecter"
+  ],
+  "chunks": 181,
+  "queries": 109,
+  "query_model": "gemini-3.7-flash",
+  "rows": [
+   {
+    "setting": "within-talk",
+    "method": "gemini-embedding-001",
+    "queries": 109,
+    "mean_pool": 16.468,
+    "recall@1": 0.761,
+    "recall@3": 0.982,
+    "recall@6": 1.0,
+    "mrr": 0.867,
+    "ndcg@6": 0.895
+   },
+   {
+    "setting": "within-talk",
+    "method": "hashed bag-of-words (previous)",
+    "queries": 109,
+    "mean_pool": 16.468,
+    "recall@1": 0.229,
+    "recall@3": 0.486,
+    "recall@6": 0.615,
+    "mrr": 0.407,
+    "ndcg@6": 0.413
+   },
+   {
+    "setting": "within-talk",
+    "method": "BM25",
+    "queries": 109,
+    "mean_pool": 16.468,
+    "recall@1": 0.569,
+    "recall@3": 0.89,
+    "recall@6": 0.927,
+    "mrr": 0.731,
+    "ndcg@6": 0.772
+   },
+   {
+    "setting": "cross-talk",
+    "method": "gemini-embedding-001",
+    "queries": 109,
+    "mean_pool": 181.0,
+    "recall@1": 0.743,
+    "recall@3": 0.963,
+    "recall@6": 0.982,
+    "mrr": 0.849,
+    "ndcg@6": 0.876
+   },
+   {
+    "setting": "cross-talk",
+    "method": "hashed bag-of-words (previous)",
+    "queries": 109,
+    "mean_pool": 181.0,
+    "recall@1": 0.055,
+    "recall@3": 0.138,
+    "recall@6": 0.211,
+    "mrr": 0.126,
+    "ndcg@6": 0.119
+   },
+   {
+    "setting": "cross-talk",
+    "method": "BM25",
+    "queries": 109,
+    "mean_pool": 181.0,
+    "recall@1": 0.541,
+    "recall@3": 0.798,
+    "recall@6": 0.844,
+    "mrr": 0.68,
+    "ndcg@6": 0.708
+   }
+  ]
+ },
+ "fault_injection": {
+  "label": "mock-based fault injection",
+  "primary_model": "gemini-3.1-flash-lite",
+  "scenarios": [
+   {
+    "scenario": "S0 no fault",
+    "trials": 20,
+    "outcomes": {
+     "primary model": 20
+    },
+    "usable_output_rate": 1.0,
+    "mean_attempts": 1,
+    "latency_median_sec": 0.0,
+    "latency_max_sec": 0.0,
+    "models_tried": "gemini-3.1-flash-lite",
+    "second_call_model": "gemini-3.1-flash-lite",
+    "degraded_flagged": 0
+   },
+   {
+    "scenario": "S1 transient 429 (once)",
+    "trials": 20,
+    "outcomes": {
+     "primary model": 20
+    },
+    "usable_output_rate": 1.0,
+    "mean_attempts": 2,
+    "latency_median_sec": 0.0,
+    "latency_max_sec": 0.0,
+    "models_tried": "gemini-3.1-flash-lite",
+    "second_call_model": "gemini-3.1-flash-lite",
+    "degraded_flagged": 0
+   },
+   {
+    "scenario": "S2 timeout (once)",
+    "trials": 20,
+    "outcomes": {
+     "primary model": 20
+    },
+    "usable_output_rate": 1.0,
+    "mean_attempts": 2,
+    "latency_median_sec": 0.0,
+    "latency_max_sec": 0.002,
+    "models_tried": "gemini-3.1-flash-lite",
+    "second_call_model": "gemini-3.1-flash-lite",
+    "degraded_flagged": 0
+   },
+   {
+    "scenario": "S3 persistent 429 on primary",
+    "trials": 20,
+    "outcomes": {
+     "fallback model": 20
+    },
+    "usable_output_rate": 1.0,
+    "mean_attempts": 4,
+    "latency_median_sec": 1.006,
+    "latency_max_sec": 1.015,
+    "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+    "second_call_model": "gemini-3.1-flash-lite",
+    "degraded_flagged": 0
+   },
+   {
+    "scenario": "S4 model 404 not found",
+    "trials": 20,
+    "outcomes": {
+     "fallback model": 20
+    },
+    "usable_output_rate": 1.0,
+    "mean_attempts": 2,
+    "latency_median_sec": 0.0,
+    "latency_max_sec": 0.001,
+    "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+    "second_call_model": "gemini-3.6-flash",
+    "degraded_flagged": 0
+   },
+   {
+    "scenario": "S5 empty response",
+    "trials": 20,
+    "outcomes": {
+     "fallback model": 20
+    },
+    "usable_output_rate": 1.0,
+    "mean_attempts": 2,
+    "latency_median_sec": 0.0,
+    "latency_max_sec": 0.0,
+    "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+    "second_call_model": "gemini-3.1-flash-lite",
+    "degraded_flagged": 0
+   },
+   {
+    "scenario": "S6 JSON in markdown fence",
+    "trials": 20,
+    "outcomes": {
+     "primary model": 20
+    },
+    "usable_output_rate": 1.0,
+    "mean_attempts": 1,
+    "latency_median_sec": 0.0,
+    "latency_max_sec": 0.001,
+    "models_tried": "gemini-3.1-flash-lite",
+    "second_call_model": "gemini-3.1-flash-lite",
+    "degraded_flagged": 0
+   },
+   {
+    "scenario": "S7 prose, no JSON",
+    "trials": 20,
+    "outcomes": {
+     "unparsed (raw text)": 20
+    },
+    "usable_output_rate": 0.0,
+    "mean_attempts": 1,
+    "latency_median_sec": 0.0,
+    "latency_max_sec": 0.0,
+    "models_tried": "gemini-3.1-flash-lite",
+    "second_call_model": "gemini-3.1-flash-lite",
+    "degraded_flagged": 0
+   },
+   {
+    "scenario": "S8 all models 500",
+    "trials": 20,
+    "outcomes": {
+     "offline template": 20
+    },
+    "usable_output_rate": 0.0,
+    "mean_attempts": 6,
+    "latency_median_sec": 2.021,
+    "latency_max_sec": 2.03,
+    "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+    "second_call_model": "gemini-3.1-flash-lite",
+    "degraded_flagged": 20
+   }
+  ],
+  "circuit_breaker_probe": {
+   "consecutive_failing_calls": 8,
+   "fail_max": 5,
+   "upstream_invocations": 5,
+   "short_circuited": 3,
+   "breaker_open_until_set": true
+  },
+  "sustained_429_probe": {
+   "calls": 8,
+   "fail_max": 3,
+   "reset_seconds": 60.0,
+   "primary_attempts": 3,
+   "per_call": [
+    {
+     "primary_attempted": true,
+     "answered_by": "gemini-3.6-flash",
+     "latency_sec": 1.009
+    },
+    {
+     "primary_attempted": true,
+     "answered_by": "gemini-3.6-flash",
+     "latency_sec": 1.003
+    },
+    {
+     "primary_attempted": true,
+     "answered_by": "gemini-3.6-flash",
+     "latency_sec": 1.018
+    },
+    {
+     "primary_attempted": false,
+     "answered_by": "gemini-3.6-flash",
+     "latency_sec": 0.0
+    },
+    {
+     "primary_attempted": false,
+     "answered_by": "gemini-3.6-flash",
+     "latency_sec": 0.0
+    },
+    {
+     "primary_attempted": false,
+     "answered_by": "gemini-3.6-flash",
+     "latency_sec": 0.0
+    },
+    {
+     "primary_attempted": false,
+     "answered_by": "gemini-3.6-flash",
+     "latency_sec": 0.0
+    },
+    {
+     "primary_attempted": false,
+     "answered_by": "gemini-3.6-flash",
+     "latency_sec": 0.0
+    }
+   ]
+  }
+ },
+ "tests": {
+  "tests": 80,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "time_s": 41.943,
+  "line_coverage": 65.9,
+  "statements": 3644,
+  "by_package": {
+   "__init__.py": 100.0,
+   "api": 59.5,
+   "core": 93.8,
+   "db": 82.5,
+   "graphs": 66.8,
+   "main.py": 77.3,
+   "middleware": 48.4,
+   "models": 100.0,
+   "providers": 62.7,
+   "schemas": 100.0,
+   "services": 54.1,
+   "workers": 0.0
+  },
+  "tests_by_file": {
+   "test_anthropic_provider": 8,
+   "test_chat": 1,
+   "test_data_isolation": 2,
+   "test_endpoints": 5,
+   "test_events": 1,
+   "test_graph_gates": 5,
+   "test_guardrails": 5,
+   "test_health": 4,
+   "test_pipeline_speed": 7,
+   "test_rag": 6,
+   "test_regressions": 11,
+   "test_resilience_fixes": 10,
+   "test_storage": 2,
+   "test_upload_formats": 13
+  }
+ },
+ "correlation": {
+  "n": 18,
+  "variables": [
+   "Duration",
+   "Transcript words",
+   "WER",
+   "Total latency",
+   "Input tokens",
+   "Mean rubric"
+  ],
+  "rho": [
+   [
+    1.0,
+    0.948,
+    0.055,
+    0.771,
+    0.959,
+    0.01
+   ],
+   [
+    0.948,
+    1.0,
+    -0.013,
+    0.746,
+    0.92,
+    0.031
+   ],
+   [
+    0.055,
+    -0.013,
+    1.0,
+    0.069,
+    -0.075,
+    -0.085
+   ],
+   [
+    0.771,
+    0.746,
+    0.069,
+    1.0,
+    0.808,
+    0.156
+   ],
+   [
+    0.959,
+    0.92,
+    -0.075,
+    0.808,
+    1.0,
+    0.031
+   ],
+   [
+    0.01,
+    0.031,
+    -0.085,
+

@@ -1,0 +1,86 @@
+{
+ "talks": [
+  "Barry_Schwartz",
+  "Craig_Venter",
+  "Elizabeth_Gilbert",
+  "Wade_Davis",
+  "AimeeMullins",
+  "BillGates",
+  "DanBarber",
+  "DanielKahneman",
+  "JamesCameron",
+  "JaneMcGonigal",
+  "MichaelSpecter"
+ ],
+ "chunks": 181,
+ "queries": 109,
+ "query_model": "gemini-3.7-flash",
+ "summary": [
+  {
+   "setting": "within-talk",
+   "method": "gemini-embedding-001",
+   "queries": 109,
+   "mean_pool": 16.46788990825688,
+   "recall@1": 0.7614678899082569,
+   "recall@3": 0.981651376146789,
+   "recall@6": 1.0,
+   "mrr": 0.8672782874617737,
+   "ndcg@6": 0.8947041803812696
+  },
+  {
+   "setting": "within-talk",
+   "method": "hashed bag-of-words (previous)",
+   "queries": 109,
+   "mean_pool": 16.46788990825688,
+   "recall@1": 0.22935779816513763,
+   "recall@3": 0.48623853211009177,
+   "recall@6": 0.6146788990825688,
+   "mrr": 0.4067192736633475,
+   "ndcg@6": 0.4133634009468035
+  },
+  {
+   "setting": "within-talk",
+   "method": "BM25",
+   "queries": 109,
+   "mean_pool": 16.46788990825688,
+   "recall@1": 0.5688073394495413,
+   "recall@3": 0.8899082568807339,
+   "recall@6": 0.926605504587156,
+   "mrr": 0.7309672743158983,
+   "ndcg@6": 0.7720610022963245
+  },
+  {
+   "setting": "cross-talk",
+   "method": "gemini-embedding-001",
+   "queries": 109,
+   "mean_pool": 181.0,
+   "recall@1": 0.7431192660550459,
+   "recall@3": 0.963302752293578,
+   "recall@6": 0.981651376146789,
+   "mrr": 0.8485656036114753,
+   "ndcg@6": 0.8757277298902088
+  },
+  {
+   "setting": "cross-talk",
+   "method": "hashed bag-of-words (previous)",
+   "queries": 109,
+   "mean_pool": 181.0,
+   "recall@1": 0.05504587155963303,
+   "recall@3": 0.13761467889908258,
+   "recall@6": 0.21100917431192662,
+   "mrr": 0.12585442835582095,
+   "ndcg@6": 0.11941303232450916
+  },
+  {
+   "setting": "cross-talk",
+   "method": "BM25",
+   "queries": 109,
+   "mean_pool": 181.0,
+   "recall@1": 0.5412844036697247,
+   "recall@3": 0.7981651376146789,
+   "recall@6": 0.8440366972477065,
+   "mrr": 0.6799232844103738,
+   "ndcg@6": 0.7076484386917318
+  }
+ ]
+}

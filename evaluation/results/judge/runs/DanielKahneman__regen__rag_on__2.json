@@ -1,0 +1,112 @@
+{
+ "run_id": "DanielKahneman__regen__rag_on__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "DanielKahneman",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 2,
+ "verdicts": {
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    9,
+    10
+   ],
+   "justification": "The post adheres perfectly to all formatting constraints and accurately summarizes key themes from the talk."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    5,
+    9,
+    10
+   ],
+   "justification": "The flyer title meets the 6-word limit, uses TBA placeholders appropriately, and highlights core ideas concisely."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    8,
+    9
+   ],
+   "justification": "The caption includes carousel cues, emojis, a call to action, and exactly 10 targeted hashtags while remaining factually faithful."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    9,
+    10
+   ],
+   "justification": "The subject line is under 50 characters, and the email contains three clearly delineated bold sections with engaging editorial copy."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The summary provides an excellent breakdown of metrics, evidence, and discussion points within the under-400-word limit."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "The article is well structured with numbered sections, a comparative table, a conclusion, and an accurate author section."
+  }
+ }
+}

@@ -1,0 +1,187 @@
+{
+ "label": "mock-based fault injection",
+ "primary_model": "gemini-3.1-flash-lite",
+ "scenarios": [
+  {
+   "scenario": "S0 no fault",
+   "trials": 20,
+   "outcomes": {
+    "primary model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 1,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.0,
+   "models_tried": "gemini-3.1-flash-lite",
+   "second_call_model": "gemini-3.1-flash-lite",
+   "degraded_flagged": 0
+  },
+  {
+   "scenario": "S1 transient 429 (once)",
+   "trials": 20,
+   "outcomes": {
+    "primary model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 2,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.0,
+   "models_tried": "gemini-3.1-flash-lite",
+   "second_call_model": "gemini-3.1-flash-lite",
+   "degraded_flagged": 0
+  },
+  {
+   "scenario": "S2 timeout (once)",
+   "trials": 20,
+   "outcomes": {
+    "primary model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 2,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.002,
+   "models_tried": "gemini-3.1-flash-lite",
+   "second_call_model": "gemini-3.1-flash-lite",
+   "degraded_flagged": 0
+  },
+  {
+   "scenario": "S3 persistent 429 on primary",
+   "trials": 20,
+   "outcomes": {
+    "fallback model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 4,
+   "latency_median_sec": 1.006,
+   "latency_max_sec": 1.015,
+   "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+   "second_call_model": "gemini-3.1-flash-lite",
+   "degraded_flagged": 0
+  },
+  {
+   "scenario": "S4 model 404 not found",
+   "trials": 20,
+   "outcomes": {
+    "fallback model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 2,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.001,
+   "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+   "second_call_model": "gemini-3.6-flash",
+   "degraded_flagged": 0
+  },
+  {
+   "scenario": "S5 empty response",
+   "trials": 20,
+   "outcomes": {
+    "fallback model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 2,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.0,
+   "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+   "second_call_model": "gemini-3.1-flash-lite",
+   "degraded_flagged": 0
+  },
+  {
+   "scenario": "S6 JSON in markdown fence",
+   "trials": 20,
+   "outcomes": {
+    "primary model": 20
+   },
+   "usable_output_rate": 1.0,
+   "mean_attempts": 1,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.001,
+   "models_tried": "gemini-3.1-flash-lite",
+   "second_call_model": "gemini-3.1-flash-lite",
+   "degraded_flagged": 0
+  },
+  {
+   "scenario": "S7 prose, no JSON",
+   "trials": 20,
+   "outcomes": {
+    "unparsed (raw text)": 20
+   },
+   "usable_output_rate": 0.0,
+   "mean_attempts": 1,
+   "latency_median_sec": 0.0,
+   "latency_max_sec": 0.0,
+   "models_tried": "gemini-3.1-flash-lite",
+   "second_call_model": "gemini-3.1-flash-lite",
+   "degraded_flagged": 0
+  },
+  {
+   "scenario": "S8 all models 500",
+   "trials": 20,
+   "outcomes": {
+    "offline template": 20
+   },
+   "usable_output_rate": 0.0,
+   "mean_attempts": 6,
+   "latency_median_sec": 2.021,
+   "latency_max_sec": 2.03,
+   "models_tried": "gemini-3.1-flash-lite|gemini-3.6-flash",
+   "second_call_model": "gemini-3.1-flash-lite",
+   "degraded_flagged": 20
+  }
+ ],
+ "circuit_breaker_probe": {
+  "consecutive_failing_calls": 8,
+  "fail_max": 5,
+  "upstream_invocations": 5,
+  "short_circuited": 3,
+  "breaker_open_until_set": true
+ },
+ "sustained_429_probe": {
+  "calls": 8,
+  "fail_max": 3,
+  "reset_seconds": 60.0,
+  "primary_attempts": 3,
+  "per_call": [
+   {
+    "primary_attempted": true,
+    "answered_by": "gemini-3.6-flash",
+    "latency_sec": 1.009
+   },
+   {
+    "primary_attempted": true,
+    "answered_by": "gemini-3.6-flash",
+    "latency_sec": 1.003
+   },
+   {
+    "primary_attempted": true,
+    "answered_by": "gemini-3.6-flash",
+    "latency_sec": 1.018
+   },
+   {
+    "primary_attempted": false,
+    "answered_by": "gemini-3.6-flash",
+    "latency_sec": 0.0
+   },
+   {
+    "primary_attempted": false,
+    "answered_by": "gemini-3.6-flash",
+    "latency_sec": 0.0
+   },
+   {
+    "primary_attempted": false,
+    "answered_by": "gemini-3.6-flash",
+    "latency_sec": 0.0
+   },
+   {
+    "primary_attempted": false,
+    "answered_by": "gemini-3.6-flash",
+    "latency_sec": 0.0
+   },
+   {
+    "primary_attempted": false,
+    "answered_by": "gemini-3.6-flash",
+    "latency_sec": 0.0
+   }
+  ]
+ }
+}

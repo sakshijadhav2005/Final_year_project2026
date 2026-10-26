@@ -1,0 +1,188 @@
+﻿2026-10-26T10:01:09.262045Z [info     ] request                        duration_ms=99.4 method=POST path=/api/v1/auth/register status=201
+2026-10-26T10:01:09.288051Z [info     ] request                        duration_ms=24.09 method=PUT path=/api/v1/auth/profile status=200
+Calling on_part_begin with no data
+Calling on_header_field with data[36:55]
+Calling on_header_value with data[57:92]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[96:100]
+Calling on_part_end with no data
+Calling on_part_begin with no data
+Calling on_header_field with data[138:157]
+Calling on_header_value with data[159:192]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[196:244]
+Calling on_part_end with no data
+Calling on_part_begin with no data
+Calling on_header_field with data[282:301]
+Calling on_header_value with data[303:337]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[341:346]
+Calling on_part_end with no data
+Calling on_part_begin with no data
+Calling on_header_field with data[384:403]
+Calling on_header_value with data[405:458]
+Calling on_header_end with no data
+Calling on_header_field with data[460:472]
+Calling on_header_value with data[474:483]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[487:35348691]
+Calling on_part_end with no data
+Calling on_end with no data
+2026-10-26T10:01:09.580522Z [info     ] upload_integrity_verified      filename=Barry_Schwartz.wav sha256=cfb226c269450d85e82c84bb3112b3e01586da8f8e5ad06a67895b2a1cfdeb46
+2026-10-26T10:01:09.642103Z [info     ] request                        duration_ms=335.59 method=POST path=/api/v1/uploads status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T10:02:14.521250Z [info     ] vertex_stt_done                chunks=4 model=gemini-3.1-flash-lite words=3222
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T10:02:41.533790Z [info     ] request                        duration_ms=10.3 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d status=200
+2026-10-26T10:02:41.541060Z [info     ] request                        duration_ms=6.01 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/transcript status=200
+2026-10-26T10:02:41.550069Z [info     ] request                        duration_ms=7.72 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/content status=200
+[w3] Barry_Schwartz__e2e__rag_on__0: status=pending_review wall=92.2s llm_calls=13 pieces=12
+2026-10-26T10:02:41.570545Z [info     ] request                        duration_ms=13.14 method=POST path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T10:03:04.116373Z [info     ] request                        duration_ms=4.45 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d status=200
+2026-10-26T10:03:04.124373Z [info     ] request                        duration_ms=5.68 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/transcript status=200
+2026-10-26T10:03:04.132627Z [info     ] request                        duration_ms=7.58 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/content status=200
+[w3] Barry_Schwartz__regen__rag_on__1: status=pending_review wall=22.6s llm_calls=9 pieces=12
+2026-10-26T10:03:04.156243Z [info     ] request                        duration_ms=15.34 method=POST path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T10:03:27.153452Z [info     ] request                        duration_ms=4.42 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d status=200
+2026-10-26T10:03:27.159490Z [info     ] request                        duration_ms=4.82 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/transcript status=200
+2026-10-26T10:03:27.165460Z [info     ] request                        duration_ms=5.35 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/content status=200
+[w3] Barry_Schwartz__regen__rag_off__1: status=pending_review wall=23.0s llm_calls=9 pieces=12
+2026-10-26T10:03:27.187450Z [info     ] request                        duration_ms=14.9 method=POST path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T10:03:50.705139Z [info     ] request                        duration_ms=3.79 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d status=200
+2026-10-26T10:03:50.710225Z [info     ] request                        duration_ms=4.38 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/transcript status=200
+2026-10-26T10:03:50.716142Z [info     ] request                        duration_ms=4.9 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/content status=200
+[w3] Barry_Schwartz__regen__rag_on__2: status=pending_review wall=23.5s llm_calls=9 pieces=12
+2026-10-26T10:03:50.735072Z [info     ] request                        duration_ms=12.54 method=POST path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T10:04:12.326485Z [info     ] request                        duration_ms=9.8 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d status=200
+2026-10-26T10:04:12.346497Z [info     ] request                        duration_ms=17.55 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/transcript status=200
+2026-10-26T10:04:12.362483Z [info     ] request                        duration_ms=12.34 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/content status=200
+[w3] Barry_Schwartz__regen__rag_off__2: status=pending_review wall=21.6s llm_calls=9 pieces=12
+2026-10-26T10:04:12.409322Z [info     ] request                        duration_ms=29.58 method=POST path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T10:04:35.036219Z [info     ] request                        duration_ms=5.82 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d status=200
+2026-10-26T10:04:35.043135Z [info     ] request                        duration_ms=4.56 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/transcript status=200
+2026-10-26T10:04:35.049140Z [info     ] request                        duration_ms=5.64 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/content status=200
+[w3] Barry_Schwartz__regen__rag_on__3: status=pending_review wall=22.7s llm_calls=9 pieces=12
+2026-10-26T10:04:35.067541Z [info     ] request                        duration_ms=12.0 method=POST path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/regenerate status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T10:04:58.092416Z [info     ] request                        duration_ms=4.29 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d status=200
+2026-10-26T10:04:58.098413Z [info     ] request                        duration_ms=4.94 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/transcript status=200
+2026-10-26T10:04:58.105415Z [info     ] request                        duration_ms=5.8 method=GET path=/api/v1/jobs/21f1d3b8-661b-49bf-8dbf-c992b2d0379d/content status=200
+[w3] Barry_Schwartz__regen__rag_off__3: status=pending_review wall=23.0s llm_calls=9 pieces=12
+Calling on_part_begin with no data
+Calling on_header_field with data[36:55]
+Calling on_header_value with data[57:92]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[96:100]
+Calling on_part_end with no data
+Calling on_part_begin with no data
+Calling on_header_field with data[138:157]
+Calling on_header_value with data[159:192]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[196:244]
+Calling on_part_end with no data
+Calling on_part_begin with no data
+Calling on_header_field with data[282:301]
+Calling on_header_value with data[303:337]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[341:346]
+Calling on_part_end with no data
+Calling on_part_begin with no data
+Calling on_header_field with data[384:403]
+Calling on_header_value with data[405:467]
+Calling on_header_end with no data
+Calling on_header_field with data[469:481]
+Calling on_header_value with data[483:492]
+Calling on_header_end with no data
+Calling on_headers_finished with no data
+Calling on_part_data with data[496:14692800]
+Calling on_part_end with no data
+Calling on_end with no data
+2026-10-26T10:04:58.222799Z [info     ] upload_integrity_verified      filename=EricMead_2009P_EricMead.wav sha256=e44bbb98468bab8c624ea51598794b1153a13e1a24f600a41944abb242595ca7
+2026-10-26T10:04:58.240308Z [info     ] request                        duration_ms=111.29 method=POST path=/api/v1/uploads status=202
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T10:05:28.027153Z [info     ] vertex_stt_done                chunks=2 model=gemini-3.1-flash-lite words=1534
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+AFC is enabled with max remote calls: 10.
+2026-10-26T10:05:53.330611Z [info     ] request                        duration_ms=12.09 method=GET path=/api/v1/jobs/1ab70692-417b-49ab-a533-b8c181b7acd0 status=200
+2026-10-26T10:05:53.342574Z [info     ] request                        duration_ms=8.54 method=GET path=/api/v1/jobs/1ab70692-417b-49ab-a533-b8c181b7acd0/transcript status=200
+2026-10-26T10:05:53.349177Z [info     ] request                        duration_ms=6.32 method=GET path=/api/v1/jobs/1ab70692-417b-49ab-a533-b8c181b7acd0/content status=200
+[w3] EricMead_2009P_EricMead__e2e__rag_on__0: status=pending_review wall=55.2s llm_calls=11 pieces=12

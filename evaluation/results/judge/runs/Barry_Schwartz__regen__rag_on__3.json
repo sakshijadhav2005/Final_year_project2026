@@ -1,0 +1,112 @@
+{
+ "run_id": "Barry_Schwartz__regen__rag_on__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Barry_Schwartz",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    10
+   ],
+   "justification": "The flyer is clean and engaging, but the title contains 8 words, exceeding the maximum limit of 6 words."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    7,
+    10
+   ],
+   "justification": "The post adheres closely to all LinkedIn format requirements without using banned cliches or filler words."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    10
+   ],
+   "justification": "The caption effectively uses emojis, carousel-friendly formatting, an appropriate hashtag count, and a strong call to action."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter follows all structural criteria, including a subject line under 50 characters, three distinct bolded sections, and a warm editorial tone."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    7,
+    8
+   ],
+   "justification": "The executive briefing accurately reflects the talk's findings with clear evidence, discussion points, and action items under 400 words."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post is comprehensive and structured perfectly with numbered insight sections, a comparison table, and an author bio."
+  }
+ }
+}

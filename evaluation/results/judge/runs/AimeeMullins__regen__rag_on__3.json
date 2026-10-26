@@ -1,0 +1,115 @@
+{
+ "run_id": "AimeeMullins__regen__rag_on__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "AimeeMullins",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    8,
+    10
+   ],
+   "justification": "The flyer adheres strictly to the word-count constraint on the title, provides high-impact bullet points, and accurately handles placeholder logistics."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post perfectly incorporates visual carousel cues, emoji-spaced bullet points, a strong call to action, and exactly 10 targeted hashtags."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    7,
+    8,
+    9
+   ],
+   "justification": "The draft avoids all prohibited buzzwords, features clear insights with short paragraphs, includes an engaging question, and uses 5 relevant hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    7,
+    8,
+    9
+   ],
+   "justification": "The executive briefing is well under the 400-word limit and includes all required sections (TL;DR, key evidence, discussion points, action items) formatted cleanly in Markdown."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The subject line is under 50 characters, and the email contains a proper greeting, three bold subheaded sections, and strong calls to action in a conversational tone."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The long-form article follows all structural requirements with numbered insight sections, a comparison table, a strong conclusion, and an 'About the Author' section."
+  }
+ }
+}

@@ -1,0 +1,7 @@
+setting,method,queries,mean_pool,recall@1,recall@3,recall@6,mrr,ndcg@6
+within-talk,gemini-embedding-001,109,16.468,0.761,0.982,1.0,0.867,0.895
+within-talk,hashed bag-of-words (previous),109,16.468,0.229,0.486,0.615,0.407,0.413
+within-talk,BM25,109,16.468,0.569,0.89,0.927,0.731,0.772
+cross-talk,gemini-embedding-001,109,181.0,0.743,0.963,0.982,0.849,0.876
+cross-talk,hashed bag-of-words (previous),109,181.0,0.055,0.138,0.211,0.126,0.119
+cross-talk,BM25,109,181.0,0.541,0.798,0.844,0.68,0.708

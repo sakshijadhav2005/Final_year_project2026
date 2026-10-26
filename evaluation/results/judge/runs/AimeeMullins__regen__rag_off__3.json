@@ -1,0 +1,112 @@
+{
+ "run_id": "AimeeMullins__regen__rag_off__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "AimeeMullins",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    9,
+    10
+   ],
+   "justification": "The flyer captures the main themes accurately with strong formatting, though the title slightly exceeds the 6-word limit."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    9,
+    10
+   ],
+   "justification": "The LinkedIn post follows all formatting instructions, avoids banned buzzwords, and delivers an engaging, factually faithful message."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    7,
+    9
+   ],
+   "justification": "The caption successfully includes carousel cues, emoji formatting, clear takeaways, and exactly 10 targeted hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    7,
+    9,
+    10
+   ],
+   "justification": "The newsletter is conversational and well-structured with three bold subheadings, though the subject line exceeds the 50-character limit."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    7
+   ],
+   "justification": "The executive briefing is succinct, well under the 400-word limit, and organizes key strategic insights effectively into required sections."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    7,
+    9,
+    10
+   ],
+   "justification": "The blog post adheres perfectly to all long-form requirements, featuring numbered insight sections, an accurate comparison table, and the author profile."
+  }
+ }
+}

@@ -1,0 +1,99 @@
+{
+ "run_id": "Elizabeth_Gilbert__regen__rag_on__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Elizabeth_Gilbert",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    10
+   ],
+   "justification": "The flyer adheres to all length and structural constraints, featuring concise high-impact copy and accurate logistical placeholders."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    10
+   ],
+   "justification": "The post effectively hooks the reader, captures core insights from the talk, complies with hashtag counts, and avoids banned clichés."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    6,
+    10
+   ],
+   "justification": "The draft satisfies all visual and carousel requirements, features engaging short lines with emojis, and includes exactly 10 targeted hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    4,
+    10
+   ],
+   "justification": "The executive briefing is well under the 400-word limit and includes all necessary structural components such as TL;DR, evidence, discussion points, and action items."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "The subject line is under 50 characters, and the email contains a friendly greeting, three distinct bold subheadings, and clear CTAs."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    2,
+    3,
+    6,
+    10
+   ],
+   "justification": "While well-written and structured with numbered sections and an author bio, the draft fails to include the required comparison/takeaway table."
+  }
+ }
+}

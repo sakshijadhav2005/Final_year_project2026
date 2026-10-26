@@ -1,0 +1,112 @@
+{
+ "run_id": "AimeeMullins__regen__rag_on__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "AimeeMullins",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 2,
+ "verdicts": {
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    8,
+    10
+   ],
+   "justification": "The draft captures core insights accurately with engaging visual carousel cues and meets all format constraints including hashtags."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    4,
+    8,
+    10
+   ],
+   "justification": "The flyer adheres to the 6-word title limit, utilizes high-impact lines, and correctly uses TBA placeholders for event logistics."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    7,
+    8
+   ],
+   "justification": "The executive briefing is well under the 400-word limit, well-structured in Markdown with TL;DR, evidence, discussion points, and action items."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post has strong storytelling and avoids forbidden buzzwords, but fails to include the required 3-5 hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    7,
+    8,
+    10
+   ],
+   "justification": "The newsletter follows all editorial requirements, features a subject line under 50 characters, and includes three distinct sections with bold subheadings."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post thoroughly expands on the talk's themes with numbered sections, a structured takeaway table, and an About the Author section."
+  }
+ }
+}

@@ -1,0 +1,104 @@
+{
+ "run_id": "EricMead_2009P_EricMead__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "EricMead_2009P_EricMead",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5
+   ],
+   "justification": "The flyer is clean, compelling, and accurate, though the title exceeds the strict 6-word limit."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5
+   ],
+   "justification": "The post captures key ideas well and avoids buzzwords, but fails to include the required 3-5 hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5
+   ],
+   "justification": "Adheres strictly to executive briefing format requirements and word count limits while maintaining high clarity."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5
+   ],
+   "justification": "Meets all format requirements including character count for the subject line, three bold subheadings, and clear CTAs."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7
+   ],
+   "justification": "Well written and structured with numbered sections and a table, but it omits the required 'About the Author' section."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "justification": "Effectively uses carousel cues, punchy copy, emojis, CTAs, and adheres to the specified hashtag count."
+  }
+ }
+}

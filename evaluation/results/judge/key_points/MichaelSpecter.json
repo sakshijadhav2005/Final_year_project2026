@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "Humanity is currently experiencing unprecedented historical levels of health, wealth, and opportunity.",
+  "quote": "this is the greatest time there's ever been on this planet by any measure you wish to choose",
+  "position": 0.0505
+ },
+ {
+  "id": 2,
+  "point": "Scientific problem-solving and modern medicine have eradicated deadly diseases and transformed human life expectancy.",
+  "quote": "vaccines modern medicine our ability to feed billions of people those are triumphs of the scientific method",
+  "position": 0.116
+ },
+ {
+  "id": 3,
+  "point": "While people are entitled to hold their own opinions, they are not entitled to create their own facts.",
+  "quote": "they're even entitled to their opinion about progress but you know what you're not entitled to you're not entitled to your own facts",
+  "position": 0.2334
+ },
+ {
+  "id": 4,
+  "point": "Healthy skepticism is vital, but individuals must be willing to accept findings when proof and evidence are provided.",
+  "quote": "ask questions demand proof demand evidence don't take anything for granted but here's the thing when you get proof you need to accept the proof",
+  "position": 0.3594
+ },
+ {
+  "id": 5,
+  "point": "Extensive international scientific research found no link between vaccines and autism, yet emotional anecdotes continue to mislead people.",
+  "quote": "the data came back from the united states from england from sweden from canada and it was all the same no correlation no connection",
+  "position": 0.3978
+ },
+ {
+  "id": 6,
+  "point": "Refusing vaccinations threatens public health by inviting the swift re-emergence of preventable and debilitating diseases.",
+  "quote": "vaccines are essential you take them away disease comes back horrible diseases and that's happening we have measles in this country now",
+  "position": 0.5441
+ },
+ {
+  "id": 7,
+  "point": "Distrust in existing medical institutions often drives people to spend billions of dollars on completely ineffective alternative treatments.",
+  "quote": "they take alternative medicines and it doesn't matter how often we find out that they're useless the data says it all the time",
+  "position": 0.6281
+ },
+ {
+  "id": 8,
+  "point": "Discarding evidence-based science in favor of unproven beliefs can produce catastrophic and lethal consequences.",
+  "quote": "when you start down the road where belief and magic replace evidence and science you end up in a place you don't want to be",
+  "position": 0.7174
+ },
+ {
+  "id": 9,
+  "point": "Virtually all crops consumed today were selectively bred by humans, and modern genetic modification can deliver life-saving nutrition.",
+  "quote": "every single thing we eat every grain of rice every sprig of parsley every brussel sprout has been modified by man",
+  "position": 0.7697
+ },
+ {
+  "id": 10,
+  "point": "Blocking agricultural biotechnology that can alleviate severe malnutrition and food shortages in developing regions is a harmful form of high-tech colonialism.",
+  "quote": "we're guilty of something that i don't think we want to be guilty of high tech colonialism there's no other way to describe what's going on",
+  "position": 0.9458
+ }
+]

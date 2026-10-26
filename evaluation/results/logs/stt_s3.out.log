@@ -1,0 +1,35 @@
+2026-10-26 15:42:12 [info     ] vertex_stt_done                chunks=3 model=gemini-3.1-flash-lite words=865
+Al_Gore gemini-3.1-flash-lite 120s: 26.4s 
+2026-10-26 15:43:09 [info     ] vertex_stt_done                chunks=10 model=gemini-3.1-flash-lite words=3220
+Barry_Schwartz gemini-3.1-flash-lite 120s: 56.8s 
+2026-10-26 15:43:18 [info     ] vertex_stt_done                chunks=4 model=gemini-3.1-flash-lite words=1476
+Blaise_Agueray_Arcas gemini-3.1-flash-lite 120s: 8.5s 
+2026-10-26 15:43:24 [info     ] vertex_stt_done                chunks=2 model=gemini-3.1-flash-lite words=581
+Brian_Cox gemini-3.1-flash-lite 120s: 6.9s 
+2026-10-26 15:43:42 [info     ] vertex_stt_done                chunks=8 model=gemini-3.1-flash-lite words=2461
+Craig_Venter gemini-3.1-flash-lite 120s: 17.9s 
+2026-10-26 15:43:51 [info     ] vertex_stt_done                chunks=3 model=gemini-3.1-flash-lite words=1114
+David_Merrill gemini-3.1-flash-lite 120s: 9.0s 
+2026-10-26 15:44:16 [info     ] vertex_stt_done                chunks=10 model=gemini-3.1-flash-lite words=3761
+Elizabeth_Gilbert gemini-3.1-flash-lite 120s: 24.6s 
+Wade_Davis gemini-3.1-flash-lite 120s: 466.8s HttpError: <HttpError 400 when requesting https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta&key=<redacted> returned "API key not valid. Please pass a valid API key.". Details: "[{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'AP
+2026-10-26 15:53:07 [info     ] vertex_stt_done                chunks=11 model=gemini-3.1-flash-lite words=2893
+AimeeMullins gemini-3.1-flash-lite 120s: 64.4s 
+2026-10-26 15:54:08 [info     ] vertex_stt_done                chunks=14 model=gemini-3.1-flash-lite words=4367
+BillGates gemini-3.1-flash-lite 120s: 60.4s 
+2026-10-26 15:54:29 [info     ] vertex_stt_done                chunks=8 model=gemini-3.1-flash-lite words=2335
+DanBarber gemini-3.1-flash-lite 120s: 21.1s 
+2026-10-26 15:55:08 [info     ] vertex_stt_done                chunks=10 model=gemini-3.1-flash-lite words=3001
+DanielKahneman gemini-3.1-flash-lite 120s: 39.7s 
+2026-10-26 15:55:22 [info     ] vertex_stt_done                chunks=5 model=gemini-3.1-flash-lite words=1533
+EricMead_2009P_EricMead gemini-3.1-flash-lite 120s: 13.8s 
+2026-10-26 15:55:33 [info     ] vertex_stt_done                chunks=3 model=gemini-3.1-flash-lite words=1098
+GaryFlake gemini-3.1-flash-lite 120s: 10.4s 
+2026-10-26 15:56:14 [info     ] vertex_stt_done                chunks=9 model=gemini-3.1-flash-lite words=3016
+JamesCameron gemini-3.1-flash-lite 120s: 41.6s 
+2026-10-26 15:57:07 [info     ] vertex_stt_done                chunks=11 model=gemini-3.1-flash-lite words=3776
+JaneMcGonigal gemini-3.1-flash-lite 120s: 53.0s 
+2026-10-26 15:57:30 [info     ] vertex_stt_done                chunks=9 model=gemini-3.1-flash-lite words=2962
+MichaelSpecter gemini-3.1-flash-lite 120s: 22.4s 
+2026-10-26 15:58:02 [info     ] vertex_stt_done                chunks=3 model=gemini-3.1-flash-lite words=869
+RobertGupta gemini-3.1-flash-lite 120s: 32.5s 

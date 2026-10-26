@@ -1,0 +1,7 @@
+stage,mean_prompt_tokens,mean_output_tokens
+generator,28845,4020
+stt,21790,3198
+guardrail,6958,210
+translation,3248,4010
+analysis,3178,507
+generator_retry,482,64

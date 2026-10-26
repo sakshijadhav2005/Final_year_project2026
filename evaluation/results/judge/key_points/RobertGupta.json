@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "point": "Journalist Steve Lopez first discovered Nathaniel Ayers playing a broken violin on the streets of downtown Los Angeles.",
+  "quote": "steve lopez was walking along the streets of downtown los angeles when he heard beautiful music",
+  "position": 0.0073
+ },
+ {
+  "id": 2,
+  "point": "Nathaniel Ayers had studied double bass at Juilliard before his career was halted by severe mental illness.",
+  "quote": "nathaniel anthony ayers the juilliard trained double bassist whose promising career was cut short by a tragic affliction with paranoid schizophrenia",
+  "position": 0.0892
+ },
+ {
+  "id": 3,
+  "point": "Ayers avoided standard medical intervention due to the traumatic treatments he suffered in the past.",
+  "quote": "nathaniel refuses treatment because when he was treated it was with shock therapy and thorazine and handcuffs",
+  "position": 0.3364
+ },
+ {
+  "id": 4,
+  "point": "Ayers arrived at his first lesson deeply distressed and consumed by paranoid delusions.",
+  "quote": "nathaniel was in such a state of agitation when we started our first lesson at walt disney concert hall",
+  "position": 0.4242
+ },
+ {
+  "id": 5,
+  "point": "Fearing he would lose Ayers's attention with standard teaching methods, the speaker simply began performing Beethoven.",
+  "quote": "i just started playing and i played the first movement of the beethoven violin concerto",
+  "position": 0.5343
+ },
+ {
+  "id": 6,
+  "point": "Hearing the music produced an immediate, calming effect on Ayers's mental state.",
+  "quote": "it was as if he was in the grip of some invisible pharmaceutical a chemical reaction for which my playing",
+  "position": 0.5709
+ },
+ {
+  "id": 7,
+  "point": "Ayers responded by playing portions of classical concertos from memory on his own instrument.",
+  "quote": "he lifted his own violin and he started playing by ear certain snippets of violin concertos",
+  "position": 0.6197
+ },
+ {
+  "id": 8,
+  "point": "Music functions as a form of medicine that provides Ayers with a creative escape and sanity.",
+  "quote": "music is medicine music changes us and for nathaniel music is sanity because music allows him to take his thoughts",
+  "position": 0.7783
+ },
+ {
+  "id": 9,
+  "point": "The core purpose of art is transforming fundamental human emotions into a shared reality that connects people.",
+  "quote": "through our artistic lens through our creativity we're able to shape those emotions into reality",
+  "position": 0.8683
+ },
+ {
+  "id": 10,
+  "point": "Music ultimately reintegrated Ayers into a welcoming musical community and reaffirmed the speaker's calling.",
+  "quote": "for nathaniel music brought him back into a fold of friends the redemptive power of music brought him back",
+  "position": 0.9069
+ }
+]

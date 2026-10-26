@@ -1,0 +1,111 @@
+{
+ "run_id": "Craig_Venter__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Craig_Venter",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    7,
+    9,
+    10
+   ],
+   "justification": "The flyer is punchy, adheres to all formatting constraints including the title word limit, and accurately highlights key themes."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "Follows all LinkedIn guidelines, avoids banned buzzwords, includes a clear call to action, and uses appropriate hashtags."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Includes engaging carousel cues, clear emoji-bulleted takeaways, and exactly 10 targeted hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "Structured perfectly according to executive summary guidelines, well under the 400-word limit with actionable points."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Features a conversational editorial tone, three distinct bold subheadings, and a concise subject line under 50 characters."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The article is well written with an author bio and comparison table, but failed to use numbered section headings as required."
+  }
+ }
+}

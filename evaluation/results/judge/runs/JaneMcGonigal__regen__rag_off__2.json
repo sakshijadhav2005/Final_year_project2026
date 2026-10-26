@@ -1,0 +1,102 @@
+{
+ "run_id": "JaneMcGonigal__regen__rag_off__2",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "JaneMcGonigal",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 2,
+ "verdicts": {
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    5,
+    10
+   ],
+   "justification": "The draft clearly conveys core insights from the talk, adheres to all formatting guidelines, and avoids prohibited buzzwords."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    5,
+    10
+   ],
+   "justification": "The flyer adheres to all length and structural rules, correctly using placeholders for unknown logistics."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    10
+   ],
+   "justification": "The caption includes visual carousel cues, emoji-spaced lines, an engaging CTA, and the required number of hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    10
+   ],
+   "justification": "The summary is concise, under 400 words, and precisely incorporates the requested structural headings and action items."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    10
+   ],
+   "justification": "The blog post follows the required Markdown structure, including numbered sections, a comparative table, and an author bio."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    5,
+    10
+   ],
+   "justification": "The newsletter is well written with three distinct bold subheadings, but the subject line exceeds the 50-character limit."
+  }
+ }
+}

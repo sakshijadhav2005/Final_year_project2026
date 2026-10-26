@@ -1,0 +1,105 @@
+{
+ "run_id": "Wade_Davis__regen__rag_off__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Wade_Davis",
+ "mode": "regen",
+ "condition": "rag_off",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    10
+   ],
+   "justification": "The flyer captures the main theme well, but the title exceeds the 6-word maximum requirement."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    8
+   ],
+   "justification": "The post adheres to all LinkedIn formatting constraints and effectively conveys the talk's core insights without forbidden filler words."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    10
+   ],
+   "justification": "Follows all Instagram formatting guidelines including carousel cues, emoji styling, CTA, and hashtag counts."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7
+   ],
+   "justification": "Well-structured executive briefing that complies with the sub-400-word limit and required Markdown components."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    10
+   ],
+   "justification": "Meets all email newsletter requirements, including subject line length, three bold subheadings, and conversational tone."
+  },
+  "blog": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 4,
+   "instruction_adherence": 3,
+   "unsupported_claims": [
+    "the insights of the Warao"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    10
+   ],
+   "justification": "The blog misidentifies the Waorani tribe as 'Warao', omits the required numbered sections, and misses a dedicated 'About the Author' section."
+  }
+ }
+}

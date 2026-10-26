@@ -1,0 +1,113 @@
+{
+ "run_id": "Barry_Schwartz__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Barry_Schwartz",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 3,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    10
+   ],
+   "justification": "The flyer captures key themes well and uses proper placeholders, but the title exceeds the required maximum of 6 words."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    10
+   ],
+   "justification": "Adheres strictly to all formatting guidelines, avoids banned clichés/buzzwords, and effectively conveys the talk's main insights."
+  },
+  "instagram": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [
+    "🎙️ Keynote by: Barry Schwartz"
+   ],
+   "covered_key_points": [
+    1,
+    3,
+    7,
+    8,
+    10
+   ],
+   "justification": "Follows all Instagram formatting constraints and hashtag counts, with the minor addition of the speaker's name not explicitly given in the transcript or author profile."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    3,
+    4,
+    6,
+    7,
+    10
+   ],
+   "justification": "Provides a clean, well-structured executive summary under 400 words adhering to all formatting requirements."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    7,
+    8,
+    10
+   ],
+   "justification": "Adheres to all newsletter requirements, including three bold subheadings, subject line length constraint, and an editorial tone."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    10
+   ],
+   "justification": "An excellent long-form blog post that fully satisfies all structural requirements including numbered sections, comparison table, and author bio."
+  }
+ }
+}

@@ -1,0 +1,10 @@
+scenario,trials,outcome,usable_rate,mean_attempts,median_latency_s,next_call_model
+S0 no fault,20,primary model 20,1.0,1,0.0,gemini-3.1-flash-lite
+S1 transient 429 (once),20,primary model 20,1.0,2,0.0,gemini-3.1-flash-lite
+S2 timeout (once),20,primary model 20,1.0,2,0.0,gemini-3.1-flash-lite
+S3 persistent 429 on primary,20,fallback model 20,1.0,4,1.006,gemini-3.1-flash-lite
+S4 model 404 not found,20,fallback model 20,1.0,2,0.0,gemini-3.6-flash
+S5 empty response,20,fallback model 20,1.0,2,0.0,gemini-3.1-flash-lite
+S6 JSON in markdown fence,20,primary model 20,1.0,1,0.0,gemini-3.1-flash-lite
+"S7 prose, no JSON",20,unparsed (raw text) 20,0.0,1,0.0,gemini-3.1-flash-lite
+S8 all models 500,20,offline template 20,0.0,6,2.021,gemini-3.1-flash-lite

@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\caption{Per-stage latency of the live end-to-end runs (seconds; completed jobs, upload to finished drafts incl.\ Hindi translation).}
+\label{tab:latency}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lrrrr}
+\toprule
+Stage & $n$ & Median & IQR & Range \\
+\midrule
+Media check & 18 & 12.30 & 4.55--14.72 & 3.00--155.35 \\
+Speech-to-text & 18 & 43.24 & 21.13--51.99 & 8.45--135.53 \\
+RAG indexing & 18 & 1.74 & 1.09--2.99 & 0.60--10.09 \\
+Analysis & 18 & 3.14 & 2.92--3.27 & 2.64--3.70 \\
+RAG retrieval & 18 & 0.57 & 0.00--0.73 & 0.00--0.99 \\
+Generation (6 agents) & 18 & 5.41 & 5.02--5.78 & 4.25--10.13 \\
+Guardrail (+retry) & 18 & 2.04 & 1.73--2.37 & 1.49--8.40 \\
+Translation (hi) & 18 & 12.49 & 11.55--12.92 & 11.10--13.75 \\
+\midrule
+Total (upload to drafts) & 18 & 90.20 & 56.40--98.20 & 32.90--226.30 \\
+\bottomrule
+\end{tabular}
+\end{table}

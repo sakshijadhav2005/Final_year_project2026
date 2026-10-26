@@ -1,0 +1,35 @@
+2026-10-26 15:42:00 [info     ] vertex_stt_done                chunks=1 model=gemini-3.1-flash-lite words=864
+Al_Gore gemini-3.1-flash-lite 600s: 13.8s 
+2026-10-26 15:42:23 [info     ] vertex_stt_done                chunks=2 model=gemini-3.1-flash-lite words=3223
+Barry_Schwartz gemini-3.1-flash-lite 600s: 23.8s 
+2026-10-26 15:42:39 [info     ] vertex_stt_done                chunks=1 model=gemini-3.1-flash-lite words=1479
+Blaise_Agueray_Arcas gemini-3.1-flash-lite 600s: 16.1s 
+2026-10-26 15:43:09 [info     ] vertex_stt_done                chunks=1 model=gemini-3.1-flash-lite words=580
+Brian_Cox gemini-3.1-flash-lite 600s: 29.6s 
+2026-10-26 15:43:34 [info     ] vertex_stt_done                chunks=2 model=gemini-3.1-flash-lite words=2458
+Craig_Venter gemini-3.1-flash-lite 600s: 24.6s 
+2026-10-26 15:43:47 [info     ] vertex_stt_done                chunks=1 model=gemini-3.1-flash-lite words=1111
+David_Merrill gemini-3.1-flash-lite 600s: 12.9s 
+2026-10-26 15:44:12 [info     ] vertex_stt_done                chunks=2 model=gemini-3.1-flash-lite words=3761
+Elizabeth_Gilbert gemini-3.1-flash-lite 600s: 25.8s 
+Wade_Davis gemini-3.1-flash-lite 600s: 207.0s ServerNotFoundError: Unable to find the server at generativelanguage.googleapis.com
+2026-10-26 15:52:45 [info     ] vertex_stt_done                chunks=3 model=gemini-3.1-flash-lite words=2894
+AimeeMullins gemini-3.1-flash-lite 600s: 305.4s 
+2026-10-26 15:53:16 [info     ] vertex_stt_done                chunks=3 model=gemini-3.1-flash-lite words=4373
+BillGates gemini-3.1-flash-lite 600s: 31.5s 
+2026-10-26 15:53:39 [info     ] vertex_stt_done                chunks=2 model=gemini-3.1-flash-lite words=2335
+DanBarber gemini-3.1-flash-lite 600s: 22.9s 
+2026-10-26 15:54:03 [info     ] vertex_stt_done                chunks=2 model=gemini-3.1-flash-lite words=3003
+DanielKahneman gemini-3.1-flash-lite 600s: 23.5s 
+2026-10-26 15:54:17 [info     ] vertex_stt_done                chunks=1 model=gemini-3.1-flash-lite words=1538
+EricMead_2009P_EricMead gemini-3.1-flash-lite 600s: 14.2s 
+2026-10-26 15:54:28 [info     ] vertex_stt_done                chunks=1 model=gemini-3.1-flash-lite words=1099
+GaryFlake gemini-3.1-flash-lite 600s: 11.3s 
+2026-10-26 15:54:51 [info     ] vertex_stt_done                chunks=2 model=gemini-3.1-flash-lite words=3021
+JamesCameron gemini-3.1-flash-lite 600s: 22.7s 
+2026-10-26 15:55:15 [info     ] vertex_stt_done                chunks=2 model=gemini-3.1-flash-lite words=3768
+JaneMcGonigal gemini-3.1-flash-lite 600s: 24.4s 
+2026-10-26 15:55:42 [info     ] vertex_stt_done                chunks=2 model=gemini-3.1-flash-lite words=2965
+MichaelSpecter gemini-3.1-flash-lite 600s: 26.4s 
+2026-10-26 15:56:15 [info     ] vertex_stt_done                chunks=1 model=gemini-3.1-flash-lite words=868
+RobertGupta gemini-3.1-flash-lite 600s: 33.2s 

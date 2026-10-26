@@ -1,0 +1,120 @@
+{
+ "run_id": "David_Merrill__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "David_Merrill",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    7,
+    8,
+    10
+   ],
+   "justification": "The flyer adheres closely to all formatting requirements with a concise 6-word title, clear highlights, and appropriate use of TBA placeholders."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    8,
+    10
+   ],
+   "justification": "The Instagram caption includes an engaging hook, visual emojis, a clear call to action, and exactly 10 targeted hashtags."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post effectively conveys the core insights without banned cliches or filler words, adhering to the formatting constraints and hashtag count."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7,
+    9,
+    10
+   ],
+   "justification": "The briefing is well under 400 words, structured clearly in Markdown, and covers all required executive summary sections."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    10
+   ],
+   "justification": "The newsletter is conversational and well structured with three bold subheadings, though the subject line slightly exceeds the 50-character limit."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post comprehensively covers all key points of the talk and strictly fulfills all structural requirements including numbered sections, a takeaway table, and an About the Author section."
+  }
+ }
+}

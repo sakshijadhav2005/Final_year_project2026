@@ -1,0 +1,110 @@
+{
+ "run_id": "DanielKahneman__regen__rag_on__3",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "DanielKahneman",
+ "mode": "regen",
+ "condition": "rag_on",
+ "repeat": 3,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "The flyer adheres strictly to formatting guidelines including title length constraints and accurately captures key themes from the talk."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    8,
+    9
+   ],
+   "justification": "The Instagram caption includes an engaging hook, carousel visual cues, clean emoji usage, a clear call to action, and exactly 10 relevant hashtags."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 2,
+   "completeness": 1,
+   "readability": 2,
+   "instruction_adherence": 1,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1
+   ],
+   "justification": "The draft fails format requirements by merely pasting the opening sentences of the transcript verbatim without structuring, insights, a call to action, or hashtags."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    5,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The executive summary perfectly organizes the core points into the required sections and stays well under the 400-word limit."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    9,
+    10
+   ],
+   "justification": "The newsletter follows all structural guidelines, maintaining an engaging editorial tone and keeping the subject line under 50 characters."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post is exceptionally well written, adhering to all structural requirements including numbered insight sections, a comparison table, and an About the Author section."
+  }
+ }
+}

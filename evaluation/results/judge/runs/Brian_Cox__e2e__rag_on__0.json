@@ -1,0 +1,129 @@
+{
+ "run_id": "Brian_Cox__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Brian_Cox",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 4,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [
+    "Inside the 27km Atlas Detector"
+   ],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The draft conflates the 27km LHC circumference with the ATLAS detector and exceeds the maximum 6-word title constraint."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Follows all LinkedIn format instructions smoothly without forbidden clichés and accurately summarizes the talk's main themes."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Well-structured briefing that clearly outlines evidence, discussion points, and action items within word limits."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Captures the story effectively with excellent carousel visual cues, emojis, call to action, and exactly 10 relevant hashtags."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Meets all requirements including a subject line under 50 characters, three distinct bold subheadings, and a conversational tone."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 3,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "Well written and covers all key points, but fails to include the required comparison/takeaway table."
+  }
+ }
+}

@@ -1,0 +1,121 @@
+{
+ "run_id": "Al_Gore__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Al_Gore",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    5,
+    7,
+    10
+   ],
+   "justification": "The draft accurately reflects the talk's core messages and adheres perfectly to all Instagram formatting requirements including visual cues and hashtag count."
+  },
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    7,
+    8,
+    10
+   ],
+   "justification": "The flyer has a concise title under 6 words, utilizes high-impact lines, and correctly uses TBA placeholders for unknown logistics."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    5,
+    8,
+    9,
+    10
+   ],
+   "justification": "The post avoids prohibited buzzwords/cliches, includes a clear question CTA, uses 5 targeted hashtags, and accurately conveys key insights."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10
+   ],
+   "justification": "The summary contains all required structural components, maintains strict factual consistency, and easily stays under the 400-word limit."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter is engaging and covers the key points well, though the subject line slightly exceeds the 50-character limit."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The blog post adheres fully to Markdown formatting rules, includes numbered insight sections, a comparison table, and an accurate About the Author section."
+  }
+ }
+}

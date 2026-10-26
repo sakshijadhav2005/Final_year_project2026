@@ -1,0 +1,18 @@
+2026-10-26 15:42:25 [info     ] vertex_stt_done                chunks=1 model=gemini-3.7-flash words=862
+Al_Gore gemini-3.7-flash 300s: 39.2s 
+Barry_Schwartz gemini-3.7-flash 300s: 314.5s ServerNotFoundError: Unable to find the server at generativelanguage.googleapis.com
+2026-10-26 15:53:09 [info     ] vertex_stt_done                chunks=2 model=gemini-3.7-flash words=1414
+Blaise_Agueray_Arcas gemini-3.7-flash 300s: 329.2s 
+2026-10-26 15:53:24 [info     ] vertex_stt_done                chunks=1 model=gemini-3.7-flash words=573
+Brian_Cox gemini-3.7-flash 300s: 15.0s 
+2026-10-26 15:54:13 [info     ] vertex_stt_done                chunks=4 model=gemini-3.7-flash words=2455
+Craig_Venter gemini-3.7-flash 300s: 49.3s 
+2026-10-26 15:55:11 [info     ] vertex_stt_done                chunks=2 model=gemini-3.7-flash words=1119
+David_Merrill gemini-3.7-flash 300s: 58.0s 
+2026-10-26 15:56:44 [info     ] vertex_stt_done                chunks=4 model=gemini-3.7-flash words=3761
+Elizabeth_Gilbert gemini-3.7-flash 300s: 93.0s 
+2026-10-26 15:57:49 [info     ] vertex_stt_done                chunks=5 model=gemini-3.7-flash words=4134
+Wade_Davis gemini-3.7-flash 300s: 64.8s 
+AimeeMullins gemini-3.7-flash 300s: 3011.8s ServerNotFoundError: Unable to find the server at generativelanguage.googleapis.com
+2026-10-26 16:50:52 [info     ] vertex_stt_done                chunks=6 model=gemini-3.7-flash words=4321
+BillGates gemini-3.7-flash 300s: 171.1s 

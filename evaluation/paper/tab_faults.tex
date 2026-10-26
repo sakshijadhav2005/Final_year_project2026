@@ -1,0 +1,23 @@
+\begin{table*}[t]
+\centering
+\caption{Mock-based fault injection into the production Vertex provider (20 trials per scenario). ``Next call'' is the first model tried by the next call in the same process; ``Flagged'' counts trials whose fallback output was marked as degraded.}
+\label{tab:faults}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{llrrlr}
+\toprule
+Scenario & Outcome (of 20) & Calls & Lat. (s) & Next call & Flagged \\
+\midrule
+S0 no fault & primary model 20 & 1.0 & 0.00 & 3.1-flash-lite & 0 \\
+S1 transient 429 (once) & primary model 20 & 2.0 & 0.00 & 3.1-flash-lite & 0 \\
+S2 timeout (once) & primary model 20 & 2.0 & 0.00 & 3.1-flash-lite & 0 \\
+S3 persistent 429 on primary & fallback model 20 & 4.0 & 1.01 & 3.1-flash-lite & 0 \\
+S4 model 404 not found & fallback model 20 & 2.0 & 0.00 & 3.6-flash & 0 \\
+S5 empty response & fallback model 20 & 2.0 & 0.00 & 3.1-flash-lite & 0 \\
+S6 JSON in markdown fence & primary model 20 & 1.0 & 0.00 & 3.1-flash-lite & 0 \\
+S7 prose, no JSON & unparsed (raw text) 20 & 1.0 & 0.00 & 3.1-flash-lite & 0 \\
+S8 all models 500 & offline template 20 & 6.0 & 2.02 & 3.1-flash-lite & 20 \\
+\bottomrule
+\end{tabular}
+\\[2pt]\parbox{\linewidth}{\scriptsize Circuit-breaker probe: 8 consecutive failing calls (fail\_max = 5) reached the upstream 5 times; 3 were short-circuited. Sustained 429 on the primary over 8 calls: the primary was tried by 3 calls, then skipped by its model breaker (fail\_max = 3, 60\,s window).}
+\end{table*}

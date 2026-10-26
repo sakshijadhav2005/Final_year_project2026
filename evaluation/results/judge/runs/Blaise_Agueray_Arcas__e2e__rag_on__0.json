@@ -1,0 +1,122 @@
+{
+ "run_id": "Blaise_Agueray_Arcas__e2e__rag_on__0",
+ "judge_model": "gemini-3.7-flash",
+ "talk_id": "Blaise_Agueray_Arcas",
+ "mode": "e2e",
+ "condition": "rag_on",
+ "repeat": 0,
+ "verdicts": {
+  "flyer": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    5,
+    6,
+    8,
+    10
+   ],
+   "justification": "The flyer captures the main themes accurately, though the title exceeds the requested maximum of six words."
+  },
+  "summary": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The summary adheres strictly to all format constraints, maintaining a concise, well-structured executive tone under 400 words."
+  },
+  "instagram": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 4,
+   "readability": 5,
+   "instruction_adherence": 4,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    6,
+    7,
+    8,
+    10
+   ],
+   "justification": "The post has strong visual appeal and valid hashtag counts, but lacks explicit carousel/slide cues."
+  },
+  "linkedin": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    5,
+    6,
+    7,
+    8,
+    10
+   ],
+   "justification": "Follows all LinkedIn guidelines, avoids banned clichés/buzzwords, and includes an engaging closing discussion question."
+  },
+  "newsletter": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "The newsletter is conversational, features three clearly structured sections with bold headers, and includes clear calls to action."
+  },
+  "blog": {
+   "factual_consistency": 5,
+   "relevance": 5,
+   "completeness": 5,
+   "readability": 5,
+   "instruction_adherence": 5,
+   "unsupported_claims": [],
+   "covered_key_points": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "justification": "A comprehensive blog article that meets all formatting criteria including numbered sections, comparison table, and author bio."
+  }
+ }
+}

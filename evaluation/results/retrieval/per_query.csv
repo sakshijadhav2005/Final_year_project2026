@@ -1,0 +1,655 @@
+setting,method,talk,query,pool_size,recall@1,recall@3,recall@6,mrr,ndcg@6
+within-talk,gemini-embedding-001,Barry_Schwartz,0,16,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Barry_Schwartz,0,16,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,Barry_Schwartz,0,16,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Barry_Schwartz,1,16,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Barry_Schwartz,1,16,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,Barry_Schwartz,1,16,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Barry_Schwartz,2,16,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Barry_Schwartz,2,16,0.0,0.0,0.0,0.08333333333333333,0.0
+within-talk,BM25,Barry_Schwartz,2,16,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Barry_Schwartz,3,16,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),Barry_Schwartz,3,16,0.0,0.0,0.0,0.07142857142857142,0.0
+within-talk,BM25,Barry_Schwartz,3,16,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Barry_Schwartz,4,16,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Barry_Schwartz,4,16,0.0,1.0,1.0,0.3333333333333333,0.3065735963827292
+within-talk,BM25,Barry_Schwartz,4,16,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Barry_Schwartz,5,16,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Barry_Schwartz,5,16,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,Barry_Schwartz,5,16,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Barry_Schwartz,6,16,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Barry_Schwartz,6,16,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,BM25,Barry_Schwartz,6,16,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Barry_Schwartz,7,16,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Barry_Schwartz,7,16,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,BM25,Barry_Schwartz,7,16,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Barry_Schwartz,8,16,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),Barry_Schwartz,8,16,0.0,0.0,0.0,0.08333333333333333,0.0
+within-talk,BM25,Barry_Schwartz,8,16,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Barry_Schwartz,9,16,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,hashed bag-of-words (previous),Barry_Schwartz,9,16,0.0,0.0,0.0,0.125,0.0
+within-talk,BM25,Barry_Schwartz,9,16,0.0,0.0,1.0,0.2,0.38685280723454163
+within-talk,gemini-embedding-001,Craig_Venter,10,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Craig_Venter,10,12,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,Craig_Venter,10,12,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Craig_Venter,11,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Craig_Venter,11,12,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,Craig_Venter,11,12,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,gemini-embedding-001,Craig_Venter,12,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Craig_Venter,12,12,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,Craig_Venter,12,12,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,Craig_Venter,13,12,1.0,1.0,1.0,1.0,0.9197207891481876
+within-talk,hashed bag-of-words (previous),Craig_Venter,13,12,0.0,1.0,1.0,0.5,0.38685280723454163
+within-talk,BM25,Craig_Venter,13,12,0.0,1.0,1.0,0.3333333333333333,0.3065735963827292
+within-talk,gemini-embedding-001,Craig_Venter,14,12,1.0,1.0,1.0,1.0,0.6131471927654584
+within-talk,hashed bag-of-words (previous),Craig_Venter,14,12,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,BM25,Craig_Venter,14,12,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Craig_Venter,15,12,1.0,1.0,1.0,1.0,0.9197207891481876
+within-talk,hashed bag-of-words (previous),Craig_Venter,15,12,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,BM25,Craig_Venter,15,12,0.0,1.0,1.0,0.5,0.6934264036172708
+within-talk,gemini-embedding-001,Craig_Venter,16,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Craig_Venter,16,12,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,Craig_Venter,16,12,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,gemini-embedding-001,Craig_Venter,17,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Craig_Venter,17,12,0.0,0.0,1.0,0.16666666666666666,0.21840743681816419
+within-talk,BM25,Craig_Venter,17,12,0.0,0.0,0.0,0.125,0.0
+within-talk,gemini-embedding-001,Craig_Venter,18,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Craig_Venter,18,12,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,Craig_Venter,18,12,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Craig_Venter,19,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Craig_Venter,19,12,0.0,0.0,0.0,0.09090909090909091,0.0
+within-talk,BM25,Craig_Venter,19,12,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,gemini-embedding-001,Elizabeth_Gilbert,20,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,20,19,0.0,0.0,0.0,0.06666666666666667,0.0
+within-talk,BM25,Elizabeth_Gilbert,20,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Elizabeth_Gilbert,21,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,21,19,0.0,0.0,1.0,0.2,0.38685280723454163
+within-talk,BM25,Elizabeth_Gilbert,21,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Elizabeth_Gilbert,22,19,1.0,1.0,1.0,1.0,0.9197207891481876
+within-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,22,19,0.0,0.0,0.0,0.1111111111111111,0.0
+within-talk,BM25,Elizabeth_Gilbert,22,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Elizabeth_Gilbert,23,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,23,19,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,Elizabeth_Gilbert,23,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Elizabeth_Gilbert,24,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,24,19,0.0,0.0,1.0,0.2,0.38685280723454163
+within-talk,BM25,Elizabeth_Gilbert,24,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Elizabeth_Gilbert,25,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,25,19,0.0,0.0,0.0,0.125,0.0
+within-talk,BM25,Elizabeth_Gilbert,25,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Elizabeth_Gilbert,26,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,26,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,Elizabeth_Gilbert,26,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,Elizabeth_Gilbert,27,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,27,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,Elizabeth_Gilbert,27,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Elizabeth_Gilbert,28,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,28,19,0.0,0.0,1.0,0.2,0.38685280723454163
+within-talk,BM25,Elizabeth_Gilbert,28,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Elizabeth_Gilbert,29,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,29,19,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,BM25,Elizabeth_Gilbert,29,19,0.0,0.0,0.0,0.08333333333333333,0.0
+within-talk,gemini-embedding-001,Wade_Davis,30,21,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Wade_Davis,30,21,1.0,1.0,1.0,1.0,0.6131471927654584
+within-talk,BM25,Wade_Davis,30,21,1.0,1.0,1.0,1.0,0.9197207891481876
+within-talk,gemini-embedding-001,Wade_Davis,31,21,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Wade_Davis,31,21,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,BM25,Wade_Davis,31,21,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Wade_Davis,32,21,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Wade_Davis,32,21,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,Wade_Davis,32,21,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Wade_Davis,33,21,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Wade_Davis,33,21,0.0,0.0,0.0,0.0625,0.0
+within-talk,BM25,Wade_Davis,33,21,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Wade_Davis,34,21,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Wade_Davis,34,21,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,BM25,Wade_Davis,34,21,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,Wade_Davis,35,21,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Wade_Davis,35,21,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,BM25,Wade_Davis,35,21,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,Wade_Davis,36,21,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Wade_Davis,36,21,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,Wade_Davis,36,21,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Wade_Davis,37,21,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Wade_Davis,37,21,0.0,0.0,0.0,0.05,0.0
+within-talk,BM25,Wade_Davis,37,21,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Wade_Davis,38,21,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Wade_Davis,38,21,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,Wade_Davis,38,21,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,Wade_Davis,39,21,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),Wade_Davis,39,21,0.0,0.0,0.0,0.07692307692307693,0.0
+within-talk,BM25,Wade_Davis,39,21,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,AimeeMullins,40,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),AimeeMullins,40,15,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,AimeeMullins,40,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,AimeeMullins,41,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),AimeeMullins,41,15,0.0,0.0,1.0,0.2,0.38685280723454163
+within-talk,BM25,AimeeMullins,41,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,AimeeMullins,42,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),AimeeMullins,42,15,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,AimeeMullins,42,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,AimeeMullins,43,15,1.0,1.0,1.0,1.0,0.9197207891481876
+within-talk,hashed bag-of-words (previous),AimeeMullins,43,15,1.0,1.0,1.0,1.0,0.8315546295836225
+within-talk,BM25,AimeeMullins,43,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,AimeeMullins,44,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),AimeeMullins,44,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,AimeeMullins,44,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,AimeeMullins,45,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),AimeeMullins,45,15,0.0,0.0,0.0,0.08333333333333333,0.0
+within-talk,BM25,AimeeMullins,45,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,AimeeMullins,46,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),AimeeMullins,46,15,0.0,0.0,0.0,0.125,0.0
+within-talk,BM25,AimeeMullins,46,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,AimeeMullins,47,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),AimeeMullins,47,15,0.0,1.0,1.0,0.3333333333333333,0.3065735963827292
+within-talk,BM25,AimeeMullins,47,15,1.0,1.0,1.0,1.0,0.9197207891481876
+within-talk,gemini-embedding-001,AimeeMullins,48,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),AimeeMullins,48,15,0.0,0.0,1.0,0.25,0.43067655807339306
+within-talk,BM25,AimeeMullins,48,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,AimeeMullins,49,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),AimeeMullins,49,15,1.0,1.0,1.0,1.0,0.9197207891481876
+within-talk,BM25,AimeeMullins,49,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,BillGates,50,22,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),BillGates,50,22,0.0,0.0,0.0,0.05,0.0
+within-talk,BM25,BillGates,50,22,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,BillGates,51,22,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),BillGates,51,22,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,BillGates,51,22,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,BillGates,52,22,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),BillGates,52,22,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,BM25,BillGates,52,22,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,BillGates,53,22,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),BillGates,53,22,0.0,0.0,0.0,0.05263157894736842,0.0
+within-talk,BM25,BillGates,53,22,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,BillGates,54,22,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),BillGates,54,22,0.0,0.0,0.0,0.07692307692307693,0.0
+within-talk,BM25,BillGates,54,22,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,BillGates,55,22,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),BillGates,55,22,0.0,0.0,0.0,0.125,0.0
+within-talk,BM25,BillGates,55,22,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,gemini-embedding-001,BillGates,56,22,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,hashed bag-of-words (previous),BillGates,56,22,0.0,0.0,0.0,0.1,0.0
+within-talk,BM25,BillGates,56,22,0.0,0.0,1.0,0.25,0.43067655807339306
+within-talk,gemini-embedding-001,BillGates,57,22,0.0,0.0,1.0,0.2,0.38685280723454163
+within-talk,hashed bag-of-words (previous),BillGates,57,22,0.0,0.0,0.0,0.08333333333333333,0.0
+within-talk,BM25,BillGates,57,22,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,gemini-embedding-001,BillGates,58,22,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),BillGates,58,22,0.0,0.0,0.0,0.058823529411764705,0.0
+within-talk,BM25,BillGates,58,22,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,gemini-embedding-001,BillGates,59,22,0.0,0.0,1.0,0.16666666666666666,0.3562071871080222
+within-talk,hashed bag-of-words (previous),BillGates,59,22,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,BillGates,59,22,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,gemini-embedding-001,DanBarber,60,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),DanBarber,60,12,1.0,1.0,1.0,1.0,0.9197207891481876
+within-talk,BM25,DanBarber,60,12,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,DanBarber,61,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),DanBarber,61,12,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,BM25,DanBarber,61,12,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,DanBarber,62,12,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),DanBarber,62,12,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,DanBarber,62,12,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,DanBarber,63,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),DanBarber,63,12,1.0,1.0,1.0,1.0,0.8315546295836225
+within-talk,BM25,DanBarber,63,12,0.0,1.0,1.0,0.5,0.6934264036172708
+within-talk,gemini-embedding-001,DanBarber,64,12,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),DanBarber,64,12,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,DanBarber,64,12,0.0,0.0,1.0,0.25,0.43067655807339306
+within-talk,gemini-embedding-001,DanBarber,65,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),DanBarber,65,12,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,BM25,DanBarber,65,12,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,DanBarber,66,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),DanBarber,66,12,0.0,0.0,0.0,0.1111111111111111,0.0
+within-talk,BM25,DanBarber,66,12,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,DanBarber,67,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),DanBarber,67,12,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,BM25,DanBarber,67,12,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,DanBarber,68,12,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),DanBarber,68,12,0.0,0.0,0.0,0.125,0.0
+within-talk,BM25,DanBarber,68,12,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,DanBarber,69,12,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,hashed bag-of-words (previous),DanBarber,69,12,0.0,0.0,0.0,0.125,0.0
+within-talk,BM25,DanBarber,69,12,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,DanielKahneman,70,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),DanielKahneman,70,15,0.0,0.0,0.0,0.08333333333333333,0.0
+within-talk,BM25,DanielKahneman,70,15,0.0,0.0,0.0,0.09090909090909091,0.0
+within-talk,gemini-embedding-001,DanielKahneman,71,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),DanielKahneman,71,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,DanielKahneman,71,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,DanielKahneman,72,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),DanielKahneman,72,15,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,DanielKahneman,72,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,DanielKahneman,73,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),DanielKahneman,73,15,0.0,0.0,1.0,0.25,0.43067655807339306
+within-talk,BM25,DanielKahneman,73,15,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,gemini-embedding-001,DanielKahneman,74,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),DanielKahneman,74,15,0.0,0.0,0.0,0.08333333333333333,0.0
+within-talk,BM25,DanielKahneman,74,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,DanielKahneman,75,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),DanielKahneman,75,15,0.0,0.0,0.0,0.125,0.0
+within-talk,BM25,DanielKahneman,75,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,DanielKahneman,76,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),DanielKahneman,76,15,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,BM25,DanielKahneman,76,15,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,gemini-embedding-001,DanielKahneman,77,15,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,hashed bag-of-words (previous),DanielKahneman,77,15,0.0,0.0,0.0,0.06666666666666667,0.0
+within-talk,BM25,DanielKahneman,77,15,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,gemini-embedding-001,DanielKahneman,78,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),DanielKahneman,78,15,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,DanielKahneman,78,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,JamesCameron,79,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JamesCameron,79,15,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,BM25,JamesCameron,79,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,JamesCameron,80,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JamesCameron,80,15,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,BM25,JamesCameron,80,15,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,gemini-embedding-001,JamesCameron,81,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JamesCameron,81,15,0.0,1.0,1.0,0.3333333333333333,0.5706417189553201
+within-talk,BM25,JamesCameron,81,15,0.0,1.0,1.0,0.5,0.6934264036172708
+within-talk,gemini-embedding-001,JamesCameron,82,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JamesCameron,82,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,JamesCameron,82,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,JamesCameron,83,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JamesCameron,83,15,0.0,0.0,0.0,0.1,0.0
+within-talk,BM25,JamesCameron,83,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,JamesCameron,84,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),JamesCameron,84,15,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,JamesCameron,84,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,JamesCameron,85,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JamesCameron,85,15,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,JamesCameron,85,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,JamesCameron,86,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),JamesCameron,86,15,0.0,0.0,1.0,0.2,0.38685280723454163
+within-talk,BM25,JamesCameron,86,15,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,gemini-embedding-001,JamesCameron,87,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JamesCameron,87,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,JamesCameron,87,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,JamesCameron,88,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JamesCameron,88,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,JamesCameron,88,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,JaneMcGonigal,89,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JaneMcGonigal,89,19,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,BM25,JaneMcGonigal,89,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,JaneMcGonigal,90,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JaneMcGonigal,90,19,0.0,0.0,1.0,0.2,0.38685280723454163
+within-talk,BM25,JaneMcGonigal,90,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,JaneMcGonigal,91,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JaneMcGonigal,91,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,BM25,JaneMcGonigal,91,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,JaneMcGonigal,92,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JaneMcGonigal,92,19,0.0,0.0,1.0,0.25,0.43067655807339306
+within-talk,BM25,JaneMcGonigal,92,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,JaneMcGonigal,93,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JaneMcGonigal,93,19,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,BM25,JaneMcGonigal,93,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,JaneMcGonigal,94,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),JaneMcGonigal,94,19,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,BM25,JaneMcGonigal,94,19,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,JaneMcGonigal,95,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JaneMcGonigal,95,19,0.0,0.0,0.0,0.0625,0.0
+within-talk,BM25,JaneMcGonigal,95,19,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,gemini-embedding-001,JaneMcGonigal,96,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JaneMcGonigal,96,19,0.0,0.0,0.0,0.14285714285714285,0.0
+within-talk,BM25,JaneMcGonigal,96,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,JaneMcGonigal,97,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JaneMcGonigal,97,19,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,JaneMcGonigal,97,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,JaneMcGonigal,98,19,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),JaneMcGonigal,98,19,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,JaneMcGonigal,98,19,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,MichaelSpecter,99,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),MichaelSpecter,99,15,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,MichaelSpecter,99,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,MichaelSpecter,100,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),MichaelSpecter,100,15,0.0,1.0,1.0,0.5,0.6934264036172708
+within-talk,BM25,MichaelSpecter,100,15,0.0,1.0,1.0,0.5,0.6240505200038379
+within-talk,gemini-embedding-001,MichaelSpecter,101,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),MichaelSpecter,101,15,0.0,0.0,1.0,0.2,0.38685280723454163
+within-talk,BM25,MichaelSpecter,101,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,MichaelSpecter,102,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),MichaelSpecter,102,15,0.0,0.0,1.0,0.25,0.43067655807339306
+within-talk,BM25,MichaelSpecter,102,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,gemini-embedding-001,MichaelSpecter,103,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),MichaelSpecter,103,15,0.0,0.0,1.0,0.25,0.43067655807339306
+within-talk,BM25,MichaelSpecter,103,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,MichaelSpecter,104,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),MichaelSpecter,104,15,0.0,0.0,0.0,0.1111111111111111,0.0
+within-talk,BM25,MichaelSpecter,104,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,MichaelSpecter,105,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),MichaelSpecter,105,15,1.0,1.0,1.0,1.0,1.0
+within-talk,BM25,MichaelSpecter,105,15,1.0,1.0,1.0,1.0,1.0
+within-talk,gemini-embedding-001,MichaelSpecter,106,15,0.0,1.0,1.0,0.3333333333333333,0.5
+within-talk,hashed bag-of-words (previous),MichaelSpecter,106,15,0.0,0.0,0.0,0.07142857142857142,0.0
+within-talk,BM25,MichaelSpecter,106,15,0.0,0.0,1.0,0.2,0.38685280723454163
+within-talk,gemini-embedding-001,MichaelSpecter,107,15,1.0,1.0,1.0,1.0,1.0
+within-talk,hashed bag-of-words (previous),MichaelSpecter,107,15,0.0,0.0,1.0,0.25,0.2640681225725909
+within-talk,BM25,MichaelSpecter,107,15,1.0,1.0,1.0,1.0,0.9197207891481876
+within-talk,gemini-embedding-001,MichaelSpecter,108,15,0.0,1.0,1.0,0.5,0.6309297535714575
+within-talk,hashed bag-of-words (previous),MichaelSpecter,108,15,0.0,0.0,0.0,0.07142857142857142,0.0
+within-talk,BM25,MichaelSpecter,108,15,0.0,0.0,0.0,0.07142857142857142,0.0
+cross-talk,gemini-embedding-001,Barry_Schwartz,0,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Barry_Schwartz,0,181,0.0,0.0,0.0,0.023809523809523808,0.0
+cross-talk,BM25,Barry_Schwartz,0,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Barry_Schwartz,1,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Barry_Schwartz,1,181,0.0,0.0,0.0,0.023809523809523808,0.0
+cross-talk,BM25,Barry_Schwartz,1,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Barry_Schwartz,2,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Barry_Schwartz,2,181,0.0,0.0,0.0,0.018867924528301886,0.0
+cross-talk,BM25,Barry_Schwartz,2,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,Barry_Schwartz,3,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),Barry_Schwartz,3,181,0.0,0.0,0.0,0.006329113924050633,0.0
+cross-talk,BM25,Barry_Schwartz,3,181,0.0,0.0,0.0,0.06666666666666667,0.0
+cross-talk,gemini-embedding-001,Barry_Schwartz,4,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Barry_Schwartz,4,181,0.0,0.0,0.0,0.04,0.0
+cross-talk,BM25,Barry_Schwartz,4,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Barry_Schwartz,5,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Barry_Schwartz,5,181,0.0,0.0,0.0,0.03125,0.0
+cross-talk,BM25,Barry_Schwartz,5,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Barry_Schwartz,6,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Barry_Schwartz,6,181,0.0,0.0,0.0,0.041666666666666664,0.0
+cross-talk,BM25,Barry_Schwartz,6,181,0.0,0.0,0.0,0.1,0.0
+cross-talk,gemini-embedding-001,Barry_Schwartz,7,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Barry_Schwartz,7,181,0.0,0.0,0.0,0.034482758620689655,0.0
+cross-talk,BM25,Barry_Schwartz,7,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Barry_Schwartz,8,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),Barry_Schwartz,8,181,0.0,0.0,0.0,0.008264462809917356,0.0
+cross-talk,BM25,Barry_Schwartz,8,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Barry_Schwartz,9,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,hashed bag-of-words (previous),Barry_Schwartz,9,181,0.0,0.0,0.0,0.030303030303030304,0.0
+cross-talk,BM25,Barry_Schwartz,9,181,0.0,0.0,0.0,0.0625,0.0
+cross-talk,gemini-embedding-001,Craig_Venter,10,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Craig_Venter,10,181,0.0,0.0,0.0,0.02127659574468085,0.0
+cross-talk,BM25,Craig_Venter,10,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Craig_Venter,11,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Craig_Venter,11,181,0.0,0.0,0.0,0.014925373134328358,0.0
+cross-talk,BM25,Craig_Venter,11,181,0.0,0.0,0.0,0.05555555555555555,0.0
+cross-talk,gemini-embedding-001,Craig_Venter,12,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Craig_Venter,12,181,0.0,0.0,0.0,0.05,0.0
+cross-talk,BM25,Craig_Venter,12,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Craig_Venter,13,181,1.0,1.0,1.0,1.0,0.9197207891481876
+cross-talk,hashed bag-of-words (previous),Craig_Venter,13,181,0.0,0.0,0.0,0.022222222222222223,0.0
+cross-talk,BM25,Craig_Venter,13,181,0.0,1.0,1.0,0.5,0.38685280723454163
+cross-talk,gemini-embedding-001,Craig_Venter,14,181,1.0,1.0,1.0,1.0,0.6131471927654584
+cross-talk,hashed bag-of-words (previous),Craig_Venter,14,181,0.0,0.0,0.0,0.011904761904761904,0.0
+cross-talk,BM25,Craig_Venter,14,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Craig_Venter,15,181,1.0,1.0,1.0,1.0,0.9197207891481876
+cross-talk,hashed bag-of-words (previous),Craig_Venter,15,181,0.0,0.0,0.0,0.009009009009009009,0.0
+cross-talk,BM25,Craig_Venter,15,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Craig_Venter,16,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Craig_Venter,16,181,0.0,0.0,1.0,0.16666666666666666,0.3562071871080222
+cross-talk,BM25,Craig_Venter,16,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Craig_Venter,17,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Craig_Venter,17,181,0.0,0.0,0.0,0.011235955056179775,0.0
+cross-talk,BM25,Craig_Venter,17,181,0.0,0.0,0.0,0.08333333333333333,0.0
+cross-talk,gemini-embedding-001,Craig_Venter,18,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Craig_Venter,18,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,BM25,Craig_Venter,18,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Craig_Venter,19,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Craig_Venter,19,181,0.0,0.0,0.0,0.0058823529411764705,0.0
+cross-talk,BM25,Craig_Venter,19,181,0.0,0.0,0.0,0.011764705882352941,0.0
+cross-talk,gemini-embedding-001,Elizabeth_Gilbert,20,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,20,181,0.0,0.0,0.0,0.00641025641025641,0.0
+cross-talk,BM25,Elizabeth_Gilbert,20,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Elizabeth_Gilbert,21,181,0.0,0.0,0.0,0.07142857142857142,0.0
+cross-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,21,181,0.0,0.0,0.0,0.00847457627118644,0.0
+cross-talk,BM25,Elizabeth_Gilbert,21,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Elizabeth_Gilbert,22,181,1.0,1.0,1.0,1.0,0.9197207891481876
+cross-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,22,181,0.0,0.0,0.0,0.007462686567164179,0.0
+cross-talk,BM25,Elizabeth_Gilbert,22,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Elizabeth_Gilbert,23,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,23,181,0.0,0.0,1.0,0.2,0.38685280723454163
+cross-talk,BM25,Elizabeth_Gilbert,23,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Elizabeth_Gilbert,24,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,24,181,0.0,0.0,0.0,0.012987012987012988,0.0
+cross-talk,BM25,Elizabeth_Gilbert,24,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,Elizabeth_Gilbert,25,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,25,181,0.0,0.0,0.0,0.007936507936507936,0.0
+cross-talk,BM25,Elizabeth_Gilbert,25,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Elizabeth_Gilbert,26,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,26,181,0.0,0.0,1.0,0.16666666666666666,0.3562071871080222
+cross-talk,BM25,Elizabeth_Gilbert,26,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,Elizabeth_Gilbert,27,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,27,181,0.0,0.0,1.0,0.2,0.38685280723454163
+cross-talk,BM25,Elizabeth_Gilbert,27,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Elizabeth_Gilbert,28,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,28,181,0.0,0.0,0.0,0.00847457627118644,0.0
+cross-talk,BM25,Elizabeth_Gilbert,28,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Elizabeth_Gilbert,29,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),Elizabeth_Gilbert,29,181,0.0,0.0,0.0,0.012195121951219513,0.0
+cross-talk,BM25,Elizabeth_Gilbert,29,181,0.0,0.0,0.0,0.011627906976744186,0.0
+cross-talk,gemini-embedding-001,Wade_Davis,30,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Wade_Davis,30,181,1.0,1.0,1.0,1.0,0.6131471927654584
+cross-talk,BM25,Wade_Davis,30,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Wade_Davis,31,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Wade_Davis,31,181,0.0,0.0,0.0,0.14285714285714285,0.0
+cross-talk,BM25,Wade_Davis,31,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Wade_Davis,32,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Wade_Davis,32,181,0.0,0.0,0.0,0.0625,0.0
+cross-talk,BM25,Wade_Davis,32,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Wade_Davis,33,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Wade_Davis,33,181,0.0,0.0,0.0,0.011111111111111112,0.0
+cross-talk,BM25,Wade_Davis,33,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Wade_Davis,34,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Wade_Davis,34,181,0.0,0.0,0.0,0.05263157894736842,0.0
+cross-talk,BM25,Wade_Davis,34,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,Wade_Davis,35,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Wade_Davis,35,181,0.0,0.0,0.0,0.125,0.0
+cross-talk,BM25,Wade_Davis,35,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,Wade_Davis,36,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Wade_Davis,36,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,BM25,Wade_Davis,36,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Wade_Davis,37,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Wade_Davis,37,181,0.0,0.0,0.0,0.007575757575757576,0.0
+cross-talk,BM25,Wade_Davis,37,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,Wade_Davis,38,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Wade_Davis,38,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,BM25,Wade_Davis,38,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,Wade_Davis,39,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),Wade_Davis,39,181,0.0,0.0,0.0,0.05,0.0
+cross-talk,BM25,Wade_Davis,39,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,AimeeMullins,40,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),AimeeMullins,40,181,0.0,0.0,1.0,0.2,0.38685280723454163
+cross-talk,BM25,AimeeMullins,40,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,AimeeMullins,41,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),AimeeMullins,41,181,0.0,0.0,0.0,0.14285714285714285,0.0
+cross-talk,BM25,AimeeMullins,41,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,AimeeMullins,42,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),AimeeMullins,42,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,BM25,AimeeMullins,42,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,AimeeMullins,43,181,1.0,1.0,1.0,1.0,0.9197207891481876
+cross-talk,hashed bag-of-words (previous),AimeeMullins,43,181,0.0,0.0,0.0,0.038461538461538464,0.0
+cross-talk,BM25,AimeeMullins,43,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,AimeeMullins,44,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),AimeeMullins,44,181,0.0,0.0,0.0,0.045454545454545456,0.0
+cross-talk,BM25,AimeeMullins,44,181,0.0,0.0,0.0,0.07142857142857142,0.0
+cross-talk,gemini-embedding-001,AimeeMullins,45,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),AimeeMullins,45,181,0.0,0.0,0.0,0.007462686567164179,0.0
+cross-talk,BM25,AimeeMullins,45,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,gemini-embedding-001,AimeeMullins,46,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),AimeeMullins,46,181,0.0,0.0,0.0,0.010638297872340425,0.0
+cross-talk,BM25,AimeeMullins,46,181,0.0,0.0,0.0,0.01020408163265306,0.0
+cross-talk,gemini-embedding-001,AimeeMullins,47,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),AimeeMullins,47,181,0.0,0.0,0.0,0.07142857142857142,0.0
+cross-talk,BM25,AimeeMullins,47,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,AimeeMullins,48,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),AimeeMullins,48,181,0.0,0.0,0.0,0.01639344262295082,0.0
+cross-talk,BM25,AimeeMullins,48,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,AimeeMullins,49,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),AimeeMullins,49,181,1.0,1.0,1.0,1.0,0.8315546295836225
+cross-talk,BM25,AimeeMullins,49,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,BillGates,50,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),BillGates,50,181,0.0,0.0,0.0,0.007692307692307693,0.0
+cross-talk,BM25,BillGates,50,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,BillGates,51,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),BillGates,51,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,BM25,BillGates,51,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,BillGates,52,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),BillGates,52,181,0.0,0.0,0.0,0.02564102564102564,0.0
+cross-talk,BM25,BillGates,52,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,BillGates,53,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),BillGates,53,181,0.0,0.0,0.0,0.010309278350515464,0.0
+cross-talk,BM25,BillGates,53,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,BillGates,54,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),BillGates,54,181,0.0,0.0,0.0,0.010416666666666666,0.0
+cross-talk,BM25,BillGates,54,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,BillGates,55,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),BillGates,55,181,0.0,0.0,0.0,0.02857142857142857,0.0
+cross-talk,BM25,BillGates,55,181,0.0,0.0,0.0,0.041666666666666664,0.0
+cross-talk,gemini-embedding-001,BillGates,56,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,hashed bag-of-words (previous),BillGates,56,181,0.0,0.0,0.0,0.02631578947368421,0.0
+cross-talk,BM25,BillGates,56,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,gemini-embedding-001,BillGates,57,181,0.0,0.0,1.0,0.2,0.38685280723454163
+cross-talk,hashed bag-of-words (previous),BillGates,57,181,0.0,0.0,0.0,0.01639344262295082,0.0
+cross-talk,BM25,BillGates,57,181,0.0,0.0,1.0,0.25,0.43067655807339306
+cross-talk,gemini-embedding-001,BillGates,58,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),BillGates,58,181,0.0,0.0,0.0,0.008403361344537815,0.0
+cross-talk,BM25,BillGates,58,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,gemini-embedding-001,BillGates,59,181,0.0,0.0,1.0,0.16666666666666666,0.3562071871080222
+cross-talk,hashed bag-of-words (previous),BillGates,59,181,0.0,0.0,0.0,0.06666666666666667,0.0
+cross-talk,BM25,BillGates,59,181,0.0,0.0,0.0,0.045454545454545456,0.0
+cross-talk,gemini-embedding-001,DanBarber,60,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),DanBarber,60,181,1.0,1.0,1.0,1.0,0.6131471927654584
+cross-talk,BM25,DanBarber,60,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,DanBarber,61,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),DanBarber,61,181,0.0,0.0,0.0,0.022222222222222223,0.0
+cross-talk,BM25,DanBarber,61,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,DanBarber,62,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),DanBarber,62,181,0.0,0.0,1.0,0.16666666666666666,0.3562071871080222
+cross-talk,BM25,DanBarber,62,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,DanBarber,63,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),DanBarber,63,181,0.0,0.0,0.0,0.09090909090909091,0.0
+cross-talk,BM25,DanBarber,63,181,0.0,1.0,1.0,0.5,0.6934264036172708
+cross-talk,gemini-embedding-001,DanBarber,64,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),DanBarber,64,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,BM25,DanBarber,64,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,gemini-embedding-001,DanBarber,65,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),DanBarber,65,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,BM25,DanBarber,65,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,DanBarber,66,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),DanBarber,66,181,0.0,0.0,0.0,0.006993006993006993,0.0
+cross-talk,BM25,DanBarber,66,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,DanBarber,67,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),DanBarber,67,181,0.0,0.0,0.0,0.016129032258064516,0.0
+cross-talk,BM25,DanBarber,67,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,DanBarber,68,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),DanBarber,68,181,0.0,0.0,0.0,0.00909090909090909,0.0
+cross-talk,BM25,DanBarber,68,181,0.0,0.0,0.0,0.038461538461538464,0.0
+cross-talk,gemini-embedding-001,DanBarber,69,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,hashed bag-of-words (previous),DanBarber,69,181,0.0,0.0,0.0,0.018867924528301886,0.0
+cross-talk,BM25,DanBarber,69,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,DanielKahneman,70,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),DanielKahneman,70,181,0.0,0.0,0.0,0.00819672131147541,0.0
+cross-talk,BM25,DanielKahneman,70,181,0.0,0.0,0.0,0.1,0.0
+cross-talk,gemini-embedding-001,DanielKahneman,71,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),DanielKahneman,71,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,BM25,DanielKahneman,71,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,DanielKahneman,72,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),DanielKahneman,72,181,0.0,1.0,1.0,0.5,0.6934264036172708
+cross-talk,BM25,DanielKahneman,72,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,DanielKahneman,73,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),DanielKahneman,73,181,0.0,0.0,0.0,0.07692307692307693,0.0
+cross-talk,BM25,DanielKahneman,73,181,0.0,0.0,1.0,0.25,0.43067655807339306
+cross-talk,gemini-embedding-001,DanielKahneman,74,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),DanielKahneman,74,181,0.0,0.0,0.0,0.008333333333333333,0.0
+cross-talk,BM25,DanielKahneman,74,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,DanielKahneman,75,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),DanielKahneman,75,181,0.0,0.0,0.0,0.047619047619047616,0.0
+cross-talk,BM25,DanielKahneman,75,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,DanielKahneman,76,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),DanielKahneman,76,181,0.0,0.0,0.0,0.038461538461538464,0.0
+cross-talk,BM25,DanielKahneman,76,181,0.0,0.0,1.0,0.2,0.38685280723454163
+cross-talk,gemini-embedding-001,DanielKahneman,77,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,hashed bag-of-words (previous),DanielKahneman,77,181,0.0,0.0,0.0,0.005952380952380952,0.0
+cross-talk,BM25,DanielKahneman,77,181,0.0,0.0,0.0,0.09090909090909091,0.0
+cross-talk,gemini-embedding-001,DanielKahneman,78,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),DanielKahneman,78,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,BM25,DanielKahneman,78,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,JamesCameron,79,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JamesCameron,79,181,0.0,0.0,0.0,0.013888888888888888,0.0
+cross-talk,BM25,JamesCameron,79,181,0.0,0.0,1.0,0.25,0.43067655807339306
+cross-talk,gemini-embedding-001,JamesCameron,80,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JamesCameron,80,181,0.0,0.0,0.0,0.0125,0.0
+cross-talk,BM25,JamesCameron,80,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,JamesCameron,81,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JamesCameron,81,181,0.0,0.0,0.0,0.02040816326530612,0.0
+cross-talk,BM25,JamesCameron,81,181,1.0,1.0,1.0,1.0,0.6131471927654584
+cross-talk,gemini-embedding-001,JamesCameron,82,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JamesCameron,82,181,0.0,0.0,1.0,0.2,0.38685280723454163
+cross-talk,BM25,JamesCameron,82,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,JamesCameron,83,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JamesCameron,83,181,0.0,0.0,0.0,0.011904761904761904,0.0
+cross-talk,BM25,JamesCameron,83,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,JamesCameron,84,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),JamesCameron,84,181,0.0,0.0,0.0,0.1111111111111111,0.0
+cross-talk,BM25,JamesCameron,84,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,gemini-embedding-001,JamesCameron,85,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,hashed bag-of-words (previous),JamesCameron,85,181,0.0,0.0,0.0,0.07692307692307693,0.0
+cross-talk,BM25,JamesCameron,85,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,JamesCameron,86,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),JamesCameron,86,181,0.0,0.0,0.0,0.010526315789473684,0.0
+cross-talk,BM25,JamesCameron,86,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,JamesCameron,87,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JamesCameron,87,181,0.0,0.0,0.0,0.03333333333333333,0.0
+cross-talk,BM25,JamesCameron,87,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,JamesCameron,88,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JamesCameron,88,181,0.0,0.0,0.0,0.038461538461538464,0.0
+cross-talk,BM25,JamesCameron,88,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,JaneMcGonigal,89,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JaneMcGonigal,89,181,0.0,0.0,0.0,0.14285714285714285,0.0
+cross-talk,BM25,JaneMcGonigal,89,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,JaneMcGonigal,90,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JaneMcGonigal,90,181,0.0,0.0,0.0,0.025,0.0
+cross-talk,BM25,JaneMcGonigal,90,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,JaneMcGonigal,91,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JaneMcGonigal,91,181,0.0,0.0,1.0,0.2,0.38685280723454163
+cross-talk,BM25,JaneMcGonigal,91,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,JaneMcGonigal,92,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JaneMcGonigal,92,181,0.0,0.0,0.0,0.013888888888888888,0.0
+cross-talk,BM25,JaneMcGonigal,92,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,JaneMcGonigal,93,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JaneMcGonigal,93,181,0.0,0.0,0.0,0.02127659574468085,0.0
+cross-talk,BM25,JaneMcGonigal,93,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,JaneMcGonigal,94,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),JaneMcGonigal,94,181,0.0,0.0,0.0,0.027777777777777776,0.0
+cross-talk,BM25,JaneMcGonigal,94,181,0.0,0.0,1.0,0.2,0.38685280723454163
+cross-talk,gemini-embedding-001,JaneMcGonigal,95,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JaneMcGonigal,95,181,0.0,0.0,0.0,0.006535947712418301,0.0
+cross-talk,BM25,JaneMcGonigal,95,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,gemini-embedding-001,JaneMcGonigal,96,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JaneMcGonigal,96,181,0.0,0.0,0.0,0.041666666666666664,0.0
+cross-talk,BM25,JaneMcGonigal,96,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,JaneMcGonigal,97,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JaneMcGonigal,97,181,0.0,0.0,0.0,0.1111111111111111,0.0
+cross-talk,BM25,JaneMcGonigal,97,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,JaneMcGonigal,98,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),JaneMcGonigal,98,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,BM25,JaneMcGonigal,98,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,MichaelSpecter,99,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),MichaelSpecter,99,181,0.0,0.0,0.0,0.038461538461538464,0.0
+cross-talk,BM25,MichaelSpecter,99,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,MichaelSpecter,100,181,0.0,1.0,1.0,0.5,0.6934264036172708
+cross-talk,hashed bag-of-words (previous),MichaelSpecter,100,181,0.0,0.0,0.0,0.07142857142857142,0.0
+cross-talk,BM25,MichaelSpecter,100,181,0.0,1.0,1.0,0.5,0.38685280723454163
+cross-talk,gemini-embedding-001,MichaelSpecter,101,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),MichaelSpecter,101,181,0.0,0.0,0.0,0.01098901098901099,0.0
+cross-talk,BM25,MichaelSpecter,101,181,0.0,0.0,0.0,0.14285714285714285,0.0
+cross-talk,gemini-embedding-001,MichaelSpecter,102,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),MichaelSpecter,102,181,0.0,0.0,0.0,0.009708737864077669,0.0
+cross-talk,BM25,MichaelSpecter,102,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,MichaelSpecter,103,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),MichaelSpecter,103,181,0.0,0.0,0.0,0.019230769230769232,0.0
+cross-talk,BM25,MichaelSpecter,103,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,MichaelSpecter,104,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,hashed bag-of-words (previous),MichaelSpecter,104,181,0.0,0.0,0.0,0.016666666666666666,0.0
+cross-talk,BM25,MichaelSpecter,104,181,0.0,1.0,1.0,0.5,0.6309297535714575
+cross-talk,gemini-embedding-001,MichaelSpecter,105,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),MichaelSpecter,105,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,BM25,MichaelSpecter,105,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,MichaelSpecter,106,181,0.0,0.0,0.0,0.05555555555555555,0.0
+cross-talk,hashed bag-of-words (previous),MichaelSpecter,106,181,0.0,0.0,0.0,0.00558659217877095,0.0
+cross-talk,BM25,MichaelSpecter,106,181,0.0,0.0,0.0,0.023255813953488372,0.0
+cross-talk,gemini-embedding-001,MichaelSpecter,107,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,hashed bag-of-words (previous),MichaelSpecter,107,181,0.0,0.0,0.0,0.017241379310344827,0.0
+cross-talk,BM25,MichaelSpecter,107,181,1.0,1.0,1.0,1.0,1.0
+cross-talk,gemini-embedding-001,MichaelSpecter,108,181,0.0,1.0,1.0,0.3333333333333333,0.5
+cross-talk,hashed bag-of-words (previous),MichaelSpecter,108,181,0.0,0.0,0.0,0.005988023952095809,0.0
+cross-talk,BM25,MichaelSpecter,108,181,0.0,0.0,0.0,0.005952380952380952,0.0
