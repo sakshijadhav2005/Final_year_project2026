@@ -28,8 +28,14 @@ async def rag_retrieve(state: JobGraphState) -> dict[str, Any]:
     if not pool:
         return {"rag_chunks": []}
     query = _brief_query(state)
-    model, chunks = await rank_chunks(pool, query, get_settings().rag_top_k)
+    settings = get_settings()
+    model, chunks = await rank_chunks(pool, query, settings.rag_top_k, settings.rag_strategy)
     return {
         "rag_chunks": chunks,
-        "rag_meta": {"model": model, "query": query, "pool_size": len(pool)},
+        "rag_meta": {
+            "model": model,
+            "query": query,
+            "pool_size": len(pool),
+            "strategy": settings.rag_strategy,
+        },
     }

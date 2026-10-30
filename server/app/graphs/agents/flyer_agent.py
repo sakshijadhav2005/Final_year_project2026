@@ -24,13 +24,16 @@ class FlyerAgent(BaseCreatorAgent):
         user_memory: dict | None = None,
         temperature: float = 0.35,
         context_chunks: list[dict] | None = None,
+        balanced_coverage: bool = False,
     ) -> dict[str, Any]:
         try:
             
             settings = get_settings()
             if not settings.gemini_api_key or not settings.agent_tools_enabled:
                 # Offline mode or tools switched off: one plain generation call (fastest).
-                return await super().generate(transcript_text, brief, user_memory, temperature, context_chunks)
+                return await super().generate(
+                    transcript_text, brief, user_memory, temperature, context_chunks, balanced_coverage
+                )
             
             model_name = settings.gemini_model_generate or "gemini-3.6-flash"
             llm = ChatGoogleGenerativeAI(
@@ -52,7 +55,7 @@ class FlyerAgent(BaseCreatorAgent):
                 "Here is the context you must use to generate the flyer:\n\n"
                 f"<EDITORIAL_BRIEF>\n{brief_str}\n</EDITORIAL_BRIEF>\n\n"
                 f"<TRANSCRIPT>\n{transcript_text[:AGENT_TRANSCRIPT_CHARS]}\n</TRANSCRIPT>\n\n"
-                f"{_retrieved_block(context_chunks)}"
+                f"{_retrieved_block(context_chunks, balanced_coverage)}"
                 f"Now, please generate the final {self.agent_name} matching your system instructions. "
                 "IMPORTANT: You MUST return a pure JSON string. Do not use Markdown code blocks. Just start with { and end with }."
             )
@@ -89,4 +92,6 @@ class FlyerAgent(BaseCreatorAgent):
             
         except Exception as exc:
             logger.error("flyer_agent_tool_error", error=str(exc))
-            return await super().generate(transcript_text, brief, user_memory, temperature, context_chunks)
+            return await super().generate(
+                transcript_text, brief, user_memory, temperature, context_chunks, balanced_coverage
+            )

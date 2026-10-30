@@ -1,0 +1,218 @@
+[
+ {
+  "item_id": "H01",
+  "run_id": "David_Merrill__e2e__rag_on__0",
+  "talk_id": "David_Merrill",
+  "type": "flyer"
+ },
+ {
+  "item_id": "H02",
+  "run_id": "DanielKahneman__e2e__rag_on__0",
+  "talk_id": "DanielKahneman",
+  "type": "flyer"
+ },
+ {
+  "item_id": "H03",
+  "run_id": "JaneMcGonigal__e2e__rag_on__0",
+  "talk_id": "JaneMcGonigal",
+  "type": "summary"
+ },
+ {
+  "item_id": "H04",
+  "run_id": "MichaelSpecter__e2e__rag_on__0",
+  "talk_id": "MichaelSpecter",
+  "type": "instagram"
+ },
+ {
+  "item_id": "H05",
+  "run_id": "Elizabeth_Gilbert__e2e__rag_on__0",
+  "talk_id": "Elizabeth_Gilbert",
+  "type": "instagram"
+ },
+ {
+  "item_id": "H06",
+  "run_id": "Wade_Davis__e2e__rag_on__0",
+  "talk_id": "Wade_Davis",
+  "type": "flyer"
+ },
+ {
+  "item_id": "H07",
+  "run_id": "Craig_Venter__e2e__rag_on__0",
+  "talk_id": "Craig_Venter",
+  "type": "flyer"
+ },
+ {
+  "item_id": "H08",
+  "run_id": "BillGates__e2e__rag_on__0",
+  "talk_id": "BillGates",
+  "type": "linkedin"
+ },
+ {
+  "item_id": "H09",
+  "run_id": "DanielKahneman__e2e__rag_on__0",
+  "talk_id": "DanielKahneman",
+  "type": "blog"
+ },
+ {
+  "item_id": "H10",
+  "run_id": "MichaelSpecter__e2e__rag_on__0",
+  "talk_id": "MichaelSpecter",
+  "type": "linkedin"
+ },
+ {
+  "item_id": "H11",
+  "run_id": "JamesCameron__e2e__rag_on__0",
+  "talk_id": "JamesCameron",
+  "type": "linkedin"
+ },
+ {
+  "item_id": "H12",
+  "run_id": "Al_Gore__e2e__rag_on__0",
+  "talk_id": "Al_Gore",
+  "type": "instagram"
+ },
+ {
+  "item_id": "H13",
+  "run_id": "Craig_Venter__e2e__rag_on__0",
+  "talk_id": "Craig_Venter",
+  "type": "newsletter"
+ },
+ {
+  "item_id": "H14",
+  "run_id": "Wade_Davis__e2e__rag_on__0",
+  "talk_id": "Wade_Davis",
+  "type": "newsletter"
+ },
+ {
+  "item_id": "H15",
+  "run_id": "EricMead_2009P_EricMead__e2e__rag_on__0",
+  "talk_id": "EricMead_2009P_EricMead",
+  "type": "blog"
+ },
+ {
+  "item_id": "H16",
+  "run_id": "Al_Gore__e2e__rag_on__0",
+  "talk_id": "Al_Gore",
+  "type": "newsletter"
+ },
+ {
+  "item_id": "H17",
+  "run_id": "Al_Gore__e2e__rag_on__0",
+  "talk_id": "Al_Gore",
+  "type": "linkedin"
+ },
+ {
+  "item_id": "H18",
+  "run_id": "Craig_Venter__e2e__rag_on__0",
+  "talk_id": "Craig_Venter",
+  "type": "summary"
+ },
+ {
+  "item_id": "H19",
+  "run_id": "David_Merrill__e2e__rag_on__0",
+  "talk_id": "David_Merrill",
+  "type": "summary"
+ },
+ {
+  "item_id": "H20",
+  "run_id": "Blaise_Agueray_Arcas__e2e__rag_on__0",
+  "talk_id": "Blaise_Agueray_Arcas",
+  "type": "instagram"
+ },
+ {
+  "item_id": "H21",
+  "run_id": "GaryFlake__e2e__rag_on__0",
+  "talk_id": "GaryFlake",
+  "type": "newsletter"
+ },
+ {
+  "item_id": "H22",
+  "run_id": "AimeeMullins__e2e__rag_on__0",
+  "talk_id": "AimeeMullins",
+  "type": "linkedin"
+ },
+ {
+  "item_id": "H23",
+  "run_id": "Wade_Davis__e2e__rag_on__0",
+  "talk_id": "Wade_Davis",
+  "type": "blog"
+ },
+ {
+  "item_id": "H24",
+  "run_id": "DanBarber__e2e__rag_on__0",
+  "talk_id": "DanBarber",
+  "type": "summary"
+ },
+ {
+  "item_id": "H25",
+  "run_id": "Brian_Cox__e2e__rag_on__0",
+  "talk_id": "Brian_Cox",
+  "type": "blog"
+ },
+ {
+  "item_id": "H26",
+  "run_id": "JaneMcGonigal__e2e__rag_on__0",
+  "talk_id": "JaneMcGonigal",
+  "type": "instagram"
+ },
+ {
+  "item_id": "H27",
+  "run_id": "Blaise_Agueray_Arcas__e2e__rag_on__0",
+  "talk_id": "Blaise_Agueray_Arcas",
+  "type": "blog"
+ },
+ {
+  "item_id": "H28",
+  "run_id": "BillGates__e2e__rag_on__0",
+  "talk_id": "BillGates",
+  "type": "flyer"
+ },
+ {
+  "item_id": "H29",
+  "run_id": "Elizabeth_Gilbert__e2e__rag_on__0",
+  "talk_id": "Elizabeth_Gilbert",
+  "type": "linkedin"
+ },
+ {
+  "item_id": "H30",
+  "run_id": "RobertGupta__e2e__rag_on__0",
+  "talk_id": "RobertGupta",
+  "type": "summary"
+ },
+ {
+  "item_id": "H31",
+  "run_id": "EricMead_2009P_EricMead__e2e__rag_on__0",
+  "talk_id": "EricMead_2009P_EricMead",
+  "type": "newsletter"
+ },
+ {
+  "item_id": "H32",
+  "run_id": "GaryFlake__e2e__rag_on__0",
+  "talk_id": "GaryFlake",
+  "type": "blog"
+ },
+ {
+  "item_id": "H33",
+  "run_id": "EricMead_2009P_EricMead__e2e__rag_on__0",
+  "talk_id": "EricMead_2009P_EricMead",
+  "type": "flyer"
+ },
+ {
+  "item_id": "H34",
+  "run_id": "Wade_Davis__e2e__rag_on__0",
+  "talk_id": "Wade_Davis",
+  "type": "instagram"
+ },
+ {
+  "item_id": "H35",
+  "run_id": "Barry_Schwartz__e2e__rag_on__0",
+  "talk_id": "Barry_Schwartz",
+  "type": "summary"
+ },
+ {
+  "item_id": "H36",
+  "run_id": "DanielKahneman__e2e__rag_on__0",
+  "talk_id": "DanielKahneman",
+  "type": "newsletter"
+ }
+]

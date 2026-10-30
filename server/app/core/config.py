@@ -81,6 +81,11 @@ class Settings(BaseSettings):
     rag_token_threshold: int = 2000
     rag_enabled: bool = True
     rag_top_k: int = 6
+    # "similarity": top-k by cosine to the brief (the evaluated default).
+    # "balanced": one best chunk per part of the unseen talk first, then by similarity;
+    # writers get the excerpts in talk order with their position and are asked to
+    # cover the beginning, middle and end (counters the early-coverage drop).
+    rag_strategy: str = "similarity"
     # Vertex AI embedding model (needs GOOGLE_CLOUD_PROJECT); else hashed bag-of-words.
     rag_embedding_model: str = "gemini-embedding-001"
     rag_embedding_dims: int = 768

@@ -4,7 +4,7 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Query, Request, status
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -142,6 +142,32 @@ async def regenerate_job(
         str(job.id), background_tasks, reuse_transcript=transcript is not None
     )
     return job
+
+
+@router.get("/{job_id}/media")
+async def job_media(
+    job_id: UUID,
+    user: Annotated[User, Depends(get_user_from_bearer_or_query)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> FileResponse:
+    """The original recording, so the Content Studio can play the moment a sentence
+    came from. Supports Range requests (seeking). Gone once the retention purge ran.
+    Accepts ?token= because an <audio> element cannot send an Authorization header."""
+    from pathlib import Path
+
+    from app.services.storage import get_storage
+
+    job = await _load_job(db, user, job_id)
+    recording = (
+        await db.execute(select(Recording).where(Recording.id == job.recording_id))
+    ).scalar_one_or_none()
+    content_type = (recording.content_type or "") if recording else ""
+    if recording is None or not recording.storage_uri or not content_type.startswith(("audio/", "video/")):
+        raise http_error(status.HTTP_404_NOT_FOUND, "Recording not available", "not_found")
+    path = Path(get_storage().get_local_path(recording.storage_uri))
+    if not path.is_file():
+        raise http_error(status.HTTP_404_NOT_FOUND, "Recording not available", "not_found")
+    return FileResponse(path, media_type=content_type)
 
 
 @router.get("/{job_id}/events")

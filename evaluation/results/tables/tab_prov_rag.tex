@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering
+\caption{Where the drafts' traced claims come from, RAG off vs on (same ablation drafts as Table~\ref{tab:rag}, per-talk means, $n=11$; deterministic, no judge).}
+\label{tab:provrag}
+\footnotesize
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Metric & RAG off & RAG on & $\Delta$ & $+$/$-$ & $p$ \\
+\midrule
+Traced claims from the late talk (\%) & 17.4 & 36.8 & +19.4 & 10/1 & 0.0020 \\
+Evidence spread (quarters used) & 0.75 & 0.72 & -0.02 & 4/7 & 0.2676 \\
+Traced-claim rate (\%) & 37.5 & 41.2 & +3.6 & 9/2 & 0.0098 \\
+\bottomrule
+\end{tabular}
+\end{table}

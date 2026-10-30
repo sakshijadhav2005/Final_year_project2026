@@ -148,6 +148,37 @@ export const getTranscript = (token: string, id: string) =>
   request<TranscriptPublic>(`/api/v1/jobs/${id}/transcript`, { token });
 export const getJobContent = (token: string, id: string) =>
   request<ContentPublic[]>(`/api/v1/jobs/${id}/content`, { token });
+export type ProvenanceClaim = {
+  sentence: string;
+  status: "traced" | "partial" | "untraced";
+  support: number;
+  position: number | null;
+  start: number | null;
+  end: number | null;
+  evidence: string | null;
+};
+
+export type ContentProvenance = {
+  available: boolean;
+  method?: string;
+  claims: ProvenanceClaim[];
+  summary: {
+    claims: number;
+    traced: number;
+    partial: number;
+    coverage: number | null;
+    bins: number[];
+    spread: number;
+  } | null;
+};
+
+export const getContentProvenance = (token: string, id: string) =>
+  request<ContentProvenance>(`/api/v1/content/${id}/provenance`, { token });
+
+/** <audio> cannot send headers, so the backend accepts the token as ?token= (like SSE). */
+export const jobMediaUrl = (token: string, jobId: string) =>
+  `${API_BASE}/api/v1/jobs/${jobId}/media?token=${encodeURIComponent(token)}`;
+
 export const approveContent = (token: string, id: string) =>
   request<ContentPublic>(`/api/v1/content/${id}/approve`, { method: "POST", token });
 export const rejectContent = (token: string, id: string, reason: string) =>

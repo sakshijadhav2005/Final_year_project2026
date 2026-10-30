@@ -42,6 +42,10 @@ $py = "server\.venv\Scripts\python.exe"
 & $py evaluation\scripts\retrieval_eval.py                        # Recall@k / MRR / nDCG
 & $py evaluation\scripts\judge_quality.py                         # rubric + key-point coverage
 & $py evaluation\scripts\judge_quality.py --second-judge          # judge agreement subset
+& $py evaluation\scripts\human_eval.py export --per-format 6      # blinded rating form for human raters
+& $py evaluation\scripts\human_eval.py analyze                    # after ratings are in results\human\ratings\
+# optional third RAG arm (coverage-balanced retrieval), then judge_quality.py again:
+& $py evaluation\scripts\run_pipeline.py --worker w3 --ablation 3 --conditions rag_balanced --no-e2e-record --talks <long talks...>
 & $py evaluation\scripts\fault_injection.py --trials 20           # mock reliability
 & $py -m pytest server\tests --cov=app ...                        # see results/coverage.json
 & $py evaluation\scripts\diagrams.py                              # architecture + pipeline figures
@@ -69,5 +73,11 @@ verdicts, retrieval results) is included.
 - `results/pilot/` – pilot runs that exposed the guardrail and template-leakage issues.
 - `results/stt/`, `results/asr_scores.csv` – transcription experiments.
 - `results/retrieval/`, `results/judge*/`, `results/fault_injection/` – per-item results.
+- `results/tables/provenance_*.csv`, `tab_provenance.tex`, `tab_prov_loc.tex`, `tab_prov_rag.tex` –
+  claim-level provenance (`server/app/services/provenance.py`, deterministic, no API calls),
+  computed from the saved runs by `analyze.py`.
+- `results/human/items.json` (which run and format each rated item is) and
+  `results/human/ratings/*.csv` (one file per rater). `rating_form.html` embeds transcripts
+  and is not published. `tab_human.tex` and `tab_rag_balanced.tex` appear once their data exists.
 - `results/tables/*.csv`, `results/summary.json` – every number used in the paper.
 - `figures/*.pdf|png`, `figures/screenshots/*.png`.

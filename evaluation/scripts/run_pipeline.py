@@ -5,9 +5,13 @@ For each talk:
                job runs the full pipeline (media check, STT, analysis, planner, RAG,
                6 writer agents, guardrail, Hindi translation). RAG on (app default).
   2. regen   - (long talks only, --ablation) POST /jobs/{id}/regenerate reuses the
-               stored transcript; alternating RAG on / RAG off, --repeats times each.
+               stored transcript; the --conditions interleaved, --ablation times each.
+               rag_on = similarity retrieval, rag_off = no retrieval,
+               rag_balanced = RAG_STRATEGY=balanced (coverage-balanced retrieval).
 
     python evaluation/scripts/run_pipeline.py --worker w1 --talks Al_Gore Brian_Cox --ablation 3
+    python evaluation/scripts/run_pipeline.py --worker w2 --talks <long talks> --ablation 3 \
+        --conditions rag_balanced --no-e2e-record  # add the balanced arm to an existing ablation
 """
 
 from __future__ import annotations
@@ -21,6 +25,11 @@ import harness
 
 TYPES = "summary,blog,linkedin,newsletter,instagram,flyer"
 LANGS = "en,hi"
+CONDITIONS = {  # condition -> (rag_enabled, rag_strategy)
+    "rag_on": (True, "similarity"),
+    "rag_off": (False, "similarity"),
+    "rag_balanced": (True, "balanced"),
+}
 
 
 def main() -> None:
@@ -28,6 +37,10 @@ def main() -> None:
     ap.add_argument("--worker", required=True)
     ap.add_argument("--talks", nargs="+", required=True)
     ap.add_argument("--ablation", type=int, default=0, help="repeats per RAG condition")
+    ap.add_argument("--conditions", nargs="+", default=["rag_on", "rag_off"], choices=sorted(CONDITIONS))
+    ap.add_argument("--no-e2e-record", action="store_true",
+                    help="still upload (each worker has its own database, so the regen runs need a "
+                         "transcript) but do not save or overwrite the talk's e2e record")
     args = ap.parse_args()
 
     harness.configure_env(args.worker)
@@ -99,7 +112,7 @@ def main() -> None:
 
         for talk in args.talks:
             # 1. Full end-to-end run from audio.
-            settings.rag_enabled = True
+            settings.rag_enabled, settings.rag_strategy = CONDITIONS["rag_on"]
             harness.reset()
             since = datetime.now(UTC)
             t0 = time.perf_counter()
@@ -114,16 +127,19 @@ def main() -> None:
                 print(f"[{args.worker}] {talk}: upload failed {res.status_code} {res.text[:200]}", flush=True)
                 continue
             job_id = res.json()["id"]
-            run = record(talk, "e2e", "rag_on", 0, job_id, wall, since)
+            if args.no_e2e_record:
+                transcript = client.get(f"/api/v1/jobs/{job_id}/transcript", headers=headers).json()
+            else:
+                transcript = record(talk, "e2e", "rag_on", 0, job_id, wall, since).get("transcript")
 
-            words = len(((run.get("transcript") or {}).get("full_text") or "").split())
+            words = len(((transcript or {}).get("full_text") or "").split())
             if not args.ablation or words <= settings.rag_token_threshold:
                 continue
 
             # 2. RAG ablation on the same stored transcript, conditions interleaved.
             for rep in range(1, args.ablation + 1):
-                for condition in ("rag_on", "rag_off"):
-                    settings.rag_enabled = condition == "rag_on"
+                for condition in args.conditions:
+                    settings.rag_enabled, settings.rag_strategy = CONDITIONS[condition]
                     harness.reset()
                     since = datetime.now(UTC)
                     t0 = time.perf_counter()
@@ -133,7 +149,7 @@ def main() -> None:
                         print(f"[{args.worker}] regen failed {res.status_code} {res.text[:200]}", flush=True)
                         continue
                     record(talk, "regen", condition, rep, job_id, wall, since)
-            settings.rag_enabled = True
+            settings.rag_enabled, settings.rag_strategy = CONDITIONS["rag_on"]
 
 
 if __name__ == "__main__":

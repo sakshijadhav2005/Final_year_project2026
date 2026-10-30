@@ -232,6 +232,7 @@ def config_snapshot() -> dict:
         "rag_enabled": s.rag_enabled,
         "rag_token_threshold": s.rag_token_threshold,
         "rag_top_k": s.rag_top_k,
+        "rag_strategy": s.rag_strategy,
         "rag_embedding_model": s.rag_embedding_model,
         "rag_embedding_dims": s.rag_embedding_dims,
         "rag_embedding_location": s.rag_embedding_location,
