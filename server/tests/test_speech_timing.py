@@ -1,10 +1,9 @@
 """Speech spans from the audio, and provenance placing words on speech time."""
 
-from pydub import AudioSegment
-from pydub.generators import Sine
-
 from app.providers.vertex_stt import _speech_spans
 from app.services.provenance import timed_words
+from pydub import AudioSegment
+from pydub.generators import Sine
 
 
 def _tone(ms: int) -> AudioSegment:

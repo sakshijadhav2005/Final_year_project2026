@@ -3,8 +3,6 @@
 import asyncio
 import uuid
 
-from fastapi.testclient import TestClient
-
 from app.graphs.agents.base import _retrieved_block
 from app.main import app
 from app.services.provenance import (
@@ -15,6 +13,7 @@ from app.services.provenance import (
     trace_claims,
 )
 from app.services.rag import BAG_MODEL, bag_vector, rank_chunks
+from fastapi.testclient import TestClient
 
 TALK = (
     "Good morning everyone. Today I want to talk about coral reefs and why they matter. "
@@ -161,11 +160,10 @@ def test_provenance_endpoint_and_media_for_a_text_upload() -> None:
 
 
 def test_media_endpoint_streams_and_seeks_the_recording(tmp_path) -> None:
-    from sqlalchemy import select
-
     from app.db.session import SessionLocal
     from app.models.job import Job
     from app.models.recording import Recording
+    from sqlalchemy import select
 
     audio = tmp_path / "talk.wav"
     audio.write_bytes(bytes(range(256)) * 40)

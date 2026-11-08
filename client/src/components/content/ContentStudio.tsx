@@ -18,7 +18,7 @@ interface ContentStudioProps {
   pieces: ContentPublic[];
 }
 
-export function normalizeType(type: string): "summary" | "blog" | "linkedin" | "newsletter" | "instagram" | "flyer" {
+function normalizeType(type: string): "summary" | "blog" | "linkedin" | "newsletter" | "instagram" | "flyer" {
   const t = (type || "").toLowerCase().replace(/[-_]/g, "");
   if (t.includes("summary")) return "summary";
   if (t.includes("blog")) return "blog";
