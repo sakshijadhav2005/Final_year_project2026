@@ -6,7 +6,8 @@ call), so it runs on every request, stays correct after a human edits the draft 
 can be recomputed for old jobs and saved evaluation runs.
 
 Times are estimates: STT segments can be long (one per transcription chunk), so a
-word's time is interpolated linearly inside its segment.
+word's time is interpolated inside its segment, over speech time when the segment
+carries speech spans (pauses get no words), otherwise linearly.
 """
 
 from __future__ import annotations
@@ -105,6 +106,32 @@ def _segment_offsets(words: list[str], segments: list[dict]) -> list[int] | None
     return offsets
 
 
+def _speech_in(seg: dict, start: float, end: float) -> list[tuple[float, float]]:
+    """The segment's speech spans clipped to [start, end]; empty when it has none."""
+    spans = []
+    for span in seg.get("speech") or []:
+        try:
+            a, b = max(float(span[0]), start), min(float(span[1]), end)
+        except (TypeError, ValueError, IndexError):
+            return []
+        if b > a:
+            spans.append((a, b))
+    return spans
+
+
+def _time_at(fraction: float, start: float, end: float, spans: list[tuple[float, float]]) -> float:
+    """Time at `fraction` of a segment's words: on speech time when the segment has
+    speech spans (pauses take no words), otherwise spread evenly from start to end."""
+    if not spans:
+        return start + (end - start) * fraction
+    target = fraction * sum(b - a for a, b in spans)
+    for a, b in spans:
+        if target <= b - a:
+            return a + target
+        target -= b - a
+    return spans[-1][1]
+
+
 def timed_words(full_text: str, segments: list[dict] | None) -> list[tuple[str, float | None]]:
     """Every transcript word with its estimated start time (None for text uploads)."""
     words = full_text.split()
@@ -112,16 +139,23 @@ def timed_words(full_text: str, segments: list[dict] | None) -> list[tuple[str, 
     if not words or not timed_segs:
         return [(w, None) for w in words]
     offsets = _segment_offsets(words, timed_segs)
-    if offsets is None:  # cannot align: spread the recording's time evenly over the words
+    if offsets is None:  # cannot align: spread the words over the whole recording
         offsets = [0]
-        timed_segs = [{"start": timed_segs[0]["start"], "end": timed_segs[-1]["end"]}]
+        timed_segs = [
+            {
+                "start": timed_segs[0]["start"],
+                "end": timed_segs[-1]["end"],
+                "speech": [span for s in timed_segs for span in (s.get("speech") or [])],
+            }
+        ]
     bounds = [*offsets[1:], len(words)]
     times: list[float | None] = [None] * len(words)
     for seg, first, last in zip(timed_segs, offsets, bounds, strict=True):
         start, end = float(seg["start"]), float(seg["end"])
+        spans = _speech_in(seg, start, end)
         count = max(last - first, 1)
         for i in range(first, last):
-            times[i] = round(start + (end - start) * (i - first) / count, 2)
+            times[i] = round(_time_at((i - first) / count, start, end, spans), 2)
     first_start = float(timed_segs[0]["start"])
     return [(w, t if t is not None else first_start) for w, t in zip(words, times, strict=True)]
 

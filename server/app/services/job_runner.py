@@ -216,6 +216,7 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                         "end": seg.end,
                         "confidence": seg.confidence,
                         "speaker": seg.speaker,
+                        "speech": seg.speech,
                     }
                     for seg in transcript.segments
                 ],
