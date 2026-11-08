@@ -47,7 +47,9 @@ class Settings(BaseSettings):
     vertex_model: str = ""  # empty = GEMINI_MODEL_GENERATE
     vertex_fast_model: str = ""  # empty = GEMINI_MODEL_FAST
     vertex_stt_model: str = ""  # empty = GEMINI_MODEL_ANALYZE
-    stt_chunk_seconds: int = 300  # long recordings are transcribed in ~5 min chunks
+    # Long recordings are transcribed in ~2 min chunks. Same WER as 300 s on the evaluation
+    # talks; claim "Play from" times land within 5 s for 94% vs 83% (timestamp_eval.py).
+    stt_chunk_seconds: int = 120
     stt_concurrency: int = 4
     stt_chunk_timeout_seconds: float = 240.0  # per ~5 min chunk; measured 5-60 s normally
     portkey_api_key: str = ""

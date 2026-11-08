@@ -40,6 +40,7 @@ $py = "server\.venv\Scripts\python.exe"
 & $py evaluation\scripts\run_stt.py --models gemini-3.1-flash-lite --chunks 120 600
 & $py evaluation\scripts\score_asr.py                             # WER / CER
 & $py evaluation\scripts\retrieval_eval.py                        # Recall@k / MRR / nDCG
+& $py evaluation\scripts\timestamp_eval.py                        # provenance "Play from" time error (live 15 s STT)
 & $py evaluation\scripts\judge_quality.py                         # rubric + key-point coverage
 & $py evaluation\scripts\judge_quality.py --second-judge          # judge agreement subset
 & $py evaluation\scripts\human_eval.py export --per-format 6      # blinded rating form for human raters
@@ -72,6 +73,10 @@ verdicts, retrieval results) is included.
   made after it); `fault_injection_prefix/` is the mock experiment before the resilience fixes.
 - `results/pilot/` – pilot runs that exposed the guardrail and template-leakage issues.
 - `results/stt/`, `results/asr_scores.csv` – transcription experiments.
+- `results/timing/` (not published: transcripts) and `results/timing_summary.json` – error of
+  the estimated claim times. Ground truth is speech onset in 15 s chunks; app-sized chunks
+  (300/120/60 s) are simulated by grouping them. 18 talks, at 300 s / 120 s:
+  median 2.35 s / 1.60 s, within 5 s 83% / 94% (speech-time placement).
 - `results/retrieval/`, `results/judge*/`, `results/fault_injection/` – per-item results.
 - `results/tables/provenance_*.csv`, `tab_provenance.tex`, `tab_prov_loc.tex`, `tab_prov_rag.tex` –
   claim-level provenance (`server/app/services/provenance.py`, deterministic, no API calls),
