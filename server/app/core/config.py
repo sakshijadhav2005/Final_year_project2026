@@ -120,7 +120,8 @@ class Settings(BaseSettings):
 
     # Error-repair agent (development only). New errors are fixed by Claude Code in a
     # separate git worktree; nothing is committed or pushed until an admin approves.
-    autofix_enabled: bool = True
+    # Opt-in: it runs a coding agent (with a budget) and tests on the code it writes.
+    autofix_enabled: bool = False
     autofix_agent_cmd: str = ""  # path to the claude CLI; empty = PATH, then the VS Code extension
     autofix_model: str = ""  # empty = the CLI's default model
     autofix_max_per_day: int = 10  # fix attempts per day

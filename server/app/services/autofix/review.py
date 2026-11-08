@@ -9,6 +9,12 @@ RISK_ORDER = {"low": 0, "medium": 1, "high": 2}
 FORBIDDEN = re.compile(
     r"(^|/)\.env($|\.)|\.pem$|\.key$|(^|/)\.git/|^evaluation/results/|(^|/)\.github/workflows/"
 )
+# The backend runs pytest / tsc on the agent's change before anyone has seen it. Only these
+# paths may change for that to happen: test configuration (conftest.py, pytest.ini,
+# pyproject.toml), packaging and scripts would run at collection time, outside the code
+# under test. Application code and test_*.py files still run, which is why the agent is
+# told to treat the error report as untrusted data.
+RUNNABLE = re.compile(r"^(server/app/.+|server/tests/test_[\w-]+\.py|client/src/.+)$")
 # Changes here are allowed but always need a careful look.
 SENSITIVE = re.compile(
     r"server/app/(core/security|core/config|api/deps|api/v1/auth|services/auth|db/session|"
@@ -43,6 +49,11 @@ _REMOVED_LINE_RULES = [
 
 def _bump(current: str, new: str) -> str:
     return new if RISK_ORDER[new] > RISK_ORDER[current] else current
+
+
+def not_runnable(files: list[str]) -> list[str]:
+    """Changed files that make it unsafe to run the checks (protected or outside RUNNABLE)."""
+    return [f for f in files if FORBIDDEN.search(f) or not RUNNABLE.match(f)]
 
 
 def changed_files(diff: str) -> list[str]:
