@@ -127,7 +127,9 @@ export async function request<T>(
     } catch {
       /* ignore */
     }
-    throw new Error(message);
+    const error = new Error(message);
+    error.name = "ApiError"; // the server records its own failures; the browser reporter skips these
+    throw error;
   }
   if (response.status === 204) return undefined as T;
   return response.json() as Promise<T>;
@@ -185,6 +187,73 @@ export const rejectContent = (token: string, id: string, reason: string) =>
   request<ContentPublic>(`/api/v1/content/${id}/reject`, { method: "POST", token, json: { reason } });
 export const listAdminJobs = (token: string) => request<JobPublic[]>("/api/v1/admin/jobs", { token });
 export const listAudit = (token: string) => request<Record<string, string | null>[]>("/api/v1/admin/audit", { token });
+
+export type AutoFixStatus =
+  | "new" | "external" | "fixing" | "proposed" | "revising" | "approved" | "rejected" | "failed";
+
+export type AutoFixSummary = {
+  id: string;
+  fingerprint: string;
+  source: "api" | "pipeline" | "frontend";
+  error_type: string;
+  message: string;
+  location: string | null;
+  occurrences: number;
+  status: AutoFixStatus;
+  status_detail: string | null;
+  attempts: number;
+  risk: "low" | "medium" | "high" | null;
+  cost_usd: number;
+  branch: string | null;
+  pr_url: string | null;
+  title: string | null;
+  created_at: string | null;
+  last_seen: string | null;
+  decided_at: string | null;
+};
+
+type CheckBlock = { passed: boolean | null; output: string } | null;
+export type RiskFinding = { file: string | null; line: number | null; finding: string; risk: "low" | "medium" | "high" };
+
+export type AutoFixDetail = AutoFixSummary & {
+  stack: string | null;
+  context: Record<string, string> | null;
+  report: { fixed?: boolean; title?: string; root_cause?: string; fix?: string; test?: string; risk?: string; notes?: string } | null;
+  diff: string | null;
+  checks: { passed: boolean; backend: CheckBlock; frontend: CheckBlock; reproduced: boolean | null; note?: string } | null;
+  review: {
+    scan: { risk: string; blocked: boolean; findings: RiskFinding[]; files: string[] };
+    agent: { verdict?: string; risk?: string; notes?: string[] } | null;
+  } | null;
+  feedback: string | null;
+  base_branch: string | null;
+  base_commit: string | null;
+  decided_by: string | null;
+};
+
+export type AutoFixAgentStatus = {
+  active: boolean;
+  environment: string;
+  agent_found: boolean;
+  agent_cmd: string | null;
+  github_cli: boolean;
+  attempts_today: number;
+  max_per_day: number;
+  llm_review: boolean;
+  gateway: { gateway: "portkey" | "direct"; ready: boolean; route: string | null; detail?: string };
+};
+
+export const getAutoFixStatus = (token: string) => request<AutoFixAgentStatus>("/api/v1/autofix/status", { token });
+export const listAutoFixes = (token: string) => request<AutoFixSummary[]>("/api/v1/autofix/issues", { token });
+export const getAutoFix = (token: string, id: string) => request<AutoFixDetail>(`/api/v1/autofix/issues/${id}`, { token });
+export const approveAutoFix = (token: string, id: string) =>
+  request<AutoFixDetail>(`/api/v1/autofix/issues/${id}/approve`, { method: "POST", token });
+export const rejectAutoFix = (token: string, id: string, reason: string) =>
+  request<AutoFixDetail>(`/api/v1/autofix/issues/${id}/reject`, { method: "POST", token, json: { reason } });
+export const reviseAutoFix = (token: string, id: string, feedback: string) =>
+  request<AutoFixDetail>(`/api/v1/autofix/issues/${id}/revise`, { method: "POST", token, json: { feedback } });
+export const retryAutoFix = (token: string, id: string) =>
+  request<AutoFixDetail>(`/api/v1/autofix/issues/${id}/retry`, { method: "POST", token });
 
 export const patchContent = (
   token: string,

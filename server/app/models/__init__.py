@@ -1,3 +1,4 @@
+from app.models.autofix import AutoFixIssue
 from app.models.chat import ChatMessage, ChatSession
 from app.models.content import ContentPiece
 from app.models.event import Event, EventType
@@ -8,6 +9,7 @@ from app.models.user import AuditLog, RefreshToken, User, UserProfile
 __all__ = [
     "AgentOutput",
     "AuditLog",
+    "AutoFixIssue",
     "ChatMessage",
     "ChatSession",
     "ContentPiece",

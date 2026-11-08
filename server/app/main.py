@@ -1,8 +1,9 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app import __version__
 from app.api.v1.router import api_router
@@ -35,8 +36,15 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
 
         await recover_interrupted_jobs()
         retention_task = asyncio.create_task(purge_media_periodically())
+    autofix_task = None
+    if settings.autofix_active:
+        import asyncio
+
+        from app.services.autofix.agent import run_worker
+
+        autofix_task = asyncio.create_task(run_worker())
     yield
-    for task in (retention_task, credentials_task):
+    for task in (retention_task, credentials_task, autofix_task):
         if task is not None:
             task.cancel()
 
@@ -64,6 +72,20 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     application.include_router(api_router, prefix=settings.api_v1_prefix)
+
+    if settings.autofix_active:
+
+        @application.exception_handler(Exception)
+        async def report_unhandled(request: Request, exc: Exception) -> JSONResponse:
+            # Hand the crash to the error-repair agent (development only).
+            from app.services.autofix.capture import record_exception
+
+            await record_exception(
+                exc, source="api", context={"method": request.method, "path": request.url.path}
+            )
+            return JSONResponse(
+                status_code=500, content={"detail": "Internal server error", "code": "internal_error"}
+            )
 
     @application.get("/health")
     async def root_health() -> dict[str, str]:

@@ -118,6 +118,30 @@ class Settings(BaseSettings):
     sentry_dsn: str = ""
     bootstrap_admin_email: str = "admin@example.com"
 
+    # Error-repair agent (development only). New errors are fixed by Claude Code in a
+    # separate git worktree; nothing is committed or pushed until an admin approves.
+    autofix_enabled: bool = True
+    autofix_agent_cmd: str = ""  # path to the claude CLI; empty = PATH, then the VS Code extension
+    autofix_model: str = ""  # empty = the CLI's default model
+    autofix_max_per_day: int = 10  # fix attempts per day
+    autofix_max_budget_usd: float = 2.0  # per agent call
+    autofix_max_rounds: int = 3  # agent edits -> checks -> feedback, at most this many times
+    autofix_timeout_seconds: float = 900.0  # one agent call
+    autofix_check_timeout_seconds: float = 600.0  # one test run
+    autofix_llm_review: bool = True  # second agent call that reviews the diff
+    autofix_worktree_root: str = str(ROOT.parent / ".eventai-autofix")
+    autofix_remote: str = "origin"
+    autofix_poll_seconds: float = 10.0
+    # Every model call the agent makes goes through the Portkey gateway (logs, cost,
+    # traces per error, retries / fallbacks from a Portkey config). "direct" = the CLI's
+    # own login, no gateway. Portkey needs PORTKEY_API_KEY plus one way to reach Claude:
+    # a config id (preferred: fallbacks, retries, caching), a virtual key holding the
+    # Anthropic key, or ANTHROPIC_API_KEY forwarded with x-portkey-provider: anthropic.
+    autofix_llm_gateway: Literal["portkey", "direct"] = "portkey"
+    autofix_portkey_base_url: str = "https://api.portkey.ai"
+    autofix_portkey_config: str = ""
+    autofix_portkey_virtual_key: str = ""
+
     use_celery: bool = False
     rate_limit_enabled: bool = True
     rate_limit_per_minute: int = 20
@@ -149,6 +173,10 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.eventai_env == "production"
+
+    @property
+    def autofix_active(self) -> bool:
+        return self.autofix_enabled and self.eventai_env == "development"
 
     @property
     def is_sqlite(self) -> bool:

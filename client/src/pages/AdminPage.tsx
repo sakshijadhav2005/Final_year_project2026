@@ -32,12 +32,17 @@ export function AdminPage() {
             </h1>
           </div>
 
-          <Link
-            to="/dashboard"
-            className="btn-ghost btn-sm"
-          >
-            ← Back to Dashboard
-          </Link>
+          <div className="flex gap-8">
+            <Link to="/admin/fixes" className="btn-primary btn-sm">
+              Error fixes
+            </Link>
+            <Link
+              to="/dashboard"
+              className="btn-ghost btn-sm"
+            >
+              ← Back to Dashboard
+            </Link>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-21">
