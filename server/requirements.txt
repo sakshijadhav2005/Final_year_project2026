@@ -36,7 +36,7 @@ langchain-google-genai==2.0.1
 google-generativeai==0.8.5
 google-genai==1.2.0  # Vertex AI (LLM_PROVIDER=vertex)
 pydub==0.25.1
-duckduckgo-search==6.3.2
+ddgs==9.16.1  # web + news search for the optional writer tools
 openai==1.54.3
 anthropic==2.3.0
 

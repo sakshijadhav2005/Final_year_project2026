@@ -4,12 +4,16 @@ Every tool returns real data or says plainly that it found none. A tool never in
 a result: on an empty search or an error it tells the model not to cite outside facts."""
 
 import structlog
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 from langchain_core.tools import tool
 
 from app.core.config import get_settings
 
 logger = structlog.get_logger("agent_tools")
+
+# Engines tried for a web search. ddgs's "auto" choice found nothing from some networks
+# where these did (checked 2026-11-08); DuckDuckGo alone was rate-limited.
+TEXT_BACKENDS = "google, yahoo, bing, brave, duckduckgo"
 
 
 def _no_results(what: str, query: str) -> str:
@@ -26,7 +30,9 @@ def search_web(query: str) -> str:
     """
     logger.info("tool_invoked", tool="search_web", query=query)
     try:
-        results = list(DDGS(timeout=get_settings().tool_timeout_seconds).text(query, max_results=3))
+        results = list(
+            DDGS(timeout=get_settings().tool_timeout_seconds).text(query, max_results=3, backend=TEXT_BACKENDS)
+        )
     except Exception as exc:
         logger.error("tool_error", tool="search_web", error=str(exc))
         return _no_results("web results", query)
