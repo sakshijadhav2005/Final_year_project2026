@@ -1,11 +1,22 @@
+import asyncio
+import json
+import re
 from pathlib import Path
 from typing import Any
 
+import structlog
+
+from app.core.config import get_settings
 from app.providers.factory import get_llm_provider
 from app.services.rag import AGENT_TRANSCRIPT_CHARS
 from app.services.resilience import llm_circuit, with_backoff
 
 SKILLS_DIR = Path(__file__).resolve().parent.parent / "skills"
+
+# Turn budget for the tool loop: model -> tool -> model -> tool -> model.
+TOOL_LOOP_RECURSION_LIMIT = 6
+
+logger = structlog.get_logger("writer_agent")
 
 
 def _retrieved_block(chunks: list[dict] | None, balanced: bool = False) -> str:
@@ -43,7 +54,14 @@ def _retrieved_block(chunks: list[dict] | None, balanced: bool = False) -> str:
 
 
 class BaseCreatorAgent:
-    """Base class for specialized content creator agents reading skill.md instructions."""
+    """One writer: a skill.md file plus, optionally, tools it may call.
+
+    A subclass only sets `tools` and `tool_hint`. With tools, AGENT_TOOLS_ENABLED and a
+    Gemini key, the writer runs a short tool loop; otherwise (and on any tool-loop
+    failure) it makes one plain generation call."""
+
+    tools: tuple = ()
+    tool_hint: str = ""
 
     def __init__(self, agent_name: str, skill_filename: str):
         self.agent_name = agent_name
@@ -89,6 +107,23 @@ class BaseCreatorAgent:
             "Strictly follow all instructions and negative constraints in the skill guideline above."
         )
 
+    def _build_user_prompt(
+        self,
+        transcript_text: str,
+        brief: dict | None,
+        context_chunks: list[dict] | None,
+        balanced_coverage: bool,
+    ) -> str:
+        brief_str = str(brief) if brief else "N/A"
+        return (
+            f"TASK={self.agent_name}\n"
+            "Here is the context you must use to generate the post:\n\n"
+            f"<EDITORIAL_BRIEF>\n{brief_str}\n</EDITORIAL_BRIEF>\n\n"
+            f"<TRANSCRIPT>\n{transcript_text[:AGENT_TRANSCRIPT_CHARS]}\n</TRANSCRIPT>\n\n"
+            f"{_retrieved_block(context_chunks, balanced_coverage)}"
+            f"Now, please generate the final {self.agent_name} post matching your system instructions."
+        )
+
     async def generate(
         self,
         transcript_text: str,
@@ -98,17 +133,87 @@ class BaseCreatorAgent:
         context_chunks: list[dict] | None = None,
         balanced_coverage: bool = False,
     ) -> dict[str, Any]:
+        settings = get_settings()
+        if self.tools and settings.gemini_api_key and settings.agent_tools_enabled:
+            try:
+                return await self._generate_with_tools(
+                    transcript_text, brief, user_memory, temperature, context_chunks, balanced_coverage
+                )
+            except Exception as exc:
+                logger.warning("writer_tool_loop_failed", agent=self.agent_name, error=str(exc))
+        return await self._generate_plain(
+            transcript_text, brief, user_memory, temperature, context_chunks, balanced_coverage
+        )
+
+    async def _generate_with_tools(
+        self,
+        transcript_text: str,
+        brief: dict | None,
+        user_memory: dict | None,
+        temperature: float,
+        context_chunks: list[dict] | None,
+        balanced_coverage: bool,
+    ) -> dict[str, Any]:
+        """Short ReAct loop over this writer's tools, capped by a turn budget and a timeout.
+        Raises on any failure so generate() falls back to one plain call."""
+        from langchain_core.messages import HumanMessage, SystemMessage
+        from langchain_google_genai import ChatGoogleGenerativeAI
+        from langgraph.prebuilt import create_react_agent
+
+        settings = get_settings()
+        llm = ChatGoogleGenerativeAI(
+            model=settings.gemini_model_generate or "gemini-3.6-flash",
+            api_key=settings.gemini_api_key,
+            temperature=temperature,
+            timeout=settings.llm_timeout_seconds,
+            max_retries=1,
+        )
+        executor = create_react_agent(llm, list(self.tools))
+        user_prompt = (
+            self._build_user_prompt(transcript_text, brief, context_chunks, balanced_coverage)
+            + f" {self.tool_hint} Return only the JSON object."
+        )
+        logger.info("writer_tool_loop_started", agent=self.agent_name)
+        response = await asyncio.wait_for(
+            executor.ainvoke(
+                {
+                    "messages": [
+                        SystemMessage(content=self._build_system_prompt(user_memory)),
+                        HumanMessage(content=user_prompt),
+                    ]
+                },
+                config={"recursion_limit": TOOL_LOOP_RECURSION_LIMIT},
+            ),
+            timeout=settings.agent_timeout_seconds,
+        )
+        content = response["messages"][-1].content
+        # Newer Gemini chat models may return a list of content parts.
+        text = (
+            "".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in content)
+            if isinstance(content, list)
+            else str(content)
+        )
+        match = re.search(r"\{[\s\S]*\}", text)
+        if not match:
+            raise ValueError("tool loop returned no JSON object")
+        result = json.loads(match.group(0))
+        result["type"] = self.agent_name
+        if "body" not in result and "text" in result:
+            result["body"] = result["text"]
+        return result
+
+    async def _generate_plain(
+        self,
+        transcript_text: str,
+        brief: dict | None,
+        user_memory: dict | None,
+        temperature: float,
+        context_chunks: list[dict] | None,
+        balanced_coverage: bool,
+    ) -> dict[str, Any]:
         llm = get_llm_provider()
         system_prompt = self._build_system_prompt(user_memory)
-        brief_str = str(brief) if brief else "N/A"
-        user_prompt = (
-            f"TASK={self.agent_name}\n"
-            "Here is the context you must use to generate the post:\n\n"
-            f"<EDITORIAL_BRIEF>\n{brief_str}\n</EDITORIAL_BRIEF>\n\n"
-            f"<TRANSCRIPT>\n{transcript_text[:AGENT_TRANSCRIPT_CHARS]}\n</TRANSCRIPT>\n\n"
-            f"{_retrieved_block(context_chunks, balanced_coverage)}"
-            f"Now, please generate the final {self.agent_name} post matching your system instructions."
-        )
+        user_prompt = self._build_user_prompt(transcript_text, brief, context_chunks, balanced_coverage)
 
         async def _call() -> dict[str, Any]:
             result = await llm.generate_json(
