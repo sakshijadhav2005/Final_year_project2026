@@ -33,7 +33,10 @@ All core stages (Stages 1 through 10) are implemented and verified:
   - 📋 **One-Click Actions:** Animated copy-to-clipboard and multi-format export (`.md`, `.txt`, `.json`).
   - ⚡ **Live Real-Time SSE:** Dynamic agent chip pulsing via Server-Sent Events without polling lag.
   - ⚙️ **Settings & Diagnostics:** Theme toggle (dark/light), media retention auto-purge policies, and target languages.
-- **Test Suite:** 34 automated unit and integration tests (auth, RBAC, uploads, full pipeline, translations, content access control, downloads, chat, job recovery). They run against SQLite by default and against PostgreSQL with `TEST_DATABASE_URL`.
+- **Claim-level provenance (click-to-verify):** every sentence of a draft is traced to the transcript passage it came from; the Sources panel plays the recording from that moment. Times are placed on speech time inside 120 s STT chunks: within 5 s of the true time for 94% of claims on the 18 evaluation talks (`evaluation/scripts/timestamp_eval.py`).
+- **Writer tools (optional, `AGENT_TOOLS_ENABLED`):** the blog writer may cite one web search result and the newsletter one news item; both tools return real results or say nothing was found.
+- **Error-repair agent (development only):** errors from the API, pipeline and browser are proposed as fixes by Claude Code in a separate git worktree, tested and risk-scanned, and pushed as a draft PR only after an admin approves in Admin → Error fixes.
+- **Test Suite:** 115 automated unit and integration tests (auth, RBAC, uploads, full pipeline, translations, content access control, downloads, chat, job recovery, provenance, RAG, resilience, writer tools, error-repair agent). They run against SQLite by default and against PostgreSQL with `TEST_DATABASE_URL`.
 
 ---
 
