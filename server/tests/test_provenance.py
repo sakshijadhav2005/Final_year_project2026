@@ -158,3 +158,47 @@ def test_provenance_endpoint_and_media_for_a_text_upload() -> None:
 
         # A text upload has no recording to play.
         assert client.get(f"/api/v1/jobs/{job_id}/media?token={token}").status_code == 404
+
+
+def test_media_endpoint_streams_and_seeks_the_recording(tmp_path) -> None:
+    from sqlalchemy import select
+
+    from app.db.session import SessionLocal
+    from app.models.job import Job
+    from app.models.recording import Recording
+
+    audio = tmp_path / "talk.wav"
+    audio.write_bytes(bytes(range(256)) * 40)
+
+    with TestClient(app) as client:
+        token = _token(client)
+        headers = {"Authorization": f"Bearer {token}"}
+        upload = client.post(
+            "/api/v1/uploads", headers=headers,
+            files={"file": ("talk.txt", TALK.encode(), "text/plain")},
+            data={"consent_confirmed": "true", "requested_types": "summary", "target_languages": "en"},
+        )
+        job_id = upload.json()["id"]
+
+        async def point_at_audio() -> None:
+            async with SessionLocal() as db:
+                job = (await db.execute(select(Job).where(Job.id == uuid.UUID(job_id)))).scalar_one()
+                rec = (await db.execute(select(Recording).where(Recording.id == job.recording_id))).scalar_one()
+                rec.storage_uri, rec.content_type = str(audio), "audio/wav"
+                await db.commit()
+
+        client.portal.call(point_at_audio)
+
+        full = client.get(f"/api/v1/jobs/{job_id}/media?token={token}")
+        assert full.status_code == 200
+        assert full.headers["content-type"] == "audio/wav"
+        assert full.content == audio.read_bytes()
+
+        # The audio player seeks with Range requests.
+        part = client.get(f"/api/v1/jobs/{job_id}/media?token={token}", headers={"Range": "bytes=1000-1099"})
+        assert part.status_code == 206
+        assert part.content == audio.read_bytes()[1000:1100]
+
+        # Only the owner can play it, and a bad token is rejected.
+        assert client.get(f"/api/v1/jobs/{job_id}/media?token={_token(client)}").status_code == 404
+        assert client.get(f"/api/v1/jobs/{job_id}/media?token=nope").status_code == 401
