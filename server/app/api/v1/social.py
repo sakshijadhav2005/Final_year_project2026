@@ -510,6 +510,127 @@ async def publish_instagram_with_image(
     return await _publish(db, user, content_id, "instagram", upload=data)
 
 
+def platform_for_type(content_type: str) -> str | None:
+    """Which platform a draft type is written for (same rule as the Content Studio)."""
+    t = (content_type or "").lower().replace("-", "").replace("_", "")
+    if "linkedin" in t:
+        return "linkedin"
+    if "insta" in t:
+        return "instagram"
+    return None
+
+
+class PublishableDraft(BaseModel):
+    content_id: UUID
+    platform: str
+    title: str | None
+    language: str
+    excerpt: str
+    job_id: UUID | None
+    created_at: datetime | None
+    published_url: str | None  # set once it is live
+
+
+class PublishPreview(BaseModel):
+    platform: str
+    text: str
+    characters: int
+    limit: int
+    problems: list[str]
+    image_preview_path: str | None  # Instagram: GET this (signed in) for the recap card
+
+
+@router.get("/social/drafts", response_model=list[PublishableDraft])
+async def list_publishable_drafts(
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+    platform: Platform | None = None,
+) -> list[PublishableDraft]:
+    """The signed-in user's own approved LinkedIn / Instagram drafts, newest first."""
+    from sqlalchemy import or_
+
+    from app.models.job import Job
+
+    rows = await db.execute(
+        select(ContentPiece)
+        .outerjoin(Job, Job.id == ContentPiece.job_id)
+        .where(
+            ContentPiece.status.in_(PUBLIC_STATUSES),
+            or_(Job.user_id == user.id, (ContentPiece.job_id.is_(None)) & (ContentPiece.user_id == user.id)),
+        )
+        .order_by(ContentPiece.created_at.desc())
+        .limit(200)
+    )
+    pieces = [(p, platform_for_type(p.type)) for p in rows.scalars()]
+    pieces = [(p, plat) for p, plat in pieces if plat and (platform is None or plat == platform)]
+    live: dict[tuple[UUID, str], str | None] = {}
+    if pieces:
+        posted = await db.execute(
+            select(SocialPost).where(
+                SocialPost.content_id.in_([p.id for p, _ in pieces]), SocialPost.status == "posted"
+            )
+        )
+        live = {(s.content_id, s.platform): s.post_url or "" for s in posted.scalars()}
+    return [
+        PublishableDraft(
+            content_id=p.id,
+            platform=plat,
+            title=p.title,
+            language=p.language,
+            excerpt=plain_text(p.body or "")[:200],
+            job_id=p.job_id,
+            created_at=p.created_at,
+            published_url=live.get((p.id, plat)),
+        )
+        for p, plat in pieces
+    ]
+
+
+@router.get("/content/{content_id}/publish-preview", response_model=PublishPreview)
+async def publish_preview(
+    content_id: UUID,
+    platform: Platform,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> PublishPreview:
+    """Exactly the text that ``publish`` would send, and anything that would stop it."""
+    piece = await _load_piece(db, user, content_id, write=True)
+    problems: list[str] = []
+    if piece.status not in PUBLIC_STATUSES:
+        problems.append("The draft is not approved yet.")
+    if platform == "instagram":
+        text, limit = instagram.build_caption(piece.body or ""), instagram.MAX_CAPTION_CHARS
+        try:
+            instagram.check_caption(text)
+            _check_public_images_possible()
+        except PublishError as exc:
+            problems.append(str(exc))
+    else:
+        text = linkedin.build_post_text(piece.title, piece.body or "")
+        limit = linkedin.MAX_COMMENTARY_CHARS
+        if len(text) > limit:
+            problems.append(f"Too long for LinkedIn ({len(text)}/{limit} characters).")
+    if not text.strip():
+        problems.append("The post is empty.")
+    account = await _get_account(db, user.id, platform)
+    if account is None:
+        problems.append(f"{LABELS[platform]} is not connected (Settings -> Connected accounts).")
+    elif _is_expired(account) and not account.refresh_token_enc:
+        problems.append(f"The {LABELS[platform]} connection expired; reconnect it in Settings.")
+    return PublishPreview(
+        platform=platform,
+        text=text,
+        characters=len(text),
+        limit=limit,
+        problems=problems,
+        image_preview_path=(
+            f"{get_settings().api_v1_prefix}/content/{piece.id}/social-image"
+            if platform == "instagram"
+            else None
+        ),
+    )
+
+
 @router.get("/content/{content_id}/publications", response_model=list[SocialPostPublic])
 async def list_publications(
     content_id: UUID,

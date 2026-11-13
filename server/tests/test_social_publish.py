@@ -252,3 +252,28 @@ def test_too_long_post_is_refused_before_calling_linkedin(fake_linkedin) -> None
         assert r.status_code == 400
         assert r.json()["detail"]["code"] == "too_long"
         assert fake_linkedin.posts == []
+
+
+def test_drafts_list_and_preview(fake_linkedin) -> None:
+    with TestClient(app) as client:
+        me = _user(client)
+        other = _user(client)
+        mine = _post(client, me, "My **launch** post #AI")
+        _post(client, other)  # someone else's approved draft is not listed
+        r = client.post("/api/v1/content", headers=me, json={"title": "x", "body": "y", "type": "user_post"})
+        assert r.status_code == 201  # not a social draft type
+
+        drafts = client.get("/api/v1/social/drafts", headers=me).json()
+        assert [d["content_id"] for d in drafts] == [mine]
+        assert drafts[0]["platform"] == "linkedin" and drafts[0]["published_url"] is None
+
+        preview = client.get(f"/api/v1/content/{mine}/publish-preview?platform=linkedin", headers=me).json()
+        assert preview["text"] == "Recap\n\nMy launch post #AI"
+        assert any("not connected" in p for p in preview["problems"])
+
+        _connect(client, me)
+        preview = client.get(f"/api/v1/content/{mine}/publish-preview?platform=linkedin", headers=me).json()
+        assert preview["problems"] == []
+        client.post(f"/api/v1/content/{mine}/publish", headers=me, json={})
+        drafts = client.get("/api/v1/social/drafts?platform=linkedin", headers=me).json()
+        assert drafts[0]["published_url"].startswith("https://www.linkedin.com/feed/update/")
