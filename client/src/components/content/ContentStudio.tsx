@@ -11,6 +11,7 @@ import { InstagramCard } from "./renderers/InstagramCard";
 import { BlogArticle } from "./renderers/BlogArticle";
 import { SummaryView } from "./renderers/SummaryView";
 import { SourcesPanel } from "./SourcesPanel";
+import { PublishPanel } from "@/components/social/PublishPanel";
 
 interface ContentStudioProps {
   token: string;
@@ -410,6 +411,17 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
               <p className="px-8 text-xs leading-relaxed text-ink-dim">
                 Approving marks this draft ready. When every draft in the session is reviewed, the session becomes ready to publish.
               </p>
+
+              {currentPiece.normalizedType === "linkedin" && (
+                <PublishPanel
+                  key={`publish-${currentPiece.id}`}
+                  token={token}
+                  contentId={currentPiece.id}
+                  platform="linkedin"
+                  approved={currentPiece.status === "approved" || currentPiece.status === "ready_to_publish"}
+                  onPublished={() => notify("✓ Published to LinkedIn!")}
+                />
+              )}
 
               <SourcesPanel key={currentPiece.id} token={token} jobId={jobId} contentId={currentPiece.id} body={currentPiece.body} />
             </aside>

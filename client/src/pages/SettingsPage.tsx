@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
+import { ConnectedAccounts } from "@/components/social/ConnectedAccounts";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { getApiHealth, getReady } from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
@@ -9,6 +10,7 @@ import { useThemeStore } from "@/store/theme";
 
 export function SettingsPage() {
   const user = useAuthStore((s) => s.user);
+  const token = useAuthStore((s) => s.accessToken);
   const health = useQuery({ queryKey: ["api-health"], queryFn: getApiHealth });
   const ready = useQuery({ queryKey: ["ready"], queryFn: getReady });
 
@@ -72,6 +74,8 @@ export function SettingsPage() {
             </div>
           </div>
         </section>
+
+        {token && <ConnectedAccounts token={token} />}
 
         {/* Theme Settings */}
         <section className="rounded-card border border-black/10 bg-surface-light p-21 dark:border-white/[0.08] dark:bg-surface-dark dark:shadow-none">

@@ -4,6 +4,7 @@ from app.models.content import ContentPiece
 from app.models.event import Event, EventType
 from app.models.job import AgentOutput, Job, Transcript
 from app.models.recording import Recording
+from app.models.social import SocialAccount, SocialPost
 from app.models.user import AuditLog, RefreshToken, User, UserProfile
 
 __all__ = [
@@ -18,6 +19,8 @@ __all__ = [
     "Job",
     "Recording",
     "RefreshToken",
+    "SocialAccount",
+    "SocialPost",
     "Transcript",
     "User",
     "UserProfile",

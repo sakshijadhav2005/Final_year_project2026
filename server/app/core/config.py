@@ -143,6 +143,16 @@ class Settings(BaseSettings):
     autofix_portkey_config: str = ""
     autofix_portkey_virtual_key: str = ""
 
+    # Social publishing. Approved drafts can be posted to the user's own connected accounts.
+    # LinkedIn: create an app at developer.linkedin.com, add the "Share on LinkedIn" and
+    # "Sign In with LinkedIn using OpenID Connect" products, and register the redirect URI.
+    linkedin_client_id: str = ""
+    linkedin_client_secret: str = ""
+    linkedin_redirect_uri: str = "http://localhost:8000/api/v1/social/linkedin/callback"
+    linkedin_api_version: str = "202606"  # LinkedIn-Version header (YYYYMM, ~1 year supported)
+    # Where the browser goes after the OAuth callback (the web app's Settings page).
+    frontend_url: str = "http://localhost:5173"
+
     use_celery: bool = False
     rate_limit_enabled: bool = True
     rate_limit_per_minute: int = 20

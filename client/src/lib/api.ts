@@ -185,6 +185,44 @@ export const approveContent = (token: string, id: string) =>
   request<ContentPublic>(`/api/v1/content/${id}/approve`, { method: "POST", token });
 export const rejectContent = (token: string, id: string, reason: string) =>
   request<ContentPublic>(`/api/v1/content/${id}/reject`, { method: "POST", token, json: { reason } });
+// ── Social publishing ──────────────────────────────────────────────────────────
+export type SocialPlatform = "linkedin";
+
+export type SocialPlatformStatus = {
+  platform: SocialPlatform;
+  configured: boolean;
+  account: {
+    platform: SocialPlatform;
+    display_name: string | null;
+    connected_at: string | null;
+    expires_at: string | null;
+    expired: boolean;
+  } | null;
+};
+
+export type SocialPost = {
+  id: string;
+  content_id: string;
+  platform: SocialPlatform;
+  status: "posted" | "failed" | "pending";
+  external_post_id: string | null;
+  post_url: string | null;
+  error: string | null;
+  created_at: string | null;
+};
+
+export const listSocialAccounts = (token: string) =>
+  request<SocialPlatformStatus[]>("/api/v1/social/accounts", { token });
+/** Returns the platform's sign-in URL; the caller sends the browser there. */
+export const startSocialConnect = (token: string, platform: SocialPlatform) =>
+  request<{ authorize_url: string }>(`/api/v1/social/${platform}/connect`, { token, credentials: "include" });
+export const disconnectSocial = (token: string, platform: SocialPlatform) =>
+  request<void>(`/api/v1/social/accounts/${platform}`, { method: "DELETE", token });
+export const publishContent = (token: string, id: string, platform: SocialPlatform) =>
+  request<SocialPost>(`/api/v1/content/${id}/publish`, { method: "POST", token, json: { platform } });
+export const listPublications = (token: string, id: string) =>
+  request<SocialPost[]>(`/api/v1/content/${id}/publications`, { token });
+
 export const listAdminJobs = (token: string) => request<JobPublic[]>("/api/v1/admin/jobs", { token });
 export const listAudit = (token: string) => request<Record<string, string | null>[]>("/api/v1/admin/audit", { token });
 
