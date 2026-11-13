@@ -14,6 +14,7 @@ import { useAuthStore } from "@/store/auth";
 import { EventChatWidget } from "@/components/chat/EventChatWidget";
 import { MarkdownText } from "@/components/content/renderers/MarkdownText";
 import { GoldenShell } from "@/layouts/GoldenShell";
+import { contentFormat } from "@/lib/social";
 
 export function EventDetailPage() {
   const { eventId = "" } = useParams<{ eventId: string }>();
@@ -85,7 +86,7 @@ export function EventDetailPage() {
   const posts: ContentPublic[] = contentQuery.data || [];
 
   const filteredPosts =
-    selectedType === "all" ? posts : posts.filter((p) => p.type === selectedType);
+    selectedType === "all" ? posts : posts.filter((p) => contentFormat(p.type) === selectedType);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -305,7 +306,7 @@ export function EventDetailPage() {
                 <option value="all">All Formats ({posts.length})</option>
                 <option value="linkedin">💼 LinkedIn</option>
                 <option value="instagram">📸 Instagram</option>
-                <option value="x_post">𝕏 X</option>
+                <option value="x">𝕏 X</option>
                 <option value="newsletter">📧 Newsletter</option>
                 <option value="blog">📝 Blog</option>
                 <option value="summary">📊 Summary</option>

@@ -18,3 +18,16 @@ export function xLength(text: string): number {
   }
   return total;
 }
+
+/** The format a content type belongs to, for filters ("ig_caption" -> "instagram"). */
+export function contentFormat(type: string): string {
+  const t = (type || "").toLowerCase().replace(/[-_]/g, "");
+  if (["x", "xpost", "tweet", "twitter", "twitterpost"].includes(t)) return "x";
+  if (t.includes("linkedin")) return "linkedin";
+  if (t.includes("insta") || t.startsWith("ig")) return "instagram";
+  if (t.includes("newsletter")) return "newsletter";
+  if (t.includes("blog")) return "blog";
+  if (t.includes("summary")) return "summary";
+  if (t.includes("flyer") || t.includes("poster")) return "flyer";
+  return t;
+}
