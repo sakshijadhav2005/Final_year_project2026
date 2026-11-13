@@ -305,6 +305,7 @@ export function EventDetailPage() {
                 <option value="all">All Formats ({posts.length})</option>
                 <option value="linkedin">💼 LinkedIn</option>
                 <option value="instagram">📸 Instagram</option>
+                <option value="x_post">𝕏 X</option>
                 <option value="newsletter">📧 Newsletter</option>
                 <option value="blog">📝 Blog</option>
                 <option value="summary">📊 Summary</option>

@@ -8,10 +8,11 @@ import { LinkedInCard } from "./renderers/LinkedInCard";
 import { NewsletterPreview } from "./renderers/NewsletterPreview";
 import { FlyerPreview } from "./renderers/FlyerPreview";
 import { InstagramCard } from "./renderers/InstagramCard";
+import { XCard } from "./renderers/XCard";
 import { BlogArticle } from "./renderers/BlogArticle";
 import { SummaryView } from "./renderers/SummaryView";
 import { SourcesPanel } from "./SourcesPanel";
-import { PublishPanel } from "@/components/social/PublishPanel";
+import { PublishSection } from "@/components/social/PublishPanel";
 
 interface ContentStudioProps {
   token: string;
@@ -19,10 +20,13 @@ interface ContentStudioProps {
   pieces: ContentPublic[];
 }
 
-function normalizeType(type: string): "summary" | "blog" | "linkedin" | "newsletter" | "instagram" | "flyer" {
+type StudioType = "summary" | "blog" | "linkedin" | "newsletter" | "instagram" | "flyer" | "x";
+
+function normalizeType(type: string): StudioType {
   const t = (type || "").toLowerCase().replace(/[-_]/g, "");
   if (t.includes("summary")) return "summary";
   if (t.includes("blog")) return "blog";
+  if (["x", "xpost", "tweet", "twitter", "twitterpost"].includes(t)) return "x";
   if (t.includes("linkedin")) return "linkedin";
   if (t.includes("newsletter")) return "newsletter";
   if (t.includes("insta") || t.includes("ig")) return "instagram";
@@ -30,16 +34,14 @@ function normalizeType(type: string): "summary" | "blog" | "linkedin" | "newslet
   return "summary";
 }
 
-const TYPE_CONFIG: Record<
-  "summary" | "blog" | "linkedin" | "newsletter" | "instagram" | "flyer",
-  { label: string; icon: string; desc: string }
-> = {
+const TYPE_CONFIG: Record<StudioType, { label: string; icon: string; desc: string }> = {
   summary: { label: "Summary", icon: "📝", desc: "Executive briefing & key takeaways" },
   blog: { label: "Blog Post", icon: "📰", desc: "Long-form editorial article" },
   linkedin: { label: "LinkedIn", icon: "💼", desc: "Professional social feed post" },
   newsletter: { label: "Newsletter", icon: "📧", desc: "Email template with highlights" },
   instagram: { label: "Instagram", icon: "📸", desc: "Visual post caption with tags" },
   flyer: { label: "Flyer Poster", icon: "🎨", desc: "Visual recap poster card" },
+  x: { label: "X", icon: "𝕏", desc: "One post within 280 characters" },
 };
 
 export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
@@ -55,7 +57,7 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
     normalizedType: normalizeType(p.type),
   }));
 
-  const [activeType, setActiveType] = useState<"summary" | "blog" | "linkedin" | "newsletter" | "instagram" | "flyer">("summary");
+  const [activeType, setActiveType] = useState<StudioType>("summary");
   const [activeLang, setActiveLang] = useState<string>("en");
 
   // Editing state
@@ -297,6 +299,9 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
                         onCopy={() => notify("✓ Copied to clipboard!")}
                       />
                     )}
+                    {currentPiece.normalizedType === "x" && (
+                      <XCard body={currentPiece.body} onCopy={() => notify("✓ Copied to clipboard!")} />
+                    )}
                     {currentPiece.normalizedType === "blog" && (
                       <BlogArticle
                         title={currentPiece.title}
@@ -412,18 +417,13 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
                 Approving marks this draft ready. When every draft in the session is reviewed, the session becomes ready to publish.
               </p>
 
-              {(currentPiece.normalizedType === "linkedin" || currentPiece.normalizedType === "instagram") && (
-                <PublishPanel
-                  key={`publish-${currentPiece.id}`}
-                  token={token}
-                  contentId={currentPiece.id}
-                  platform={currentPiece.normalizedType}
-                  approved={currentPiece.status === "approved" || currentPiece.status === "ready_to_publish"}
-                  onPublished={() =>
-                    notify(`✓ Published to ${currentPiece.normalizedType === "instagram" ? "Instagram" : "LinkedIn"}!`)
-                  }
-                />
-              )}
+              <PublishSection
+                token={token}
+                contentId={currentPiece.id}
+                kind={currentPiece.normalizedType}
+                approved={currentPiece.status === "approved" || currentPiece.status === "ready_to_publish"}
+                onPublished={notify}
+              />
 
               <SourcesPanel key={currentPiece.id} token={token} jobId={jobId} contentId={currentPiece.id} body={currentPiece.body} />
             </aside>

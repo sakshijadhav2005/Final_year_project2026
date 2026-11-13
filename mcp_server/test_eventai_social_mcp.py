@@ -53,8 +53,15 @@ class FakeEventAI:
             })
         if path == f"/api/v1/content/{DRAFT}/social-image":
             return httpx.Response(200, content=JPEG, headers={"content-type": "image/jpeg"})
+        if path == "/api/v1/social/posts/p1" and request.method == "DELETE":
+            return httpx.Response(200, json={"status": "cancelled", "platform": "x"})
         if path == f"/api/v1/content/{DRAFT}/publish":
-            self.published.append(json.loads(request.content))
+            payload = json.loads(request.content)
+            self.published.append(payload)
+            if payload.get("scheduled_for"):
+                return httpx.Response(200, json={"id": "p1", "status": "scheduled", "platform": payload["platform"],
+                                                 "scheduled_for": payload["scheduled_for"], "post_url": None,
+                                                 "external_post_id": None})
             return httpx.Response(200, json={"status": "posted", "platform": "linkedin",
                                              "post_url": "https://www.linkedin.com/feed/update/urn:li:share:1/",
                                              "external_post_id": "urn:li:share:1"})
@@ -84,13 +91,13 @@ def _payload(result) -> object:
 async def test_tools_listed(server) -> None:
     names = {t.name for t in await server.list_tools()}
     assert names == {"list_social_accounts", "list_publishable_drafts", "preview_post",
-                     "publish_post", "get_post_status"}
+                     "publish_post", "cancel_scheduled_post", "get_post_status"}
 
 
 async def test_accounts_and_drafts(server) -> None:
     accounts = _payload(await server.call_tool("list_social_accounts", {}))
-    assert accounts[0] == {"platform": "linkedin", "server_configured": True, "connected": True,
-                           "account_name": "Asha Rao", "connection_expired": False}
+    assert accounts[0] == {"platform": "linkedin", "drafts_it_takes": [], "server_configured": True,
+                           "connected": True, "account_name": "Asha Rao", "connection_expired": False}
     drafts = _payload(await server.call_tool("list_publishable_drafts", {"platform": "linkedin"}))
     assert drafts[0]["content_id"] == DRAFT
 
@@ -143,3 +150,14 @@ async def test_stdio_handshake() -> None:
         await session.initialize()
         tools = await session.list_tools()
         assert "publish_post" in {t.name for t in tools.tools}
+
+
+async def test_schedule_and_cancel(server, fake) -> None:
+    done = _payload(await server.call_tool(
+        "publish_post",
+        {"content_id": DRAFT, "platform": "x", "confirm": True, "schedule_at": "2026-12-01T09:00:00+05:30"},
+    ))
+    assert done["published"] is False and done["scheduled_for"] == "2026-12-01T09:00:00+05:30"
+    assert fake.published[-1] == {"platform": "x", "scheduled_for": "2026-12-01T09:00:00+05:30"}
+    cancelled = _payload(await server.call_tool("cancel_scheduled_post", {"post_id": "p1"}))
+    assert cancelled == {"cancelled": True, "platform": "x"}

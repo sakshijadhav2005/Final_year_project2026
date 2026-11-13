@@ -4,16 +4,32 @@ import { useSearchParams } from "react-router-dom";
 
 import { disconnectSocial, listSocialAccounts, startSocialConnect, type SocialPlatform } from "@/lib/api";
 
-const PLATFORM_LABEL: Record<SocialPlatform, string> = { linkedin: "LinkedIn", instagram: "Instagram" };
+const PLATFORM_LABEL: Record<SocialPlatform, string> = {
+  linkedin: "LinkedIn",
+  instagram: "Instagram",
+  facebook: "Facebook",
+  x: "X",
+};
 
 const PLATFORM_BADGE: Record<SocialPlatform, { text: string; className: string }> = {
   linkedin: { text: "in", className: "bg-[#0A66C2]" },
   instagram: { text: "IG", className: "bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF]" },
+  facebook: { text: "f", className: "bg-[#1877F2]" },
+  x: { text: "𝕏", className: "bg-black dark:border dark:border-white/20" },
+};
+
+const ACCEPTS_TEXT: Record<SocialPlatform, string> = {
+  linkedin: "Posts LinkedIn drafts",
+  instagram: "Posts Instagram captions with an image",
+  facebook: "Posts LinkedIn or Instagram drafts to your first Page",
+  x: "Posts X drafts (280 characters)",
 };
 
 const ENV_HINT: Record<SocialPlatform, string> = {
   linkedin: "LINKEDIN_CLIENT_ID",
   instagram: "INSTAGRAM_CLIENT_ID",
+  facebook: "FACEBOOK_APP_ID",
+  x: "X_CLIENT_ID",
 };
 
 const ERROR_TEXT: Record<string, string> = {
@@ -25,6 +41,12 @@ const ERROR_TEXT: Record<string, string> = {
   user_denied: "You cancelled the Instagram sign-in.",
   instagram_oauth_failed: "Instagram did not accept the sign-in. It must be a Business or Creator account.",
   instagram_unreachable: "Could not reach Instagram. Check your connection and try again.",
+  facebook_oauth_failed: "Facebook did not accept the sign-in. Check the app's Facebook Login settings.",
+  facebook_unreachable: "Could not reach Facebook. Check your connection and try again.",
+  no_pages: "Your Facebook account manages no Page. Create a Page or get Page admin access first.",
+  access_denied: "You cancelled the sign-in.",
+  x_oauth_failed: "X did not accept the sign-in. Check the app's callback URL and OAuth 2.0 settings.",
+  x_unreachable: "Could not reach X. Check your connection and try again.",
 };
 
 /** Settings section: connect the accounts that approved drafts can be published to. */
@@ -95,7 +117,12 @@ export function ConnectedAccounts({ token }: { token: string }) {
                   {PLATFORM_BADGE[item.platform]?.text ?? "?"}
                 </span>
                 <div>
-                  <span className="block font-medium text-ink-light dark:text-ink-dark">{label}</span>
+                  <span className="block font-medium text-ink-light dark:text-ink-dark">
+                    {label}
+                    <span className="ml-8 font-normal text-ink-light/50 dark:text-ink-dim">
+                      {ACCEPTS_TEXT[item.platform]}
+                    </span>
+                  </span>
                   <span className="text-ink-light/60 dark:text-ink-dim">
                     {!item.configured
                       ? `Not set up on this server (${ENV_HINT[item.platform]})`

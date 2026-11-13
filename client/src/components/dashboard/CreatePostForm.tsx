@@ -17,6 +17,7 @@ const POST_FORMATS = [
   { id: "newsletter", label: "Newsletter", icon: "📬", desc: "Email broadcast for community attendees" },
   { id: "linkedin", label: "LinkedIn Post", icon: "💼", desc: "Professional insights with hashtags" },
   { id: "ig_caption", label: "Instagram Post", icon: "📸", desc: "Engaging visual caption with hooks" },
+  { id: "x_post", label: "X Post", icon: "𝕏", desc: "One sharp post within 280 characters" },
   { id: "summary", label: "Executive Summary", icon: "📊", desc: "High-level TL;DR & actionable bullets" },
   { id: "flyer", label: "Event Flyer", icon: "🎨", desc: "Visual promo poster draft" },
 ];

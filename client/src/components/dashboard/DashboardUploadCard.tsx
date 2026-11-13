@@ -49,6 +49,16 @@ const POST_TYPES = [
     glowClass: "",
   },
   {
+    id: "x_post",
+    title: "X Post",
+    subtitle: "One sharp post, 280 characters",
+    icon: "𝕏",
+    color: "slate",
+    activeClass: "border-amber-400/60 bg-amber-400/[0.06] text-amber-300",
+    badgeClass: "bg-amber-400/15 text-amber-300",
+    glowClass: "",
+  },
+  {
     id: "summary",
     title: "Event Summary",
     subtitle: "Executive overview & action items",

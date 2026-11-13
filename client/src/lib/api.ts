@@ -186,11 +186,13 @@ export const approveContent = (token: string, id: string) =>
 export const rejectContent = (token: string, id: string, reason: string) =>
   request<ContentPublic>(`/api/v1/content/${id}/reject`, { method: "POST", token, json: { reason } });
 // ── Social publishing ──────────────────────────────────────────────────────────
-export type SocialPlatform = "linkedin" | "instagram";
+export type SocialPlatform = "linkedin" | "instagram" | "facebook" | "x";
 
 export type SocialPlatformStatus = {
   platform: SocialPlatform;
+  label: string;
   configured: boolean;
+  accepts: string[];
   account: {
     platform: SocialPlatform;
     display_name: string | null;
@@ -204,10 +206,11 @@ export type SocialPost = {
   id: string;
   content_id: string;
   platform: SocialPlatform;
-  status: "posted" | "failed" | "pending";
+  status: "posted" | "failed" | "pending" | "scheduled" | "cancelled";
   external_post_id: string | null;
   post_url: string | null;
   error: string | null;
+  scheduled_for: string | null;
   created_at: string | null;
 };
 
@@ -218,14 +221,22 @@ export const startSocialConnect = (token: string, platform: SocialPlatform) =>
   request<{ authorize_url: string }>(`/api/v1/social/${platform}/connect`, { token, credentials: "include" });
 export const disconnectSocial = (token: string, platform: SocialPlatform) =>
   request<void>(`/api/v1/social/accounts/${platform}`, { method: "DELETE", token });
-export const publishContent = (token: string, id: string, platform: SocialPlatform) =>
-  request<SocialPost>(`/api/v1/content/${id}/publish`, { method: "POST", token, json: { platform } });
+/** Publish now, or at `scheduledFor` (ISO time) when given. */
+export const publishContent = (token: string, id: string, platform: SocialPlatform, scheduledFor?: string) =>
+  request<SocialPost>(`/api/v1/content/${id}/publish`, {
+    method: "POST",
+    token,
+    json: { platform, ...(scheduledFor ? { scheduled_for: scheduledFor } : {}) },
+  });
+export const cancelScheduledPost = (token: string, postId: string) =>
+  request<SocialPost>(`/api/v1/social/posts/${postId}`, { method: "DELETE", token });
 export const listPublications = (token: string, id: string) =>
   request<SocialPost[]>(`/api/v1/content/${id}/publications`, { token });
 /** Instagram with the user's own picture (the server pads it to an allowed shape). */
-export const publishInstagramWithImage = (token: string, id: string, image: File) => {
+export const publishInstagramWithImage = (token: string, id: string, image: File, scheduledFor?: string) => {
   const body = new FormData();
   body.append("image", image);
+  if (scheduledFor) body.append("scheduled_for", scheduledFor);
   return request<SocialPost>(`/api/v1/content/${id}/publish/instagram`, { method: "POST", token, body });
 };
 /** The recap card Instagram uses when no picture is uploaded, as an object URL. */

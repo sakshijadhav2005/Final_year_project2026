@@ -1,7 +1,7 @@
 # EventAI Social: MCP server
 
-Lets an AI assistant (Claude Desktop, Claude Code, or any MCP client) publish EventAI
-drafts to LinkedIn and Instagram.
+Lets an AI assistant (Claude Desktop, Claude Code, or any MCP client) publish or schedule
+EventAI drafts to LinkedIn, Instagram, Facebook Pages and X.
 
 It is a thin client of the EventAI API, signed in as one EventAI user. The assistant gets
 no new powers: it can only publish that user's **already approved** drafts, to the accounts
@@ -11,9 +11,10 @@ Editing and approving drafts stays in the web app.
 | Tool | What it does |
 |---|---|
 | `list_social_accounts` | Which platforms are connected |
-| `list_publishable_drafts` | Approved LinkedIn / Instagram drafts, and whether each is live |
+| `list_publishable_drafts` | Approved drafts, where each can go, and whether it is live or scheduled |
 | `preview_post` | The exact text that would be posted (and the Instagram image) |
-| `publish_post` | Posts it. Without `confirm=true` it only returns the preview |
+| `publish_post` | Posts it, or schedules it with `schedule_at`. Without `confirm=true` it only returns the preview |
+| `cancel_scheduled_post` | Cancels a scheduled post before it is sent |
 | `get_post_status` | Every publish attempt for a draft, with links and errors |
 
 ## Set up
@@ -57,7 +58,7 @@ claude mcp add eventai-social \
 ```
 
 Then ask, for example: *"Which of my EventAI drafts are ready for LinkedIn? Show me the
-newest one and post it."* The assistant previews the post and asks before publishing.
+newest one and schedule it for tomorrow 9am IST."* The assistant previews the post and asks before publishing.
 
 ## Tests
 
