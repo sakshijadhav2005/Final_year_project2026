@@ -157,6 +157,17 @@ class Settings(BaseSettings):
     instagram_client_secret: str = ""
     instagram_redirect_uri: str = "http://localhost:8000/api/v1/social/instagram/callback"
     instagram_graph_version: str = "v23.0"
+    # Facebook Pages: Meta app with "Facebook Login for Business"; posts go to the user's first Page.
+    facebook_app_id: str = ""
+    facebook_app_secret: str = ""
+    facebook_redirect_uri: str = "http://localhost:8000/api/v1/social/facebook/callback"
+    facebook_graph_version: str = "v23.0"
+    # X (Twitter): developer.x.com app, OAuth 2.0 "Web App" (confidential), read + write.
+    x_client_id: str = ""
+    x_client_secret: str = ""
+    x_redirect_uri: str = "http://localhost:8000/api/v1/social/x/callback"
+    # How often due scheduled posts are sent (in-process loop; Celery beat uses 1 minute).
+    social_scheduler_interval_seconds: int = 30
     # Instagram downloads post images itself, so they need a public https URL. With
     # STORAGE_BACKEND=r2/s3 the bucket URL is used; otherwise set this to the public address
     # of this API (e.g. an ngrok https URL) and images are served from a signed link.

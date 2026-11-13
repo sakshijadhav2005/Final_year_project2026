@@ -25,5 +25,9 @@ celery_app.conf.beat_schedule = {
     "purge-expired-media-daily": {
         "task": "jobs.purge_expired_media",
         "schedule": crontab(hour="0", minute="0"),
-    }
+    },
+    "send-due-social-posts": {
+        "task": "social.send_due_posts",
+        "schedule": 60.0,
+    },
 }

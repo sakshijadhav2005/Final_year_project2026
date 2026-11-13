@@ -16,7 +16,8 @@ from urllib.parse import urlencode
 import httpx
 
 from app.core.config import get_settings
-from app.services.publishers import OAuthTokens, PublishError, PublishResult, http_client
+from app.services.publishers import Identity, OAuthTokens, PublishError, PublishResult, http_client
+from app.services.publishers.meta import graph_error
 from app.services.publishers.text import HASHTAG, MENTION, plain_text
 
 AUTHORIZE_URL = "https://www.instagram.com/oauth/authorize"
@@ -32,6 +33,12 @@ CONTAINER_POLL_ATTEMPTS = 15
 # Long-lived tokens last 60 days and can be refreshed once they are a day old.
 REFRESH_WHEN_LEFT = timedelta(days=10)
 
+NAME, LABEL, ENV_HINT = "instagram", "Instagram", "INSTAGRAM_CLIENT_ID"
+ACCEPTS = frozenset({"instagram"})
+REFRESH = "self"  # the long-lived token is exchanged for a fresh one before it expires
+NEEDS_IMAGE = True
+MAX_TEXT = MAX_CAPTION_CHARS
+
 
 def is_configured() -> bool:
     s = get_settings()
@@ -42,7 +49,7 @@ def _graph(path: str) -> str:
     return f"{GRAPH}/{get_settings().instagram_graph_version}/{path.lstrip('/')}"
 
 
-def authorize_url(state: str) -> str:
+def authorize_url(state: str, code_challenge: str = "") -> str:
     s = get_settings()
     query = urlencode(
         {
@@ -58,6 +65,16 @@ def authorize_url(state: str) -> str:
 
 def build_caption(body: str) -> str:
     return plain_text(body)
+
+
+def build_text(title: str | None, body: str) -> str:
+    return build_caption(body)  # Instagram captions carry no separate title
+
+
+def check_text(text: str) -> None:
+    if not text.strip():
+        raise PublishError("The caption is empty", "empty_post")
+    check_caption(text)
 
 
 def check_caption(caption: str) -> None:
@@ -81,27 +98,16 @@ def check_caption(caption: str) -> None:
 
 
 def _graph_error(res: httpx.Response, action: str) -> PublishError:
-    try:
-        err = res.json().get("error", {})
-    except ValueError:
-        err = {}
-    code, message = err.get("code"), err.get("message") or res.text[:300] or f"HTTP {res.status_code}"
-    if code == 190 or res.status_code == 401:
-        return PublishError(
-            "Your Instagram connection expired. Reconnect Instagram in Settings.", "reconnect_required"
-        )
-    if code in (10, 200) or res.status_code == 403:
-        return PublishError(
-            "Instagram refused: the app needs the instagram_business_content_publish permission, "
-            "and the account must be a Business or Creator account.",
-            "permission_denied",
-        )
-    if code in (4, 9, 17, 32, 613) or err.get("error_subcode") == 2207042:
-        return PublishError("Instagram's publishing limit was reached. Try again later.", "rate_limited")
-    return PublishError(f"Instagram could not {action}: {str(message)[:300]}", "publish_failed")
+    return graph_error(
+        res,
+        action,
+        LABEL,
+        "the app needs the instagram_business_content_publish permission, and the account "
+        "must be a Business or Creator account",
+    )
 
 
-async def exchange_code(code: str) -> OAuthTokens:
+async def exchange_code(code: str, code_verifier: str = "") -> OAuthTokens:
     """Code -> short-lived token (1 hour) -> long-lived token (60 days)."""
     s = get_settings()
     code = code.removesuffix("#_")  # Instagram appends this to the redirect
@@ -163,7 +169,7 @@ def needs_refresh(expires_at: datetime | None) -> bool:
     return expires_at is not None and expires_at - datetime.now(UTC) < REFRESH_WHEN_LEFT
 
 
-async def fetch_identity(access_token: str) -> tuple[str, str | None]:
+async def fetch_identity(access_token: str) -> Identity:
     """(Instagram professional account id, @username)."""
     try:
         async with http_client() as client:
@@ -176,7 +182,7 @@ async def fetch_identity(access_token: str) -> tuple[str, str | None]:
         raise PublishError("Could not read your Instagram account.", "instagram_oauth_failed")
     data = res.json()
     username = data.get("username")
-    return str(data.get("user_id") or data["id"]), f"@{username}" if username else None
+    return Identity(str(data.get("user_id") or data["id"]), f"@{username}" if username else None)
 
 
 async def publish(access_token: str, ig_user_id: str, image_url: str, caption: str) -> PublishResult:

@@ -5,6 +5,7 @@ from app.graphs.agents.instagram_agent import InstagramAgent
 from app.graphs.agents.linkedin_agent import LinkedInAgent
 from app.graphs.agents.newsletter_agent import NewsletterAgent
 from app.graphs.agents.summary_agent import SummaryAgent
+from app.graphs.agents.x_agent import XAgent
 
 AGENT_REGISTRY: dict[str, type[BaseCreatorAgent]] = {
     "summary": SummaryAgent,
@@ -14,6 +15,9 @@ AGENT_REGISTRY: dict[str, type[BaseCreatorAgent]] = {
     "ig_caption": InstagramAgent,
     "instagram": InstagramAgent,  # alias sent by the event detail page
     "flyer": FlyerAgent,
+    "x_post": XAgent,
+    "x": XAgent,  # aliases
+    "twitter": XAgent,
 }
 
 __all__ = [
@@ -25,4 +29,5 @@ __all__ = [
     "LinkedInAgent",
     "NewsletterAgent",
     "SummaryAgent",
+    "XAgent",
 ]

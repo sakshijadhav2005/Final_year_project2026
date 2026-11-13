@@ -69,6 +69,7 @@ _UPGRADE_COLUMNS: list[tuple[str, str, dict[str, str]]] = [
     ("events", "description", {"postgresql": "TEXT", "sqlite": "TEXT", "mysql": "TEXT"}),
     ("jobs", "event_id", {"postgresql": "UUID", "sqlite": "CHAR(32)", "mysql": "CHAR(32)"}),
     ("social_posts", "image_uri", {"postgresql": "VARCHAR(1024)", "sqlite": "VARCHAR(1024)", "mysql": "VARCHAR(1024)"}),
+    ("social_posts", "scheduled_for", {"postgresql": "TIMESTAMP WITH TIME ZONE", "sqlite": "DATETIME", "mysql": "DATETIME"}),
 ]
 
 

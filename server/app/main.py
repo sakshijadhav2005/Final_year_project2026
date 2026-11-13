@@ -22,6 +22,7 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
 
     retention_task = None
     credentials_task = None
+    scheduler_task = None
     if settings.validate_credentials_on_startup and settings.eventai_env != "test":
         import asyncio
 
@@ -33,9 +34,11 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         import asyncio
 
         from app.services.job_runner import purge_media_periodically, recover_interrupted_jobs
+        from app.services.social_publishing import run_scheduler_periodically
 
         await recover_interrupted_jobs()
         retention_task = asyncio.create_task(purge_media_periodically())
+        scheduler_task = asyncio.create_task(run_scheduler_periodically())
     autofix_task = None
     if settings.autofix_active:
         import asyncio
@@ -44,7 +47,7 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
 
         autofix_task = asyncio.create_task(run_worker())
     yield
-    for task in (retention_task, credentials_task, autofix_task):
+    for task in (retention_task, credentials_task, scheduler_task, autofix_task):
         if task is not None:
             task.cancel()
 

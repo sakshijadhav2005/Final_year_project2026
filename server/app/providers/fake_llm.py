@@ -164,6 +164,18 @@ def _demo_content(task: str, raw_text: str) -> dict[str, Any]:
             "structured": {"visual_prompt": f"Modern infographic banner for {topic_headline}"},
         }
 
+    if task in {"x_post", "x", "twitter"}:
+        from app.graphs.agents.x_agent import fit_x_limit
+
+        tag = f"#{keywords[0].replace(' ', '')}" if keywords else ""
+        lesson = fit_x_limit(f"Key lesson on {topic_headline}: {first_sentence}", 270 - len(tag))
+        return {
+            "type": "x_post",
+            "title": f"X post: {topic_headline}",
+            "body": f"{lesson}\n\n{tag}".strip(),
+            "structured": {},
+        }
+
     if task in {"flyer", "marketing_flyer"}:
         flyer_body = (
             f"# 📢 {topic_headline}\n\n"

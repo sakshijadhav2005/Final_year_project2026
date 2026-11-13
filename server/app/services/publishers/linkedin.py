@@ -17,7 +17,7 @@ from urllib.parse import urlencode
 import httpx
 
 from app.core.config import get_settings
-from app.services.publishers import OAuthTokens, PublishError, PublishResult, http_client
+from app.services.publishers import Identity, OAuthTokens, PublishError, PublishResult, http_client
 from app.services.publishers.text import HASHTAG, plain_text
 
 AUTHORIZE_URL = "https://www.linkedin.com/oauth/v2/authorization"
@@ -28,6 +28,12 @@ SCOPES = "openid profile w_member_social"
 
 MAX_COMMENTARY_CHARS = 3000
 
+NAME, LABEL, ENV_HINT = "linkedin", "LinkedIn", "LINKEDIN_CLIENT_ID"
+ACCEPTS = frozenset({"linkedin"})  # draft kinds this platform publishes
+REFRESH = "refresh_token"  # only for apps LinkedIn approved; others reconnect every 60 days
+NEEDS_IMAGE = False
+MAX_TEXT = MAX_COMMENTARY_CHARS
+
 # Characters with meaning in LinkedIn's "little text" format; plain text must escape them.
 _RESERVED = re.compile(r"([\\|{}@\[\]()<>#*_~])")
 
@@ -37,7 +43,7 @@ def is_configured() -> bool:
     return bool(s.linkedin_client_id and s.linkedin_client_secret)
 
 
-def authorize_url(state: str) -> str:
+def authorize_url(state: str, code_challenge: str = "") -> str:
     s = get_settings()
     query = urlencode(
         {
@@ -57,6 +63,21 @@ def build_post_text(title: str | None, body: str) -> str:
     if title and title.strip() and not text.lower().startswith(title.strip().lower()):
         text = f"{title.strip()}\n\n{text}"
     return text
+
+
+def build_text(title: str | None, body: str) -> str:
+    return build_post_text(title, body)
+
+
+def check_text(text: str) -> None:
+    if not text.strip():
+        raise PublishError("The post is empty", "empty_post")
+    if len(text) > MAX_COMMENTARY_CHARS:
+        raise PublishError(
+            f"LinkedIn posts are limited to {MAX_COMMENTARY_CHARS} characters; "
+            f"this one has {len(text)}. Shorten it and try again.",
+            "too_long",
+        )
 
 
 def to_commentary(text: str) -> str:
@@ -81,7 +102,7 @@ def _error_message(res: httpx.Response) -> str:
     )[:300]
 
 
-async def exchange_code(code: str) -> OAuthTokens:
+async def exchange_code(code: str, code_verifier: str = "") -> OAuthTokens:
     s = get_settings()
     try:
         async with http_client() as client:
@@ -137,7 +158,7 @@ async def refresh(refresh_token: str) -> OAuthTokens:
     )
 
 
-async def fetch_identity(access_token: str) -> tuple[str, str | None]:
+async def fetch_identity(access_token: str) -> Identity:
     """(member id, display name) of the account that just connected."""
     try:
         async with http_client() as client:
@@ -149,19 +170,12 @@ async def fetch_identity(access_token: str) -> tuple[str, str | None]:
             f"Could not read your LinkedIn profile: {_error_message(res)}", "linkedin_oauth_failed"
         )
     data = res.json()
-    return str(data["sub"]), data.get("name")
+    return Identity(str(data["sub"]), data.get("name"))
 
 
 async def publish(access_token: str, member_id: str, text: str) -> PublishResult:
     """Post ``text`` (plain, from :func:`build_post_text`) to the member's feed."""
-    if not text.strip():
-        raise PublishError("The post is empty", "empty_post")
-    if len(text) > MAX_COMMENTARY_CHARS:
-        raise PublishError(
-            f"LinkedIn posts are limited to {MAX_COMMENTARY_CHARS} characters; "
-            f"this one has {len(text)}. Shorten it and try again.",
-            "too_long",
-        )
+    check_text(text)
     body = {
         "author": f"urn:li:person:{member_id}",
         "commentary": to_commentary(text),

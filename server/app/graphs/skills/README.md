@@ -9,5 +9,6 @@ Each file here defines the persona, tone, style rules, formatting blueprints, an
 - `blog_skill.md`: Instructions for structured long-form technical blogs.
 - `summary_skill.md`: Instructions for C-level executive bullet briefs.
 - `flyer_skill.md`: Instructions for snappy marketing recap flyers.
+- `x_skill.md`: Instructions for a single X (Twitter) post within 280 characters.
 
 Agents automatically load these files at runtime via `BaseCreatorAgent._load_skill()`.

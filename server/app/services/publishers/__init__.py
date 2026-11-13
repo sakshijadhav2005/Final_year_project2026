@@ -14,7 +14,7 @@ import httpx
 # Tests swap this for an ``httpx.MockTransport`` so no request leaves the machine.
 HTTP_TRANSPORT: httpx.AsyncBaseTransport | None = None
 
-SUPPORTED_PLATFORMS = ("linkedin", "instagram")
+SUPPORTED_PLATFORMS = ("linkedin", "instagram", "facebook", "x")
 
 
 class PublishError(Exception):
@@ -37,6 +37,13 @@ class OAuthTokens:
     expires_in: int | None
     refresh_token: str | None
     scope: str | None
+
+
+@dataclass
+class Identity:
+    external_id: str  # who/where posts go: member id, Instagram account id, Page id, X user id
+    display_name: str | None
+    access_token: str | None = None  # replaces the user token (Facebook Page token)
 
 
 def http_client() -> httpx.AsyncClient:

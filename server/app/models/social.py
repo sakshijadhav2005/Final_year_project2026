@@ -38,8 +38,9 @@ class SocialPost(TimestampMixin, Base):
     )
     user_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), index=True, nullable=False)
     platform: Mapped[str] = mapped_column(String(32), nullable=False)
-    status: Mapped[str] = mapped_column(String(16), nullable=False, default="pending")  # pending | posted | failed
+    status: Mapped[str] = mapped_column(String(16), nullable=False, default="pending")  # scheduled | pending | posted | failed | cancelled
     external_post_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     post_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     error: Mapped[str | None] = mapped_column(Text, nullable=True)
     image_uri: Mapped[str | None] = mapped_column(String(1024), nullable=True)  # Instagram
+    scheduled_for: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, index=True)

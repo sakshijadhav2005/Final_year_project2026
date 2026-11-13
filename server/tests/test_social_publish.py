@@ -102,7 +102,8 @@ def test_connect_needs_server_credentials(monkeypatch) -> None:
         r = client.get("/api/v1/social/linkedin/connect", headers=headers)
         assert r.status_code == 503
         accounts = client.get("/api/v1/social/accounts", headers=headers).json()
-        assert {"platform": "linkedin", "configured": False, "account": None} in accounts
+        linkedin_row = next(a for a in accounts if a["platform"] == "linkedin")
+        assert linkedin_row["configured"] is False and linkedin_row["account"] is None
 
 
 def test_connect_stores_encrypted_token(fake_linkedin) -> None:
@@ -265,7 +266,9 @@ def test_drafts_list_and_preview(fake_linkedin) -> None:
 
         drafts = client.get("/api/v1/social/drafts", headers=me).json()
         assert [d["content_id"] for d in drafts] == [mine]
-        assert drafts[0]["platform"] == "linkedin" and drafts[0]["published_url"] is None
+        assert drafts[0]["kind"] == "linkedin"
+        assert set(drafts[0]["platforms"]) == {"linkedin", "facebook"}
+        assert drafts[0]["platforms"]["linkedin"]["status"] == "not_published"
 
         preview = client.get(f"/api/v1/content/{mine}/publish-preview?platform=linkedin", headers=me).json()
         assert preview["text"] == "Recap\n\nMy launch post #AI"
@@ -276,4 +279,5 @@ def test_drafts_list_and_preview(fake_linkedin) -> None:
         assert preview["problems"] == []
         client.post(f"/api/v1/content/{mine}/publish", headers=me, json={})
         drafts = client.get("/api/v1/social/drafts?platform=linkedin", headers=me).json()
-        assert drafts[0]["published_url"].startswith("https://www.linkedin.com/feed/update/")
+        assert drafts[0]["platforms"]["linkedin"]["status"] == "posted"
+        assert drafts[0]["platforms"]["linkedin"]["post_url"].startswith("https://www.linkedin.com/feed/update/")
