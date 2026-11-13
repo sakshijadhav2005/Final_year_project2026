@@ -150,6 +150,17 @@ class Settings(BaseSettings):
     linkedin_client_secret: str = ""
     linkedin_redirect_uri: str = "http://localhost:8000/api/v1/social/linkedin/callback"
     linkedin_api_version: str = "202606"  # LinkedIn-Version header (YYYYMM, ~1 year supported)
+    # Instagram (Business/Creator accounts, "Instagram API with Instagram Login"): create a
+    # Meta app at developers.facebook.com, add the Instagram product, use its Instagram
+    # app id / secret, and register the redirect URI under "Set up Instagram business login".
+    instagram_client_id: str = ""
+    instagram_client_secret: str = ""
+    instagram_redirect_uri: str = "http://localhost:8000/api/v1/social/instagram/callback"
+    instagram_graph_version: str = "v23.0"
+    # Instagram downloads post images itself, so they need a public https URL. With
+    # STORAGE_BACKEND=r2/s3 the bucket URL is used; otherwise set this to the public address
+    # of this API (e.g. an ngrok https URL) and images are served from a signed link.
+    public_base_url: str = ""
     # Where the browser goes after the OAuth callback (the web app's Settings page).
     frontend_url: str = "http://localhost:5173"
 

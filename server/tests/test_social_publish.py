@@ -102,7 +102,7 @@ def test_connect_needs_server_credentials(monkeypatch) -> None:
         r = client.get("/api/v1/social/linkedin/connect", headers=headers)
         assert r.status_code == 503
         accounts = client.get("/api/v1/social/accounts", headers=headers).json()
-        assert accounts == [{"platform": "linkedin", "configured": False, "account": None}]
+        assert {"platform": "linkedin", "configured": False, "account": None} in accounts
 
 
 def test_connect_stores_encrypted_token(fake_linkedin) -> None:

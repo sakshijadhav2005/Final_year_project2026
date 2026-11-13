@@ -14,7 +14,7 @@ import httpx
 # Tests swap this for an ``httpx.MockTransport`` so no request leaves the machine.
 HTTP_TRANSPORT: httpx.AsyncBaseTransport | None = None
 
-SUPPORTED_PLATFORMS = ("linkedin",)
+SUPPORTED_PLATFORMS = ("linkedin", "instagram")
 
 
 class PublishError(Exception):

@@ -412,14 +412,16 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
                 Approving marks this draft ready. When every draft in the session is reviewed, the session becomes ready to publish.
               </p>
 
-              {currentPiece.normalizedType === "linkedin" && (
+              {(currentPiece.normalizedType === "linkedin" || currentPiece.normalizedType === "instagram") && (
                 <PublishPanel
                   key={`publish-${currentPiece.id}`}
                   token={token}
                   contentId={currentPiece.id}
-                  platform="linkedin"
+                  platform={currentPiece.normalizedType}
                   approved={currentPiece.status === "approved" || currentPiece.status === "ready_to_publish"}
-                  onPublished={() => notify("✓ Published to LinkedIn!")}
+                  onPublished={() =>
+                    notify(`✓ Published to ${currentPiece.normalizedType === "instagram" ? "Instagram" : "LinkedIn"}!`)
+                  }
                 />
               )}
 

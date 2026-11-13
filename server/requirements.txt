@@ -43,6 +43,9 @@ anthropic==2.3.0
 # Cloud Storage (Cloudflare R2 / AWS S3 / MinIO)
 boto3==1.37.9
 
+# Images for Instagram posts (recap card, upload normalisation)
+pillow==13.0.0
+
 # Optional VideoDB — install when keys are available
 videodb
 

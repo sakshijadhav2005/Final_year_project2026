@@ -18,6 +18,7 @@ import httpx
 
 from app.core.config import get_settings
 from app.services.publishers import OAuthTokens, PublishError, PublishResult, http_client
+from app.services.publishers.text import HASHTAG, plain_text
 
 AUTHORIZE_URL = "https://www.linkedin.com/oauth/v2/authorization"
 TOKEN_URL = "https://www.linkedin.com/oauth/v2/accessToken"
@@ -29,7 +30,6 @@ MAX_COMMENTARY_CHARS = 3000
 
 # Characters with meaning in LinkedIn's "little text" format; plain text must escape them.
 _RESERVED = re.compile(r"([\\|{}@\[\]()<>#*_~])")
-_HASHTAG = re.compile(r"(?<![\w&/])#(\w+)")
 
 
 def is_configured() -> bool:
@@ -51,20 +51,9 @@ def authorize_url(state: str) -> str:
     return f"{AUTHORIZE_URL}?{query}"
 
 
-def _plain_text(markdown: str) -> str:
-    """LinkedIn shows text as typed, so drop Markdown markers the writers may produce."""
-    text = markdown.replace("\r\n", "\n")
-    text = re.sub(r"^\s{0,3}#{1,6}\s+", "", text, flags=re.MULTILINE)  # headings
-    text = re.sub(r"\*\*(.+?)\*\*|__(.+?)__", lambda m: m.group(1) or m.group(2), text)  # bold
-    text = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r"\1 (\2)", text)  # links
-    text = re.sub(r"^(\s*)[*-]\s+", r"\1• ", text, flags=re.MULTILINE)  # bullets
-    text = re.sub(r"\n{3,}", "\n\n", text)
-    return text.strip()
-
-
 def build_post_text(title: str | None, body: str) -> str:
     """The post as the reader will see it (before little-text escaping)."""
-    text = _plain_text(body)
+    text = plain_text(body)
     if title and title.strip() and not text.lower().startswith(title.strip().lower()):
         text = f"{title.strip()}\n\n{text}"
     return text
@@ -74,7 +63,7 @@ def to_commentary(text: str) -> str:
     """Escape reserved characters; keep #tags clickable as LinkedIn hashtags."""
     out: list[str] = []
     pos = 0
-    for match in _HASHTAG.finditer(text):
+    for match in HASHTAG.finditer(text):
         out.append(_RESERVED.sub(r"\\\1", text[pos : match.start()]))
         out.append("{hashtag|\\#|" + match.group(1) + "}")
         pos = match.end()
@@ -148,7 +137,7 @@ async def refresh(refresh_token: str) -> OAuthTokens:
     )
 
 
-async def fetch_member(access_token: str) -> tuple[str, str | None]:
+async def fetch_identity(access_token: str) -> tuple[str, str | None]:
     """(member id, display name) of the account that just connected."""
     try:
         async with http_client() as client:

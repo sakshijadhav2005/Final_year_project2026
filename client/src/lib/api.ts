@@ -186,7 +186,7 @@ export const approveContent = (token: string, id: string) =>
 export const rejectContent = (token: string, id: string, reason: string) =>
   request<ContentPublic>(`/api/v1/content/${id}/reject`, { method: "POST", token, json: { reason } });
 // ── Social publishing ──────────────────────────────────────────────────────────
-export type SocialPlatform = "linkedin";
+export type SocialPlatform = "linkedin" | "instagram";
 
 export type SocialPlatformStatus = {
   platform: SocialPlatform;
@@ -222,6 +222,18 @@ export const publishContent = (token: string, id: string, platform: SocialPlatfo
   request<SocialPost>(`/api/v1/content/${id}/publish`, { method: "POST", token, json: { platform } });
 export const listPublications = (token: string, id: string) =>
   request<SocialPost[]>(`/api/v1/content/${id}/publications`, { token });
+/** Instagram with the user's own picture (the server pads it to an allowed shape). */
+export const publishInstagramWithImage = (token: string, id: string, image: File) => {
+  const body = new FormData();
+  body.append("image", image);
+  return request<SocialPost>(`/api/v1/content/${id}/publish/instagram`, { method: "POST", token, body });
+};
+/** The recap card Instagram uses when no picture is uploaded, as an object URL. */
+export async function fetchSocialImage(token: string, id: string): Promise<string> {
+  const res = await authFetch(`/api/v1/content/${id}/social-image`, { headers: authHeaders(token) });
+  if (!res.ok) throw new Error("Could not load the post image");
+  return URL.createObjectURL(await res.blob());
+}
 
 export const listAdminJobs = (token: string) => request<JobPublic[]>("/api/v1/admin/jobs", { token });
 export const listAudit = (token: string) => request<Record<string, string | null>[]>("/api/v1/admin/audit", { token });

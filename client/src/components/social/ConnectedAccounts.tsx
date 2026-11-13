@@ -4,7 +4,17 @@ import { useSearchParams } from "react-router-dom";
 
 import { disconnectSocial, listSocialAccounts, startSocialConnect, type SocialPlatform } from "@/lib/api";
 
-const PLATFORM_LABEL: Record<SocialPlatform, string> = { linkedin: "LinkedIn" };
+const PLATFORM_LABEL: Record<SocialPlatform, string> = { linkedin: "LinkedIn", instagram: "Instagram" };
+
+const PLATFORM_BADGE: Record<SocialPlatform, { text: string; className: string }> = {
+  linkedin: { text: "in", className: "bg-[#0A66C2]" },
+  instagram: { text: "IG", className: "bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF]" },
+};
+
+const ENV_HINT: Record<SocialPlatform, string> = {
+  linkedin: "LINKEDIN_CLIENT_ID",
+  instagram: "INSTAGRAM_CLIENT_ID",
+};
 
 const ERROR_TEXT: Record<string, string> = {
   invalid_state: "The sign-in link expired or was opened in another browser. Try again.",
@@ -12,6 +22,9 @@ const ERROR_TEXT: Record<string, string> = {
   user_cancelled_authorize: "You cancelled the LinkedIn sign-in.",
   linkedin_oauth_failed: "LinkedIn did not accept the sign-in. Check the app's products and redirect URL.",
   linkedin_unreachable: "Could not reach LinkedIn. Check your connection and try again.",
+  user_denied: "You cancelled the Instagram sign-in.",
+  instagram_oauth_failed: "Instagram did not accept the sign-in. It must be a Business or Creator account.",
+  instagram_unreachable: "Could not reach Instagram. Check your connection and try again.",
 };
 
 /** Settings section: connect the accounts that approved drafts can be published to. */
@@ -76,14 +89,16 @@ export function ConnectedAccounts({ token }: { token: string }) {
               className="flex flex-wrap items-center justify-between gap-13 rounded-card border border-black/5 bg-canvas-light p-13 text-xs dark:border-white/5 dark:bg-white/[0.04]"
             >
               <div className="flex items-center gap-13">
-                <span className="flex h-8 w-8 items-center justify-center rounded bg-[#0A66C2] text-[11px] font-bold text-white">
-                  in
+                <span
+                  className={`flex h-8 w-8 items-center justify-center rounded text-[11px] font-bold text-white ${PLATFORM_BADGE[item.platform]?.className ?? "bg-ink-dim"}`}
+                >
+                  {PLATFORM_BADGE[item.platform]?.text ?? "?"}
                 </span>
                 <div>
                   <span className="block font-medium text-ink-light dark:text-ink-dark">{label}</span>
                   <span className="text-ink-light/60 dark:text-ink-dim">
                     {!item.configured
-                      ? "Not set up on this server (LINKEDIN_CLIENT_ID)"
+                      ? `Not set up on this server (${ENV_HINT[item.platform]})`
                       : account
                         ? account.expired
                           ? `${account.display_name ?? "Connected"} · connection expired`
