@@ -227,7 +227,7 @@ export function JobDetailPage() {
 
       {/* Error Alert */}
       {errorMessage && (
-        <div className="mb-21 rounded-card border border-danger/40 bg-danger/10 p-13 text-sm text-danger">
+        <div role="alert" className="mb-21 rounded-card border border-danger/40 bg-danger/10 p-13 text-sm text-danger">
           ⚠️ {errorMessage}
         </div>
       )}

@@ -141,6 +141,7 @@ export function PipelineStepper({
         </div>
         <div className="flex items-center gap-8">
           <span
+            role="status"
             className={`rounded-full px-13 py-[2px] text-xs font-semibold ${
               jobStatus === "ready_to_publish"
                 ? "bg-success/15 text-success border border-success/30"

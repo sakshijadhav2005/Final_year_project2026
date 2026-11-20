@@ -70,13 +70,20 @@ export function EventChatWidget({ eventId, jobId, eventName }: EventChatWidgetPr
               type="button"
               onClick={() => setIsOpen(false)}
               className="rounded-lg p-8 text-slate-400 hover:bg-white/10 hover:text-white"
+              aria-label="Close event chat"
+              title="Close event chat"
             >
               ✕
             </button>
           </div>
 
           {/* Messages Area */}
-          <div className="h-72 overflow-y-auto p-13 space-y-13 text-xs">
+          <div
+            role="log"
+            aria-live="polite"
+            aria-busy={isStreaming}
+            className="h-72 overflow-y-auto p-13 space-y-13 text-xs"
+          >
             {messages.length === 0 && (
               <div className="py-13 text-center">
                 <span className="text-2xl">🎙️</span>
@@ -118,7 +125,7 @@ export function EventChatWidget({ eventId, jobId, eventName }: EventChatWidgetPr
             })}
 
             {error && (
-              <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 p-8 text-rose-300 text-[10px]">
+              <div role="alert" className="rounded-lg border border-rose-500/30 bg-rose-500/10 p-8 text-rose-300 text-[10px]">
                 {error}
               </div>
             )}
@@ -139,7 +146,7 @@ export function EventChatWidget({ eventId, jobId, eventName }: EventChatWidgetPr
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about speakers, points, key quotes..."
               disabled={isStreaming}
-              className="flex-1 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+              className="flex-1 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50"
             />
             <button
               type="submit"

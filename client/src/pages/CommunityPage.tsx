@@ -156,7 +156,7 @@ export function CommunityPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search feed..."
-              className="w-full rounded-card border border-white/[0.08] bg-surface pl-34 pr-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+              className="w-full rounded-card border border-white/[0.08] bg-surface pl-34 pr-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50"
             />
             <span className="absolute left-2.5 top-2 text-xs text-slate-400">🔍</span>
           </div>

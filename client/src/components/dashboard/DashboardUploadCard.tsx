@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, type ChangeEvent } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import { uploadRecording, listMyEvents } from "@/lib/api";
 import { NeuSwitch } from "@/components/ui/NeuSwitch";
@@ -267,6 +267,17 @@ export function DashboardUploadCard() {
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
               onClick={() => !selectedFile && fileInputRef.current?.click()}
+              // Without a file the whole zone is the "browse" button; with one, the
+              // Change File / Remove buttons inside take over (no nested buttons).
+              role={selectedFile ? undefined : "button"}
+              tabIndex={selectedFile ? undefined : 0}
+              aria-label={selectedFile ? undefined : "Choose an event recording to upload"}
+              onKeyDown={(e) => {
+                if (!selectedFile && (e.key === "Enter" || e.key === " ")) {
+                  e.preventDefault();
+                  fileInputRef.current?.click();
+                }
+              }}
               className={`rounded-panel border border-dashed p-34 text-center transition-colors ${
                 isDragging
                   ? "drop-active border-amber-400"
@@ -468,7 +479,7 @@ export function DashboardUploadCard() {
                     <select
                       value={selectedEventId}
                       onChange={(e) => setSelectedEventId(e.target.value)}
-                      className="w-full min-w-0 rounded-card border border-white/[0.08] bg-slate-900 px-13 py-8 text-xs text-slate-200 focus:border-amber-500 focus:outline-none"
+                      className="w-full min-w-0 rounded-card border border-white/[0.08] bg-slate-900 px-13 py-8 text-xs text-slate-200 focus:border-amber-500"
                     >
                       <option value="">General Session (No Specific Event Linked)</option>
                       {events.map((ev) => (
@@ -479,13 +490,12 @@ export function DashboardUploadCard() {
                     </select>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => navigate("/catalog/all")}
+                  <Link
+                    to="/catalog/all"
                     className="text-xs text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 font-semibold"
                   >
                     <span>➕ Create New Event</span>
-                  </button>
+                  </Link>
                 </div>
               )}
             </div>

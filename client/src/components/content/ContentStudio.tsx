@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import {
   approveContent,
@@ -90,7 +90,6 @@ const TYPE_CONFIG: Record<StudioType, { label: string; icon: string; desc: strin
 
 export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
 
   const targetDashboard = user?.role === "regular_user" ? "/user/dashboard" : "/organizer/dashboard";
@@ -202,13 +201,12 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
           Nothing is published until you approve it. Edit, approve or reject each draft below.
         </p>
 
-        <button
-          type="button"
-          onClick={() => navigate(targetDashboard)}
+        <Link
+          to={targetDashboard}
           className="inline-flex items-center gap-8 rounded-full border border-white/[0.12] px-21 py-8 text-sm text-ink transition-colors hover:border-amber-400/50"
         >
           <span>Back to dashboard</span>
-        </button>
+        </Link>
       </div>
 
       {/* Content Type Tabs (Deduplicated 6 Canonical Formats) */}
@@ -292,8 +290,8 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
               <div className="flex justify-start">
                 {isEditing ? (
                   <div className="w-full max-w-3xl rounded-card border border-amber-400/40 bg-surface p-21">
-                    <label className="block text-xs font-semibold opacity-60">Title / Headline</label>
-                    <input
+                    <label htmlFor="draft-title-headline" className="block text-xs font-semibold opacity-60">Title / Headline</label>
+                    <input id="draft-title-headline"
                       type="text"
                       value={editTitle}
                       onChange={(e) => setEditTitle(e.target.value)}
@@ -301,8 +299,8 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
                       placeholder="Enter title..."
                     />
 
-                    <label className="mt-21 block text-xs font-semibold opacity-60">Content Body</label>
-                    <textarea
+                    <label htmlFor="draft-content-body" className="mt-21 block text-xs font-semibold opacity-60">Content Body</label>
+                    <textarea id="draft-content-body"
                       rows={14}
                       value={editBody}
                       onChange={(e) => setEditBody(e.target.value)}

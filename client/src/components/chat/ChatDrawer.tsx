@@ -61,13 +61,19 @@ export function ChatDrawer({ isOpen, onClose, jobId, eventId }: ChatDrawerProps)
           onClick={onClose}
           className="rounded-lg p-8 text-slate-400 hover:bg-white/10 hover:text-white transition-colors"
           title="Close assistant"
+          aria-label="Close assistant"
         >
           ✕
         </button>
       </div>
 
       {/* Messages Body */}
-      <div className="flex-1 overflow-y-auto p-13 space-y-13 font-sans text-xs">
+      <div
+        role="log"
+        aria-live="polite"
+        aria-busy={isStreaming}
+        className="flex-1 overflow-y-auto p-13 space-y-13 font-sans text-xs"
+      >
         {messages.length === 0 && (
           <div className="py-13 text-center">
             <div className="mx-auto mb-8 flex h-10 w-10 items-center justify-center rounded-panel bg-amber-500/10 border border-amber-500/20 text-xl">
@@ -127,7 +133,7 @@ export function ChatDrawer({ isOpen, onClose, jobId, eventId }: ChatDrawerProps)
         )}
 
         {error && (
-          <div className="rounded-card border border-rose-500/30 bg-rose-500/10 p-8 text-[11px] text-rose-300">
+          <div role="alert" className="rounded-card border border-rose-500/30 bg-rose-500/10 p-8 text-[11px] text-rose-300">
             ⚠️ {error}
           </div>
         )}

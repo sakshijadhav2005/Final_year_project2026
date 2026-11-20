@@ -301,7 +301,7 @@ export function EventDetailPage() {
               <select
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
-                className="rounded-card border border-white/[0.08] bg-slate-900 px-13 py-8 text-xs text-slate-200 focus:border-amber-500/50 focus:outline-none"
+                className="rounded-card border border-white/[0.08] bg-slate-900 px-13 py-8 text-xs text-slate-200 focus:border-amber-500/50"
               >
                 <option value="all">All Formats ({posts.length})</option>
                 <option value="linkedin">💼 LinkedIn</option>
@@ -456,7 +456,7 @@ export function EventDetailPage() {
                   value={transcriptSearch}
                   onChange={(e) => setTranscriptSearch(e.target.value)}
                   placeholder="Search transcript text..."
-                  className="w-full rounded-card border border-white/[0.08] bg-white/5 pl-9 pr-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                  className="w-full rounded-card border border-white/[0.08] bg-white/5 pl-9 pr-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50"
                 />
                 <span className="absolute inset-y-0 left-3 flex items-center text-xs text-slate-400">
                   🔍
@@ -578,10 +578,10 @@ export function EventDetailPage() {
 
               <form onSubmit={handleSaveEdit} className="mt-21 space-y-13">
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-300">
+                  <label htmlFor="event-post-post-title" className="mb-1 block text-xs font-semibold text-slate-300">
                     Post Title
                   </label>
-                  <input
+                  <input id="event-post-post-title"
                     type="text"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
@@ -592,14 +592,14 @@ export function EventDetailPage() {
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-xs font-semibold text-slate-300">
+                    <label htmlFor="event-post-post-body-markdown-supported" className="text-xs font-semibold text-slate-300">
                       Post Body (Markdown Supported)
                     </label>
                     <span className="text-[11px] text-slate-500">
                       {editBody.length} chars
                     </span>
                   </div>
-                  <textarea
+                  <textarea id="event-post-post-body-markdown-supported"
                     value={editBody}
                     onChange={(e) => setEditBody(e.target.value)}
                     rows={10}
