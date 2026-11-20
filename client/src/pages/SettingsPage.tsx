@@ -70,7 +70,7 @@ export function SettingsPage() {
             </div>
             <div>
               <span className="text-ink-light/50 dark:text-ink-dim block">Assigned Role:</span>
-              <span className="font-semibold text-ink">{user?.role?.replace("_", " ") || "Organizer"}</span>
+              <span className="font-semibold text-ink">{user?.role?.replace(/_/g, " ") || "Organizer"}</span>
             </div>
           </div>
         </section>

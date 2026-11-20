@@ -26,6 +26,36 @@ from app.services.queue import enqueue_process_job
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
 
+async def _with_titles(db: AsyncSession, jobs: list[Job]) -> list[JobPublic]:
+    """JobPublic rows with a readable title (event name, else the uploaded file name)."""
+    from app.models.event import Event
+
+    event_ids = {j.event_id for j in jobs if j.event_id}
+    recording_ids = {j.recording_id for j in jobs if j.recording_id}
+    events = (
+        dict((await db.execute(select(Event.id, Event.name).where(Event.id.in_(event_ids)))).all())
+        if event_ids
+        else {}
+    )
+    files = (
+        dict(
+            (
+                await db.execute(
+                    select(Recording.id, Recording.original_name).where(Recording.id.in_(recording_ids))
+                )
+            ).all()
+        )
+        if recording_ids
+        else {}
+    )
+    return [
+        JobPublic.model_validate(j).model_copy(
+            update={"title": events.get(j.event_id) or files.get(j.recording_id)}
+        )
+        for j in jobs
+    ]
+
+
 def _can_access(user: User, job: Job) -> bool:
     return user.role == UserRole.ADMIN or job.user_id == user.id
 
@@ -44,14 +74,14 @@ async def list_jobs(
     scope: Annotated[
         str, Query(description="mine (default): your own sessions. all: every user's (admin only)")
     ] = "mine",
-) -> list[Job]:
+) -> list[JobPublic]:
     """Sessions of the signed-in user. Every role, admins included, sees only their
     own sessions here; an admin can ask for scope=all (the Admin page does)."""
     stmt = select(Job).order_by(Job.created_at.desc())
     if not (scope == "all" and user.role == UserRole.ADMIN):
         stmt = stmt.where(Job.user_id == user.id)
     result = await db.execute(stmt)
-    return list(result.scalars().all())
+    return await _with_titles(db, list(result.scalars().all()))
 
 
 @router.get("/{job_id}", response_model=JobPublic)
@@ -59,8 +89,9 @@ async def get_job(
     job_id: UUID,
     user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
-) -> Job:
-    return await _load_job(db, user, job_id)
+) -> JobPublic:
+    job = await _load_job(db, user, job_id)
+    return (await _with_titles(db, [job]))[0]
 
 
 def _transcript_public(row: Transcript) -> TranscriptPublic:

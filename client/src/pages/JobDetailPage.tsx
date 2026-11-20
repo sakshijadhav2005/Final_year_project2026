@@ -14,6 +14,7 @@ import {
   type JobPublic,
 } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
+import { sessionTitle } from "@/lib/status";
 import { useAuthStore } from "@/store/auth";
 import { useJobEvents } from "@/hooks/useJobEvents";
 
@@ -40,7 +41,7 @@ export function JobDetailPage() {
   });
 
   const handleDeleteSession = () => {
-    if (window.confirm(`Are you sure you want to permanently delete session ${jobId.slice(0, 8)}? All generated content and transcripts will be removed.`)) {
+    if (window.confirm(`Permanently delete “${sessionTitle(job.data ?? { id: jobId })}”? All its drafts and its transcript will be removed.`)) {
       deleteMutation.mutate();
     }
   };
@@ -172,7 +173,7 @@ export function JobDetailPage() {
           <Link to="/dashboard" className="text-sm text-ink-dim transition-colors hover:text-ink">
             ← Dashboard
           </Link>
-          <h1 className="mt-8 font-display text-h1 font-semibold text-ink">Session {jobId.slice(0, 8)}</h1>
+          <h1 className="mt-8 font-display text-h1 font-semibold text-ink">{sessionTitle(job.data ?? { id: jobId })}</h1>
           {isConnected && (
             <p className="mt-8 flex items-center gap-8 text-xs text-teal">
               <span className="live-bars" aria-hidden="true">

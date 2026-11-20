@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { sessionTitle, statusLabel } from "@/lib/status";
 
 import { CatalogNav } from "@/components/dashboard/CatalogNav";
 import { EventCard } from "@/components/dashboard/EventCard";
@@ -47,7 +48,7 @@ export function UserDashboard() {
   const handleDeleteSession = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
-    if (window.confirm(`Are you sure you want to permanently delete session ${id.slice(0, 8)}? All generated content and transcripts will be removed.`)) {
+    if (window.confirm(`Permanently delete “${sessionTitle(userSessions.find((j) => j.id === id))}”? All its drafts and its transcript will be removed.`)) {
       deleteMutation.mutate(id);
     }
   };
@@ -160,7 +161,7 @@ export function UserDashboard() {
                             </div>
                             <div>
                               <h4 className="text-xs font-bold text-white group-hover:text-amber-300 transition-colors">
-                                Session {job.id.slice(0, 8)}
+                                {sessionTitle(job)}
                               </h4>
                               <p className="text-[10px] text-slate-400">
                                 {job.created_at ? new Date(job.created_at).toLocaleString() : "Recently"}
@@ -179,7 +180,7 @@ export function UserDashboard() {
                                 : "bg-sky-500/15 text-sky-400 border border-white/[0.08]"
                             }`}
                           >
-                            {job.status.replace("_", " ")}
+                            {statusLabel(job.status)}
                           </span>
                         </div>
 

@@ -46,6 +46,7 @@ export type JobPublic = {
   error_message: string | null;
   created_at: string | null;
   finished_at: string | null;
+  title?: string | null;
 };
 
 export type TranscriptPublic = {

@@ -84,3 +84,13 @@ def test_other_users_cannot_edit() -> None:
         assert res.status_code == 404
         text = client.get(f"/api/v1/jobs/{job_id}/transcript", headers=owner).json()["full_text"]
         assert text != "hijacked"
+
+
+def test_jobs_carry_a_readable_title() -> None:
+    with TestClient(app) as client:
+        headers = _headers(client)
+        job_id = _job(client, headers)
+        listed = client.get("/api/v1/jobs", headers=headers).json()
+        assert listed[0]["title"] == "session.txt"
+        one = client.get(f"/api/v1/jobs/{job_id}", headers=headers).json()
+        assert one["title"] == "session.txt"

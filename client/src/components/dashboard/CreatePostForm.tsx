@@ -307,7 +307,7 @@ export function CreatePostForm({
           <div>
             <div className="flex items-center justify-between mb-8">
               <p className="text-xs font-bold text-slate-300">
-                3. Choose AI Output Formats ({selectedTypes.length}/6 selected)
+                3. Choose AI Output Formats ({selectedTypes.length}/{POST_FORMATS.length} selected)
               </p>
               <button
                 type="button"

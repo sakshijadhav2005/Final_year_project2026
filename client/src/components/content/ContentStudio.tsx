@@ -20,6 +20,7 @@ import { BlogArticle } from "./renderers/BlogArticle";
 import { SummaryView } from "./renderers/SummaryView";
 import { SourcesPanel } from "./SourcesPanel";
 import { PublishSection } from "@/components/social/PublishPanel";
+import { statusLabel } from "@/lib/status";
 
 /** Result of translating a draft back into English and comparing it with the original. */
 function BackTranslationNotice({ check }: { check: BackTranslationCheck }) {
@@ -431,7 +432,7 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
                         : "bg-pending/15 text-pending-soft"
                     }`}
                   >
-                    {currentPiece.status === "pending_review" ? "Awaiting review" : currentPiece.status === "approved" ? "Approved" : currentPiece.status === "rejected" ? "Rejected" : currentPiece.status.replace("_", " ")}
+                    {statusLabel(currentPiece.status)}
                   </span>
 
                   {isEditing ? (

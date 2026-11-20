@@ -107,6 +107,7 @@ export function DashboardUploadCard() {
     "newsletter",
     "linkedin",
     "ig_caption",
+    "x_post",
     "summary",
     "flyer",
   ]);
@@ -457,7 +458,7 @@ export function DashboardUploadCard() {
                         </span>
                       </div>
                       <p className="text-[11px] text-slate-400">
-                        All 6 generated AI posts and full speech transcript will be attached to this event's hub.
+                        Every generated draft and the full transcript will be attached to this event's page.
                       </p>
                     </div>
                   </div>

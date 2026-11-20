@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, type ChangeEvent } from "react";
+import { useState, useRef, type ChangeEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -6,7 +6,7 @@ import { uploadRecording } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { useAuthStore } from "@/store/auth";
 
-const CONTENT_TYPES = "summary,blog,linkedin,newsletter,ig_caption,flyer";
+const CONTENT_TYPES = "summary,blog,linkedin,newsletter,ig_caption,x_post,flyer";
 
 export function LandingPage() {
   const token = useAuthStore((s) => s.accessToken);
@@ -18,20 +18,15 @@ export function LandingPage() {
   const [consent, setConsent] = useState(false);
   const languages = "en,hi";
   const [error, setError] = useState<string | null>(null);
-  const [readyCount, setReadyCount] = useState(0);
 
-  // Status strip animated count
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      let n = 0;
-      const iv = setInterval(() => {
-        n++;
-        setReadyCount(n);
-        if (n >= 4) clearInterval(iv);
-      }, 240);
-    }, 900);
-    return () => clearTimeout(timer);
-  }, []);
+  // Signed-out visitors go to sign-up first, so they never pick a file that would be lost.
+  function openPickerOrRegister() {
+    if (!token) {
+      navigate("/register");
+      return;
+    }
+    fileInputRef.current?.click();
+  }
 
   const upload = useMutation({
     mutationFn: (file: File) =>
@@ -124,12 +119,12 @@ export function LandingPage() {
               >
                 <span>
                   {upload.isPending
-                    ? "Ingesting Recording…"
+                    ? "Uploading…"
                     : selectedFile
-                    ? "Begin Content Synthesis"
+                    ? "Generate drafts"
                     : token
-                    ? "Select Event Recording"
-                    : "Register Account to Begin Session"}
+                    ? "Choose a recording"
+                    : "Create an account to start"}
                 </span>
               </button>
             </div>
@@ -137,9 +132,17 @@ export function LandingPage() {
 
           {/* Neuromorphic Stage Upload Target */}
           <div
-            onClick={() => fileInputRef.current?.click()}
+            onClick={openPickerOrRegister}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openPickerOrRegister();
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label={token ? "Choose a recording to upload" : "Create an account to upload a recording"}
             className="glass neo-stage reveal r4 cursor-pointer p-34 text-center transition-colors hover:border-amber-400/40"
-            title="Click to choose a file"
           >
             <div className="relative my-21">
               <div className="pulse-ring" />
@@ -149,7 +152,7 @@ export function LandingPage() {
               </div>
             </div>
             <div className="text-sm font-medium text-ink">
-              {selectedFile ? `Ready: ${selectedFile.name}` : "Drop a recording here"}
+              {selectedFile ? `Ready: ${selectedFile.name}` : token ? "Choose a recording" : "Create an account to upload"}
             </div>
             <p className="mt-8 text-xs text-ink-dim">Audio, video or a .txt transcript</p>
           </div>
@@ -194,20 +197,13 @@ export function LandingPage() {
           </div>
         </div>
 
-        {/* Live Status Strip */}
+        {/* What one upload produces (an honest example, not a fake live status) */}
         <div className="glass reveal r9 flex flex-wrap items-center justify-between gap-13 px-21 py-13 text-xs">
-          <div className="flex items-center gap-13">
-            <div className="h-2 w-2 rounded-full bg-teal" />
-            <span className="text-ink-light/60 dark:text-ink-dim">
-              Transcribing —{" "}
-              <span className="font-semibold text-gold dark:text-gold-soft">
-                {readyCount} of 6 pieces ready
-              </span>
-            </span>
-          </div>
-          <span className="text-ink-dim">
-            Sentiment &amp; speaker analysis running in parallel…
+          <span className="text-ink-light/60 dark:text-ink-dim">
+            One talk becomes{" "}
+            <span className="font-semibold text-gold dark:text-gold-soft">7 drafts in each language you pick</span>
           </span>
+          <span className="text-ink-dim">Every sentence is traced to the recording, and nothing publishes until you approve it.</span>
         </div>
 
         {/* Existing Jobs Footer Link */}

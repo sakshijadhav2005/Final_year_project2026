@@ -1,3 +1,5 @@
+import { statusLabel } from "@/lib/status";
+
 
 type Props = {
   progress?: Record<string, string>;
@@ -152,7 +154,7 @@ export function PipelineStepper({
                 : "bg-white/[0.06] text-ink border border-white/[0.12]"
             }`}
           >
-            {jobStatus === "pending_review" ? "Awaiting review" : jobStatus === "ready_to_publish" ? "Ready to publish" : jobStatus.replace(/_/g, " ")}
+            {statusLabel(jobStatus)}
           </span>
         </div>
       </div>

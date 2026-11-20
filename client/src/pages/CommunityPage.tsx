@@ -220,7 +220,7 @@ export function CommunityPage() {
                         <div className="flex items-center gap-8">
                           <span className="text-sm font-bold text-white">{author}</span>
                           <span className="rounded-full bg-white/10 px-8 py-0.5 text-[10px] font-semibold text-slate-300">
-                            {post.type.replace("_", " ").toUpperCase()}
+                            {post.type.replace(/_/g, " ").toUpperCase()}
                           </span>
                         </div>
                         <span className="text-xs text-slate-400">

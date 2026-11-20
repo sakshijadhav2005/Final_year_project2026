@@ -20,6 +20,8 @@ class JobPublic(ORMModel):
     error_message: str | None = None
     created_at: datetime | None = None
     finished_at: datetime | None = None
+    # Human name for the session: its event's name, else the uploaded file's name.
+    title: str | None = None
 
 
 class TranscriptPublic(BaseModel):
