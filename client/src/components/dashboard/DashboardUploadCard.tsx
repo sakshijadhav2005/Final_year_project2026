@@ -100,7 +100,8 @@ export function DashboardUploadCard() {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [consent, setConsent] = useState(true);
+  // Unticked by default: consent is a real check, not a formality (plan §11).
+  const [consent, setConsent] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([
     "blog",
     "newsletter",
@@ -521,7 +522,7 @@ export function DashboardUploadCard() {
               />
 
               {error && (
-                <div className="text-xs text-rose-400 font-semibold">
+                <div role="alert" className="text-xs text-rose-400 font-semibold">
                   ⚠️ {error}
                 </div>
               )}

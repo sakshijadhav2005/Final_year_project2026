@@ -48,6 +48,7 @@ All core stages (Stages 1 through 10) are implemented and verified:
 ### Deviations from the plan
 
 - **No pgvector.** The plan specified pgvector. Embeddings are stored in a JSON column and ranked by cosine similarity in Python instead, so the same code runs on SQLite (tests, local development) and on plain PostgreSQL with no database extension. The retrieval pool per job is small (this event's chunks plus at most 300 past-event chunks), so a vector index would add little at this scale. pgvector stays the upgrade path if cross-event memory grows to many thousands of chunks.
+- **Visual theme is "Lavender mist", not "Deep Signal".** The plan specified indigo/teal with Sora and Manrope. The app deliberately ships Lavender mist (lavender and teal mist on deep slate, Bricolage Grotesque and Instrument Sans), still dark-mode first with the golden-ratio layout and Fibonacci spacing. Colour roles: lavender = primary action and "in progress", teal mist = awaiting your review, ochre = warnings, sage = approved, dusty rose = danger. All tokens live in `client/src/styles/index.css` and `client/tailwind.config.js`.
 - **Celery is optional.** Jobs run as in-process background tasks by default; `USE_CELERY=true` uses the Celery worker in docker-compose (the plan allows this in Stage 3).
 
 ---

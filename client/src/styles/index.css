@@ -23,6 +23,7 @@ html.dark {
   --shade: 0 0 0;
   --on-accent: 22 17 34;
   --spot: 185 169 218;
+  --warn: 222 177 98; /* ochre: cautions only */
   /* glass + soft-UI depth */
   --glass-fill: 17 30 37;
   --glass-alpha: 0.58;
@@ -52,6 +53,7 @@ html:not(.dark) {
   --shade: 26 42 50;
   --on-accent: 255 255 255;
   --spot: 123 104 148;
+  --warn: 146 98 20; /* ochre, darkened for white surfaces */
   --glass-fill: 255 255 255;
   --glass-alpha: 0.62;
   --glass-edge: 255 255 255;
@@ -348,7 +350,7 @@ html:not(.dark) .neu-switch-knob {
 
 /* Neumorphic feature tile: a soft, solid slab pushed out of the page, with its
    icon sunk into a well. On hover the slab lifts (deeper shadow, no movement)
-   and the icon rises out of its well and lights up coral. */
+   and the icon rises out of its well and lights up rose. */
 .neu-tile {
   position: relative;
   border-radius: 21px;

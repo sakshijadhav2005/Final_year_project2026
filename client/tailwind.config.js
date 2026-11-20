@@ -15,11 +15,12 @@ const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 const scale = (prefix) =>
   Object.fromEntries(STEPS.map((s) => [s, `rgb(var(--${prefix}-${s}) / <alpha-value>)`]));
 
+// Scale names say what they render (they used to read marigold / lilac / coral).
 const neutral = scale("n"); // teal-slate neutrals
-const marigold = scale("a"); // lavender: primary accent
+const lavenderScale = scale("a"); // lavender: primary accent and "in progress"
 const sage = scale("g"); // muted sage: success only
-const lilac = scale("l"); // teal mist: AI / info
-const coral = scale("r"); // dusty rose: danger
+const mistScale = scale("l"); // teal mist: AI / info and "awaiting your review"
+const roseScale = scale("r"); // dusty rose: danger
 
 const v = (name) => `rgb(var(--${name}) / <alpha-value>)`;
 
@@ -35,13 +36,16 @@ export default {
         ink: { DEFAULT: v("ink"), dark: v("ink"), light: v("ink"), dim: v("ink-dim") },
         line: v("line"),
         "on-accent": v("on-accent"),
-        primary: { DEFAULT: lilac[500], dark: lilac[600] },
+        primary: { DEFAULT: mistScale[500], dark: mistScale[600] },
         accent: sage[400],
         success: sage[400],
-        warning: marigold[400],
-        danger: coral[400],
-        gold: { DEFAULT: marigold[400], soft: marigold[300] },
-        lavender: lilac[400],
+        // Warning has its own ochre so a caution never looks like the primary button.
+        warning: v("warn"),
+        // Awaiting the user's review: teal mist, distinct from primary/running lavender.
+        pending: { DEFAULT: mistScale[400], soft: mistScale[300] },
+        danger: roseScale[400],
+        gold: { DEFAULT: lavenderScale[400], soft: lavenderScale[300] },
+        lavender: mistScale[400],
         teal: { ...sage, DEFAULT: sage[400] },
 
         // Tailwind hue names remapped onto the theme scales
@@ -52,22 +56,22 @@ export default {
         zinc: neutral,
         neutral,
         stone: neutral,
-        amber: marigold,
-        orange: marigold,
-        yellow: marigold,
+        amber: lavenderScale,
+        orange: lavenderScale,
+        yellow: lavenderScale,
         emerald: sage,
         green: sage,
         lime: sage,
         cyan: sage,
-        purple: lilac,
-        violet: lilac,
-        indigo: lilac,
-        fuchsia: lilac,
-        sky: lilac,
-        blue: lilac,
-        rose: coral,
-        red: coral,
-        pink: coral,
+        purple: mistScale,
+        violet: mistScale,
+        indigo: mistScale,
+        fuchsia: mistScale,
+        sky: mistScale,
+        blue: mistScale,
+        rose: roseScale,
+        red: roseScale,
+        pink: roseScale,
       },
       fontFamily: {
         sans: ['"Instrument Sans Variable"', "Instrument Sans", "system-ui", "sans-serif"],

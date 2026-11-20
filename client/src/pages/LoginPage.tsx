@@ -9,8 +9,8 @@ import { useAuthStore } from "@/store/auth";
 export function LoginPage() {
   const navigate = useNavigate();
   const setSession = useAuthStore((s) => s.setSession);
-  const [email, setEmail] = useState("organizer@example.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,11 +43,6 @@ export function LoginPage() {
         </div>
 
         <form className="glass p-34 flex flex-col gap-13" onSubmit={onSubmit}>
-          <div className="rounded-card border border-gold/20 bg-gold/5 p-10 text-xs text-ink-light/80 dark:text-ink-dim flex items-center gap-8">
-            <span className="text-gold text-base">ℹ️</span>
-            <span>If you are a new user, please <strong>register first</strong> before signing in.</span>
-          </div>
-
           <div>
             <label htmlFor="login-email" className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Email Address</label>
             <input

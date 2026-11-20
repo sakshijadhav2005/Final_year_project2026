@@ -146,7 +146,7 @@ export function PipelineStepper({
               jobStatus === "ready_to_publish"
                 ? "bg-success/15 text-success border border-success/30"
                 : jobStatus === "pending_review"
-                ? "bg-amber-400/15 text-amber-300 border border-amber-400/30"
+                ? "bg-pending/15 text-pending-soft border border-pending/30"
                 : isFailed
                 ? "bg-danger/15 text-danger border border-danger/30"
                 : "bg-white/[0.06] text-ink border border-white/[0.12]"

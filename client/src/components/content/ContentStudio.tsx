@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
@@ -58,6 +58,8 @@ function BackTranslationNotice({ check }: { check: BackTranslationCheck }) {
   );
 }
 
+const REVIEWED_STATUSES = ["approved", "rejected", "ready_to_publish"];
+
 interface ContentStudioProps {
   token: string;
   jobId: string;
@@ -94,11 +96,13 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
 
   const targetDashboard = user?.role === "regular_user" ? "/user/dashboard" : "/organizer/dashboard";
 
-  // Normalize pieces to ensure exactly 1 item per canonical format type
-  const normalizedPieces = pieces.map((p) => ({
-    ...p,
-    normalizedType: normalizeType(p.type),
-  }));
+  // Normalize pieces to ensure exactly 1 item per canonical format type.
+  // Memoised: a new array every render gave currentPiece a new identity every
+  // render, so the sync effect below reset isEditing and closed the editor at once.
+  const normalizedPieces = useMemo(
+    () => pieces.map((p) => ({ ...p, normalizedType: normalizeType(p.type) })),
+    [pieces],
+  );
 
   const [activeType, setActiveType] = useState<StudioType>("summary");
   const [activeLang, setActiveLang] = useState<string>("en");
@@ -129,6 +133,25 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
     ) ||
     normalizedPieces.find((p) => p.normalizedType === activeType) ||
     normalizedPieces[0];
+
+  // Session review progress: every draft in every language must be approved or rejected.
+  const reviewedCount = normalizedPieces.filter((p) => REVIEWED_STATUSES.includes(p.status)).length;
+  const totalCount = normalizedPieces.length;
+  const pieceFor = (type: StudioType, lang: string) =>
+    normalizedPieces.find((p) => p.normalizedType === type && (p.language || "en") === lang);
+  // Unreviewed drafts in tab order (format, then language), starting after the open one.
+  const reviewOrder = availableTypes.flatMap((type) =>
+    availableLangs.map((lang) => ({ type, lang, piece: pieceFor(type, lang) })),
+  );
+  const openIndex = reviewOrder.findIndex((o) => o.piece?.id === currentPiece?.id);
+  const nextUnreviewed = [...reviewOrder.slice(openIndex + 1), ...reviewOrder.slice(0, openIndex + 1)].find(
+    (o) => o.piece && o.piece.id !== currentPiece?.id && o.piece.status === "pending_review",
+  );
+  function openNextUnreviewed() {
+    if (!nextUnreviewed) return;
+    setActiveType(nextUnreviewed.type);
+    setActiveLang(nextUnreviewed.lang);
+  }
 
   // Sync edit state when active piece changes
   useEffect(() => {
@@ -197,9 +220,37 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
 
       {/* Dashboard Return & Review Progress Bar */}
       <div className="flex flex-wrap items-center justify-between gap-13">
-        <p className="text-sm text-ink-dim">
-          Nothing is published until you approve it. Edit, approve or reject each draft below.
-        </p>
+        <div className="min-w-0 flex-1 space-y-8">
+          <div className="flex flex-wrap items-baseline gap-x-13 gap-y-[4px]">
+            <p className="text-sm font-semibold text-ink">
+              {reviewedCount} of {totalCount} drafts reviewed
+            </p>
+            <p className="text-xs text-ink-dim">Nothing is published until you approve it.</p>
+          </div>
+          <div
+            className="h-[6px] max-w-md overflow-hidden rounded-full bg-white/[0.08]"
+            role="progressbar"
+            aria-label="Drafts reviewed"
+            aria-valuemin={0}
+            aria-valuemax={totalCount}
+            aria-valuenow={reviewedCount}
+          >
+            <div
+              className="h-full rounded-full bg-success transition-[width] duration-300 ease-out"
+              style={{ width: `${totalCount ? (reviewedCount / totalCount) * 100 : 0}%` }}
+            />
+          </div>
+        </div>
+
+        {nextUnreviewed && (
+          <button
+            type="button"
+            onClick={openNextUnreviewed}
+            className="inline-flex items-center gap-8 rounded-full border border-white/[0.12] px-21 py-8 text-sm text-ink transition-colors hover:border-amber-400/50"
+          >
+            Next unreviewed
+          </button>
+        )}
 
         <Link
           to={targetDashboard}
@@ -215,7 +266,7 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
           {availableTypes.map((type) => {
             const config = TYPE_CONFIG[type] || { label: type, icon: "📄", desc: "" };
             const isActive = activeType === type;
-            const piece = normalizedPieces.find((p) => p.normalizedType === type);
+            const piece = pieceFor(type, activeLang) || normalizedPieces.find((p) => p.normalizedType === type);
             const isApproved = piece?.status === "approved";
             const isPending = piece?.status === "pending_review";
 
@@ -233,7 +284,7 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
                 <span>{config.icon}</span>
                 <span>{config.label}</span>
                 {isApproved && <span className="text-xs text-success">✓</span>}
-                {isPending && <span className="h-[6px] w-[6px] rounded-full bg-amber-400" aria-label="Awaiting review" />}
+                {isPending && <span className="h-[6px] w-[6px] rounded-full bg-pending" aria-label="Awaiting review" />}
               </button>
             );
           })}
@@ -367,7 +418,7 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
               </div>
             </div>
 
-            <aside className="min-w-0 space-y-13 lg:sticky lg:top-[89px] lg:order-last">
+            <aside className="min-w-0 space-y-13 lg:order-last">
               {/* Action Toolbar */}
               <div className="flex flex-col gap-21 rounded-panel border border-white/[0.08] bg-surface p-21">
                 <div className="flex items-center gap-13">
@@ -377,7 +428,7 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
                         ? "bg-success/15 text-success"
                         : currentPiece.status === "rejected"
                         ? "bg-danger/15 text-danger"
-                        : "bg-amber-400/15 text-amber-300"
+                        : "bg-pending/15 text-pending-soft"
                     }`}
                   >
                     {currentPiece.status === "pending_review" ? "Awaiting review" : currentPiece.status === "approved" ? "Approved" : currentPiece.status === "rejected" ? "Rejected" : currentPiece.status.replace("_", " ")}
@@ -437,31 +488,44 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
                     Download
                   </button>
 
-                  {/* Human Approval Gate */}
-                  {currentPiece.status === "pending_review" && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => approveMutation.mutate(currentPiece.id)}
-                        disabled={approveMutation.isPending}
-                        className="rounded-full bg-amber-400 px-21 py-8 text-sm font-semibold text-on-accent transition-colors hover:bg-amber-300"
-                      >
-                        {approveMutation.isPending ? "Approving…" : "Approve"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setShowRejectModal(true)}
-                        className="rounded-full border border-rose-400/40 px-21 py-8 text-sm text-rose-300 transition-colors hover:bg-rose-400/10"
-                      >
-                        Reject
-                      </button>
-                    </>
-                  )}
                 </div>
               </div>
-              <p className="px-8 text-xs leading-relaxed text-ink-dim">
-                Approving marks this draft ready. When every draft in the session is reviewed, the session becomes ready to publish.
-              </p>
+              {/* Evidence before the decision: where each sentence came from */}
+              <SourcesPanel key={currentPiece.id} token={token} jobId={jobId} contentId={currentPiece.id} body={currentPiece.body} />
+
+              {/* Human Approval Gate */}
+              {currentPiece.status === "pending_review" ? (
+                <div className="space-y-13 rounded-panel border border-white/[0.08] bg-surface p-21">
+                  <p className="text-xs leading-relaxed text-ink-dim">
+                    Checked the sources? Approving marks this draft ready. When every draft is reviewed, the session
+                    becomes ready to publish.
+                  </p>
+                  <div className="flex flex-wrap items-center gap-8">
+                    <button
+                      type="button"
+                      onClick={() => approveMutation.mutate(currentPiece.id)}
+                      disabled={approveMutation.isPending || isEditing}
+                      title={isEditing ? "Save or cancel your edit first" : undefined}
+                      className="btn-primary"
+                    >
+                      {approveMutation.isPending ? "Approving…" : "Approve"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowRejectModal(true)}
+                      className="rounded-full border border-rose-400/40 px-21 py-8 text-sm text-rose-300 transition-colors hover:bg-rose-400/10"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="px-8 text-xs leading-relaxed text-ink-dim">
+                  {currentPiece.status === "rejected"
+                    ? "Rejected. Edit and save it, or regenerate the session, to get a new version to review."
+                    : "Approved. You can publish it below."}
+                </p>
+              )}
 
               <PublishSection
                 token={token}
@@ -471,7 +535,6 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
                 onPublished={notify}
               />
 
-              <SourcesPanel key={currentPiece.id} token={token} jobId={jobId} contentId={currentPiece.id} body={currentPiece.body} />
             </aside>
           </div>
         </>
@@ -479,15 +542,29 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
 
       {/* Reject Reason Modal */}
       {showRejectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-21">
-          <div className="w-full max-w-md rounded-card border border-danger/40 bg-surface-light p-21 dark:bg-surface-dark">
-            <h3 className="font-display text-lg text-ink-light dark:text-ink-dark">Reject Draft</h3>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-21"
+          onClick={(e) => e.target === e.currentTarget && setShowRejectModal(false)}
+          onKeyDown={(e) => e.key === "Escape" && setShowRejectModal(false)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="reject-draft-title"
+            className="w-full max-w-md rounded-card border border-danger/40 bg-surface-light p-21 dark:bg-surface-dark"
+          >
+            <h3 id="reject-draft-title" className="font-display text-lg text-ink-light dark:text-ink-dark">
+              Reject Draft
+            </h3>
             <p className="mt-[4px] text-xs opacity-60">
               Provide feedback for why this content is being rejected:
             </p>
 
+            {/* Focus lands in the reason box when the dialog opens, so Esc works at once. */}
             <textarea
               rows={4}
+              autoFocus
+              aria-label="Reason for rejecting"
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="e.g., Tone is too informal, missed key metrics mentioned by speaker…"

@@ -14,7 +14,8 @@ export function LandingPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [consent, setConsent] = useState(true);
+  // Unticked by default: consent is a real check, not a formality (plan §11).
+  const [consent, setConsent] = useState(false);
   const languages = "en,hi";
   const [error, setError] = useState<string | null>(null);
   const [readyCount, setReadyCount] = useState(0);
@@ -106,7 +107,7 @@ export function LandingPage() {
                     onChange={(e) => setConsent(e.target.checked)}
                     className="accent-gold"
                   />
-                  Participants informed recording may be processed (Consent confirmed)
+                  Speakers and attendees know this recording will be processed by AI
                 </label>
               </div>
             ) : null}
