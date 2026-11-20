@@ -440,6 +440,13 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                     title=item.get("title"),
                     body=str(item.get("body") or ""),
                     status="pending_review",
+                    # Back-translation verdict (no "pass" key at the top level, so the
+                    # studio does not show it as a grounding alert).
+                    grounding=(
+                        {"back_translation": item["back_translation"]}
+                        if item.get("back_translation")
+                        else None
+                    ),
                 )
             )
 

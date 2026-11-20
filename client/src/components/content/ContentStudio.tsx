@@ -2,7 +2,14 @@ import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import { approveContent, downloadContent, patchContent, rejectContent, type ContentPublic } from "@/lib/api";
+import {
+  approveContent,
+  downloadContent,
+  patchContent,
+  rejectContent,
+  type BackTranslationCheck,
+  type ContentPublic,
+} from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 import { LinkedInCard } from "./renderers/LinkedInCard";
 import { NewsletterPreview } from "./renderers/NewsletterPreview";
@@ -13,6 +20,43 @@ import { BlogArticle } from "./renderers/BlogArticle";
 import { SummaryView } from "./renderers/SummaryView";
 import { SourcesPanel } from "./SourcesPanel";
 import { PublishSection } from "@/components/social/PublishPanel";
+
+/** Result of translating a draft back into English and comparing it with the original. */
+function BackTranslationNotice({ check }: { check: BackTranslationCheck }) {
+  const pct = check.score == null ? null : Math.round(check.score * 100);
+  if (check.status === "pass") {
+    return (
+      <div className="text-xs text-ink-dim">
+        <p>✓ Back-translation check: {pct}% of the English content words came back</p>
+        {check.back_text && (
+          <details className="mt-[4px]">
+            <summary className="cursor-pointer">Show the back-translation</summary>
+            <p className="mt-[4px] whitespace-pre-wrap opacity-80">{check.back_text}</p>
+          </details>
+        )}
+      </div>
+    );
+  }
+  const message =
+    check.status === "low_agreement"
+      ? `Back-translation check: only ${pct}% of the English content words came back (minimum ${Math.round(
+          (check.min_score ?? 0) * 100,
+        )}%). Meaning may have drifted; compare before approving.`
+      : check.status === "untranslated"
+        ? "Back-translation check: this language could not be translated, so the English text is shown."
+        : "Back-translation check could not run for this draft; review the translation by hand.";
+  return (
+    <div className="rounded-card border border-warning/30 bg-warning/10 p-13 text-xs text-warning">
+      <p className="font-semibold">⚠️ {message}</p>
+      {check.back_text && (
+        <details className="mt-[4px]">
+          <summary className="cursor-pointer">Show the back-translation</summary>
+          <p className="mt-[4px] whitespace-pre-wrap opacity-90">{check.back_text}</p>
+        </details>
+      )}
+    </div>
+  );
+}
 
 interface ContentStudioProps {
   token: string;
@@ -231,6 +275,10 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
                     ))}
                   </ul>
                 </div>
+              )}
+
+              {currentPiece.grounding?.back_translation && (
+                <BackTranslationNotice check={currentPiece.grounding.back_translation} />
               )}
 
               {currentPiece.moderation && currentPiece.moderation.pass === false && (

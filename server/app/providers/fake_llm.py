@@ -194,7 +194,7 @@ def _demo_content(task: str, raw_text: str) -> dict[str, Any]:
     if task == "guardrail":
         return {"pass": True, "issues": []}
 
-    if task in {"guardrail_batch", "translation_batch"}:
+    if task in {"guardrail_batch", "translation_batch", "back_translation_batch"}:
         import json as _json
 
         m = re.search(r"<DRAFTS_JSON>\s*([\s\S]*?)\s*</DRAFTS_JSON>", raw_text)
@@ -208,7 +208,7 @@ def _demo_content(task: str, raw_text: str) -> dict[str, Any]:
                     k: {"grounding_pass": True, "moderation_pass": True, "issues": []} for k in drafts
                 }
             }
-        # Offline mode has no translator: return the drafts unchanged.
+        # Offline mode has no translator: return the drafts unchanged (both directions).
         return {"drafts": drafts}
 
     if task == "translation":

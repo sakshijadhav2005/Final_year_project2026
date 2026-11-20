@@ -95,6 +95,12 @@ class Settings(BaseSettings):
     # vs ~0.6 s regionally. Pick the region nearest the server (e.g. asia-south1).
     rag_embedding_location: str = "us-central1"
 
+    # Back-translation check: every translated draft is translated back into English
+    # and compared word-for-word (content words, stemmed) with the original. Below
+    # the minimum score the translation is flagged for the reviewer.
+    back_translation_enabled: bool = True
+    back_translation_min_score: float = 0.45
+
     max_upload_mb: int = 500
     max_duration_sec: int = 10800
     media_retention_hours: int = 72
