@@ -21,7 +21,7 @@ All core stages (Stages 1 through 10) are implemented and verified:
   - **Selective RAG:** Transcripts are split into overlapping 250-word chunks and embedded with Vertex AI `gemini-embedding-001` (hashed bag-of-words fallback when no Google Cloud project is set), stored in a JSON column, so no database extension is required. When a transcript is longer than the writers' context window (`RAG_TOKEN_THRESHOLD`, ~2,000 words) or org-memory is enabled, a `rag_retrieve` graph node ranks the unseen chunks (and past-event chunks) against the editorial brief by cosine similarity and passes the top-k (`RAG_TOP_K`) to every writer agent. The retrieved chunks are saved per job as the `rag` agent output.
   - **Gemini Generator:** Structured generation with prompt injection protection.
   - **Dual Guardrails:** Automated moderation and transcript grounding checks.
-  - **Multi-Language Translation:** Output translation for international audiences.
+  - **Multi-Language Translation:** Output translation for international audiences. Every translated draft is **back-translated** into English and its content words compared with the original (F1 overlap); a score below `BACK_TRANSLATION_MIN_SCORE` (0.45) shows a warning with the back-translation in the Content Studio.
 - **Rich Content Studio UI:**
   - 📝 **Executive Summary:** High-level takeaways and metrics.
   - 📰 **Blog Article:** Editorial formatting with reading time estimation.
@@ -30,6 +30,7 @@ All core stages (Stages 1 through 10) are implemented and verified:
   - 📸 **Instagram Caption:** Social media card with emojis and copy caption.
   - 🎨 **Event Flyer:** Golden-ratio portrait visual poster preview.
   - ✏️ **Inline Editing:** Live drafting and saving via `PATCH /api/v1/content/{id}`.
+  - 📝 **Transcript Correction:** fix names, jargon and `[unclear audio]` spans in the Transcript tab (`PATCH /api/v1/jobs/{id}/transcript`), then regenerate the drafts from the corrected text without transcribing again. Edits are audit-logged and the transcript is marked as edited.
   - 📋 **One-Click Actions:** Animated copy-to-clipboard and multi-format export (`.md`, `.txt`, `.json`).
   - ⚡ **Live Real-Time SSE:** Dynamic agent chip pulsing via Server-Sent Events without polling lag.
   - ⚙️ **Settings & Diagnostics:** Theme toggle (dark/light), media retention auto-purge policies, and target languages.
@@ -42,7 +43,12 @@ All core stages (Stages 1 through 10) are implemented and verified:
 - **Publish to LinkedIn (optional, `LINKEDIN_CLIENT_ID`):** users connect their own LinkedIn account in Settings → Connected accounts (OAuth 2.0; tokens encrypted at rest) and post an *approved* LinkedIn draft from the Content Studio. Markdown is converted to LinkedIn's text format, `#tags` stay clickable hashtags, the 3,000-character limit is checked before sending, and every attempt is saved with the live post link and written to the audit log. Setup steps are in `.env.example`.
 - **Writer tools (optional, `AGENT_TOOLS_ENABLED`):** the blog writer may cite one web search result and the newsletter one news item; both tools return real results or say nothing was found.
 - **Error-repair agent (development only, opt-in with `AUTOFIX_ENABLED=true`):** errors from the API, pipeline and browser are proposed as fixes by Claude Code in a separate git worktree, tested and risk-scanned, and pushed as a draft PR only after an admin approves in Admin → Error fixes.
-- **Test Suite:** 119 automated unit and integration tests (auth, RBAC, uploads, full pipeline, translations, content access control, downloads, chat, job recovery, provenance, RAG, resilience, writer tools, error-repair agent). They run against SQLite by default and against PostgreSQL with `TEST_DATABASE_URL`.
+- **Test Suite:** 170 automated unit and integration tests (auth, RBAC, uploads, full pipeline, translations, content access control, downloads, chat, job recovery, provenance, RAG, resilience, writer tools, error-repair agent). They run against SQLite by default and against PostgreSQL with `TEST_DATABASE_URL`.
+
+### Deviations from the plan
+
+- **No pgvector.** The plan specified pgvector. Embeddings are stored in a JSON column and ranked by cosine similarity in Python instead, so the same code runs on SQLite (tests, local development) and on plain PostgreSQL with no database extension. The retrieval pool per job is small (this event's chunks plus at most 300 past-event chunks), so a vector index would add little at this scale. pgvector stays the upgrade path if cross-event memory grows to many thousands of chunks.
+- **Celery is optional.** Jobs run as in-process background tasks by default; `USE_CELERY=true` uses the Celery worker in docker-compose (the plan allows this in Stage 3).
 
 ---
 
