@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ORMModel(BaseModel):
@@ -30,6 +30,14 @@ class TranscriptPublic(BaseModel):
     segments: list | None
     provider: str
     badge: str
+    edited: bool = False
+    edited_at: datetime | None = None
+
+
+class TranscriptUpdate(BaseModel):
+    """A human correction of the transcript (names, jargon, [unclear audio] spans)."""
+
+    full_text: str = Field(..., min_length=1, max_length=2_000_000)
 
 
 class RegenerRequest(BaseModel):

@@ -4,7 +4,15 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { PipelineStepper } from "@/components/pipeline/PipelineStepper";
 import { ContentStudio } from "@/components/content/ContentStudio";
-import { deleteJob, getJob, getJobContent, getTranscript, regenerateJob, type JobPublic } from "@/lib/api";
+import {
+  deleteJob,
+  getJob,
+  getJobContent,
+  getTranscript,
+  regenerateJob,
+  updateTranscript,
+  type JobPublic,
+} from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { useAuthStore } from "@/store/auth";
 import { useJobEvents } from "@/hooks/useJobEvents";
@@ -40,6 +48,10 @@ export function JobDetailPage() {
   // Active View Tab: "studio" or "transcript"
   const [activeTab, setActiveTab] = useState<"studio" | "transcript">("studio");
   const [searchQuery, setSearchQuery] = useState("");
+  // Transcript correction: draft text while editing, and a hint to regenerate after saving
+  const [editingTranscript, setEditingTranscript] = useState(false);
+  const [transcriptDraft, setTranscriptDraft] = useState("");
+  const [transcriptSaved, setTranscriptSaved] = useState(false);
 
   // SSE Real-time Hook
   const { eventData, isConnected } = useJobEvents(jobId, token);
@@ -93,6 +105,15 @@ export function JobDetailPage() {
     },
   });
 
+  const saveTranscript = useMutation({
+    mutationFn: (text: string) => updateTranscript(token, jobId, text),
+    onSuccess: (saved) => {
+      queryClient.setQueryData(["transcript", jobId], saved);
+      setEditingTranscript(false);
+      setTranscriptSaved(true);
+    },
+  });
+
   // Merge SSE progress or query progress
   const progress = eventData?.progress || job.data?.progress || {};
   const currentStatus = eventData?.status || job.data?.status || "loading";
@@ -102,7 +123,8 @@ export function JobDetailPage() {
   const transcriptText = transcript.data?.full_text || "";
   const highlightedTranscript = useMemo(() => {
     if (!searchQuery.trim() || !transcriptText) return transcriptText;
-    const parts = transcriptText.split(new RegExp(`(${searchQuery})`, "gi"));
+    const escaped = searchQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const parts = transcriptText.split(new RegExp(`(${escaped})`, "gi"));
     return parts.map((part, i) =>
       part.toLowerCase() === searchQuery.toLowerCase() ? (
         <mark key={i} className="rounded bg-accent/40 px-1 text-inherit">
@@ -258,29 +280,117 @@ export function JobDetailPage() {
         </section>
       )}
 
-      {/* Tab 2: Transcript Viewer */}
+      {/* Tab 2: Transcript Viewer / Editor */}
       {activeTab === "transcript" && (
         <section className="flex flex-col gap-13">
-          <div className="flex items-center justify-between">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search transcript..."
-              className="w-full max-w-sm rounded-card border border-black/10 bg-canvas-light px-13 py-8 text-xs dark:border-white/[0.08] dark:bg-canvas-dark"
-            />
-            <span className="text-xs opacity-60">
-              Words: {transcriptText.trim() ? transcriptText.trim().split(/\s+/).length : 0}
-            </span>
+          <div className="flex flex-wrap items-center justify-between gap-13">
+            {editingTranscript ? (
+              <p className="text-xs text-ink-dim">
+                Fix names, jargon and <span className="text-gold-soft">[unclear audio]</span> spans. Drafts are not
+                changed until you regenerate.
+              </p>
+            ) : (
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search transcript..."
+                aria-label="Search transcript"
+                className="w-full max-w-sm rounded-card border border-black/10 bg-canvas-light px-13 py-8 text-xs dark:border-white/[0.08] dark:bg-canvas-dark"
+              />
+            )}
+            <div className="flex items-center gap-13">
+              <span className="text-xs opacity-60">
+                Words:{" "}
+                {(editingTranscript ? transcriptDraft : transcriptText).trim()
+                  ? (editingTranscript ? transcriptDraft : transcriptText).trim().split(/\s+/).length
+                  : 0}
+              </span>
+              {transcript.data?.edited && !editingTranscript && (
+                <span
+                  className="rounded-full bg-white/[0.08] px-8 py-[2px] text-xs text-ink-dim"
+                  title={transcript.data.edited_at ? new Date(transcript.data.edited_at).toLocaleString() : undefined}
+                >
+                  Edited by a person
+                </span>
+              )}
+              {transcript.data && !editingTranscript && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTranscriptDraft(transcriptText);
+                    setTranscriptSaved(false);
+                    saveTranscript.reset();
+                    setEditingTranscript(true);
+                  }}
+                  disabled={!["pending_review", "ready_to_publish", "needs_review", "needs_reupload", "failed", "cancelled"].includes(currentStatus)}
+                  title="Correct the transcript (available once processing has finished)"
+                  className="rounded-full border border-white/[0.12] px-13 py-[4px] text-xs text-ink transition-colors hover:border-amber-400/50 disabled:opacity-40"
+                >
+                  Edit transcript
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className="max-h-[65vh] overflow-auto rounded-card border border-black/10 bg-surface-light p-21 text-sm leading-relaxed dark:border-white/[0.08] dark:bg-surface-dark">
-            {transcript.data ? (
-              <div className="whitespace-pre-wrap">{highlightedTranscript}</div>
-            ) : (
-              <p className="text-xs opacity-60">Waiting for transcription engine...</p>
-            )}
-          </div>
+          {transcriptSaved && !editingTranscript && (
+            <div className="flex flex-wrap items-center justify-between gap-13 rounded-card border border-teal/30 bg-teal/10 p-13 text-xs text-teal">
+              <span>Transcript saved. Regenerate to rewrite the drafts from the corrected text (the recording is not transcribed again).</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setTranscriptSaved(false);
+                  setActiveTab("studio");
+                  regenMutation.mutate();
+                }}
+                disabled={regenMutation.isPending}
+                className="rounded-full border border-teal/40 px-13 py-[4px] font-semibold transition-colors hover:bg-teal/10"
+              >
+                Regenerate drafts
+              </button>
+            </div>
+          )}
+
+          {editingTranscript ? (
+            <div className="flex flex-col gap-13">
+              <textarea
+                value={transcriptDraft}
+                onChange={(e) => setTranscriptDraft(e.target.value)}
+                aria-label="Transcript text"
+                rows={20}
+                className="max-h-[65vh] min-h-[40vh] w-full rounded-card border border-amber-400/40 bg-surface-light p-21 font-sans text-sm leading-relaxed dark:bg-surface-dark"
+              />
+              {saveTranscript.isError && (
+                <p className="text-xs text-danger">⚠️ {(saveTranscript.error as Error).message}</p>
+              )}
+              <div className="flex justify-end gap-8">
+                <button
+                  type="button"
+                  onClick={() => setEditingTranscript(false)}
+                  disabled={saveTranscript.isPending}
+                  className="btn-ghost"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => saveTranscript.mutate(transcriptDraft)}
+                  disabled={saveTranscript.isPending || !transcriptDraft.trim() || transcriptDraft === transcriptText}
+                  className="rounded-full bg-amber-400 px-21 py-8 text-sm font-semibold text-black transition-opacity disabled:opacity-40"
+                >
+                  {saveTranscript.isPending ? "Saving…" : "Save transcript"}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="max-h-[65vh] overflow-auto rounded-card border border-black/10 bg-surface-light p-21 text-sm leading-relaxed dark:border-white/[0.08] dark:bg-surface-dark">
+              {transcript.data ? (
+                <div className="whitespace-pre-wrap">{highlightedTranscript}</div>
+              ) : (
+                <p className="text-xs opacity-60">Waiting for transcription engine...</p>
+              )}
+            </div>
+          )}
         </section>
       )}
     </GoldenShell>

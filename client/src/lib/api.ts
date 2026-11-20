@@ -56,6 +56,16 @@ export type TranscriptPublic = {
   segments: unknown[] | null;
   provider: string;
   badge: "high" | "medium" | "low";
+  edited?: boolean;
+  edited_at?: string | null;
+};
+
+export type BackTranslationCheck = {
+  status: "pass" | "low_agreement" | "unchecked" | "untranslated";
+  pass: boolean | null;
+  score: number | null;
+  min_score?: number;
+  back_text?: string;
 };
 
 export type ContentPublic = {
@@ -71,7 +81,7 @@ export type ContentPublic = {
   structured: Record<string, unknown> | null;
   status: string;
   version: number;
-  grounding: { pass?: boolean; unsupported?: string[] } | null;
+  grounding: { pass?: boolean; unsupported?: string[]; back_translation?: BackTranslationCheck } | null;
   moderation: { pass?: boolean; hits?: string[] } | null;
   created_at?: string | null;
 };
@@ -148,6 +158,13 @@ export const listJobs = (token: string, opts?: { all?: boolean }) =>
 export const getJob = (token: string, id: string) => request<JobPublic>(`/api/v1/jobs/${id}`, { token });
 export const getTranscript = (token: string, id: string) =>
   request<TranscriptPublic>(`/api/v1/jobs/${id}/transcript`, { token });
+
+export const updateTranscript = (token: string, id: string, fullText: string) =>
+  request<TranscriptPublic>(`/api/v1/jobs/${id}/transcript`, {
+    method: "PATCH",
+    token,
+    json: { full_text: fullText },
+  });
 export const getJobContent = (token: string, id: string) =>
   request<ContentPublic[]>(`/api/v1/jobs/${id}/content`, { token });
 export type ProvenanceClaim = {

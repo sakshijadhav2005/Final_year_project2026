@@ -1,21 +1,24 @@
 import asyncio
 import json
+from datetime import UTC, datetime
 from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Query, Request, status
 from fastapi.responses import FileResponse, StreamingResponse
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user, get_user_from_bearer_or_query
 from app.core.exceptions import http_error
 from app.core.security import UserRole
 from app.db.session import SessionLocal, get_db
+from app.models.embedding import Embedding
 from app.models.job import Job, Transcript
 from app.models.recording import Recording
 from app.models.user import User
-from app.schemas.common import JobPublic, RegenerRequest, TranscriptPublic
+from app.schemas.common import JobPublic, RegenerRequest, TranscriptPublic, TranscriptUpdate
+from app.services.audit import write_audit
 from app.services.guardrails import confidence_badge
 from app.services.job_runner import TERMINAL
 from app.services.queue import enqueue_process_job
@@ -60,6 +63,27 @@ async def get_job(
     return await _load_job(db, user, job_id)
 
 
+def _transcript_public(row: Transcript) -> TranscriptPublic:
+    edit = (row.quality_json or {}).get("human_edit") or {}
+    edited_at = None
+    if edit.get("at"):
+        try:
+            edited_at = datetime.fromisoformat(edit["at"])
+        except ValueError:
+            edited_at = None
+    return TranscriptPublic(
+        full_text=row.full_text,
+        language=row.language,
+        avg_confidence=row.avg_confidence,
+        quality_json=row.quality_json,
+        segments=row.segments,
+        provider=row.provider,
+        badge=confidence_badge(row.avg_confidence),
+        edited=bool(edit),
+        edited_at=edited_at,
+    )
+
+
 @router.get("/{job_id}/transcript", response_model=TranscriptPublic | None)
 async def get_transcript(
     job_id: UUID,
@@ -72,15 +96,67 @@ async def get_transcript(
     ).scalar_one_or_none()
     if row is None:
         return None
-    return TranscriptPublic(
-        full_text=row.full_text,
-        language=row.language,
-        avg_confidence=row.avg_confidence,
-        quality_json=row.quality_json,
-        segments=row.segments,
-        provider=row.provider,
-        badge=confidence_badge(row.avg_confidence),
+    return _transcript_public(row)
+
+
+@router.patch("/{job_id}/transcript", response_model=TranscriptPublic)
+async def update_transcript(
+    job_id: UUID,
+    body: TranscriptUpdate,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> TranscriptPublic:
+    """Save a human correction of the transcript. Existing drafts are not changed:
+    regenerate the session to write them again from the corrected text (the
+    recording is not transcribed again). Not allowed while the pipeline is running."""
+    job = await _load_job(db, user, job_id)
+    if job.status not in TERMINAL:
+        raise http_error(
+            status.HTTP_409_CONFLICT,
+            "The session is still processing; edit the transcript when it has finished",
+            "job_running",
+        )
+    row = (
+        await db.execute(select(Transcript).where(Transcript.job_id == job_id))
+    ).scalar_one_or_none()
+    if row is None:
+        raise http_error(status.HTTP_404_NOT_FOUND, "Transcript not found", "not_found")
+    text = body.full_text.strip()
+    if not text:
+        raise http_error(status.HTTP_422_UNPROCESSABLE_ENTITY, "Transcript cannot be empty", "empty")
+    if text == row.full_text:
+        return _transcript_public(row)
+
+    previous_words = len(row.full_text.split())
+    row.full_text = text
+    # Segment timings are kept: the Sources panel re-aligns the edited words to the
+    # recording, and spreads them evenly where it cannot.
+    row.quality_json = {
+        **(row.quality_json or {}),
+        "human_edit": {
+            "at": datetime.now(UTC).isoformat(),
+            "by": str(user.id),
+            "words_before": previous_words,
+            "words_after": len(text.split()),
+        },
+    }
+    # Old retrieval chunks describe the old text; the next run re-indexes on demand.
+    await db.execute(
+        delete(Embedding).where(
+            Embedding.source_id == str(job_id), Embedding.source_type == "transcript_chunk"
+        )
     )
+    await write_audit(
+        db,
+        user_id=user.id,
+        action="edit_transcript",
+        resource_type="job",
+        resource_id=str(job_id),
+        detail=f"{previous_words} -> {len(text.split())} words",
+    )
+    await db.commit()
+    await db.refresh(row)
+    return _transcript_public(row)
 
 
 @router.post("/{job_id}/cancel", response_model=JobPublic)
@@ -211,8 +287,6 @@ async def delete_job(
     user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> None:
-    from sqlalchemy import delete
-
     from app.models.content import ContentPiece
     from app.models.job import AgentOutput, Transcript
     from app.services.job_runner import cancel_job_task
