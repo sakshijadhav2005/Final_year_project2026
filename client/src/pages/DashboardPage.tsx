@@ -107,7 +107,7 @@ export function DashboardPage() {
           <button
             type="button"
             onClick={() => setShowChatDrawer(true)}
-            className="inline-flex items-center gap-8 rounded-full border border-amber-500/40 bg-amber-500/20 px-21 py-8 text-xs font-semibold text-amber-300 transition-all"
+            className="inline-flex items-center gap-8 rounded-full border border-amber-500/40 bg-amber-500/20 px-21 py-8 text-xs font-semibold text-amber-300 transition-colors"
           >
             <span>Ask the co-pilot</span>
           </button>
@@ -125,7 +125,7 @@ export function DashboardPage() {
         </section>
 
         {/* Step 2: Past Recording Sessions Section (Above Upload with RBAC) */}
-        <section className="rounded-panel border border-white/[0.08] bg-surface p-21 transition-all">
+        <section className="rounded-panel border border-white/[0.08] bg-surface p-21 transition-colors">
           <div className="flex flex-wrap items-center justify-between gap-13">
             <div className="flex items-center gap-13">
               <div className="flex h-10 w-10 items-center justify-center rounded-panel bg-amber-500/10 border border-amber-500/20 text-lg">
@@ -149,7 +149,7 @@ export function DashboardPage() {
             <button
               type="button"
               onClick={() => setShowPastSessions((prev) => !prev)}
-              className="inline-flex items-center gap-8 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs font-semibold text-slate-200 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-200 transition-all"
+              className="inline-flex items-center gap-8 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs font-semibold text-slate-200 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-200 transition-colors"
             >
               <span>{showPastSessions ? "▲ Hide Previous Sessions" : "▼ Show All Previous Sessions"}</span>
               <span className="rounded-full bg-white/10 px-8 py-0.5 text-[10px] font-bold">
@@ -256,7 +256,7 @@ export function DashboardPage() {
                 <button
                   type="button"
                   onClick={() => setShowTranscriptPreview(!showTranscriptPreview)}
-                  className="rounded-full border border-amber-500/30 bg-amber-500/10 px-13 py-8 text-xs font-semibold text-amber-300 hover:bg-amber-500/20 transition-all"
+                  className="rounded-full border border-amber-500/30 bg-amber-500/10 px-13 py-8 text-xs font-semibold text-amber-300 hover:bg-amber-500/20 transition-colors"
                 >
                   {showTranscriptPreview ? "Hide transcript" : "Show transcript"}
                 </button>
@@ -270,7 +270,7 @@ export function DashboardPage() {
                   type="button"
                   onClick={(e) => handleDeleteSession(e, latest.id)}
                   disabled={deleteMutation.isPending}
-                  className="rounded-full border border-rose-500/40 bg-rose-500/10 px-13 py-8 text-xs font-medium text-rose-300 hover:bg-rose-500/20 transition-all"
+                  className="rounded-full border border-rose-500/40 bg-rose-500/10 px-13 py-8 text-xs font-medium text-rose-300 hover:bg-rose-500/20 transition-colors"
                   title="Delete this session"
                 >
                   Delete
@@ -309,7 +309,7 @@ export function DashboardPage() {
                 {latestTranscript.isLoading ? (
                   <div className="py-21 text-center text-xs text-slate-400">
                     <div className="inline-block h-4 w-4 animate-spin rounded-full border border-amber-400 border-t-transparent mr-8" />
-                    Fetching latest transcription...
+                    Fetching latest transcription…
                   </div>
                 ) : latestTranscript.data?.full_text ? (
                   <div className="max-h-48 overflow-y-auto rounded-card bg-white/[0.02] p-13 text-xs text-slate-300 whitespace-pre-wrap leading-relaxed border border-white/5">

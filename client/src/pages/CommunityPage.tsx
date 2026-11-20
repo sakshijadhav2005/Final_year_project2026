@@ -74,7 +74,7 @@ export function CommunityPage() {
             <button
               type="button"
               onClick={() => setShowCreatePost((prev) => !prev)}
-              className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-all"
+              className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-colors"
             >
               <span>{showCreatePost ? "✕ Close Form" : "✍️ Write Post / Upload Recording"}</span>
             </button>
@@ -137,7 +137,7 @@ export function CommunityPage() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`inline-flex items-center gap-8 rounded-card px-13 py-8 text-xs font-semibold transition-all ${
+                className={`inline-flex items-center gap-8 rounded-card px-13 py-8 text-xs font-semibold transition-colors ${
                   activeTab === tab.id
                     ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
                     : "border border-white/5 bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white"
@@ -155,7 +155,7 @@ export function CommunityPage() {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search feed..."
+              placeholder="Search feed…"
               className="w-full rounded-card border border-white/[0.08] bg-surface pl-34 pr-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50"
             />
             <span className="absolute left-2.5 top-2 text-xs text-slate-400">🔍</span>

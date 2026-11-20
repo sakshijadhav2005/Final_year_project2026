@@ -154,7 +154,7 @@ export function JobDetailPage() {
             </Link>
             <Link
               to="/"
-              className="rounded-full bg-white/[0.05] border border-white/[0.08] px-21 py-8 text-sm font-medium hover:bg-white/[0.1] transition-all"
+              className="rounded-full bg-white/[0.05] border border-white/[0.08] px-21 py-8 text-sm font-medium hover:bg-white/[0.1] transition-colors"
             >
               Upload New Recording
             </Link>
@@ -237,7 +237,7 @@ export function JobDetailPage() {
         <button
           type="button"
           onClick={() => setActiveTab("studio")}
-          className={`flex items-center gap-8 border-b-2 px-21 py-13 text-sm font-semibold transition-all ${
+          className={`flex items-center gap-8 border-b-2 px-21 py-13 text-sm font-semibold transition-colors ${
             activeTab === "studio"
               ? "border-amber-400 text-ink"
               : "border-transparent text-ink-dim hover:text-ink"
@@ -252,7 +252,7 @@ export function JobDetailPage() {
         <button
           type="button"
           onClick={() => setActiveTab("transcript")}
-          className={`flex items-center gap-8 border-b-2 px-21 py-13 text-sm font-semibold transition-all ${
+          className={`flex items-center gap-8 border-b-2 px-21 py-13 text-sm font-semibold transition-colors ${
             activeTab === "transcript"
               ? "border-amber-400 text-ink"
               : "border-transparent text-ink-dim hover:text-ink"
@@ -271,7 +271,7 @@ export function JobDetailPage() {
           ) : (
             <div className="rounded-card border border-dashed border-white/20 p-55 text-center">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-amber-400 border-t-transparent mb-13"></div>
-              <p className="font-semibold">Agents are analyzing the recording...</p>
+              <p className="font-semibold">Agents are analyzing the recording…</p>
               <p className="mt-[4px] text-xs opacity-60">
                 Topics, highlights, speakers, and generation will appear in real time.
               </p>
@@ -294,7 +294,7 @@ export function JobDetailPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search transcript..."
+                placeholder="Search transcript…"
                 aria-label="Search transcript"
                 className="w-full max-w-sm rounded-card border border-black/10 bg-canvas-light px-13 py-8 text-xs dark:border-white/[0.08] dark:bg-canvas-dark"
               />
@@ -387,7 +387,7 @@ export function JobDetailPage() {
               {transcript.data ? (
                 <div className="whitespace-pre-wrap">{highlightedTranscript}</div>
               ) : (
-                <p className="text-xs opacity-60">Waiting for transcription engine...</p>
+                <p className="text-xs opacity-60">Waiting for transcription engine…</p>
               )}
             </div>
           )}

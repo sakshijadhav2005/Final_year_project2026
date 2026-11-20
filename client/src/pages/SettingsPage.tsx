@@ -86,7 +86,7 @@ export function SettingsPage() {
             <button
               type="button"
               onClick={() => setTheme("dark")}
-              className={`flex items-center gap-8 rounded-card border px-21 py-13 text-xs font-medium transition-all ${
+              className={`flex items-center gap-8 rounded-card border px-21 py-13 text-xs font-medium transition-colors ${
                 theme === "dark"
                   ? "border-amber-400/60 bg-amber-400/[0.08] text-ink"
                   : "border-black/10 text-ink-light/70 hover:border-black/30 dark:border-white/[0.08] dark:text-ink-dim dark:hover:border-white/30"
@@ -97,7 +97,7 @@ export function SettingsPage() {
             <button
               type="button"
               onClick={() => setTheme("light")}
-              className={`flex items-center gap-8 rounded-card border px-21 py-13 text-xs font-medium transition-all ${
+              className={`flex items-center gap-8 rounded-card border px-21 py-13 text-xs font-medium transition-colors ${
                 theme === "light"
                   ? "border-amber-400/60 bg-amber-400/[0.08] text-ink"
                   : "border-black/10 text-ink-light/70 hover:border-black/30 dark:border-white/[0.08] dark:text-ink-dim dark:hover:border-white/30"
@@ -151,7 +151,7 @@ export function SettingsPage() {
                   key={lang.code}
                   type="button"
                   onClick={() => toggleLang(lang.code)}
-                  className={`rounded-card border px-13 py-8 text-xs font-medium transition-all ${
+                  className={`rounded-card border px-13 py-8 text-xs font-medium transition-colors ${
                     active
                       ? "border-amber-400/60 bg-amber-400/[0.08] text-ink"
                       : "border-black/10 text-ink-light/70 hover:text-ink-light hover:border-black/30 dark:border-white/[0.08] dark:text-ink-dim dark:hover:text-ink-dark dark:hover:border-white/30"

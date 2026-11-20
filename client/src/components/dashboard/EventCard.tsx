@@ -81,7 +81,7 @@ export function EventCard({ event, onSelect }: EventCardProps) {
 
         <Link
           to={`/community?event_id=${event.id}`}
-          className="inline-flex items-center justify-center gap-1 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs font-semibold text-slate-300 transition-all hover:border-white/20 hover:text-white"
+          className="inline-flex items-center justify-center gap-1 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs font-semibold text-slate-300 transition-colors hover:border-white/20 hover:text-white"
           title="Community Discussions"
         >
           <span>💬</span>
@@ -91,7 +91,7 @@ export function EventCard({ event, onSelect }: EventCardProps) {
           <button
             type="button"
             onClick={() => onSelect(event)}
-            className="inline-flex items-center justify-center rounded-card bg-amber-500/20 px-13 py-8 text-xs font-semibold text-amber-300 transition-all hover:bg-amber-500/30"
+            className="inline-flex items-center justify-center rounded-card bg-amber-500/20 px-13 py-8 text-xs font-semibold text-amber-300 transition-colors hover:bg-amber-500/30"
           >
             Select
           </button>

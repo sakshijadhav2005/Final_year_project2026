@@ -166,7 +166,7 @@ export function PipelineStepper({
           return (
             <div
               key={s.id}
-              className={`relative flex flex-col justify-between rounded-card border p-13 transition-all ${
+              className={`relative flex flex-col justify-between rounded-card border p-13 transition-colors ${
                 isRunning
                   ? "stage-live border-amber-400/70 bg-amber-400/[0.06]"
                   : isDone

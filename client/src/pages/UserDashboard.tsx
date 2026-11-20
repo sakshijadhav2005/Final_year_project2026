@@ -85,7 +85,7 @@ export function UserDashboard() {
             <button
               type="button"
               onClick={() => setShowCreatePost((p) => !p)}
-              className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-all"
+              className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-colors"
             >
               <span>{showCreatePost ? "✕ Close Form" : "✍️ Write Post / Upload Recording"}</span>
             </button>
@@ -120,7 +120,7 @@ export function UserDashboard() {
             <button
               type="button"
               onClick={() => setShowPastSessions((prev) => !prev)}
-              className="inline-flex items-center gap-8 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs font-semibold text-slate-200 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-200 transition-all"
+              className="inline-flex items-center gap-8 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs font-semibold text-slate-200 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-200 transition-colors"
             >
               <span>{showPastSessions ? "▲ Hide Previous Sessions" : "▼ Show All Previous Sessions"}</span>
               <span className="rounded-full bg-white/10 px-8 py-0.5 text-[10px] font-bold">
@@ -228,7 +228,7 @@ export function UserDashboard() {
             <button
               type="button"
               onClick={() => setShowCreatePost((p) => !p)}
-              className="inline-flex items-center gap-[2px] rounded-card bg-amber-400 px-[4px] py-[2px] text-xs font-bold text-on-accent transition-all"
+              className="inline-flex items-center gap-[2px] rounded-card bg-amber-400 px-[4px] py-[2px] text-xs font-bold text-on-accent transition-colors"
             >
               <span>{showCreatePost ? "✕ Close Creator" : "✍️ Write Post / Upload Recording"}</span>
             </button>
@@ -261,7 +261,7 @@ export function UserDashboard() {
                 <button
                   type="button"
                   onClick={() => setShowCreatePost(true)}
-                  className="mt-5 inline-flex items-center gap-[2px] rounded-card bg-amber-400 px-5 py-2.5 text-xs font-bold text-on-accent transition-all"
+                  className="mt-5 inline-flex items-center gap-[2px] rounded-card bg-amber-400 px-5 py-2.5 text-xs font-bold text-on-accent transition-colors"
                 >
                   Write Your First Post
                 </button>
@@ -273,7 +273,7 @@ export function UserDashboard() {
                 {myPosts.slice(0, 3).map((p) => (
                   <div
                     key={p.id}
-                    className="flex flex-col justify-between rounded-card border border-white/[0.08] bg-white/[0.02] p-13 transition-all hover:border-amber-500/30"
+                    className="flex flex-col justify-between rounded-card border border-white/[0.08] bg-white/[0.02] p-13 transition-colors hover:border-amber-500/30"
                   >
                     <div>
                       <div className="flex items-center justify-between text-xs text-slate-400">

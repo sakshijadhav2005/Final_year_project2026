@@ -93,7 +93,7 @@ export function ChatDrawer({ isOpen, onClose, jobId, eventId }: ChatDrawerProps)
                   key={prompt}
                   type="button"
                   onClick={() => handleSend(prompt)}
-                  className="w-full text-left rounded-card border border-white/5 bg-white/[0.03] p-8 text-[11px] text-slate-300 hover:border-amber-500/30 hover:bg-amber-500/10 hover:text-amber-200 transition-all"
+                  className="w-full text-left rounded-card border border-white/5 bg-white/[0.03] p-8 text-[11px] text-slate-300 hover:border-amber-500/30 hover:bg-amber-500/10 hover:text-amber-200 transition-colors"
                 >
                   💡 {prompt}
                 </button>
@@ -154,7 +154,7 @@ export function ChatDrawer({ isOpen, onClose, jobId, eventId }: ChatDrawerProps)
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask Co-Pilot or request rewrite..."
+            placeholder="Ask Co-Pilot or request rewrite…"
             disabled={isStreaming}
             className="flex-1 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
           />
@@ -163,7 +163,7 @@ export function ChatDrawer({ isOpen, onClose, jobId, eventId }: ChatDrawerProps)
             disabled={!input.trim() || isStreaming}
             className="btn-primary btn-sm"
           >
-            {isStreaming ? "..." : "Send"}
+            {isStreaming ? "…" : "Send"}
           </button>
         </form>
       </div>

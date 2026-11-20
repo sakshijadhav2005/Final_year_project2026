@@ -250,7 +250,7 @@ function Detail({ token, id }: { token: string; id: string }) {
             Try again with the agent
           </button>
         )}
-        {f.cost_usd > 0 && <p className="text-[11px] text-ink-dim">Agent cost so far: ${f.cost_usd.toFixed(2)}</p>}
+        {f.cost_usd > 0 && <p className="text-[11px] text-ink-dim">Agent cost so far: {f.cost_usd.toLocaleString(undefined, { style: "currency", currency: "USD" })}</p>}
       </div>
     </div>
   );

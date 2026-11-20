@@ -293,7 +293,7 @@ export function DashboardUploadCard() {
                     <div>
                       <p className="font-semibold text-sm text-amber-300">{selectedFile.name}</p>
                       <p className="text-xs text-slate-400">
-                        {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • {selectedFile.type || "Event Recording Source"}
+                        {(selectedFile.size / (1024 * 1024)).toLocaleString(undefined, { maximumFractionDigits: 2 })}&nbsp;MB • {selectedFile.type || "Event Recording Source"}
                       </p>
                     </div>
                   </div>

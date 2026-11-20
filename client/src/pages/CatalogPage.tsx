@@ -108,7 +108,7 @@ export function CatalogPage() {
               <button
                 type="button"
                 onClick={() => setShowCreateModal(true)}
-                className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-all"
+                className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-colors"
               >
                 <span>➕ Create New Event</span>
               </button>
@@ -129,7 +129,7 @@ export function CatalogPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by event name, topic, or speaker..."
+              placeholder="Search by event name, topic, or speaker…"
               className="w-full rounded-card border border-white/[0.08] bg-surface pl-34 pr-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             />
           </div>
@@ -174,7 +174,7 @@ export function CatalogPage() {
               <button
                 type="button"
                 onClick={() => setShowCreateModal(true)}
-                className="mt-21 inline-flex items-center gap-8 rounded-card bg-amber-500/20 px-13 py-8 text-xs font-semibold text-amber-300 transition-all hover:bg-amber-500/30"
+                className="mt-21 inline-flex items-center gap-8 rounded-card bg-amber-500/20 px-13 py-8 text-xs font-semibold text-amber-300 transition-colors hover:bg-amber-500/30"
               >
                 <span>➕ Create First Event</span>
               </button>
@@ -298,7 +298,7 @@ export function CatalogPage() {
                   <textarea id="event-description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Brief description of the event..."
+                    placeholder="Brief description of the event…"
                     rows={3}
                     className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50"
                   />
@@ -317,7 +317,7 @@ export function CatalogPage() {
                     disabled={createEventMutation.isPending || !name.trim() || !date}
                     className="btn-primary btn-sm"
                   >
-                    {createEventMutation.isPending ? "Creating..." : "Save Event"}
+                    {createEventMutation.isPending ? "Creating…" : "Save Event"}
                   </button>
                 </div>
               </form>

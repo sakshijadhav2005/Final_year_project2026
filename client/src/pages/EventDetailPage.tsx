@@ -274,7 +274,7 @@ export function EventDetailPage() {
             <button
               type="button"
               onClick={() => setActiveTab("content")}
-              className={`rounded-card px-21 py-8 text-xs font-bold transition-all ${
+              className={`rounded-card px-21 py-8 text-xs font-bold transition-colors ${
                 activeTab === "content"
                   ? "bg-amber-400 text-on-accent"
                   : "border border-white/[0.08] bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
@@ -285,7 +285,7 @@ export function EventDetailPage() {
             <button
               type="button"
               onClick={() => setActiveTab("transcript")}
-              className={`rounded-card px-21 py-8 text-xs font-bold transition-all ${
+              className={`rounded-card px-21 py-8 text-xs font-bold transition-colors ${
                 activeTab === "transcript"
                   ? "bg-amber-400 text-on-accent"
                   : "border border-white/[0.08] bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
@@ -354,7 +354,7 @@ export function EventDetailPage() {
                   return (
                     <div
                       key={post.id}
-                      className="group relative flex flex-col justify-between overflow-hidden rounded-panel border border-white/[0.08] bg-surface p-21 transition-all hover:border-white/20"
+                      className="group relative flex flex-col justify-between overflow-hidden rounded-panel border border-white/[0.08] bg-surface p-21 transition-colors hover:border-white/20"
                     >
                       <div>
                         <div className="flex items-center justify-between border-b border-white/5 pb-13 mb-13">
@@ -455,7 +455,7 @@ export function EventDetailPage() {
                   type="text"
                   value={transcriptSearch}
                   onChange={(e) => setTranscriptSearch(e.target.value)}
-                  placeholder="Search transcript text..."
+                  placeholder="Search transcript text…"
                   className="w-full rounded-card border border-white/[0.08] bg-white/5 pl-9 pr-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50"
                 />
                 <span className="absolute inset-y-0 left-3 flex items-center text-xs text-slate-400">
@@ -585,7 +585,7 @@ export function EventDetailPage() {
                     type="text"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
-                    placeholder="Enter engaging title..."
+                    placeholder="Enter engaging title…"
                     className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                   />
                 </div>
@@ -604,7 +604,7 @@ export function EventDetailPage() {
                     onChange={(e) => setEditBody(e.target.value)}
                     rows={10}
                     required
-                    placeholder="Write or edit post content..."
+                    placeholder="Write or edit post content…"
                     className="w-full rounded-card border border-white/[0.08] bg-white/5 p-13 text-xs text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20 leading-relaxed"
                   />
                 </div>
@@ -622,7 +622,7 @@ export function EventDetailPage() {
                     disabled={updatePostMutation.isPending || !editBody.trim()}
                     className="btn-primary btn-sm"
                   >
-                    {updatePostMutation.isPending ? "Saving Changes..." : "💾 Save & Update Post"}
+                    {updatePostMutation.isPending ? "Saving Changes…" : "💾 Save & Update Post"}
                   </button>
                 </div>
               </form>

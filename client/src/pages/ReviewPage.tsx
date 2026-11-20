@@ -82,7 +82,7 @@ export function ReviewPage() {
             <div className="flex gap-13 pt-13 border-t border-line/10">
               <button
                 type="button"
-                className="rounded-full border border-teal/40 bg-teal/20 px-21 py-8 text-sm font-semibold text-teal hover:bg-teal/30 transition-all"
+                className="rounded-full border border-teal/40 bg-teal/20 px-21 py-8 text-sm font-semibold text-teal hover:bg-teal/30 transition-colors"
                 onClick={() => approve.mutate()}
               >
                 ✓ Approve &amp; Mark Ready

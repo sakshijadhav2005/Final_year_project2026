@@ -57,7 +57,7 @@ export function ConnectedAccounts({ token }: { token: string }) {
 
   const accounts = useQuery({ queryKey: ["social-accounts"], queryFn: () => listSocialAccounts(token) });
 
-  // The OAuth callback lands on /settings?social=linkedin&status=connected|error&reason=...
+  // The OAuth callback lands on /settings?social=linkedin&status=connected|error&reason=…
   useEffect(() => {
     const platform = params.get("social") as SocialPlatform | null;
     const status = params.get("status");
