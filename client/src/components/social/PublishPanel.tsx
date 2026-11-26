@@ -12,6 +12,7 @@ import {
   type SocialPlatform,
 } from "@/lib/api";
 import { PLATFORMS_FOR_KIND } from "@/lib/social";
+import { parseServerTime } from "@/lib/time";
 
 const PLATFORM_STYLE: Record<SocialPlatform, { label: string; button: string }> = {
   linkedin: { label: "LinkedIn", button: "bg-[#0A66C2] hover:bg-[#004182]" },
@@ -24,7 +25,7 @@ const PLATFORM_STYLE: Record<SocialPlatform, { label: string; button: string }> 
 };
 
 function formatWhen(iso: string): string {
-  return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+  return parseServerTime(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
 }
 
 /** Value for <input type="datetime-local"> a little in the future, in local time. */

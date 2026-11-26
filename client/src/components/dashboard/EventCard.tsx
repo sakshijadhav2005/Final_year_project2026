@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { EventPublic } from "@/lib/api";
+import { parseCalendarDate } from "@/lib/time";
 
 type EventCardProps = {
   event: EventPublic;
@@ -32,7 +33,7 @@ const TYPE_CONFIG: Record<string, { label: string; icon: string; badgeClass: str
 export function EventCard({ event, onSelect }: EventCardProps) {
   const config = TYPE_CONFIG[event.type] ?? TYPE_CONFIG.other;
 
-  const formattedDate = new Date(event.date).toLocaleDateString(undefined, {
+  const formattedDate = parseCalendarDate(event.date).toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",

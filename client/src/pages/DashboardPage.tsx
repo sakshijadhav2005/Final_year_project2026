@@ -9,6 +9,7 @@ import { deleteJob, getTranscript, listJobs, type JobPublic } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { useAuthStore } from "@/store/auth";
 import { sessionTitle, statusLabel } from "@/lib/status";
+import { parseServerTime } from "@/lib/time";
 
 // Mirrors the server's TERMINAL set: the pipeline has stopped working on these.
 const FINISHED_STATUSES = new Set([
@@ -219,7 +220,7 @@ export function DashboardPage() {
                     <span className="min-w-0 truncate font-medium">{sessionTitle(job)}</span>
                     <span className="text-xs text-ink-dim">
                       {statusLabel(job.status)}
-                      {job.created_at ? ` · ${new Date(job.created_at).toLocaleDateString()}` : ""}
+                      {job.created_at ? ` · ${parseServerTime(job.created_at).toLocaleDateString()}` : ""}
                     </span>
                   </Link>
                 </li>
@@ -301,7 +302,7 @@ export function DashboardPage() {
                                 {sessionTitle(job)}
                               </h4>
                               <p className="text-[10px] text-slate-400">
-                                {job.created_at ? new Date(job.created_at).toLocaleString() : "Recently"}
+                                {job.created_at ? parseServerTime(job.created_at).toLocaleString() : "Recently"}
                               </p>
                             </div>
                           </div>

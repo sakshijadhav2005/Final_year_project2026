@@ -16,6 +16,7 @@ import {
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { sessionTitle } from "@/lib/status";
 import { useAuthStore } from "@/store/auth";
+import { parseServerTime } from "@/lib/time";
 import { useJobEvents } from "@/hooks/useJobEvents";
 
 export function JobDetailPage() {
@@ -310,7 +311,7 @@ export function JobDetailPage() {
               {transcript.data?.edited && !editingTranscript && (
                 <span
                   className="rounded-full bg-white/[0.08] px-8 py-[2px] text-xs text-ink-dim"
-                  title={transcript.data.edited_at ? new Date(transcript.data.edited_at).toLocaleString() : undefined}
+                  title={transcript.data.edited_at ? parseServerTime(transcript.data.edited_at).toLocaleString() : undefined}
                 >
                   Edited by a person
                 </span>

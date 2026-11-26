@@ -9,6 +9,7 @@ import { CreatePostForm } from "@/components/dashboard/CreatePostForm";
 import { listEvents, listCommunityContent, listJobs, deleteJob } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { useAuthStore } from "@/store/auth";
+import { parseServerTime } from "@/lib/time";
 
 export function UserDashboard() {
   const token = useAuthStore((s) => s.accessToken);
@@ -164,7 +165,7 @@ export function UserDashboard() {
                                 {sessionTitle(job)}
                               </h4>
                               <p className="text-[10px] text-slate-400">
-                                {job.created_at ? new Date(job.created_at).toLocaleString() : "Recently"}
+                                {job.created_at ? parseServerTime(job.created_at).toLocaleString() : "Recently"}
                               </p>
                             </div>
                           </div>
@@ -282,7 +283,7 @@ export function UserDashboard() {
                           {p.type}
                         </span>
                         <span className="text-[10px]">
-                          {p.created_at ? new Date(p.created_at).toLocaleDateString() : ""}
+                          {p.created_at ? parseServerTime(p.created_at).toLocaleDateString() : ""}
                         </span>
                       </div>
                       <h4 className="mt-8 text-xs font-bold text-white line-clamp-1">{p.title}</h4>

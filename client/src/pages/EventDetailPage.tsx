@@ -15,6 +15,7 @@ import { EventChatWidget } from "@/components/chat/EventChatWidget";
 import { MarkdownText } from "@/components/content/renderers/MarkdownText";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { contentFormat } from "@/lib/social";
+import { parseCalendarDate } from "@/lib/time";
 
 export function EventDetailPage() {
   const { eventId = "" } = useParams<{ eventId: string }>();
@@ -213,7 +214,7 @@ export function EventDetailPage() {
                 <span className="text-xs text-slate-400">
                   📅{" "}
                   {event?.date
-                    ? new Date(event.date).toLocaleDateString(undefined, { dateStyle: "full" })
+                    ? parseCalendarDate(event.date).toLocaleDateString(undefined, { dateStyle: "full" })
                     : "Scheduled Date"}
                 </span>
                 {event?.location && (
