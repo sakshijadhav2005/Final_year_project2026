@@ -5,14 +5,13 @@ import types
 import uuid
 
 import pytest
-from fastapi.testclient import TestClient
-
 from app.core.config import get_settings
 from app.main import app
 from app.providers.gemini_llm import _extract_json
 from app.providers.stt import TranscriptResult
 from app.services import credentials, degraded, transcription
 from app.services.resilience import CircuitBreaker, CircuitOpenError, with_backoff
+from fastapi.testclient import TestClient
 
 GOOD = '{"title": "ok", "body": "grounded"}'
 

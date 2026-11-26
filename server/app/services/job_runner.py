@@ -14,6 +14,7 @@ from app.models.job import AgentOutput, Job, Transcript
 from app.models.recording import Recording
 from app.services import degraded
 from app.services.audit import write_audit
+from app.services.autofix.capture import record_exception
 from app.services.av_scan import scan_file
 from app.services.guardrails import should_use_rag
 from app.services.quality import inspect_media
@@ -155,6 +156,7 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
             try:
                 transcript = await transcribe_file(local_path)
             except Exception as exc:
+                await record_exception(exc, source="pipeline", context={"job_id": str(job.id), "stage": "transcription"})
                 await _save(
                     db,
                     job,
@@ -216,6 +218,7 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                         "end": seg.end,
                         "confidence": seg.confidence,
                         "speaker": seg.speaker,
+                        "speech": seg.speech,
                     }
                     for seg in transcript.segments
                 ],
@@ -358,6 +361,7 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                         progress=dict(progress),
                     )
         except Exception as exc:
+            await record_exception(exc, source="pipeline", context={"job_id": str(job.id), "stage": "generation"})
             await _save(
                 db,
                 job,
@@ -436,6 +440,13 @@ async def process_job(job_id: str, reuse_transcript: bool = False) -> None:
                     title=item.get("title"),
                     body=str(item.get("body") or ""),
                     status="pending_review",
+                    # Back-translation verdict (no "pass" key at the top level, so the
+                    # studio does not show it as a grounding alert).
+                    grounding=(
+                        {"back_translation": item["back_translation"]}
+                        if item.get("back_translation")
+                        else None
+                    ),
                 )
             )
 

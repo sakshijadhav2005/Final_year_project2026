@@ -8,6 +8,8 @@ import { ChatDrawer } from "@/components/chat/ChatDrawer";
 import { deleteJob, getTranscript, listJobs, type JobPublic } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { useAuthStore } from "@/store/auth";
+import { sessionTitle, statusLabel } from "@/lib/status";
+import { parseServerTime } from "@/lib/time";
 
 // Mirrors the server's TERMINAL set: the pipeline has stopped working on these.
 const FINISHED_STATUSES = new Set([
@@ -66,7 +68,7 @@ export function DashboardPage() {
   const handleDeleteSession = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
-    if (window.confirm(`Are you sure you want to permanently delete session ${id.slice(0, 8)}? All generated content and transcripts will be removed.`)) {
+    if (window.confirm(`Permanently delete “${sessionTitle(userSessions.find((j) => j.id === id))}”? All its drafts and its transcript will be removed.`)) {
       deleteMutation.mutate(id);
     }
   };
@@ -77,6 +79,9 @@ export function DashboardPage() {
     userSessions.find((j) => !FINISHED_STATUSES.has(j.status)) ??
     userSessions.find((j) => watched.has(j.id));
   const isLatestActive = Boolean(latest && !FINISHED_STATUSES.has(latest.status));
+  const awaitingReview = userSessions.filter(
+    (j) => ["pending_review", "needs_review"].includes(j.status) && j.id !== latest?.id,
+  );
 
   // Fetch transcript for latest job if available
   const latestTranscript = useQuery({
@@ -107,7 +112,7 @@ export function DashboardPage() {
           <button
             type="button"
             onClick={() => setShowChatDrawer(true)}
-            className="inline-flex items-center gap-8 rounded-full border border-amber-500/40 bg-amber-500/20 px-21 py-8 text-xs font-semibold text-amber-300 transition-all"
+            className="inline-flex items-center gap-8 rounded-full border border-amber-500/40 bg-amber-500/20 px-21 py-8 text-xs font-semibold text-amber-300 transition-colors"
           >
             <span>Ask the co-pilot</span>
           </button>
@@ -119,13 +124,118 @@ export function DashboardPage() {
           jobId={latest?.id}
         />
 
-        {/* Step 1: Catalog Navigation */}
+
+        {/* 1. The session processing now (or just finished) */}
+        {latest && (
+          <section className="space-y-13">
+            <div className="flex flex-wrap items-center justify-between gap-13">
+              <div>
+                <p className="text-sm text-ink-dim">{isLatestActive ? "Processing now" : "Just finished"}</p>
+                <h2 className="mt-8 font-display text-h2 font-semibold text-ink">{sessionTitle(latest)}</h2>
+              </div>
+
+              <div className="flex items-center gap-13">
+                <button
+                  type="button"
+                  onClick={() => setShowTranscriptPreview(!showTranscriptPreview)}
+                  className="rounded-full border border-amber-500/30 bg-amber-500/10 px-13 py-8 text-xs font-semibold text-amber-300 hover:bg-amber-500/20 transition-colors"
+                >
+                  {showTranscriptPreview ? "Hide transcript" : "Show transcript"}
+                </button>
+                <Link
+                  to={`/jobs/${latest.id}`}
+                  className="btn-primary btn-sm"
+                >
+                  Open drafts
+                </Link>
+                <button
+                  type="button"
+                  onClick={(e) => handleDeleteSession(e, latest.id)}
+                  disabled={deleteMutation.isPending}
+                  className="rounded-full border border-rose-500/40 bg-rose-500/10 px-13 py-8 text-xs font-medium text-rose-300 hover:bg-rose-500/20 transition-colors"
+                  title="Delete this session"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+
+            {/* Pipeline Stepper Component */}
+            <PipelineStepper
+              progress={latest.progress ?? {}}
+              jobStatus={latest.status}
+              transcriptConfidence={latestTranscript.data?.badge}
+              avgConfidence={latestTranscript.data?.avg_confidence}
+            />
+
+            {/* Optional Collapsible Transcript Preview */}
+            {showTranscriptPreview && (
+              <div className="rounded-panel border border-white/[0.08] bg-surface p-21 animate-fadeIn">
+                <div className="flex items-center justify-between border-b border-white/[0.08] pb-13 mb-13">
+                  <div className="flex items-center gap-8 text-xs font-semibold text-amber-300">
+                    <span>🎙️ Source Transcription Text</span>
+                    {latestTranscript.data?.badge && (
+                      <span className="rounded-full bg-amber-500/20 border border-amber-500/30 px-8 py-0.5 text-[10px] font-bold text-amber-300">
+                        {latestTranscript.data.badge} confidence
+                      </span>
+                    )}
+                  </div>
+                  <Link
+                    to={`/jobs/${latest.id}`}
+                    className="text-xs text-amber-400 hover:text-amber-300 hover:underline font-semibold"
+                  >
+                    Open in Studio to Search &amp; Edit →
+                  </Link>
+                </div>
+
+                {latestTranscript.isLoading ? (
+                  <div className="py-21 text-center text-xs text-slate-400">
+                    <div className="inline-block h-4 w-4 animate-spin rounded-full border border-amber-400 border-t-transparent mr-8" />
+                    Fetching latest transcription…
+                  </div>
+                ) : latestTranscript.data?.full_text ? (
+                  <div className="max-h-48 overflow-y-auto rounded-card bg-white/[0.02] p-13 text-xs text-slate-300 whitespace-pre-wrap leading-relaxed border border-white/5">
+                    {latestTranscript.data.full_text}
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-400 text-center py-13">
+                    Transcription is currently being indexed by the engine or not yet available.
+                  </p>
+                )}
+              </div>
+            )}
+          </section>
+        )}
+        {/* 2. Sessions waiting for the user's review: usually why they came back */}
+        {awaitingReview.length > 0 && (
+          <section className="rounded-panel border border-pending/30 bg-pending/[0.06] p-21">
+            <h2 className="font-display text-h3 font-semibold text-ink">Waiting for your review</h2>
+            <ul className="mt-13 space-y-8">
+              {awaitingReview.slice(0, 5).map((job) => (
+                <li key={job.id}>
+                  <Link
+                    to={`/jobs/${job.id}`}
+                    className="flex flex-wrap items-center justify-between gap-8 rounded-card border border-white/[0.08] bg-surface px-13 py-8 text-sm text-ink transition-colors hover:border-pending/50"
+                  >
+                    <span className="min-w-0 truncate font-medium">{sessionTitle(job)}</span>
+                    <span className="text-xs text-ink-dim">
+                      {statusLabel(job.status)}
+                      {job.created_at ? ` · ${parseServerTime(job.created_at).toLocaleDateString()}` : ""}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* 3. Start a new session */}
         <section>
-          <CatalogNav />
+          <DashboardUploadCard />
         </section>
 
-        {/* Step 2: Past Recording Sessions Section (Above Upload with RBAC) */}
-        <section className="rounded-panel border border-white/[0.08] bg-surface p-21 transition-all">
+        {/* 4. All past sessions */}
+        <section className="rounded-panel border border-white/[0.08] bg-surface p-21 transition-colors">
           <div className="flex flex-wrap items-center justify-between gap-13">
             <div className="flex items-center gap-13">
               <div className="flex h-10 w-10 items-center justify-center rounded-panel bg-amber-500/10 border border-amber-500/20 text-lg">
@@ -149,7 +259,7 @@ export function DashboardPage() {
             <button
               type="button"
               onClick={() => setShowPastSessions((prev) => !prev)}
-              className="inline-flex items-center gap-8 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs font-semibold text-slate-200 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-200 transition-all"
+              className="inline-flex items-center gap-8 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs font-semibold text-slate-200 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-200 transition-colors"
             >
               <span>{showPastSessions ? "▲ Hide Previous Sessions" : "▼ Show All Previous Sessions"}</span>
               <span className="rounded-full bg-white/10 px-8 py-0.5 text-[10px] font-bold">
@@ -189,10 +299,10 @@ export function DashboardPage() {
                             </div>
                             <div>
                               <h4 className="text-xs font-bold text-white group-hover:text-amber-300 transition-colors">
-                                Session {job.id.slice(0, 8)}
+                                {sessionTitle(job)}
                               </h4>
                               <p className="text-[10px] text-slate-400">
-                                {job.created_at ? new Date(job.created_at).toLocaleString() : "Recently"}
+                                {job.created_at ? parseServerTime(job.created_at).toLocaleString() : "Recently"}
                               </p>
                             </div>
                           </div>
@@ -208,7 +318,7 @@ export function DashboardPage() {
                                 : "bg-sky-500/15 text-sky-400 border border-white/[0.08]"
                             }`}
                           >
-                            {job.status.replace("_", " ")}
+                            {statusLabel(job.status)}
                           </span>
                         </div>
 
@@ -238,92 +348,11 @@ export function DashboardPage() {
           )}
         </section>
 
-        {/* Step 3: Upload Options Card */}
+        {/* 5. Event catalog */}
         <section>
-          <DashboardUploadCard />
+          <CatalogNav />
         </section>
 
-        {/* Step 2 & 3: Active Session Progression & Transcription */}
-        {latest && (
-          <section className="space-y-13">
-            <div className="flex flex-wrap items-center justify-between gap-13">
-              <div>
-                <p className="text-sm text-ink-dim">{isLatestActive ? "Processing now" : "Just finished"}</p>
-                <h2 className="mt-4 font-display text-h2 font-semibold text-ink">Session {latest.id.slice(0, 8)}</h2>
-              </div>
-
-              <div className="flex items-center gap-13">
-                <button
-                  type="button"
-                  onClick={() => setShowTranscriptPreview(!showTranscriptPreview)}
-                  className="rounded-full border border-amber-500/30 bg-amber-500/10 px-13 py-8 text-xs font-semibold text-amber-300 hover:bg-amber-500/20 transition-all"
-                >
-                  {showTranscriptPreview ? "Hide transcript" : "Show transcript"}
-                </button>
-                <Link
-                  to={`/jobs/${latest.id}`}
-                  className="btn-primary btn-sm"
-                >
-                  Open drafts
-                </Link>
-                <button
-                  type="button"
-                  onClick={(e) => handleDeleteSession(e, latest.id)}
-                  disabled={deleteMutation.isPending}
-                  className="rounded-full border border-rose-500/40 bg-rose-500/10 px-13 py-8 text-xs font-medium text-rose-300 hover:bg-rose-500/20 transition-all"
-                  title="Delete this session"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-
-            {/* Pipeline Stepper Component */}
-            <PipelineStepper
-              progress={latest.progress ?? {}}
-              jobStatus={latest.status}
-              transcriptConfidence={latestTranscript.data?.badge}
-              avgConfidence={latestTranscript.data?.avg_confidence}
-            />
-
-            {/* Optional Collapsible Transcript Preview */}
-            {showTranscriptPreview && (
-              <div className="rounded-panel border border-white/[0.08] bg-surface p-21 animate-fadeIn">
-                <div className="flex items-center justify-between border-b border-white/[0.08] pb-13 mb-13">
-                  <div className="flex items-center gap-8 text-xs font-semibold text-amber-300">
-                    <span>🎙️ Source Transcription Text</span>
-                    {latestTranscript.data?.badge && (
-                      <span className="rounded-full bg-amber-500/20 border border-amber-500/30 px-8 py-0.5 text-[10px] font-bold text-amber-300">
-                        {latestTranscript.data.badge} confidence
-                      </span>
-                    )}
-                  </div>
-                  <Link
-                    to={`/jobs/${latest.id}`}
-                    className="text-xs text-amber-400 hover:text-amber-300 hover:underline font-semibold"
-                  >
-                    Open in Studio to Search &amp; Edit →
-                  </Link>
-                </div>
-
-                {latestTranscript.isLoading ? (
-                  <div className="py-21 text-center text-xs text-slate-400">
-                    <div className="inline-block h-4 w-4 animate-spin rounded-full border border-amber-400 border-t-transparent mr-8" />
-                    Fetching latest transcription...
-                  </div>
-                ) : latestTranscript.data?.full_text ? (
-                  <div className="max-h-48 overflow-y-auto rounded-card bg-white/[0.02] p-13 text-xs text-slate-300 whitespace-pre-wrap leading-relaxed border border-white/5">
-                    {latestTranscript.data.full_text}
-                  </div>
-                ) : (
-                  <p className="text-xs text-slate-400 text-center py-13">
-                    Transcription is currently being indexed by the engine or not yet available.
-                  </p>
-                )}
-              </div>
-            )}
-          </section>
-        )}
       </div>
     </GoldenShell>
   );

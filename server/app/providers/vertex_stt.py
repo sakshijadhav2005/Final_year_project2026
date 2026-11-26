@@ -19,6 +19,29 @@ PROMPT = (
 INLINE_LIMIT = 19 * 1024 * 1024  # Vertex AI inline request data limit is ~20 MB
 SEARCH_MS = 10_000  # look this far back from a window end for a quiet split point
 FRAME_MS = 250
+SPEECH_FRAME_MS = 100
+SPEECH_DROP_DB = 18.0  # a frame this far below the chunk's average loudness is a pause
+MIN_PAUSE_MS = 400  # shorter dips are gaps between words, not pauses
+
+
+def _speech_spans(audio, offset_sec: float) -> list[list[float]]:
+    """[start, end] seconds (recording time) where the chunk is not quiet.
+
+    Energy only: it finds pauses, but applause or music count as speech."""
+    level = audio.dBFS
+    if level == float("-inf"):
+        return []
+    threshold = level - SPEECH_DROP_DB
+    spans: list[list[int]] = []
+    for pos in range(0, len(audio), SPEECH_FRAME_MS):
+        if audio[pos : pos + SPEECH_FRAME_MS].dBFS <= threshold:
+            continue
+        end = min(pos + SPEECH_FRAME_MS, len(audio))
+        if spans and pos - spans[-1][1] < MIN_PAUSE_MS:
+            spans[-1][1] = end
+        else:
+            spans.append([pos, end])
+    return [[round(offset_sec + a / 1000, 2), round(offset_sec + b / 1000, 2)] for a, b in spans]
 
 
 def _split_points(audio, window_ms: int) -> list[int]:
@@ -37,10 +60,10 @@ def _split_points(audio, window_ms: int) -> list[int]:
     return points
 
 
-def _chunks(path: str, window_sec: int) -> list[tuple[bytes, str, float, float]]:
-    """(data, mime, start_sec, end_sec) per chunk. 16 kHz mono WAV windows when the
-    audio can be decoded locally (WAV always; other formats need ffmpeg), otherwise
-    the whole file inline if it is small enough."""
+def _chunks(path: str, window_sec: int) -> list[tuple[bytes, str, float, float, list[list[float]]]]:
+    """(data, mime, start_sec, end_sec, speech_spans) per chunk. 16 kHz mono WAV windows
+    when the audio can be decoded locally (WAV always; other formats need ffmpeg),
+    otherwise the whole file inline if it is small enough (no times, no spans)."""
     try:
         from pydub import AudioSegment
 
@@ -49,15 +72,16 @@ def _chunks(path: str, window_sec: int) -> list[tuple[bytes, str, float, float]]
         size = Path(path).stat().st_size
         mime = _MEDIA_MIME.get(Path(path).suffix.lower())
         if mime and size <= INLINE_LIMIT:
-            return [(Path(path).read_bytes(), mime, 0.0, 0.0)]
+            return [(Path(path).read_bytes(), mime, 0.0, 0.0, [])]
         raise RuntimeError("Cannot decode audio locally (install ffmpeg) and file is too large to send inline")
 
     bounds = [0, *_split_points(audio, window_sec * 1000), len(audio)]
     out = []
     for a, b in zip(bounds, bounds[1:], strict=False):
         buf = io.BytesIO()
-        audio[a:b].export(buf, format="wav")
-        out.append((buf.getvalue(), "audio/wav", a / 1000, b / 1000))
+        part = audio[a:b]
+        part.export(buf, format="wav")
+        out.append((buf.getvalue(), "audio/wav", a / 1000, b / 1000, _speech_spans(part, a / 1000)))
     return out
 
 
@@ -92,7 +116,7 @@ class VertexSTTProvider(STTProvider):
                 )
                 return (response.text or "").strip()
 
-        texts = await asyncio.gather(*(_one(data, mime) for data, mime, _, _ in chunks))
+        texts = await asyncio.gather(*(_one(data, mime) for data, mime, *_ in chunks))
         text = " ".join(t for t in texts if t) or "No audible speech detected."
         logger.info("vertex_stt_done", model=model, chunks=len(chunks), words=len(text.split()))
         return TranscriptResult(
@@ -102,8 +126,10 @@ class VertexSTTProvider(STTProvider):
             provider=self.name,
             vendor_id=f"vertex:{model}",
             segments=[
-                TranscriptSegment(text=t[:500], start=start, end=end, confidence=0.95, speaker="speaker")
-                for t, (_, _, start, end) in zip(texts, chunks, strict=True)
+                TranscriptSegment(
+                    text=t[:500], start=start, end=end, confidence=0.95, speaker="speaker", speech=spans or None
+                )
+                for t, (_, _, start, end, spans) in zip(texts, chunks, strict=True)
                 if t
             ],
         )

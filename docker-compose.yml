@@ -1,6 +1,9 @@
 services:
   postgres:
-    image: pgvector/pgvector:pg16
+    # Plain PostgreSQL: RAG embeddings live in a JSON column (see README,
+    # "Deviations from the plan"), so no vector extension is needed. Same on-disk
+    # format as the pgvector/pgvector:pg16 image, so existing volumes keep working.
+    image: postgres:16
     restart: unless-stopped
     environment:
       POSTGRES_USER: eventai

@@ -7,12 +7,11 @@ bag-of-words fallback and no Vertex AI call is made.
 import asyncio
 import uuid
 
-from fastapi.testclient import TestClient
-
 from app.graphs.agents.base import BaseCreatorAgent, _retrieved_block
 from app.graphs.nodes.rag import rag_retrieve
 from app.main import app
 from app.services.rag import AGENT_TRANSCRIPT_CHARS, BAG_MODEL, chunk_text, rank_chunks
+from fastapi.testclient import TestClient
 
 
 def test_chunks_overlap_and_cover_every_word() -> None:

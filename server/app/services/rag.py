@@ -16,6 +16,8 @@ logger = structlog.get_logger("rag")
 VOCAB = 256
 BAG_MODEL = "bag-256"  # offline fallback: hashed bag-of-words, no API needed
 EMBED_BATCH = 16
+CHUNK_SIZE, CHUNK_OVERLAP = 250, 50
+CHUNK_STEP = CHUNK_SIZE - CHUNK_OVERLAP
 
 # The writing agents read only the first part of the transcript (see
 # app.graphs.agents.base.AGENT_TRANSCRIPT_CHARS); retrieval supplies the rest.
@@ -39,7 +41,7 @@ def cosine(a: list[float], b: list[float]) -> float:
     return dot / (na * nb)
 
 
-def chunk_text(text: str, size: int = 250, overlap: int = 50) -> list[str]:
+def chunk_text(text: str, size: int = CHUNK_SIZE, overlap: int = CHUNK_OVERLAP) -> list[str]:
     """Split into word windows that overlap, so a point made across a boundary
     still lands whole in one chunk."""
     words = text.split()
@@ -127,6 +129,7 @@ async def load_rag_pool(
 
     seen = " ".join(transcript[:AGENT_TRANSCRIPT_CHARS].split())
     rows = [(row, "this_event") for row in own if row.chunk_text not in seen]
+    total_words = max(len(transcript.split()), 1)
     if use_org_memory:
         others = (
             await db.execute(
@@ -145,14 +148,50 @@ async def load_rag_pool(
             "source_id": row.source_id,
             "model": (row.extra or {}).get("model", BAG_MODEL),
             "vector": list(row.embedding or []),
+            # Share of the talk before this chunk (chunks start every size - overlap words).
+            "position": (
+                round(min((row.extra or {}).get("seq", 0) * CHUNK_STEP / total_words, 1.0), 3)
+                if source == "this_event"
+                else None
+            ),
         }
         for row, source in rows
     ]
 
 
-async def rank_chunks(pool: list[dict], query: str, k: int) -> tuple[str, list[dict]]:
-    """Top-k chunks by cosine similarity to the query. Chunks stored with a different
-    embedding model than the query are compared on bag-of-words vectors instead."""
+def _balanced_pick(scored: list[tuple[float, dict]], k: int, bins: int = 3) -> list[tuple[float, dict]]:
+    """Best chunk from each equal part of this event's candidate positions first, then
+    the rest by score. This event's picks come back in talk order."""
+    own = [(s, it) for s, it in scored if it.get("position") is not None]
+    picked: list[tuple[float, dict]] = []
+    if own:
+        lo = min(it["position"] for _, it in own)
+        hi = max(it["position"] for _, it in own)
+        width = (hi - lo) / bins or 1.0
+        for b in range(min(bins, k)):
+            in_bin = [
+                pair for pair in own
+                if min(int((pair[1]["position"] - lo) / width), bins - 1) == b
+            ]
+            if in_bin:
+                picked.append(max(in_bin, key=lambda pair: pair[0]))
+    for pair in scored:  # already sorted by score
+        if len(picked) >= k:
+            break
+        if not any(pair[1] is p[1] for p in picked):
+            picked.append(pair)
+    picked = picked[:k]
+    own_picks = sorted((p for p in picked if p[1].get("position") is not None),
+                       key=lambda pair: pair[1]["position"])
+    return own_picks + [p for p in picked if p[1].get("position") is None]
+
+
+async def rank_chunks(
+    pool: list[dict], query: str, k: int, strategy: str = "similarity"
+) -> tuple[str, list[dict]]:
+    """Top-k chunks by cosine similarity to the query ("balanced": spread over the talk,
+    see _balanced_pick). Chunks stored with a different embedding model than the query
+    are compared on bag-of-words vectors instead."""
     if not pool or not query.strip():
         return BAG_MODEL, []
     model, (qvec,) = await embed_texts([query], task_type="RETRIEVAL_QUERY")
@@ -165,12 +204,14 @@ async def rank_chunks(pool: list[dict], query: str, k: int) -> tuple[str, list[d
             score = cosine(qbag, bag_vector(item["text"]))
         scored.append((score, item))
     scored.sort(key=lambda pair: pair[0], reverse=True)
+    top = _balanced_pick(scored, k) if strategy == "balanced" else scored[:k]
     return model, [
         {
             "text": item["text"],
             "source": item["source"],
             "source_id": item["source_id"],
             "score": round(score, 4),
+            "position": item.get("position"),
         }
-        for score, item in scored[:k]
+        for score, item in top
     ]

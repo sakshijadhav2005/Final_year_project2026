@@ -46,6 +46,7 @@ export type JobPublic = {
   error_message: string | null;
   created_at: string | null;
   finished_at: string | null;
+  title?: string | null;
 };
 
 export type TranscriptPublic = {
@@ -56,6 +57,16 @@ export type TranscriptPublic = {
   segments: unknown[] | null;
   provider: string;
   badge: "high" | "medium" | "low";
+  edited?: boolean;
+  edited_at?: string | null;
+};
+
+export type BackTranslationCheck = {
+  status: "pass" | "low_agreement" | "unchecked" | "untranslated";
+  pass: boolean | null;
+  score: number | null;
+  min_score?: number;
+  back_text?: string;
 };
 
 export type ContentPublic = {
@@ -71,7 +82,7 @@ export type ContentPublic = {
   structured: Record<string, unknown> | null;
   status: string;
   version: number;
-  grounding: { pass?: boolean; unsupported?: string[] } | null;
+  grounding: { pass?: boolean; unsupported?: string[]; back_translation?: BackTranslationCheck } | null;
   moderation: { pass?: boolean; hits?: string[] } | null;
   created_at?: string | null;
 };
@@ -127,7 +138,9 @@ export async function request<T>(
     } catch {
       /* ignore */
     }
-    throw new Error(message);
+    const error = new Error(message);
+    error.name = "ApiError"; // the server records its own failures; the browser reporter skips these
+    throw error;
   }
   if (response.status === 204) return undefined as T;
   return response.json() as Promise<T>;
@@ -146,14 +159,180 @@ export const listJobs = (token: string, opts?: { all?: boolean }) =>
 export const getJob = (token: string, id: string) => request<JobPublic>(`/api/v1/jobs/${id}`, { token });
 export const getTranscript = (token: string, id: string) =>
   request<TranscriptPublic>(`/api/v1/jobs/${id}/transcript`, { token });
+
+export const updateTranscript = (token: string, id: string, fullText: string) =>
+  request<TranscriptPublic>(`/api/v1/jobs/${id}/transcript`, {
+    method: "PATCH",
+    token,
+    json: { full_text: fullText },
+  });
 export const getJobContent = (token: string, id: string) =>
   request<ContentPublic[]>(`/api/v1/jobs/${id}/content`, { token });
+export type ProvenanceClaim = {
+  sentence: string;
+  status: "traced" | "partial" | "untraced";
+  support: number;
+  position: number | null;
+  start: number | null;
+  end: number | null;
+  evidence: string | null;
+};
+
+export type ContentProvenance = {
+  available: boolean;
+  method?: string;
+  claims: ProvenanceClaim[];
+  summary: {
+    claims: number;
+    traced: number;
+    partial: number;
+    coverage: number | null;
+    bins: number[];
+    spread: number;
+  } | null;
+};
+
+export const getContentProvenance = (token: string, id: string) =>
+  request<ContentProvenance>(`/api/v1/content/${id}/provenance`, { token });
+
+/** <audio> cannot send headers, so the backend accepts the token as ?token= (like SSE). */
+export const jobMediaUrl = (token: string, jobId: string) =>
+  `${API_BASE}/api/v1/jobs/${jobId}/media?token=${encodeURIComponent(token)}`;
+
 export const approveContent = (token: string, id: string) =>
   request<ContentPublic>(`/api/v1/content/${id}/approve`, { method: "POST", token });
 export const rejectContent = (token: string, id: string, reason: string) =>
   request<ContentPublic>(`/api/v1/content/${id}/reject`, { method: "POST", token, json: { reason } });
+// ── Social publishing ──────────────────────────────────────────────────────────
+export type SocialPlatform = "linkedin" | "instagram" | "facebook" | "x";
+
+export type SocialPlatformStatus = {
+  platform: SocialPlatform;
+  label: string;
+  configured: boolean;
+  accepts: string[];
+  account: {
+    platform: SocialPlatform;
+    display_name: string | null;
+    connected_at: string | null;
+    expires_at: string | null;
+    expired: boolean;
+  } | null;
+};
+
+export type SocialPost = {
+  id: string;
+  content_id: string;
+  platform: SocialPlatform;
+  status: "posted" | "failed" | "pending" | "scheduled" | "cancelled";
+  external_post_id: string | null;
+  post_url: string | null;
+  error: string | null;
+  scheduled_for: string | null;
+  created_at: string | null;
+};
+
+export const listSocialAccounts = (token: string) =>
+  request<SocialPlatformStatus[]>("/api/v1/social/accounts", { token });
+/** Returns the platform's sign-in URL; the caller sends the browser there. */
+export const startSocialConnect = (token: string, platform: SocialPlatform) =>
+  request<{ authorize_url: string }>(`/api/v1/social/${platform}/connect`, { token, credentials: "include" });
+export const disconnectSocial = (token: string, platform: SocialPlatform) =>
+  request<void>(`/api/v1/social/accounts/${platform}`, { method: "DELETE", token });
+/** Publish now, or at `scheduledFor` (ISO time) when given. */
+export const publishContent = (token: string, id: string, platform: SocialPlatform, scheduledFor?: string) =>
+  request<SocialPost>(`/api/v1/content/${id}/publish`, {
+    method: "POST",
+    token,
+    json: { platform, ...(scheduledFor ? { scheduled_for: scheduledFor } : {}) },
+  });
+export const cancelScheduledPost = (token: string, postId: string) =>
+  request<SocialPost>(`/api/v1/social/posts/${postId}`, { method: "DELETE", token });
+export const listPublications = (token: string, id: string) =>
+  request<SocialPost[]>(`/api/v1/content/${id}/publications`, { token });
+/** Instagram with the user's own picture (the server pads it to an allowed shape). */
+export const publishInstagramWithImage = (token: string, id: string, image: File, scheduledFor?: string) => {
+  const body = new FormData();
+  body.append("image", image);
+  if (scheduledFor) body.append("scheduled_for", scheduledFor);
+  return request<SocialPost>(`/api/v1/content/${id}/publish/instagram`, { method: "POST", token, body });
+};
+/** The recap card Instagram uses when no picture is uploaded, as an object URL. */
+export async function fetchSocialImage(token: string, id: string): Promise<string> {
+  const res = await authFetch(`/api/v1/content/${id}/social-image`, { headers: authHeaders(token) });
+  if (!res.ok) throw new Error("Could not load the post image");
+  return URL.createObjectURL(await res.blob());
+}
+
 export const listAdminJobs = (token: string) => request<JobPublic[]>("/api/v1/admin/jobs", { token });
 export const listAudit = (token: string) => request<Record<string, string | null>[]>("/api/v1/admin/audit", { token });
+
+export type AutoFixStatus =
+  | "new" | "external" | "fixing" | "proposed" | "revising" | "approved" | "rejected" | "failed";
+
+export type AutoFixSummary = {
+  id: string;
+  fingerprint: string;
+  source: "api" | "pipeline" | "frontend";
+  error_type: string;
+  message: string;
+  location: string | null;
+  occurrences: number;
+  status: AutoFixStatus;
+  status_detail: string | null;
+  attempts: number;
+  risk: "low" | "medium" | "high" | null;
+  cost_usd: number;
+  branch: string | null;
+  pr_url: string | null;
+  title: string | null;
+  created_at: string | null;
+  last_seen: string | null;
+  decided_at: string | null;
+};
+
+type CheckBlock = { passed: boolean | null; output: string } | null;
+export type RiskFinding = { file: string | null; line: number | null; finding: string; risk: "low" | "medium" | "high" };
+
+export type AutoFixDetail = AutoFixSummary & {
+  stack: string | null;
+  context: Record<string, string> | null;
+  report: { fixed?: boolean; title?: string; root_cause?: string; fix?: string; test?: string; risk?: string; notes?: string } | null;
+  diff: string | null;
+  checks: { passed: boolean; backend: CheckBlock; frontend: CheckBlock; reproduced: boolean | null; note?: string } | null;
+  review: {
+    scan: { risk: string; blocked: boolean; findings: RiskFinding[]; files: string[] };
+    agent: { verdict?: string; risk?: string; notes?: string[] } | null;
+  } | null;
+  feedback: string | null;
+  base_branch: string | null;
+  base_commit: string | null;
+  decided_by: string | null;
+};
+
+export type AutoFixAgentStatus = {
+  active: boolean;
+  environment: string;
+  agent_found: boolean;
+  agent_cmd: string | null;
+  github_cli: boolean;
+  attempts_today: number;
+  max_per_day: number;
+  llm_review: boolean;
+  gateway: { gateway: "portkey" | "direct"; ready: boolean; route: string | null; detail?: string };
+};
+
+export const getAutoFixStatus = (token: string) => request<AutoFixAgentStatus>("/api/v1/autofix/status", { token });
+export const listAutoFixes = (token: string) => request<AutoFixSummary[]>("/api/v1/autofix/issues", { token });
+export const getAutoFix = (token: string, id: string) => request<AutoFixDetail>(`/api/v1/autofix/issues/${id}`, { token });
+export const approveAutoFix = (token: string, id: string) =>
+  request<AutoFixDetail>(`/api/v1/autofix/issues/${id}/approve`, { method: "POST", token });
+export const rejectAutoFix = (token: string, id: string, reason: string) =>
+  request<AutoFixDetail>(`/api/v1/autofix/issues/${id}/reject`, { method: "POST", token, json: { reason } });
+export const reviseAutoFix = (token: string, id: string, feedback: string) =>
+  request<AutoFixDetail>(`/api/v1/autofix/issues/${id}/revise`, { method: "POST", token, json: { feedback } });
+export const retryAutoFix = (token: string, id: string) =>
+  request<AutoFixDetail>(`/api/v1/autofix/issues/${id}/retry`, { method: "POST", token });
 
 export const patchContent = (
   token: string,

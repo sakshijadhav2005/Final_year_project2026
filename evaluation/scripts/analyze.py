@@ -453,39 +453,27 @@ def quality(runs):
                          **{d: score(v, d) for d in DIMS},
                          "unsupported": len(v.get("unsupported_claims") or [])})
     write_table("rag_ablation_per_draft", rows)
-    talks = sorted({r["talk"] for r in rows})
-
-    def per_talk(metric, cond, types=None):
-        out = []
-        for t in talks:
-            xs = [r[metric] for r in rows if r["talk"] == t and r["condition"] == cond
-                  and r[metric] is not None and (types is None or r["type"] in types)]
-            out.append(st.mean(xs) if xs else None)
-        return out
-
-    abl = []
-    for metric, types, label in (
+    metrics = (
         ("late_cov", None, "Late coverage, all formats"),
         ("early_cov", None, "Early coverage, all formats"),
         ("late_cov", ["blog", "newsletter", "summary"], "Late coverage, long formats"),
         ("all_cov", None, "All key points, all formats"),
         *[(d, None, DIM_LABEL[d]) for d in DIMS],
         ("unsupported", None, "Unsupported claims per draft"),
-    ):
-        on, off = per_talk(metric, "rag_on", types), per_talk(metric, "rag_off", types)
-        pairs = [(a, b) for a, b in zip(on, off) if a is not None and b is not None]
-        a = np.array([p[0] for p in pairs]); b = np.array([p[1] for p in pairs])
-        diff = a - b
-        try:
-            w = stats.wilcoxon(a, b, zero_method="wilcox") if np.any(diff != 0) else None
-        except ValueError:
-            w = None
-        abl.append({"metric": label, "talks": len(pairs), "rag_on_mean": round(a.mean(), 3),
-                    "rag_off_mean": round(b.mean(), 3), "mean_diff": round(diff.mean(), 3),
-                    "talks_improved": int((diff > 0).sum()), "talks_worse": int((diff < 0).sum()),
-                    "wilcoxon_p": round(w.pvalue, 4) if w else None})
+    )
+    abl = paired_by_talk(rows, metrics, "rag_on", "rag_off")
     write_table("rag_ablation", abl)
     SUMMARY["rag_ablation"] = abl
+    if any(r["condition"] == "rag_balanced" for r in rows):
+        # Coverage-balanced retrieval (RAG_STRATEGY=balanced) against both earlier arms.
+        bal = {"vs_rag_off": paired_by_talk(rows, metrics, "rag_balanced", "rag_off"),
+               "vs_rag_on": paired_by_talk(rows, metrics, "rag_balanced", "rag_on")}
+        for name, table in bal.items():
+            write_table(f"rag_balanced_{name}", table)
+        SUMMARY["rag_balanced"] = bal
+
+    def per_talk(metric, cond):
+        return talk_means(rows, metric, cond, sorted({r["talk"] for r in rows}))
 
     on, off = per_talk("late_cov", "rag_on"), per_talk("late_cov", "rag_off")
     eon, eoff = per_talk("early_cov", "rag_on"), per_talk("early_cov", "rag_off")
@@ -531,6 +519,121 @@ def quality(runs):
                       "qwk": round(qwk(x, y), 3), "mean_j1": round(x.mean(), 2), "mean_j2": round(y.mean(), 2)})
     write_table("judge_agreement", agree)
     SUMMARY["judge_agreement"] = agree
+
+
+def talk_means(rows, metric, cond, talks, types=None):
+    out = []
+    for t in talks:
+        xs = [r[metric] for r in rows if r["talk"] == t and r["condition"] == cond
+              and r.get(metric) is not None and (types is None or r["type"] in types)]
+        out.append(st.mean(xs) if xs else None)
+    return out
+
+
+def paired_by_talk(rows, metrics, cond_a, cond_b):
+    """Per-talk means of each metric under two conditions, two-sided Wilcoxon signed-rank.
+    Keys keep the original rag_on/rag_off names: rag_on_* is cond_a, rag_off_* is cond_b."""
+    talks = sorted({r["talk"] for r in rows})
+    out = []
+    for metric, types, label in metrics:
+        xa, xb = talk_means(rows, metric, cond_a, talks, types), talk_means(rows, metric, cond_b, talks, types)
+        pairs = [(a, b) for a, b in zip(xa, xb) if a is not None and b is not None]
+        if not pairs:
+            continue
+        a = np.array([p[0] for p in pairs]); b = np.array([p[1] for p in pairs])
+        diff = a - b
+        try:
+            w = stats.wilcoxon(a, b, zero_method="wilcox") if np.any(diff != 0) else None
+        except ValueError:
+            w = None
+        out.append({"metric": label, "talks": len(pairs), "rag_on_mean": round(a.mean(), 3),
+                    "rag_off_mean": round(b.mean(), 3), "mean_diff": round(diff.mean(), 3),
+                    "talks_improved": int((diff > 0).sum()), "talks_worse": int((diff < 0).sum()),
+                    "wilcoxon_p": round(w.pvalue, 4) if w else None})
+    return out
+
+
+# --------------------------------------------------------------------------- provenance
+def _provenance_module():
+    import sys
+
+    if str(harness.SERVER) not in sys.path:
+        sys.path.insert(0, str(harness.SERVER))
+    from app.services import provenance as P  # pure-Python module, no settings or network
+
+    return P
+
+
+def provenance(runs):
+    """Claim-level provenance (deterministic, no LLM): validation against the judge's
+    key points, traced-claim rate per format, and where in the talk the drafts draw
+    their points from, RAG on vs off."""
+    P = _provenance_module()
+    kp_dir = R / "judge" / "key_points"
+    # 1. Localisation: a key point's verbatim quote gives its true position in the talk.
+    #    Locate the paraphrased point (and, as a ceiling, the quote) in the ASR transcript.
+    errors = {"point": [], "quote": []}
+    for r in runs:
+        path = kp_dir / f"{r['talk_id']}.json"
+        if r["mode"] != "e2e" or not path.exists() or not r.get("transcript"):
+            continue
+        windows = P.build_windows(r["transcript"]["full_text"], r["transcript"].get("segments"))
+        bm25 = P._BM25([w["tokens"] for w in windows])
+        for k in json.load(open(path, encoding="utf-8")):
+            for field in errors:
+                scores = bm25.scores(P.content_tokens(k[field]))
+                best = max(range(len(windows)), key=scores.__getitem__)
+                errors[field].append(abs(windows[best]["position"] - k["position"]))
+    loc = {field: {"n": len(e), "median_abs_error": round(st.median(e), 4),
+                   **{f"within_{int(t * 100)}pct": round(sum(x <= t for x in e) / len(e), 3)
+                      for t in (0.02, 0.05, 0.10)}}
+           for field, e in errors.items() if e}
+
+    # 2. Per draft.
+    rows = []
+    for r in runs:
+        if r["incident_quality_invalid"] or not r.get("transcript"):
+            continue
+        t = r["transcript"]
+        visible = min(1.0, AGENT_CHARS / len(t["full_text"])) if t.get("full_text") else 1.0
+        for p in r.get("content") or []:
+            if p.get("language") != "en":
+                continue
+            res = P.trace_claims(p.get("body") or "", t["full_text"], t.get("segments"))
+            s = res["summary"]
+            pos = [c["position"] for c in res["claims"] if c["status"] == "traced"]
+            rows.append({"run": r["run_id"], "talk": r["talk_id"], "mode": r["mode"], "condition": r["condition"],
+                         "type": p["type"], "claims": s["claims"], "traced": s["traced"], "partial": s["partial"],
+                         "traced_rate": s["coverage"], "spread": s["spread"] if pos else None,
+                         "late_share": (sum(x > visible for x in pos) / len(pos)) if pos else None})
+    write_table("provenance_per_draft", rows)
+    fmt = []
+    for t in TYPES:
+        xs = [x for x in rows if x["mode"] == "e2e" and x["type"] == t]
+        if not xs:
+            continue
+        fmt.append({"format": t, "drafts": len(xs), "claims": sum(x["claims"] for x in xs),
+                    "traced_pct": round(100 * sum(x["traced"] for x in xs) / max(sum(x["claims"] for x in xs), 1), 1),
+                    "partial_pct": round(100 * sum(x["partial"] for x in xs) / max(sum(x["claims"] for x in xs), 1), 1),
+                    "mean_spread": round(st.mean(x["spread"] for x in xs if x["spread"] is not None), 3)})
+    write_table("provenance_formats", fmt)
+    regen = [x for x in rows if x["mode"] == "regen"]
+    metrics = (("late_share", None, "Traced claims from the late talk (share)"),
+               ("spread", None, "Evidence spread (quarters used)"),
+               ("traced_rate", None, "Traced-claim rate"))
+    abl = paired_by_talk(regen, metrics, "rag_on", "rag_off")
+    write_table("provenance_ablation", abl)
+    SUMMARY["provenance"] = {"localisation": loc, "formats": fmt, "ablation": abl}
+    if any(x["condition"] == "rag_balanced" for x in regen):
+        SUMMARY["provenance"]["balanced_vs_off"] = paired_by_talk(regen, metrics, "rag_balanced", "rag_off")
+        SUMMARY["provenance"]["balanced_vs_on"] = paired_by_talk(regen, metrics, "rag_balanced", "rag_on")
+
+
+def human():
+    """Human calibration of the judge (human_eval.py analyze), when ratings exist."""
+    path = R / "human" / "summary.json"
+    if path.exists():
+        SUMMARY["human_calibration"] = json.load(open(path, encoding="utf-8"))
 
 
 def qwk(a, b, lo=1, hi=5):
@@ -702,6 +805,61 @@ def make_tex():
               "Coverage from the automatic judge.", "tab:rag", "lrrrrr",
               ["Metric", "RAG off", "RAG on", "$\\Delta$", "$+$/$-$", "$p$"], rows, colsep="2.2pt",
               note="$+$/$-$: talks whose per-talk mean rose/fell with RAG.")
+    if S.get("rag_balanced"):
+        rows = []
+        for vs_off, vs_on in zip(S["rag_balanced"]["vs_rag_off"], S["rag_balanced"]["vs_rag_on"]):
+            pct = "coverage" in vs_off["metric"].lower() or "key points" in vs_off["metric"].lower()
+            fmt = (lambda v: f2(v * 100, 1)) if pct else (lambda v: f2(v, 2))
+            sign = lambda v: ("+" if v >= 0 else "") + fmt(v)  # noqa: E731
+            pv = lambda a: f2(a["wilcoxon_p"], 4) if a["wilcoxon_p"] is not None else "--"  # noqa: E731
+            rows.append([vs_off["metric"] + (" (\\%)" if pct else ""), fmt(vs_off["rag_off_mean"]),
+                         fmt(vs_on["rag_off_mean"]), fmt(vs_off["rag_on_mean"]),
+                         sign(vs_off["mean_diff"]), pv(vs_off), sign(vs_on["mean_diff"]), pv(vs_on)])
+        rows.insert(4, "MID")
+        tex_table("tab_rag_balanced", "Coverage-balanced retrieval (Bal.) against no retrieval (Off) and "
+                  f"similarity retrieval (Sim.), per-talk means ($n={S['rag_balanced']['vs_rag_off'][0]['talks']}$); "
+                  "two-sided Wilcoxon signed-rank test.", "tab:ragbal", "lrrrrrrr",
+                  ["Metric", "Off", "Sim.", "Bal.", "$\\Delta$ Off", "$p$", "$\\Delta$ Sim.", "$p$"], rows,
+                  wide=True, colsep="2.2pt")
+    # provenance
+    P = S["provenance"]
+    loc = P["localisation"]
+    rows = [[f"Paraphrased key point ($n={loc['point']['n']}$)", f2(loc["point"]["median_abs_error"] * 100, 1),
+             f2(loc["point"]["within_2pct"] * 100, 1), f2(loc["point"]["within_5pct"] * 100, 1),
+             f2(loc["point"]["within_10pct"] * 100, 1)],
+            [f"Verbatim quote (ceiling, $n={loc['quote']['n']}$)", f2(loc["quote"]["median_abs_error"] * 100, 1),
+             f2(loc["quote"]["within_2pct"] * 100, 1), f2(loc["quote"]["within_5pct"] * 100, 1),
+             f2(loc["quote"]["within_10pct"] * 100, 1)]]
+    tex_table("tab_prov_loc", "Provenance localisation: position of the passage found for each judge key point "
+              "against the position of its verbatim quote (error and hit rates in \\% of talk length).",
+              "tab:provloc", "lrrrr", ["Query", "Median err.", "$\\le$2", "$\\le$5", "$\\le$10"], rows)
+    rows = [[r["format"].capitalize(), r["drafts"], r["claims"], f2(r["traced_pct"], 1), f2(r["partial_pct"], 1),
+             f2(r["mean_spread"])] for r in P["formats"]]
+    tex_table("tab_provenance", "Claim-level provenance of the end-to-end drafts: traced = an evidence passage "
+              "was found; spread = share of talk quarters the traced claims come from (1 = whole talk).",
+              "tab:provenance", "lrrrrr", ["Format", "Drafts", "Claims", "Traced \\%", "Partial \\%", "Spread"],
+              rows, colsep="2.5pt")
+    rows = []
+    for a in P["ablation"]:
+        pct = "share" in a["metric"] or "rate" in a["metric"]
+        fmt = (lambda v: f2(v * 100, 1)) if pct else (lambda v: f2(v, 2))
+        rows.append([a["metric"].replace(" (share)", "") + (" (\\%)" if pct else ""), fmt(a["rag_off_mean"]),
+                     fmt(a["rag_on_mean"]), ("+" if a["mean_diff"] >= 0 else "") + fmt(a["mean_diff"]),
+                     f"{a['talks_improved']}/{a['talks_worse']}",
+                     f2(a["wilcoxon_p"], 4) if a["wilcoxon_p"] is not None else "--"])
+    tex_table("tab_prov_rag", "Where the drafts' traced claims come from, RAG off vs on (same ablation drafts "
+              f"as Table~\\ref{{tab:rag}}, per-talk means, $n={P['ablation'][0]['talks']}$; deterministic, no judge).",
+              "tab:provrag", "lrrrrr", ["Metric", "RAG off", "RAG on", "$\\Delta$", "$+$/$-$", "$p$"], rows,
+              colsep="2.2pt")
+    if S.get("human_calibration"):
+        H = S["human_calibration"]
+        rows = [[DIM_LABEL[r["dimension"]], r["items"], f2(r["alpha_raters"]), f2(r["qwk_human_judge"]),
+                 f2(r["spearman"]), f2(r["exact"] * 100, 1), f2(r["within_1"] * 100, 1), f2(r["mean_human"]),
+                 f2(r["mean_judge"])] for r in H["dimensions"]]
+        tex_table("tab_human", f"Automatic judge against {len(H['raters'])} human raters: inter-rater agreement "
+                  "(Krippendorff's $\\alpha$, ordinal) and agreement of the human median with the judge.",
+                  "tab:human", "lrrrrrrrr", ["Dimension", "$n$", "$\\alpha$", "QWK", "$\\rho$", "Exact \\%",
+                                             "$\\pm$1 \\%", "Human", "Judge"], rows, wide=True)
     # quality
     rows = [[r["format"].capitalize(), r["n"], *[f2(r[d]) for d in DIMS], f2(r["mean_unsupported_claims"])]
             for r in S["quality_rubric"]]
@@ -774,6 +932,8 @@ def main():
                              "max_call_sec": round(max(c["sec"] for c in r["calls"]), 1),
                              "error": (r["job"].get("error_message") or "")[:160]} for r in incidents]
     quality(runs)
+    provenance(runs)
+    human()
     retrieval()
     faults()
     tests()

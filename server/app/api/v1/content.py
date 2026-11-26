@@ -12,10 +12,11 @@ from app.core.exceptions import http_error
 from app.core.security import UserRole
 from app.db.session import get_db
 from app.models.content import ContentPiece
-from app.models.job import Job
+from app.models.job import Job, Transcript
 from app.models.user import User
 from app.schemas.common import ContentPatch, ContentPublic, CreatePostRequest, RejectRequest
 from app.services.audit import write_audit
+from app.services.provenance import trace_claims
 
 router = APIRouter(tags=["content"])
 
@@ -197,6 +198,27 @@ async def reject_content(
     await db.commit()
     await db.refresh(piece)
     return piece
+
+
+@router.get("/content/{content_id}/provenance")
+async def content_provenance(
+    content_id: UUID,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> dict:
+    """Where in the recording each sentence of the draft comes from. Computed from the
+    current body, so it stays correct after a human edits the draft."""
+    piece = await _load_piece(db, user, content_id)
+    transcript = None
+    if piece.job_id is not None:
+        transcript = (
+            await db.execute(select(Transcript).where(Transcript.job_id == piece.job_id))
+        ).scalar_one_or_none()
+    if transcript is None or piece.language != (transcript.language or "en"):
+        # Community posts have no recording; translations do not match the transcript's words.
+        return {"available": False, "claims": [], "summary": None}
+    result = trace_claims(piece.body or "", transcript.full_text or "", transcript.segments)
+    return {"available": True, **result}
 
 
 @router.get("/content/{content_id}/download")

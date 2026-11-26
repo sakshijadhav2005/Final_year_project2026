@@ -41,7 +41,7 @@ export function EventChatWidget({ eventId, jobId, eventName }: EventChatWidgetPr
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="group flex items-center gap-2.5 rounded-full bg-amber-400 px-5 py-3 text-xs font-bold text-on-accent transition-all border border-amber-300/30"
+          className="group flex items-center gap-2.5 rounded-full bg-amber-400 px-5 py-3 text-xs font-bold text-on-accent transition-colors border border-amber-300/30"
         >
           <span className="text-base animate-bounce">💬</span>
           <span>Ask Event AI Assistant</span>
@@ -60,7 +60,7 @@ export function EventChatWidget({ eventId, jobId, eventName }: EventChatWidgetPr
               </div>
               <div>
                 <h3 className="text-xs font-bold text-white">
-                  Talk to {eventName ? `"${eventName.slice(0, 18)}..."` : "the Event"}
+                  Talk to {eventName ? `"${eventName.slice(0, 18)}…"` : "the Event"}
                 </h3>
                 <p className="text-[10px] text-slate-400">Ask any question about this session</p>
               </div>
@@ -70,13 +70,20 @@ export function EventChatWidget({ eventId, jobId, eventName }: EventChatWidgetPr
               type="button"
               onClick={() => setIsOpen(false)}
               className="rounded-lg p-8 text-slate-400 hover:bg-white/10 hover:text-white"
+              aria-label="Close event chat"
+              title="Close event chat"
             >
               ✕
             </button>
           </div>
 
           {/* Messages Area */}
-          <div className="h-72 overflow-y-auto p-13 space-y-13 text-xs">
+          <div
+            role="log"
+            aria-live="polite"
+            aria-busy={isStreaming}
+            className="h-72 overflow-y-auto p-13 space-y-13 text-xs"
+          >
             {messages.length === 0 && (
               <div className="py-13 text-center">
                 <span className="text-2xl">🎙️</span>
@@ -91,7 +98,7 @@ export function EventChatWidget({ eventId, jobId, eventName }: EventChatWidgetPr
                       key={p}
                       type="button"
                       onClick={() => handleSend(p)}
-                      className="w-full text-left rounded-lg border border-white/5 bg-white/[0.02] p-8 text-[10px] text-slate-300 hover:border-amber-500/30 hover:bg-amber-500/10 hover:text-amber-200 transition-all"
+                      className="w-full text-left rounded-lg border border-white/5 bg-white/[0.02] p-8 text-[10px] text-slate-300 hover:border-amber-500/30 hover:bg-amber-500/10 hover:text-amber-200 transition-colors"
                     >
                       ❓ {p}
                     </button>
@@ -111,14 +118,14 @@ export function EventChatWidget({ eventId, jobId, eventName }: EventChatWidgetPr
                         : "bg-slate-800 border border-white/[0.08] text-slate-200 whitespace-pre-wrap"
                     }`}
                   >
-                    {m.content || "..."}
+                    {m.content || "…"}
                   </div>
                 </div>
               );
             })}
 
             {error && (
-              <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 p-8 text-rose-300 text-[10px]">
+              <div role="alert" className="rounded-lg border border-rose-500/30 bg-rose-500/10 p-8 text-rose-300 text-[10px]">
                 {error}
               </div>
             )}
@@ -137,9 +144,9 @@ export function EventChatWidget({ eventId, jobId, eventName }: EventChatWidgetPr
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about speakers, points, key quotes..."
+              placeholder="Ask about speakers, points, key quotes…"
               disabled={isStreaming}
-              className="flex-1 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+              className="flex-1 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50"
             />
             <button
               type="submit"

@@ -10,7 +10,7 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const setSession = useAuthStore((s) => s.setSession);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("password123");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState<UserRole>("event_organizer");
   const [error, setError] = useState<string | null>(null);
@@ -44,10 +44,14 @@ export function RegisterPage() {
 
         <form className="glass p-34 flex flex-col gap-13" onSubmit={onSubmit}>
           <div>
-            <label className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Email</label>
+            <label htmlFor="register-email" className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Email</label>
             <input
-              className="w-full rounded-card border border-black/10 dark:border-white/[0.08] bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+              className="w-full rounded-card border border-black/10 dark:border-white/[0.08] bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-sm text-ink-light dark:text-ink-dark focus:border-gold"
+              id="register-email"
+              name="email"
               type="email"
+              autoComplete="email"
+              spellCheck={false}
               placeholder="organizer@conference.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -56,10 +60,13 @@ export function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Password</label>
+            <label htmlFor="register-password" className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Password</label>
             <div className="relative">
               <input
-                className="w-full rounded-card border border-black/10 dark:border-white/[0.08] bg-canvas-light dark:bg-white/[0.04] px-13 py-8 pr-34 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+                className="w-full rounded-card border border-black/10 dark:border-white/[0.08] bg-canvas-light dark:bg-white/[0.04] px-13 py-8 pr-34 text-sm text-ink-light dark:text-ink-dark focus:border-gold"
+                id="register-password"
+                name="new-password"
+                autoComplete="new-password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -69,15 +76,16 @@ export function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-10 top-1/2 -translate-y-1/2 text-ink-light/50 dark:text-ink-dim hover:text-gold focus:outline-none"
-                title={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-10 top-1/2 -translate-y-1/2 text-ink-light/50 dark:text-ink-dim hover:text-gold"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-pressed={showPassword}
               >
                 {showPassword ? (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22" />
                   </svg>
                 ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
@@ -87,9 +95,11 @@ export function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Account Role</label>
+            <label htmlFor="register-role" className="block text-xs text-ink-light/50 dark:text-ink-dim mb-[4px]">Account Role</label>
             <select
-              className="w-full rounded-card border border-black/10 dark:border-white/[0.08] bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-sm text-ink-light dark:text-ink-dark focus:border-gold focus:outline-none"
+              className="w-full rounded-card border border-black/10 dark:border-white/[0.08] bg-canvas-light dark:bg-white/[0.04] px-13 py-8 text-sm text-ink-light dark:text-ink-dark focus:border-gold"
+              id="register-role"
+              name="role"
               value={role}
               onChange={(e) => setRole(e.target.value as UserRole)}
             >
@@ -100,7 +110,7 @@ export function RegisterPage() {
           </div>
 
           {error && (
-            <div className="rounded-card border border-danger/40 bg-danger/10 p-13 text-xs text-danger flex flex-col gap-[4px]">
+            <div role="alert" className="rounded-card border border-danger/40 bg-danger/10 p-13 text-xs text-danger flex flex-col gap-[4px]">
               <div className="flex items-center gap-8 font-semibold">
                 <span>⚠️ Registration Notice</span>
               </div>

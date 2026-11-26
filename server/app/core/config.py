@@ -47,7 +47,9 @@ class Settings(BaseSettings):
     vertex_model: str = ""  # empty = GEMINI_MODEL_GENERATE
     vertex_fast_model: str = ""  # empty = GEMINI_MODEL_FAST
     vertex_stt_model: str = ""  # empty = GEMINI_MODEL_ANALYZE
-    stt_chunk_seconds: int = 300  # long recordings are transcribed in ~5 min chunks
+    # Long recordings are transcribed in ~2 min chunks. Same WER as 300 s on the evaluation
+    # talks; claim "Play from" times land within 5 s for 94% vs 83% (timestamp_eval.py).
+    stt_chunk_seconds: int = 120
     stt_concurrency: int = 4
     stt_chunk_timeout_seconds: float = 240.0  # per ~5 min chunk; measured 5-60 s normally
     portkey_api_key: str = ""
@@ -81,12 +83,23 @@ class Settings(BaseSettings):
     rag_token_threshold: int = 2000
     rag_enabled: bool = True
     rag_top_k: int = 6
+    # "similarity": top-k by cosine to the brief (the evaluated default).
+    # "balanced": one best chunk per part of the unseen talk first, then by similarity;
+    # writers get the excerpts in talk order with their position and are asked to
+    # cover the beginning, middle and end (counters the early-coverage drop).
+    rag_strategy: str = "similarity"
     # Vertex AI embedding model (needs GOOGLE_CLOUD_PROJECT); else hashed bag-of-words.
     rag_embedding_model: str = "gemini-embedding-001"
     rag_embedding_dims: int = 768
     # Regional endpoint: embeddings on the "global" endpoint measured ~12 s per call
     # vs ~0.6 s regionally. Pick the region nearest the server (e.g. asia-south1).
     rag_embedding_location: str = "us-central1"
+
+    # Back-translation check: every translated draft is translated back into English
+    # and compared word-for-word (content words, stemmed) with the original. Below
+    # the minimum score the translation is flagged for the reviewer.
+    back_translation_enabled: bool = True
+    back_translation_min_score: float = 0.45
 
     max_upload_mb: int = 500
     max_duration_sec: int = 10800
@@ -110,6 +123,63 @@ class Settings(BaseSettings):
 
     sentry_dsn: str = ""
     bootstrap_admin_email: str = "admin@example.com"
+
+    # Error-repair agent (development only). New errors are fixed by Claude Code in a
+    # separate git worktree; nothing is committed or pushed until an admin approves.
+    # Opt-in: it runs a coding agent (with a budget) and tests on the code it writes.
+    autofix_enabled: bool = False
+    autofix_agent_cmd: str = ""  # path to the claude CLI; empty = PATH, then the VS Code extension
+    autofix_model: str = ""  # empty = the CLI's default model
+    autofix_max_per_day: int = 10  # fix attempts per day
+    autofix_max_budget_usd: float = 2.0  # per agent call
+    autofix_max_rounds: int = 3  # agent edits -> checks -> feedback, at most this many times
+    autofix_timeout_seconds: float = 900.0  # one agent call
+    autofix_check_timeout_seconds: float = 600.0  # one test run
+    autofix_llm_review: bool = True  # second agent call that reviews the diff
+    autofix_worktree_root: str = str(ROOT.parent / ".eventai-autofix")
+    autofix_remote: str = "origin"
+    autofix_poll_seconds: float = 10.0
+    # Every model call the agent makes goes through the Portkey gateway (logs, cost,
+    # traces per error, retries / fallbacks from a Portkey config). "direct" = the CLI's
+    # own login, no gateway. Portkey needs PORTKEY_API_KEY plus one way to reach Claude:
+    # a config id (preferred: fallbacks, retries, caching), a virtual key holding the
+    # Anthropic key, or ANTHROPIC_API_KEY forwarded with x-portkey-provider: anthropic.
+    autofix_llm_gateway: Literal["portkey", "direct"] = "portkey"
+    autofix_portkey_base_url: str = "https://api.portkey.ai"
+    autofix_portkey_config: str = ""
+    autofix_portkey_virtual_key: str = ""
+
+    # Social publishing. Approved drafts can be posted to the user's own connected accounts.
+    # LinkedIn: create an app at developer.linkedin.com, add the "Share on LinkedIn" and
+    # "Sign In with LinkedIn using OpenID Connect" products, and register the redirect URI.
+    linkedin_client_id: str = ""
+    linkedin_client_secret: str = ""
+    linkedin_redirect_uri: str = "http://localhost:8000/api/v1/social/linkedin/callback"
+    linkedin_api_version: str = "202606"  # LinkedIn-Version header (YYYYMM, ~1 year supported)
+    # Instagram (Business/Creator accounts, "Instagram API with Instagram Login"): create a
+    # Meta app at developers.facebook.com, add the Instagram product, use its Instagram
+    # app id / secret, and register the redirect URI under "Set up Instagram business login".
+    instagram_client_id: str = ""
+    instagram_client_secret: str = ""
+    instagram_redirect_uri: str = "http://localhost:8000/api/v1/social/instagram/callback"
+    instagram_graph_version: str = "v23.0"
+    # Facebook Pages: Meta app with "Facebook Login for Business"; posts go to the user's first Page.
+    facebook_app_id: str = ""
+    facebook_app_secret: str = ""
+    facebook_redirect_uri: str = "http://localhost:8000/api/v1/social/facebook/callback"
+    facebook_graph_version: str = "v23.0"
+    # X (Twitter): developer.x.com app, OAuth 2.0 "Web App" (confidential), read + write.
+    x_client_id: str = ""
+    x_client_secret: str = ""
+    x_redirect_uri: str = "http://localhost:8000/api/v1/social/x/callback"
+    # How often due scheduled posts are sent (in-process loop; Celery beat uses 1 minute).
+    social_scheduler_interval_seconds: int = 30
+    # Instagram downloads post images itself, so they need a public https URL. With
+    # STORAGE_BACKEND=r2/s3 the bucket URL is used; otherwise set this to the public address
+    # of this API (e.g. an ngrok https URL) and images are served from a signed link.
+    public_base_url: str = ""
+    # Where the browser goes after the OAuth callback (the web app's Settings page).
+    frontend_url: str = "http://localhost:5173"
 
     use_celery: bool = False
     rate_limit_enabled: bool = True
@@ -142,6 +212,10 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.eventai_env == "production"
+
+    @property
+    def autofix_active(self) -> bool:
+        return self.autofix_enabled and self.eventai_env == "development"
 
     @property
     def is_sqlite(self) -> bool:

@@ -34,3 +34,12 @@ def purge_expired_media() -> dict[str, int]:
 
     purged = asyncio.run(_run_with_fresh_engine(_purge))
     return {"purged_count": purged}
+
+
+@celery_app.task(name="social.send_due_posts")
+def send_due_posts() -> dict[str, int]:
+    """Send scheduled social posts whose time has come (Celery beat, every minute)."""
+    from app.services.social_publishing import run_due_posts
+
+    attempted = asyncio.run(_run_with_fresh_engine(run_due_posts))
+    return {"attempted": attempted}

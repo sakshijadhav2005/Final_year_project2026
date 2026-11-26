@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { sessionTitle, statusLabel } from "@/lib/status";
 
 import { CatalogNav } from "@/components/dashboard/CatalogNav";
 import { EventCard } from "@/components/dashboard/EventCard";
@@ -8,6 +9,7 @@ import { CreatePostForm } from "@/components/dashboard/CreatePostForm";
 import { listEvents, listCommunityContent, listJobs, deleteJob } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { useAuthStore } from "@/store/auth";
+import { parseServerTime } from "@/lib/time";
 
 export function UserDashboard() {
   const token = useAuthStore((s) => s.accessToken);
@@ -47,7 +49,7 @@ export function UserDashboard() {
   const handleDeleteSession = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
-    if (window.confirm(`Are you sure you want to permanently delete session ${id.slice(0, 8)}? All generated content and transcripts will be removed.`)) {
+    if (window.confirm(`Permanently delete “${sessionTitle(userSessions.find((j) => j.id === id))}”? All its drafts and its transcript will be removed.`)) {
       deleteMutation.mutate(id);
     }
   };
@@ -85,7 +87,7 @@ export function UserDashboard() {
             <button
               type="button"
               onClick={() => setShowCreatePost((p) => !p)}
-              className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-all"
+              className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-colors"
             >
               <span>{showCreatePost ? "✕ Close Form" : "✍️ Write Post / Upload Recording"}</span>
             </button>
@@ -120,7 +122,7 @@ export function UserDashboard() {
             <button
               type="button"
               onClick={() => setShowPastSessions((prev) => !prev)}
-              className="inline-flex items-center gap-8 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs font-semibold text-slate-200 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-200 transition-all"
+              className="inline-flex items-center gap-8 rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-xs font-semibold text-slate-200 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-200 transition-colors"
             >
               <span>{showPastSessions ? "▲ Hide Previous Sessions" : "▼ Show All Previous Sessions"}</span>
               <span className="rounded-full bg-white/10 px-8 py-0.5 text-[10px] font-bold">
@@ -160,10 +162,10 @@ export function UserDashboard() {
                             </div>
                             <div>
                               <h4 className="text-xs font-bold text-white group-hover:text-amber-300 transition-colors">
-                                Session {job.id.slice(0, 8)}
+                                {sessionTitle(job)}
                               </h4>
                               <p className="text-[10px] text-slate-400">
-                                {job.created_at ? new Date(job.created_at).toLocaleString() : "Recently"}
+                                {job.created_at ? parseServerTime(job.created_at).toLocaleString() : "Recently"}
                               </p>
                             </div>
                           </div>
@@ -179,7 +181,7 @@ export function UserDashboard() {
                                 : "bg-sky-500/15 text-sky-400 border border-white/[0.08]"
                             }`}
                           >
-                            {job.status.replace("_", " ")}
+                            {statusLabel(job.status)}
                           </span>
                         </div>
 
@@ -228,7 +230,7 @@ export function UserDashboard() {
             <button
               type="button"
               onClick={() => setShowCreatePost((p) => !p)}
-              className="inline-flex items-center gap-[2px] rounded-card bg-amber-400 px-[4px] py-[2px] text-xs font-bold text-on-accent transition-all"
+              className="inline-flex items-center gap-[2px] rounded-card bg-amber-400 px-[4px] py-[2px] text-xs font-bold text-on-accent transition-colors"
             >
               <span>{showCreatePost ? "✕ Close Creator" : "✍️ Write Post / Upload Recording"}</span>
             </button>
@@ -261,7 +263,7 @@ export function UserDashboard() {
                 <button
                   type="button"
                   onClick={() => setShowCreatePost(true)}
-                  className="mt-5 inline-flex items-center gap-[2px] rounded-card bg-amber-400 px-5 py-2.5 text-xs font-bold text-on-accent transition-all"
+                  className="mt-5 inline-flex items-center gap-[2px] rounded-card bg-amber-400 px-5 py-2.5 text-xs font-bold text-on-accent transition-colors"
                 >
                   Write Your First Post
                 </button>
@@ -273,7 +275,7 @@ export function UserDashboard() {
                 {myPosts.slice(0, 3).map((p) => (
                   <div
                     key={p.id}
-                    className="flex flex-col justify-between rounded-card border border-white/[0.08] bg-white/[0.02] p-13 transition-all hover:border-amber-500/30"
+                    className="flex flex-col justify-between rounded-card border border-white/[0.08] bg-white/[0.02] p-13 transition-colors hover:border-amber-500/30"
                   >
                     <div>
                       <div className="flex items-center justify-between text-xs text-slate-400">
@@ -281,7 +283,7 @@ export function UserDashboard() {
                           {p.type}
                         </span>
                         <span className="text-[10px]">
-                          {p.created_at ? new Date(p.created_at).toLocaleDateString() : ""}
+                          {p.created_at ? parseServerTime(p.created_at).toLocaleDateString() : ""}
                         </span>
                       </div>
                       <h4 className="mt-8 text-xs font-bold text-white line-clamp-1">{p.title}</h4>

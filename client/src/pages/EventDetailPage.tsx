@@ -14,6 +14,8 @@ import { useAuthStore } from "@/store/auth";
 import { EventChatWidget } from "@/components/chat/EventChatWidget";
 import { MarkdownText } from "@/components/content/renderers/MarkdownText";
 import { GoldenShell } from "@/layouts/GoldenShell";
+import { contentFormat } from "@/lib/social";
+import { parseCalendarDate } from "@/lib/time";
 
 export function EventDetailPage() {
   const { eventId = "" } = useParams<{ eventId: string }>();
@@ -85,7 +87,7 @@ export function EventDetailPage() {
   const posts: ContentPublic[] = contentQuery.data || [];
 
   const filteredPosts =
-    selectedType === "all" ? posts : posts.filter((p) => p.type === selectedType);
+    selectedType === "all" ? posts : posts.filter((p) => contentFormat(p.type) === selectedType);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -212,7 +214,7 @@ export function EventDetailPage() {
                 <span className="text-xs text-slate-400">
                   📅{" "}
                   {event?.date
-                    ? new Date(event.date).toLocaleDateString(undefined, { dateStyle: "full" })
+                    ? parseCalendarDate(event.date).toLocaleDateString(undefined, { dateStyle: "full" })
                     : "Scheduled Date"}
                 </span>
                 {event?.location && (
@@ -273,7 +275,7 @@ export function EventDetailPage() {
             <button
               type="button"
               onClick={() => setActiveTab("content")}
-              className={`rounded-card px-21 py-8 text-xs font-bold transition-all ${
+              className={`rounded-card px-21 py-8 text-xs font-bold transition-colors ${
                 activeTab === "content"
                   ? "bg-amber-400 text-on-accent"
                   : "border border-white/[0.08] bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
@@ -284,7 +286,7 @@ export function EventDetailPage() {
             <button
               type="button"
               onClick={() => setActiveTab("transcript")}
-              className={`rounded-card px-21 py-8 text-xs font-bold transition-all ${
+              className={`rounded-card px-21 py-8 text-xs font-bold transition-colors ${
                 activeTab === "transcript"
                   ? "bg-amber-400 text-on-accent"
                   : "border border-white/[0.08] bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
@@ -300,11 +302,12 @@ export function EventDetailPage() {
               <select
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
-                className="rounded-card border border-white/[0.08] bg-slate-900 px-13 py-8 text-xs text-slate-200 focus:border-amber-500/50 focus:outline-none"
+                className="rounded-card border border-white/[0.08] bg-slate-900 px-13 py-8 text-xs text-slate-200 focus:border-amber-500/50"
               >
                 <option value="all">All Formats ({posts.length})</option>
                 <option value="linkedin">💼 LinkedIn</option>
                 <option value="instagram">📸 Instagram</option>
+                <option value="x">𝕏 X</option>
                 <option value="newsletter">📧 Newsletter</option>
                 <option value="blog">📝 Blog</option>
                 <option value="summary">📊 Summary</option>
@@ -352,7 +355,7 @@ export function EventDetailPage() {
                   return (
                     <div
                       key={post.id}
-                      className="group relative flex flex-col justify-between overflow-hidden rounded-panel border border-white/[0.08] bg-surface p-21 transition-all hover:border-white/20"
+                      className="group relative flex flex-col justify-between overflow-hidden rounded-panel border border-white/[0.08] bg-surface p-21 transition-colors hover:border-white/20"
                     >
                       <div>
                         <div className="flex items-center justify-between border-b border-white/5 pb-13 mb-13">
@@ -453,8 +456,8 @@ export function EventDetailPage() {
                   type="text"
                   value={transcriptSearch}
                   onChange={(e) => setTranscriptSearch(e.target.value)}
-                  placeholder="Search transcript text..."
-                  className="w-full rounded-card border border-white/[0.08] bg-white/5 pl-9 pr-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                  placeholder="Search transcript text…"
+                  className="w-full rounded-card border border-white/[0.08] bg-white/5 pl-9 pr-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50"
                 />
                 <span className="absolute inset-y-0 left-3 flex items-center text-xs text-slate-400">
                   🔍
@@ -576,33 +579,33 @@ export function EventDetailPage() {
 
               <form onSubmit={handleSaveEdit} className="mt-21 space-y-13">
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-300">
+                  <label htmlFor="event-post-post-title" className="mb-1 block text-xs font-semibold text-slate-300">
                     Post Title
                   </label>
-                  <input
+                  <input id="event-post-post-title"
                     type="text"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
-                    placeholder="Enter engaging title..."
+                    placeholder="Enter engaging title…"
                     className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                   />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-xs font-semibold text-slate-300">
+                    <label htmlFor="event-post-post-body-markdown-supported" className="text-xs font-semibold text-slate-300">
                       Post Body (Markdown Supported)
                     </label>
                     <span className="text-[11px] text-slate-500">
                       {editBody.length} chars
                     </span>
                   </div>
-                  <textarea
+                  <textarea id="event-post-post-body-markdown-supported"
                     value={editBody}
                     onChange={(e) => setEditBody(e.target.value)}
                     rows={10}
                     required
-                    placeholder="Write or edit post content..."
+                    placeholder="Write or edit post content…"
                     className="w-full rounded-card border border-white/[0.08] bg-white/5 p-13 text-xs text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20 leading-relaxed"
                   />
                 </div>
@@ -620,7 +623,7 @@ export function EventDetailPage() {
                     disabled={updatePostMutation.isPending || !editBody.trim()}
                     className="btn-primary btn-sm"
                   >
-                    {updatePostMutation.isPending ? "Saving Changes..." : "💾 Save & Update Post"}
+                    {updatePostMutation.isPending ? "Saving Changes…" : "💾 Save & Update Post"}
                   </button>
                 </div>
               </form>

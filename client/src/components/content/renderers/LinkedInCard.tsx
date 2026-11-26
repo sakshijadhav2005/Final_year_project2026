@@ -21,7 +21,7 @@ export function LinkedInCard({ title, body, onCopy }: LinkedInCardProps) {
   const cleanBody = body.replace(/#[a-zA-Z0-9_]+/g, "").trim();
 
   return (
-    <div className="w-full max-w-2xl rounded-card border border-black/10 bg-surface-light transition-all dark:border-white/10 dark:bg-[#1B1F24]">
+    <div className="w-full max-w-2xl rounded-card border border-black/10 bg-surface-light transition dark:border-white/10 dark:bg-[#1B1F24]">
       {/* LinkedIn Post Header */}
       <div className="flex items-center justify-between border-b border-black/5 p-21 dark:border-white/5">
         <div className="flex items-center gap-13">

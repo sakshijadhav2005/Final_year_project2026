@@ -9,6 +9,9 @@ class TranscriptSegment:
     end: float
     confidence: float | None = None
     speaker: str | None = None
+    # [start, end] seconds (recording time) where someone is speaking inside this segment.
+    # Lets provenance place words on speech time instead of spreading them evenly.
+    speech: list[list[float]] | None = None
 
 
 @dataclass

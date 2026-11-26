@@ -29,7 +29,7 @@ export function InstagramCard({ title, body, onCopy }: InstagramCardProps) {
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-[4px] rounded-card border border-[#E1306C]/40 bg-[#E1306C]/10 px-13 py-8 text-xs font-medium text-[#E1306C] transition-all hover:bg-[#E1306C] hover:text-white"
+          className="flex items-center gap-[4px] rounded-card border border-[#E1306C]/40 bg-[#E1306C]/10 px-13 py-8 text-xs font-medium text-[#E1306C] transition-colors hover:bg-[#E1306C] hover:text-white"
         >
           {copied ? "✓ Copied!" : "📋 Copy Caption"}
         </button>

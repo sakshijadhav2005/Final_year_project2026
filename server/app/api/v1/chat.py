@@ -10,6 +10,7 @@ from app.api.deps import get_current_user, get_db
 from app.core.security import UserRole
 from app.db.session import SessionLocal
 from app.models.chat import ChatMessage, ChatSession
+from app.models.content import ContentPiece
 from app.models.job import Job, Transcript
 from app.models.recording import Recording
 from app.models.user import User
@@ -100,6 +101,27 @@ async def _load_transcript_text(
     return None
 
 
+async def _load_publishing_context(
+    db: AsyncSession, user: User, job_id: UUID | None, event_id: UUID | None
+) -> list[dict] | None:
+    """Live social-publishing status of the user's own drafts for this session or event,
+    so the organizer co-pilot can answer "what's posted / scheduled?" truthfully."""
+    from app.services.social_publishing import status_summary
+
+    query = select(ContentPiece).outerjoin(Job, Job.id == ContentPiece.job_id)
+    if job_id is not None:
+        query = query.where(ContentPiece.job_id == job_id, Job.user_id == user.id)
+    elif event_id is not None:
+        query = query.where(
+            ContentPiece.event_id == event_id,
+            (Job.user_id == user.id) | (ContentPiece.job_id.is_(None) & (ContentPiece.user_id == user.id)),
+        )
+    else:
+        return None
+    pieces = list((await db.execute(query.limit(50))).scalars().all())
+    return await status_summary(db, user.id, pieces)
+
+
 @router.post("/stream")
 async def stream_message(
     body: ChatMessageSend,
@@ -145,6 +167,11 @@ async def stream_message(
     )
     session_id = session.id
     persona = body.resolved_persona or session.persona
+    publishing = (
+        await _load_publishing_context(db, current_user, body.job_id, body.event_id or session.event_id)
+        if persona == "organizer_copilot"
+        else None
+    )
 
     async def _generator():
         # First event tells the client which session to reuse for follow-ups.
@@ -154,6 +181,7 @@ async def stream_message(
             messages=history,
             persona=persona,
             transcript_text=transcript_text,
+            publishing=publishing,
         ):
             yield chunk_str
             if chunk_str.startswith("data: "):

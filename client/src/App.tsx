@@ -6,6 +6,7 @@ import { AdminPage } from "@/pages/AdminPage";
 import { CatalogPage } from "@/pages/CatalogPage";
 import { CommunityPage } from "@/pages/CommunityPage";
 import { EventDetailPage } from "@/pages/EventDetailPage";
+import { FixesPage } from "@/pages/FixesPage";
 import { JobDetailPage } from "@/pages/JobDetailPage";
 import { LandingPage } from "@/pages/LandingPage";
 import { LoginPage } from "@/pages/LoginPage";
@@ -124,6 +125,14 @@ export function App() {
           element={
             <RequireAuth>
               <AdminPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin/fixes"
+          element={
+            <RequireAuth>
+              <FixesPage />
             </RequireAuth>
           }
         />

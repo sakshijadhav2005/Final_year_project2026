@@ -4,9 +4,19 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { PipelineStepper } from "@/components/pipeline/PipelineStepper";
 import { ContentStudio } from "@/components/content/ContentStudio";
-import { deleteJob, getJob, getJobContent, getTranscript, regenerateJob, type JobPublic } from "@/lib/api";
+import {
+  deleteJob,
+  getJob,
+  getJobContent,
+  getTranscript,
+  regenerateJob,
+  updateTranscript,
+  type JobPublic,
+} from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
+import { sessionTitle } from "@/lib/status";
 import { useAuthStore } from "@/store/auth";
+import { parseServerTime } from "@/lib/time";
 import { useJobEvents } from "@/hooks/useJobEvents";
 
 export function JobDetailPage() {
@@ -32,7 +42,7 @@ export function JobDetailPage() {
   });
 
   const handleDeleteSession = () => {
-    if (window.confirm(`Are you sure you want to permanently delete session ${jobId.slice(0, 8)}? All generated content and transcripts will be removed.`)) {
+    if (window.confirm(`Permanently delete “${sessionTitle(job.data ?? { id: jobId })}”? All its drafts and its transcript will be removed.`)) {
       deleteMutation.mutate();
     }
   };
@@ -40,6 +50,10 @@ export function JobDetailPage() {
   // Active View Tab: "studio" or "transcript"
   const [activeTab, setActiveTab] = useState<"studio" | "transcript">("studio");
   const [searchQuery, setSearchQuery] = useState("");
+  // Transcript correction: draft text while editing, and a hint to regenerate after saving
+  const [editingTranscript, setEditingTranscript] = useState(false);
+  const [transcriptDraft, setTranscriptDraft] = useState("");
+  const [transcriptSaved, setTranscriptSaved] = useState(false);
 
   // SSE Real-time Hook
   const { eventData, isConnected } = useJobEvents(jobId, token);
@@ -93,6 +107,15 @@ export function JobDetailPage() {
     },
   });
 
+  const saveTranscript = useMutation({
+    mutationFn: (text: string) => updateTranscript(token, jobId, text),
+    onSuccess: (saved) => {
+      queryClient.setQueryData(["transcript", jobId], saved);
+      setEditingTranscript(false);
+      setTranscriptSaved(true);
+    },
+  });
+
   // Merge SSE progress or query progress
   const progress = eventData?.progress || job.data?.progress || {};
   const currentStatus = eventData?.status || job.data?.status || "loading";
@@ -102,7 +125,8 @@ export function JobDetailPage() {
   const transcriptText = transcript.data?.full_text || "";
   const highlightedTranscript = useMemo(() => {
     if (!searchQuery.trim() || !transcriptText) return transcriptText;
-    const parts = transcriptText.split(new RegExp(`(${searchQuery})`, "gi"));
+    const escaped = searchQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const parts = transcriptText.split(new RegExp(`(${escaped})`, "gi"));
     return parts.map((part, i) =>
       part.toLowerCase() === searchQuery.toLowerCase() ? (
         <mark key={i} className="rounded bg-accent/40 px-1 text-inherit">
@@ -132,7 +156,7 @@ export function JobDetailPage() {
             </Link>
             <Link
               to="/"
-              className="rounded-full bg-white/[0.05] border border-white/[0.08] px-21 py-8 text-sm font-medium hover:bg-white/[0.1] transition-all"
+              className="rounded-full bg-white/[0.05] border border-white/[0.08] px-21 py-8 text-sm font-medium hover:bg-white/[0.1] transition-colors"
             >
               Upload New Recording
             </Link>
@@ -150,7 +174,7 @@ export function JobDetailPage() {
           <Link to="/dashboard" className="text-sm text-ink-dim transition-colors hover:text-ink">
             ← Dashboard
           </Link>
-          <h1 className="mt-8 font-display text-h1 font-semibold text-ink">Session {jobId.slice(0, 8)}</h1>
+          <h1 className="mt-8 font-display text-h1 font-semibold text-ink">{sessionTitle(job.data ?? { id: jobId })}</h1>
           {isConnected && (
             <p className="mt-8 flex items-center gap-8 text-xs text-teal">
               <span className="live-bars" aria-hidden="true">
@@ -205,7 +229,7 @@ export function JobDetailPage() {
 
       {/* Error Alert */}
       {errorMessage && (
-        <div className="mb-21 rounded-card border border-danger/40 bg-danger/10 p-13 text-sm text-danger">
+        <div role="alert" className="mb-21 rounded-card border border-danger/40 bg-danger/10 p-13 text-sm text-danger">
           ⚠️ {errorMessage}
         </div>
       )}
@@ -215,7 +239,7 @@ export function JobDetailPage() {
         <button
           type="button"
           onClick={() => setActiveTab("studio")}
-          className={`flex items-center gap-8 border-b-2 px-21 py-13 text-sm font-semibold transition-all ${
+          className={`flex items-center gap-8 border-b-2 px-21 py-13 text-sm font-semibold transition-colors ${
             activeTab === "studio"
               ? "border-amber-400 text-ink"
               : "border-transparent text-ink-dim hover:text-ink"
@@ -230,7 +254,7 @@ export function JobDetailPage() {
         <button
           type="button"
           onClick={() => setActiveTab("transcript")}
-          className={`flex items-center gap-8 border-b-2 px-21 py-13 text-sm font-semibold transition-all ${
+          className={`flex items-center gap-8 border-b-2 px-21 py-13 text-sm font-semibold transition-colors ${
             activeTab === "transcript"
               ? "border-amber-400 text-ink"
               : "border-transparent text-ink-dim hover:text-ink"
@@ -249,7 +273,7 @@ export function JobDetailPage() {
           ) : (
             <div className="rounded-card border border-dashed border-white/20 p-55 text-center">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-amber-400 border-t-transparent mb-13"></div>
-              <p className="font-semibold">Agents are analyzing the recording...</p>
+              <p className="font-semibold">Agents are analyzing the recording…</p>
               <p className="mt-[4px] text-xs opacity-60">
                 Topics, highlights, speakers, and generation will appear in real time.
               </p>
@@ -258,29 +282,117 @@ export function JobDetailPage() {
         </section>
       )}
 
-      {/* Tab 2: Transcript Viewer */}
+      {/* Tab 2: Transcript Viewer / Editor */}
       {activeTab === "transcript" && (
         <section className="flex flex-col gap-13">
-          <div className="flex items-center justify-between">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search transcript..."
-              className="w-full max-w-sm rounded-card border border-black/10 bg-canvas-light px-13 py-8 text-xs dark:border-white/[0.08] dark:bg-canvas-dark"
-            />
-            <span className="text-xs opacity-60">
-              Words: {transcriptText.trim() ? transcriptText.trim().split(/\s+/).length : 0}
-            </span>
+          <div className="flex flex-wrap items-center justify-between gap-13">
+            {editingTranscript ? (
+              <p className="text-xs text-ink-dim">
+                Fix names, jargon and <span className="text-gold-soft">[unclear audio]</span> spans. Drafts are not
+                changed until you regenerate.
+              </p>
+            ) : (
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search transcript…"
+                aria-label="Search transcript"
+                className="w-full max-w-sm rounded-card border border-black/10 bg-canvas-light px-13 py-8 text-xs dark:border-white/[0.08] dark:bg-canvas-dark"
+              />
+            )}
+            <div className="flex items-center gap-13">
+              <span className="text-xs opacity-60">
+                Words:{" "}
+                {(editingTranscript ? transcriptDraft : transcriptText).trim()
+                  ? (editingTranscript ? transcriptDraft : transcriptText).trim().split(/\s+/).length
+                  : 0}
+              </span>
+              {transcript.data?.edited && !editingTranscript && (
+                <span
+                  className="rounded-full bg-white/[0.08] px-8 py-[2px] text-xs text-ink-dim"
+                  title={transcript.data.edited_at ? parseServerTime(transcript.data.edited_at).toLocaleString() : undefined}
+                >
+                  Edited by a person
+                </span>
+              )}
+              {transcript.data && !editingTranscript && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTranscriptDraft(transcriptText);
+                    setTranscriptSaved(false);
+                    saveTranscript.reset();
+                    setEditingTranscript(true);
+                  }}
+                  disabled={!["pending_review", "ready_to_publish", "needs_review", "needs_reupload", "failed", "cancelled"].includes(currentStatus)}
+                  title="Correct the transcript (available once processing has finished)"
+                  className="rounded-full border border-white/[0.12] px-13 py-[4px] text-xs text-ink transition-colors hover:border-amber-400/50 disabled:opacity-40"
+                >
+                  Edit transcript
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className="max-h-[65vh] overflow-auto rounded-card border border-black/10 bg-surface-light p-21 text-sm leading-relaxed dark:border-white/[0.08] dark:bg-surface-dark">
-            {transcript.data ? (
-              <div className="whitespace-pre-wrap">{highlightedTranscript}</div>
-            ) : (
-              <p className="text-xs opacity-60">Waiting for transcription engine...</p>
-            )}
-          </div>
+          {transcriptSaved && !editingTranscript && (
+            <div className="flex flex-wrap items-center justify-between gap-13 rounded-card border border-teal/30 bg-teal/10 p-13 text-xs text-teal">
+              <span>Transcript saved. Regenerate to rewrite the drafts from the corrected text (the recording is not transcribed again).</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setTranscriptSaved(false);
+                  setActiveTab("studio");
+                  regenMutation.mutate();
+                }}
+                disabled={regenMutation.isPending}
+                className="rounded-full border border-teal/40 px-13 py-[4px] font-semibold transition-colors hover:bg-teal/10"
+              >
+                Regenerate drafts
+              </button>
+            </div>
+          )}
+
+          {editingTranscript ? (
+            <div className="flex flex-col gap-13">
+              <textarea
+                value={transcriptDraft}
+                onChange={(e) => setTranscriptDraft(e.target.value)}
+                aria-label="Transcript text"
+                rows={20}
+                className="max-h-[65vh] min-h-[40vh] w-full rounded-card border border-amber-400/40 bg-surface-light p-21 font-sans text-sm leading-relaxed dark:bg-surface-dark"
+              />
+              {saveTranscript.isError && (
+                <p className="text-xs text-danger">⚠️ {(saveTranscript.error as Error).message}</p>
+              )}
+              <div className="flex justify-end gap-8">
+                <button
+                  type="button"
+                  onClick={() => setEditingTranscript(false)}
+                  disabled={saveTranscript.isPending}
+                  className="btn-ghost"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => saveTranscript.mutate(transcriptDraft)}
+                  disabled={saveTranscript.isPending || !transcriptDraft.trim() || transcriptDraft === transcriptText}
+                  className="rounded-full bg-amber-400 px-21 py-8 text-sm font-semibold text-black transition-opacity disabled:opacity-40"
+                >
+                  {saveTranscript.isPending ? "Saving…" : "Save transcript"}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="max-h-[65vh] overflow-auto rounded-card border border-black/10 bg-surface-light p-21 text-sm leading-relaxed dark:border-white/[0.08] dark:bg-surface-dark">
+              {transcript.data ? (
+                <div className="whitespace-pre-wrap">{highlightedTranscript}</div>
+              ) : (
+                <p className="text-xs opacity-60">Waiting for transcription engine…</p>
+              )}
+            </div>
+          )}
         </section>
       )}
     </GoldenShell>

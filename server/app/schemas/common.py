@@ -21,6 +21,7 @@ from app.schemas.jobs import (
     JobPublic,
     RegenerRequest,
     TranscriptPublic,
+    TranscriptUpdate,
 )
 
 
@@ -63,6 +64,7 @@ __all__ = [
     "RolePatch",
     "TokenResponse",
     "TranscriptPublic",
+    "TranscriptUpdate",
     "UserPublic",
     "UserProfilePublic",
     "UserProfileUpdate",

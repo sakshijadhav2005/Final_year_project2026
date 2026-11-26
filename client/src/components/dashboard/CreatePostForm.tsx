@@ -17,6 +17,7 @@ const POST_FORMATS = [
   { id: "newsletter", label: "Newsletter", icon: "📬", desc: "Email broadcast for community attendees" },
   { id: "linkedin", label: "LinkedIn Post", icon: "💼", desc: "Professional insights with hashtags" },
   { id: "ig_caption", label: "Instagram Post", icon: "📸", desc: "Engaging visual caption with hooks" },
+  { id: "x_post", label: "X Post", icon: "𝕏", desc: "One sharp post within 280 characters" },
   { id: "summary", label: "Executive Summary", icon: "📊", desc: "High-level TL;DR & actionable bullets" },
   { id: "flyer", label: "Event Flyer", icon: "🎨", desc: "Visual promo poster draft" },
 ];
@@ -164,7 +165,7 @@ export function CreatePostForm({
   };
 
   return (
-    <div className="space-y-13 rounded-panel border border-white/15 bg-surface p-21 md:p-34 transition-all">
+    <div className="space-y-13 rounded-panel border border-white/15 bg-surface p-21 md:p-34 transition-colors">
       {/* Header with Mode Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-13 border-b border-white/[0.08] pb-21">
         <div>
@@ -181,7 +182,7 @@ export function CreatePostForm({
             <button
               type="button"
               onClick={() => setActiveTab("ai_recording")}
-              className={`rounded-lg px-13 py-8 text-xs font-semibold transition-all ${
+              className={`rounded-lg px-13 py-8 text-xs font-semibold transition-colors ${
                 activeTab === "ai_recording"
                   ? "bg-amber-400 text-on-accent"
                   : "text-slate-400 hover:text-white"
@@ -192,7 +193,7 @@ export function CreatePostForm({
             <button
               type="button"
               onClick={() => setActiveTab("manual")}
-              className={`rounded-lg px-13 py-8 text-xs font-semibold transition-all ${
+              className={`rounded-lg px-13 py-8 text-xs font-semibold transition-colors ${
                 activeTab === "manual"
                   ? "bg-amber-400 text-on-accent"
                   : "text-slate-400 hover:text-white"
@@ -227,13 +228,13 @@ export function CreatePostForm({
 
           {/* Step 1: Event Association */}
           <div>
-            <label className="mb-8 block text-xs font-bold text-slate-300">
+            <label htmlFor="post-1-tag-target-event" className="mb-8 block text-xs font-bold text-slate-300">
               1. Tag Target Event Catalog (Optional)
             </label>
-            <select
+            <select id="post-1-tag-target-event"
               value={eventId}
               onChange={(e) => setEventId(e.target.value)}
-              className="w-full rounded-card border border-white/[0.08] bg-slate-950 px-13 py-8 text-xs text-slate-200 focus:border-amber-500 focus:outline-none"
+              className="w-full rounded-card border border-white/[0.08] bg-slate-950 px-13 py-8 text-xs text-slate-200 focus:border-amber-500"
             >
               <option value="">No Event (Standalone Workspace Session)</option>
               {events.map((ev) => (
@@ -246,9 +247,9 @@ export function CreatePostForm({
 
           {/* Step 2: Drag and Drop File Upload */}
           <div>
-            <label className="mb-8 block text-xs font-bold text-slate-300">
+            <p id="post-upload-label" className="mb-8 block text-xs font-bold text-slate-300">
               2. Upload Event Audio or Video Recording
-            </label>
+            </p>
             <div
               onDragOver={(e) => {
                 e.preventDefault();
@@ -257,7 +258,16 @@ export function CreatePostForm({
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`flex flex-col items-center justify-center rounded-panel border-2 border-dashed p-21 text-center cursor-pointer transition-all ${
+              role="button"
+              tabIndex={0}
+              aria-labelledby="post-upload-label"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  fileInputRef.current?.click();
+                }
+              }}
+              className={`flex flex-col items-center justify-center rounded-panel border-2 border-dashed p-21 text-center cursor-pointer transition-colors ${
                 isDragging
                   ? "border-amber-500 bg-amber-500/10"
                   : selectedFile
@@ -279,7 +289,7 @@ export function CreatePostForm({
                   <div className="text-left">
                     <p className="text-xs font-bold text-white">{selectedFile.name}</p>
                     <p className="text-[10px] text-emerald-400">
-                      {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • Ready to transcribe &amp; draft
+                      {(selectedFile.size / (1024 * 1024)).toLocaleString(undefined, { maximumFractionDigits: 2 })}&nbsp;MB • Ready to transcribe &amp; draft
                     </p>
                   </div>
                 </div>
@@ -296,9 +306,9 @@ export function CreatePostForm({
           {/* Step 3: Multi-Format Deliverable Selection */}
           <div>
             <div className="flex items-center justify-between mb-8">
-              <label className="text-xs font-bold text-slate-300">
-                3. Choose AI Output Formats ({selectedTypes.length}/6 selected)
-              </label>
+              <p className="text-xs font-bold text-slate-300">
+                3. Choose AI Output Formats ({selectedTypes.length}/{POST_FORMATS.length} selected)
+              </p>
               <button
                 type="button"
                 onClick={() => setSelectedTypes(POST_FORMATS.map((p) => p.id))}
@@ -315,7 +325,7 @@ export function CreatePostForm({
                     key={format.id}
                     type="button"
                     onClick={() => toggleType(format.id)}
-                    className={`flex flex-col items-start p-13 rounded-card border text-left transition-all ${
+                    className={`flex flex-col items-start p-13 rounded-card border text-left transition-colors ${
                       active
                         ? "border-amber-500/60 bg-amber-500/15 text-white"
                         : "border-white/[0.08] bg-white/[0.02] text-slate-400 hover:border-white/20"
@@ -354,7 +364,7 @@ export function CreatePostForm({
                     key={lang.code}
                     type="button"
                     onClick={() => toggleLanguage(lang.code)}
-                    className={`flex items-center justify-center gap-8 rounded-card px-8 py-8 text-xs font-medium transition-all ${
+                    className={`flex items-center justify-center gap-8 rounded-card px-8 py-8 text-xs font-medium transition-colors ${
                       active
                         ? "border border-teal-400 bg-teal-500/20 text-white ring-1 ring-teal-400/40"
                         : "border border-white/[0.08] bg-white/[0.02] text-slate-400 hover:border-amber-400/40 hover:text-white"
@@ -396,7 +406,7 @@ export function CreatePostForm({
               {aiUploadMutation.isPending ? (
                 <>
                   <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  <span>Uploading &amp; Launching Pipeline...</span>
+                  <span>Uploading &amp; Launching Pipeline…</span>
                 </>
               ) : (
                 <span>🚀 Launch AI Pipeline &amp; Generate All Posts</span>
@@ -418,12 +428,12 @@ export function CreatePostForm({
           )}
 
           <div>
-            <label className="mb-1 block text-xs font-semibold text-slate-300">Post Title</label>
-            <input
+            <label htmlFor="post-post-title" className="mb-1 block text-xs font-semibold text-slate-300">Post Title</label>
+            <input id="post-post-title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g., Key takeaways from the opening keynote..."
+              placeholder="e.g., Key takeaways from the opening keynote…"
               required
               className="w-full rounded-card border border-white/[0.08] bg-slate-950 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             />
@@ -431,11 +441,11 @@ export function CreatePostForm({
 
           <div className="grid grid-cols-1 gap-13 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-semibold text-slate-300">Tag Event (Optional)</label>
-              <select
+              <label htmlFor="post-tag-event-optional" className="mb-1 block text-xs font-semibold text-slate-300">Tag Event (Optional)</label>
+              <select id="post-tag-event-optional"
                 value={eventId}
                 onChange={(e) => setEventId(e.target.value)}
-                className="w-full rounded-card border border-white/[0.08] bg-slate-950 px-13 py-8 text-sm text-slate-200 focus:border-amber-500/50 focus:outline-none"
+                className="w-full rounded-card border border-white/[0.08] bg-slate-950 px-13 py-8 text-sm text-slate-200 focus:border-amber-500/50"
               >
                 <option value="">General Community Discussion</option>
                 {events.map((ev) => (
@@ -447,11 +457,11 @@ export function CreatePostForm({
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-semibold text-slate-300">Category</label>
-              <select
+              <label htmlFor="post-category" className="mb-1 block text-xs font-semibold text-slate-300">Category</label>
+              <select id="post-category"
                 value={postType}
                 onChange={(e) => setPostType(e.target.value)}
-                className="w-full rounded-card border border-white/[0.08] bg-slate-950 px-13 py-8 text-sm text-slate-200 focus:border-amber-500/50 focus:outline-none"
+                className="w-full rounded-card border border-white/[0.08] bg-slate-950 px-13 py-8 text-sm text-slate-200 focus:border-amber-500/50"
               >
                 <option value="discussion">💬 Discussion / Feedback</option>
                 <option value="summary">📝 Session Summary</option>
@@ -462,12 +472,12 @@ export function CreatePostForm({
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-semibold text-slate-300">Post Content</label>
-            <textarea
+            <label htmlFor="post-post-content" className="mb-1 block text-xs font-semibold text-slate-300">Post Content</label>
+            <textarea id="post-post-content"
               value={body}
               onChange={(e) => setBody(e.target.value)}
               rows={4}
-              placeholder="Share your thoughts, session notes, or ideas with the community..."
+              placeholder="Share your thoughts, session notes, or ideas with the community…"
               required
               className="w-full rounded-card border border-white/[0.08] bg-slate-950 p-13 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             />
@@ -483,7 +493,7 @@ export function CreatePostForm({
               disabled={manualMutation.isPending || !title.trim() || !body.trim()}
               className="btn-primary btn-sm"
             >
-              {manualMutation.isPending ? "Publishing..." : "Publish Post 🚀"}
+              {manualMutation.isPending ? "Publishing…" : "Publish Post 🚀"}
             </button>
           </div>
         </form>

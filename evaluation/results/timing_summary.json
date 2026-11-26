@@ -1,0 +1,79 @@
+{
+ "window_seconds": 15,
+ "talks": [
+  "Al_Gore",
+  "Barry_Schwartz",
+  "Blaise_Agueray_Arcas",
+  "Brian_Cox",
+  "Craig_Venter",
+  "David_Merrill",
+  "Elizabeth_Gilbert",
+  "Wade_Davis",
+  "AimeeMullins",
+  "BillGates",
+  "DanBarber",
+  "DanielKahneman",
+  "EricMead_2009P_EricMead",
+  "GaryFlake",
+  "JamesCameron",
+  "JaneMcGonigal",
+  "MichaelSpecter",
+  "RobertGupta"
+ ],
+ "results": [
+  {
+   "chunk_seconds": 300,
+   "method": "even",
+   "n": 1357,
+   "median_s": 2.78,
+   "mean_s": 3.58,
+   "p90_s": 7.75,
+   "within_5s": 0.738
+  },
+  {
+   "chunk_seconds": 300,
+   "method": "speech",
+   "n": 1357,
+   "median_s": 2.35,
+   "mean_s": 3.05,
+   "p90_s": 6.72,
+   "within_5s": 0.826
+  },
+  {
+   "chunk_seconds": 120,
+   "method": "even",
+   "n": 1282,
+   "median_s": 1.62,
+   "mean_s": 2.11,
+   "p90_s": 4.62,
+   "within_5s": 0.92
+  },
+  {
+   "chunk_seconds": 120,
+   "method": "speech",
+   "n": 1282,
+   "median_s": 1.6,
+   "mean_s": 2.03,
+   "p90_s": 4.18,
+   "within_5s": 0.942
+  },
+  {
+   "chunk_seconds": 60,
+   "method": "even",
+   "n": 1141,
+   "median_s": 1.14,
+   "mean_s": 1.48,
+   "p90_s": 3.19,
+   "within_5s": 0.989
+  },
+  {
+   "chunk_seconds": 60,
+   "method": "speech",
+   "n": 1141,
+   "median_s": 1.25,
+   "mean_s": 1.49,
+   "p90_s": 2.97,
+   "within_5s": 0.991
+  }
+ ]
+}

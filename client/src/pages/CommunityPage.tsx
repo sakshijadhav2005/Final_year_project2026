@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
@@ -8,6 +8,11 @@ import { listCommunityContent, listEvents } from "@/lib/api";
 import { GoldenShell } from "@/layouts/GoldenShell";
 import { MarkdownText } from "@/components/content/renderers/MarkdownText";
 import { useAuthStore } from "@/store/auth";
+import { localDayKey, parseCalendarDate, parseServerTime } from "@/lib/time";
+
+function formatDayKey(key: string): string {
+  return parseCalendarDate(key).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+}
 
 export function CommunityPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,6 +24,19 @@ export function CommunityPage() {
   const [activeTab, setActiveTab] = useState<string>("all");
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  // Optional day filter (YYYY-MM-DD); empty shows posts from every date.
+  const [selectedDate, setSelectedDate] = useState("");
+  const dateInputRef = useRef<HTMLInputElement>(null);
+
+  const openDatePicker = () => {
+    const input = dateInputRef.current;
+    if (!input) return;
+    try {
+      input.showPicker();
+    } catch {
+      input.focus();
+    }
+  };
 
   const { data: events = [] } = useQuery({
     queryKey: ["events"],
@@ -36,6 +54,7 @@ export function CommunityPage() {
 
   const filteredPosts = posts.filter((p) => {
     if (activeTab !== "all" && p.type !== activeTab) return false;
+    if (selectedDate && (!p.created_at || localDayKey(p.created_at) !== selectedDate)) return false;
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       const matchTitle = p.title?.toLowerCase().includes(term);
@@ -74,7 +93,7 @@ export function CommunityPage() {
             <button
               type="button"
               onClick={() => setShowCreatePost((prev) => !prev)}
-              className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-all"
+              className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-colors"
             >
               <span>{showCreatePost ? "✕ Close Form" : "✍️ Write Post / Upload Recording"}</span>
             </button>
@@ -121,8 +140,62 @@ export function CommunityPage() {
           </div>
         )}
 
-        {/* Feed Controls: Search & Category Tabs */}
-        <div className="mb-21 flex flex-col gap-13 sm:flex-row sm:items-center sm:justify-between">
+        {/* Feed Controls: search and date on one aligned row, category tabs beneath */}
+        <div className="mb-21 space-y-13">
+          <div className="flex flex-col gap-8 sm:flex-row sm:items-center">
+            {/* Search bar */}
+            <div className="relative w-full sm:max-w-sm">
+              <input
+                type="search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search feed…"
+                aria-label="Search feed"
+                className="w-full rounded-card border border-white/[0.08] bg-surface py-8 pl-34 pr-13 text-xs text-white placeholder-slate-500 focus:border-amber-500/50"
+              />
+              <span className="pointer-events-none absolute left-13 top-1/2 -translate-y-1/2 text-xs text-slate-400" aria-hidden="true">
+                🔍
+              </span>
+            </div>
+
+            {/* Optional date filter: show only posts shared on the chosen day */}
+            <div className="flex items-center gap-8">
+              <button
+                type="button"
+                onClick={openDatePicker}
+                aria-label={selectedDate ? `Showing posts from ${formatDayKey(selectedDate)}. Change date` : "Filter posts by date"}
+                className={`inline-flex items-center gap-8 rounded-card border px-13 py-8 text-xs font-semibold transition-colors ${
+                  selectedDate
+                    ? "border-amber-500/40 bg-amber-500/20 text-amber-300"
+                    : "border-white/[0.08] bg-surface text-slate-400 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                <span aria-hidden="true">📅</span>
+                <span>{selectedDate ? formatDayKey(selectedDate) : "Any date"}</span>
+              </button>
+              <input
+                ref={dateInputRef}
+                type="date"
+                value={selectedDate}
+                max={localDayKey(new Date())}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                tabIndex={-1}
+                aria-hidden="true"
+                className="sr-only [color-scheme:dark]"
+              />
+              {selectedDate && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedDate("")}
+                  aria-label="Clear date filter"
+                  className="rounded-full px-8 py-[4px] text-xs text-slate-400 transition-colors hover:text-white"
+                >
+                  ✕ Clear
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Tabs */}
           <div className="flex flex-wrap items-center gap-8">
             {[
@@ -137,7 +210,7 @@ export function CommunityPage() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`inline-flex items-center gap-8 rounded-card px-13 py-8 text-xs font-semibold transition-all ${
+                className={`inline-flex items-center gap-8 rounded-card px-13 py-8 text-xs font-semibold transition-colors ${
                   activeTab === tab.id
                     ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
                     : "border border-white/5 bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white"
@@ -147,18 +220,6 @@ export function CommunityPage() {
                 <span>{tab.label}</span>
               </button>
             ))}
-          </div>
-
-          {/* Search bar */}
-          <div className="relative w-full sm:w-64">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search feed..."
-              className="w-full rounded-card border border-white/[0.08] bg-surface pl-34 pr-13 py-8 text-xs text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
-            />
-            <span className="absolute left-2.5 top-2 text-xs text-slate-400">🔍</span>
           </div>
         </div>
 
@@ -185,9 +246,13 @@ export function CommunityPage() {
         {!isLoading && !error && filteredPosts.length === 0 && (
           <div className="rounded-panel border border-dashed border-white/[0.08] bg-slate-900/30 p-55 text-center">
             <span className="text-4xl">💭</span>
-            <h3 className="mt-13 text-lg font-bold text-white">No posts to display</h3>
+            <h3 className="mt-13 text-lg font-bold text-white">
+              {selectedDate ? `No posts on ${formatDayKey(selectedDate)}` : "No posts to display"}
+            </h3>
             <p className="mt-1 text-sm text-slate-400 max-w-md mx-auto">
-              Be the first to share your notes or spark a conversation with attendees!
+              {selectedDate
+                ? "Pick another date, or clear the date filter to see every post."
+                : "Be the first to share your notes or spark a conversation with attendees!"}
             </p>
             <button
               type="button"
@@ -220,11 +285,11 @@ export function CommunityPage() {
                         <div className="flex items-center gap-8">
                           <span className="text-sm font-bold text-white">{author}</span>
                           <span className="rounded-full bg-white/10 px-8 py-0.5 text-[10px] font-semibold text-slate-300">
-                            {post.type.replace("_", " ").toUpperCase()}
+                            {post.type.replace(/_/g, " ").toUpperCase()}
                           </span>
                         </div>
                         <span className="text-xs text-slate-400">
-                          {post.created_at ? new Date(post.created_at).toLocaleString() : "Recently shared"}
+                          {post.created_at ? parseServerTime(post.created_at).toLocaleString() : "Recently shared"}
                         </span>
                       </div>
                     </div>

@@ -108,7 +108,7 @@ export function CatalogPage() {
               <button
                 type="button"
                 onClick={() => setShowCreateModal(true)}
-                className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-all"
+                className="inline-flex items-center gap-8 rounded-full border border-gold/40 bg-gold/20 px-21 py-8 text-xs font-semibold text-gold-soft transition-colors"
               >
                 <span>➕ Create New Event</span>
               </button>
@@ -129,7 +129,7 @@ export function CatalogPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by event name, topic, or speaker..."
+              placeholder="Search by event name, topic, or speaker…"
               className="w-full rounded-card border border-white/[0.08] bg-surface pl-34 pr-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             />
           </div>
@@ -174,7 +174,7 @@ export function CatalogPage() {
               <button
                 type="button"
                 onClick={() => setShowCreateModal(true)}
-                className="mt-21 inline-flex items-center gap-8 rounded-card bg-amber-500/20 px-13 py-8 text-xs font-semibold text-amber-300 transition-all hover:bg-amber-500/30"
+                className="mt-21 inline-flex items-center gap-8 rounded-card bg-amber-500/20 px-13 py-8 text-xs font-semibold text-amber-300 transition-colors hover:bg-amber-500/30"
               >
                 <span>➕ Create First Event</span>
               </button>
@@ -220,35 +220,35 @@ export function CatalogPage() {
                 className="mt-13 space-y-13"
               >
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-300">Event Name</label>
-                  <input
+                  <label htmlFor="event-event-name" className="mb-1 block text-xs font-semibold text-slate-300">Event Name</label>
+                  <input id="event-event-name"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g., Annual Tech Summit 2026"
                     required
-                    className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                    className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 gap-13 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1 block text-xs font-semibold text-slate-300">Event Date</label>
-                    <input
+                    <label htmlFor="event-event-date" className="mb-1 block text-xs font-semibold text-slate-300">Event Date</label>
+                    <input id="event-event-date"
                       type="date"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
                       required
-                      className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white focus:border-amber-500/50 focus:outline-none"
+                      className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white focus:border-amber-500/50"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-xs font-semibold text-slate-300">Catalog Category</label>
-                    <select
+                    <label htmlFor="event-catalog-category" className="mb-1 block text-xs font-semibold text-slate-300">Catalog Category</label>
+                    <select id="event-catalog-category"
                       value={selectedType}
                       onChange={(e) => setSelectedType(e.target.value as EventType)}
-                      className="w-full rounded-card border border-white/[0.08] bg-slate-800 px-13 py-8 text-sm text-slate-200 focus:border-amber-500/50 focus:outline-none"
+                      className="w-full rounded-card border border-white/[0.08] bg-slate-800 px-13 py-8 text-sm text-slate-200 focus:border-amber-500/50"
                     >
                       <option value="meetup">👥 Meetup</option>
                       <option value="event">🎪 Conference / Event</option>
@@ -260,47 +260,47 @@ export function CatalogPage() {
 
                 <div className="grid grid-cols-1 gap-13 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1 block text-xs font-semibold text-slate-300">Topic / Theme</label>
-                    <input
+                    <label htmlFor="event-topic-theme" className="mb-1 block text-xs font-semibold text-slate-300">Topic / Theme</label>
+                    <input id="event-topic-theme"
                       type="text"
                       value={topic}
                       onChange={(e) => setTopic(e.target.value)}
                       placeholder="e.g., Generative AI in Production"
-                      className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                      className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-xs font-semibold text-slate-300">Location / City</label>
-                    <input
+                    <label htmlFor="event-location-city" className="mb-1 block text-xs font-semibold text-slate-300">Location / City</label>
+                    <input id="event-location-city"
                       type="text"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
                       placeholder="e.g., San Francisco, CA or Virtual"
-                      className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                      className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-300">Banner Image URL</label>
-                  <input
+                  <label htmlFor="event-banner-image-url" className="mb-1 block text-xs font-semibold text-slate-300">Banner Image URL</label>
+                  <input id="event-banner-image-url"
                     type="url"
                     value={bannerImage}
                     onChange={(e) => setBannerImage(e.target.value)}
                     placeholder="https://example.com/banner.jpg"
-                    className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                    className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-300">Description</label>
-                  <textarea
+                  <label htmlFor="event-description" className="mb-1 block text-xs font-semibold text-slate-300">Description</label>
+                  <textarea id="event-description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Brief description of the event..."
+                    placeholder="Brief description of the event…"
                     rows={3}
-                    className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50 focus:outline-none"
+                    className="w-full rounded-card border border-white/[0.08] bg-white/5 px-13 py-8 text-sm text-white placeholder-slate-500 focus:border-amber-500/50"
                   />
                 </div>
 
@@ -317,7 +317,7 @@ export function CatalogPage() {
                     disabled={createEventMutation.isPending || !name.trim() || !date}
                     className="btn-primary btn-sm"
                   >
-                    {createEventMutation.isPending ? "Creating..." : "Save Event"}
+                    {createEventMutation.isPending ? "Creating…" : "Save Event"}
                   </button>
                 </div>
               </form>

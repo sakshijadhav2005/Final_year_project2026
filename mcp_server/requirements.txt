@@ -1,0 +1,6 @@
+# EventAI Social MCP server (kept apart from the API's dependencies)
+mcp==2.3.0
+httpx==0.27.2
+
+# Tests
+pytest==8.3.5

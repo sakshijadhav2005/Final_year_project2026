@@ -1,3 +1,5 @@
+import { statusLabel } from "@/lib/status";
+
 
 type Props = {
   progress?: Record<string, string>;
@@ -141,17 +143,18 @@ export function PipelineStepper({
         </div>
         <div className="flex items-center gap-8">
           <span
+            role="status"
             className={`rounded-full px-13 py-[2px] text-xs font-semibold ${
               jobStatus === "ready_to_publish"
                 ? "bg-success/15 text-success border border-success/30"
                 : jobStatus === "pending_review"
-                ? "bg-amber-400/15 text-amber-300 border border-amber-400/30"
+                ? "bg-pending/15 text-pending-soft border border-pending/30"
                 : isFailed
                 ? "bg-danger/15 text-danger border border-danger/30"
                 : "bg-white/[0.06] text-ink border border-white/[0.12]"
             }`}
           >
-            {jobStatus === "pending_review" ? "Awaiting review" : jobStatus === "ready_to_publish" ? "Ready to publish" : jobStatus.replace(/_/g, " ")}
+            {statusLabel(jobStatus)}
           </span>
         </div>
       </div>
@@ -165,7 +168,7 @@ export function PipelineStepper({
           return (
             <div
               key={s.id}
-              className={`relative flex flex-col justify-between rounded-card border p-13 transition-all ${
+              className={`relative flex flex-col justify-between rounded-card border p-13 transition-colors ${
                 isRunning
                   ? "stage-live border-amber-400/70 bg-amber-400/[0.06]"
                   : isDone

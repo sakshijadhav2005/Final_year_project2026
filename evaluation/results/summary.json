@@ -596,6 +596,106 @@
    "mean_j2": 4.69
   }
  ],
+ "provenance": {
+  "localisation": {
+   "point": {
+    "n": 180,
+    "median_abs_error": 0.0139,
+    "within_2pct": 0.583,
+    "within_5pct": 0.744,
+    "within_10pct": 0.844
+   },
+   "quote": {
+    "n": 180,
+    "median_abs_error": 0.0055,
+    "within_2pct": 0.922,
+    "within_5pct": 0.994,
+    "within_10pct": 1.0
+   }
+  },
+  "formats": [
+   {
+    "format": "summary",
+    "drafts": 18,
+    "claims": 321,
+    "traced_pct": 12.5,
+    "partial_pct": 19.3,
+    "mean_spread": 0.45
+   },
+   {
+    "format": "blog",
+    "drafts": 18,
+    "claims": 558,
+    "traced_pct": 40.7,
+    "partial_pct": 22.9,
+    "mean_spread": 0.944
+   },
+   {
+    "format": "linkedin",
+    "drafts": 18,
+    "claims": 277,
+    "traced_pct": 44.8,
+    "partial_pct": 23.5,
+    "mean_spread": 0.778
+   },
+   {
+    "format": "newsletter",
+    "drafts": 18,
+    "claims": 420,
+    "traced_pct": 33.8,
+    "partial_pct": 27.4,
+    "mean_spread": 0.75
+   },
+   {
+    "format": "instagram",
+    "drafts": 18,
+    "claims": 275,
+    "traced_pct": 45.8,
+    "partial_pct": 23.6,
+    "mean_spread": 0.708
+   },
+   {
+    "format": "flyer",
+    "drafts": 18,
+    "claims": 166,
+    "traced_pct": 41.6,
+    "partial_pct": 22.3,
+    "mean_spread": 0.583
+   }
+  ],
+  "ablation": [
+   {
+    "metric": "Traced claims from the late talk (share)",
+    "talks": 11,
+    "rag_on_mean": 0.368,
+    "rag_off_mean": 0.174,
+    "mean_diff": 0.194,
+    "talks_improved": 10,
+    "talks_worse": 1,
+    "wilcoxon_p": 0.002
+   },
+   {
+    "metric": "Evidence spread (quarters used)",
+    "talks": 11,
+    "rag_on_mean": 0.725,
+    "rag_off_mean": 0.748,
+    "mean_diff": -0.024,
+    "talks_improved": 4,
+    "talks_worse": 7,
+    "wilcoxon_p": 0.2676
+   },
+   {
+    "metric": "Traced-claim rate",
+    "talks": 11,
+    "rag_on_mean": 0.412,
+    "rag_off_mean": 0.375,
+    "mean_diff": 0.036,
+    "talks_improved": 9,
+    "talks_worse": 2,
+    "wilcoxon_p": 0.0098
+   }
+  ]
+ },
  "retrieval": {
   "talks": [
    "Barry_Schwartz",

@@ -26,6 +26,7 @@ async def generator(state: dict[str, Any]) -> dict[str, Any]:
         brief=brief,
         user_memory=user_memory,
         context_chunks=state.get("rag_chunks") or [],
+        balanced_coverage=(state.get("rag_meta") or {}).get("strategy") == "balanced",
     )
 
     # Return as a list so the Annotated[list, operator.add] reducer can safely aggregate it 

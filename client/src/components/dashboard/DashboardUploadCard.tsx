@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, type ChangeEvent } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import { uploadRecording, listMyEvents } from "@/lib/api";
 import { NeuSwitch } from "@/components/ui/NeuSwitch";
@@ -49,6 +49,16 @@ const POST_TYPES = [
     glowClass: "",
   },
   {
+    id: "x_post",
+    title: "X Post",
+    subtitle: "One sharp post, 280 characters",
+    icon: "𝕏",
+    color: "slate",
+    activeClass: "border-amber-400/60 bg-amber-400/[0.06] text-amber-300",
+    badgeClass: "bg-amber-400/15 text-amber-300",
+    glowClass: "",
+  },
+  {
     id: "summary",
     title: "Event Summary",
     subtitle: "Executive overview & action items",
@@ -90,12 +100,14 @@ export function DashboardUploadCard() {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [consent, setConsent] = useState(true);
+  // Unticked by default: consent is a real check, not a formality (plan §11).
+  const [consent, setConsent] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([
     "blog",
     "newsletter",
     "linkedin",
     "ig_caption",
+    "x_post",
     "summary",
     "flyer",
   ]);
@@ -257,6 +269,17 @@ export function DashboardUploadCard() {
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
               onClick={() => !selectedFile && fileInputRef.current?.click()}
+              // Without a file the whole zone is the "browse" button; with one, the
+              // Change File / Remove buttons inside take over (no nested buttons).
+              role={selectedFile ? undefined : "button"}
+              tabIndex={selectedFile ? undefined : 0}
+              aria-label={selectedFile ? undefined : "Choose an event recording to upload"}
+              onKeyDown={(e) => {
+                if (!selectedFile && (e.key === "Enter" || e.key === " ")) {
+                  e.preventDefault();
+                  fileInputRef.current?.click();
+                }
+              }}
               className={`rounded-panel border border-dashed p-34 text-center transition-colors ${
                 isDragging
                   ? "drop-active border-amber-400"
@@ -272,7 +295,7 @@ export function DashboardUploadCard() {
                     <div>
                       <p className="font-semibold text-sm text-amber-300">{selectedFile.name}</p>
                       <p className="text-xs text-slate-400">
-                        {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • {selectedFile.type || "Event Recording Source"}
+                        {(selectedFile.size / (1024 * 1024)).toLocaleString(undefined, { maximumFractionDigits: 2 })}&nbsp;MB • {selectedFile.type || "Event Recording Source"}
                       </p>
                     </div>
                   </div>
@@ -435,7 +458,7 @@ export function DashboardUploadCard() {
                         </span>
                       </div>
                       <p className="text-[11px] text-slate-400">
-                        All 6 generated AI posts and full speech transcript will be attached to this event's hub.
+                        Every generated draft and the full transcript will be attached to this event's page.
                       </p>
                     </div>
                   </div>
@@ -458,7 +481,7 @@ export function DashboardUploadCard() {
                     <select
                       value={selectedEventId}
                       onChange={(e) => setSelectedEventId(e.target.value)}
-                      className="w-full min-w-0 rounded-card border border-white/[0.08] bg-slate-900 px-13 py-8 text-xs text-slate-200 focus:border-amber-500 focus:outline-none"
+                      className="w-full min-w-0 rounded-card border border-white/[0.08] bg-slate-900 px-13 py-8 text-xs text-slate-200 focus:border-amber-500"
                     >
                       <option value="">General Session (No Specific Event Linked)</option>
                       {events.map((ev) => (
@@ -469,13 +492,12 @@ export function DashboardUploadCard() {
                     </select>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => navigate("/catalog/all")}
+                  <Link
+                    to="/catalog/all"
                     className="text-xs text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 font-semibold"
                   >
                     <span>➕ Create New Event</span>
-                  </button>
+                  </Link>
                 </div>
               )}
             </div>
@@ -501,7 +523,7 @@ export function DashboardUploadCard() {
               />
 
               {error && (
-                <div className="text-xs text-rose-400 font-semibold">
+                <div role="alert" className="text-xs text-rose-400 font-semibold">
                   ⚠️ {error}
                 </div>
               )}
