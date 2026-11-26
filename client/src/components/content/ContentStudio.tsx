@@ -491,15 +491,12 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
 
                 </div>
               </div>
-              {/* Evidence before the decision: where each sentence came from */}
-              <SourcesPanel key={currentPiece.id} token={token} jobId={jobId} contentId={currentPiece.id} body={currentPiece.body} />
-
-              {/* Human Approval Gate */}
+              {/* Human Approval Gate: kept beside the top of the draft so the decision sits next to the post */}
               {currentPiece.status === "pending_review" ? (
                 <div className="space-y-13 rounded-panel border border-white/[0.08] bg-surface p-21">
                   <p className="text-xs leading-relaxed text-ink-dim">
-                    Checked the sources? Approving marks this draft ready. When every draft is reviewed, the session
-                    becomes ready to publish.
+                    Check the sources below, then approve to mark this draft ready. When every draft is reviewed, the
+                    session becomes ready to publish.
                   </p>
                   <div className="flex flex-wrap items-center gap-8">
                     <button
@@ -527,6 +524,9 @@ export function ContentStudio({ token, jobId, pieces }: ContentStudioProps) {
                     : "Approved. You can publish it below."}
                 </p>
               )}
+
+              {/* Evidence for the decision: where each sentence came from */}
+              <SourcesPanel key={currentPiece.id} token={token} jobId={jobId} contentId={currentPiece.id} body={currentPiece.body} />
 
               <PublishSection
                 token={token}
