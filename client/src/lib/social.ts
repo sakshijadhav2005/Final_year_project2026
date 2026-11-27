@@ -19,6 +19,14 @@ export function xLength(text: string): number {
   return total;
 }
 
+/** Drop Markdown divider lines (---, ***, ___), as the server does before posting. */
+export function withoutDividers(text: string): string {
+  return text
+    .replace(/^[ \t]*([-*_])(?:[ \t]*\1){2,}[ \t]*$/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 /** The format a content type belongs to, for filters ("ig_caption" -> "instagram"). */
 export function contentFormat(type: string): string {
   const t = (type || "").toLowerCase().replace(/[-_]/g, "");

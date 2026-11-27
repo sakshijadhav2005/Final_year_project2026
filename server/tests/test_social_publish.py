@@ -244,6 +244,11 @@ def test_post_text_formatting() -> None:
     assert linkedin.to_commentary("email me @ home, 50% off <now>") == "email me \\@ home, 50% off \\<now\\>"
 
 
+def test_divider_lines_are_not_posted() -> None:
+    text = linkedin.build_post_text(None, "Intro\n\n---\n\n- point\n\n* * *\n\nOutro ___ stays")
+    assert text == "Intro\n\n• point\n\nOutro ___ stays"
+
+
 def test_too_long_post_is_refused_before_calling_linkedin(fake_linkedin) -> None:
     with TestClient(app) as client:
         headers = _user(client)

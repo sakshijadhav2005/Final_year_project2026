@@ -11,6 +11,9 @@ MENTION = re.compile(r"(?<![\w.])@([A-Za-z0-9_.]+)")
 def plain_text(markdown: str) -> str:
     """Social feeds show text as typed, so drop the Markdown markers the writers produce."""
     text = (markdown or "").replace("\r\n", "\n")
+    # Divider lines (---, ***, ___) would be posted literally; drop them before the
+    # bullet rule turns "* * *" into a bullet.
+    text = re.sub(r"^[ \t]*([-*_])(?:[ \t]*\1){2,}[ \t]*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"^\s{0,3}#{1,6}\s+", "", text, flags=re.MULTILINE)  # headings
     text = re.sub(r"\*\*(.+?)\*\*|__(.+?)__", lambda m: m.group(1) or m.group(2), text)  # bold
     text = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r"\1 (\2)", text)  # links

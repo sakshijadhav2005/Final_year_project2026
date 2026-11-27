@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 /**
  * Minimal, dependency-free Markdown renderer for generated drafts.
  * Supports #/##/### headings, "-", "*" and "•" bullets, numbered lists,
- * **bold** and *italic*. Everything is rendered as React text, never as HTML,
- * so model output cannot inject markup.
+ * pipe tables, --- dividers, **bold** and *italic*. Everything is rendered as React text,
+ * never as HTML, so model output cannot inject markup.
  */
 function inline(text: string): ReactNode[] {
   const parts: ReactNode[] = [];
@@ -34,11 +34,29 @@ type Block =
   | { kind: "h"; level: number; text: string }
   | { kind: "ul"; items: string[] }
   | { kind: "ol"; items: string[] }
-  | { kind: "p"; text: string };
+  | { kind: "p"; text: string }
+  | { kind: "hr" }
+  | { kind: "table"; header: string[] | null; rows: string[][] };
+
+// A pipe-table row starts with "|" and has at least one more "|" (the trailing one is optional).
+const isTableRow = (line: string) => line.startsWith("|") && line.indexOf("|", 1) > 0;
+// The line under the header, e.g. |:---|---:|
+const isTableSeparator = (line: string) =>
+  line.includes("|") && /^\|?(\s*:?-{2,}:?\s*\|)*\s*:?-{2,}:?\s*\|?$/.test(line);
+
+function splitRow(line: string): string[] {
+  return line
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((cell) => cell.trim());
+}
 
 function parse(source: string): Block[] {
   const blocks: Block[] = [];
   let para: string[] = [];
+  // The table being filled; any other line ends it.
+  let table: Extract<Block, { kind: "table" }> | null = null;
   const flush = () => {
     if (para.length) blocks.push({ kind: "p", text: para.join(" ") });
     para = [];
@@ -47,6 +65,28 @@ function parse(source: string): Block[] {
     const line = raw.trim();
     if (!line) {
       flush();
+      table = null;
+      continue;
+    }
+    if (isTableRow(line) || (table && isTableSeparator(line))) {
+      flush();
+      if (!table) {
+        table = { kind: "table", header: null, rows: [] };
+        blocks.push(table);
+      }
+      if (isTableSeparator(line)) {
+        // The row above the separator is the header.
+        if (!table.header && table.rows.length === 1) table.header = table.rows.pop() ?? null;
+      } else {
+        table.rows.push(splitRow(line));
+      }
+      continue;
+    }
+    table = null;
+    // A line of only ---, *** or ___ (spaces allowed) is a divider.
+    if (/^([-*_])(\s*\1){2,}$/.test(line)) {
+      flush();
+      blocks.push({ kind: "hr" });
       continue;
     }
     const h = /^(#{1,4})\s+(.*)$/.exec(line);
@@ -109,6 +149,44 @@ export function MarkdownText({ source, className = "" }: { source: string; class
                 </li>
               ))}
             </ol>
+          );
+        }
+        if (b.kind === "hr") {
+          return <hr key={i} className="border-black/10 dark:border-white/10" />;
+        }
+        if (b.kind === "table") {
+          const cols = Math.max(b.header?.length ?? 0, ...b.rows.map((r) => r.length));
+          const pad = (row: string[]) => Array.from({ length: cols }, (_, c) => row[c] ?? "");
+          return (
+            <div
+              key={i}
+              className="overflow-x-auto rounded-card border border-black/10 dark:border-white/10"
+            >
+              <table className="w-full border-collapse text-left text-sm">
+                {b.header && (
+                  <thead className="bg-black/[0.03] dark:bg-white/[0.04]">
+                    <tr>
+                      {pad(b.header).map((cell, c) => (
+                        <th key={c} scope="col" className="px-13 py-8 font-semibold text-ink">
+                          {inline(cell)}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                )}
+                <tbody>
+                  {b.rows.map((row, r) => (
+                    <tr key={r} className="border-t border-black/[0.06] dark:border-white/[0.06]">
+                      {pad(row).map((cell, c) => (
+                        <td key={c} className="px-13 py-8 align-top">
+                          {inline(cell)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           );
         }
         return <p key={i}>{inline(b.text)}</p>;

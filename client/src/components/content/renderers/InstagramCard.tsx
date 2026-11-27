@@ -1,13 +1,16 @@
 import { useState } from "react";
 
+import { withoutDividers } from "@/lib/social";
+
 interface InstagramCardProps {
   title?: string | null;
   body: string;
   onCopy?: () => void;
 }
 
-export function InstagramCard({ title, body, onCopy }: InstagramCardProps) {
+export function InstagramCard({ title, body: rawBody, onCopy }: InstagramCardProps) {
   const [copied, setCopied] = useState(false);
+  const body = withoutDividers(rawBody);
 
   function handleCopy() {
     navigator.clipboard.writeText(body);

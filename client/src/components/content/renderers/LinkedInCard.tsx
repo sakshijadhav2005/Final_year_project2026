@@ -1,13 +1,16 @@
 import { useState } from "react";
 
+import { withoutDividers } from "@/lib/social";
+
 interface LinkedInCardProps {
   title?: string | null;
   body: string;
   onCopy?: () => void;
 }
 
-export function LinkedInCard({ title, body, onCopy }: LinkedInCardProps) {
+export function LinkedInCard({ title, body: rawBody, onCopy }: LinkedInCardProps) {
   const [copied, setCopied] = useState(false);
+  const body = withoutDividers(rawBody);
 
   function handleCopy() {
     navigator.clipboard.writeText(`${title ? `${title}\n\n` : ""}${body}`);
