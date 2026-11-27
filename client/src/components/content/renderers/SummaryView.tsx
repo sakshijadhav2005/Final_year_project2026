@@ -40,15 +40,6 @@ export function SummaryView({ title, body, onCopy }: SummaryViewProps) {
 
       {/* Summary Body */}
       <MarkdownText source={body} className="mt-21" />
-
-      {/* Trust & Verification Callout */}
-      <div className="mt-34 flex items-center justify-between rounded-card border border-accent/20 bg-accent/5 p-13 text-xs text-ink-light/70 dark:text-ink-dark/70">
-        <div className="flex items-center gap-8">
-          <span className="text-accent">🔒</span>
-          <span>Verified factual claims against source transcript</span>
-        </div>
-        <span className="font-semibold text-accent">Grounding Passed</span>
-      </div>
     </div>
   );
 }

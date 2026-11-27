@@ -27,7 +27,6 @@ export function FlyerPreview({ title, body, structured, onCopy }: FlyerPreviewPr
     "Comprehensive session audio transcribed with high accuracy",
     "Multi-agent analysis parsed themes and quotes",
     "Publish-ready drafts generated with zero human latency",
-    "Human gate ensured complete factual grounding",
   ];
 
   function handleCopy() {
@@ -114,7 +113,6 @@ export function FlyerPreview({ title, body, structured, onCopy }: FlyerPreviewPr
                 <span className="font-display font-bold text-accent">EventAI</span>
                 <span>• Intelligent Content</span>
               </div>
-              <span className="text-[10px] text-white/40">Verified Grounded</span>
             </div>
           </div>
         </div>

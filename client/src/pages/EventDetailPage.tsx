@@ -257,12 +257,12 @@ export function EventDetailPage() {
               </div>
               <div className="rounded-panel border border-white/[0.08] bg-white/[0.03] p-13 text-center min-w-[120px]">
                 <span className="block text-2xl font-black text-emerald-400">
-                  {transcriptQuery.data?.avg_confidence
+                  {transcriptQuery.data?.avg_confidence != null
                     ? `${Math.round(transcriptQuery.data.avg_confidence * 100)}%`
-                    : "100%"}
+                    : "–"}
                 </span>
                 <span className="text-[11px] text-slate-400 font-semibold">
-                  Grounding Score
+                  Transcript confidence
                 </span>
               </div>
             </div>
